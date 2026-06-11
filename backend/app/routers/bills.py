@@ -1,0 +1,112 @@
+from datetime import date, datetime, timezone
+
+from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.orm import Session
+
+from app.core.database import get_db
+from app.core.deps import current_user
+from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
+from app.models.user import User
+from app.schemas.bill import (
+    BillTemplateCreate,
+    BillTemplateOut,
+    BillTemplateUpdate,
+    MarkPaidRequest,
+    PaymentInstanceOut,
+)
+from app.services.recurrence import generate_next_instance
+
+router = APIRouter(prefix="/bills", tags=["bills"])
+
+
+@router.get("", response_model=list[BillTemplateOut])
+def list_bills(
+    include_archived: bool = False,
+    db: Session = Depends(get_db),
+    _: User = Depends(current_user),
+):
+    q = db.query(BillTemplate)
+    if not include_archived:
+        q = q.filter(BillTemplate.is_archived.is_(False))
+    return q.order_by(BillTemplate.name).all()
+
+
+@router.post("", response_model=BillTemplateOut, status_code=status.HTTP_201_CREATED)
+def create_bill(
+    body: BillTemplateCreate,
+    db: Session = Depends(get_db),
+    _: User = Depends(current_user),
+):
+    bill = BillTemplate(**body.model_dump())
+    db.add(bill)
+    db.commit()
+    db.refresh(bill)
+    return bill
+
+
+@router.patch("/{bill_id}", response_model=BillTemplateOut)
+def update_bill(
+    bill_id: int,
+    body: BillTemplateUpdate,
+    db: Session = Depends(get_db),
+    _: User = Depends(current_user),
+):
+    bill = db.get(BillTemplate, bill_id)
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found")
+    for field, value in body.model_dump(exclude_none=True).items():
+        setattr(bill, field, value)
+    db.commit()
+    db.refresh(bill)
+    return bill
+
+
+@router.post("/{bill_id}/archive", status_code=status.HTTP_204_NO_CONTENT)
+def archive_bill(
+    bill_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(current_user),
+):
+    bill = db.get(BillTemplate, bill_id)
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found")
+    bill.is_archived = True
+    db.commit()
+
+
+@router.get("/payments", response_model=list[PaymentInstanceOut])
+def list_payments(
+    month: str | None = None,  # "YYYY-MM"
+    db: Session = Depends(get_db),
+    _: User = Depends(current_user),
+):
+    q = db.query(PaymentInstance)
+    if month:
+        q = q.filter(PaymentInstance.period == month)
+    return q.order_by(PaymentInstance.due_date).all()
+
+
+@router.post("/payments/{instance_id}/pay", response_model=PaymentInstanceOut)
+def mark_paid(
+    instance_id: int,
+    body: MarkPaidRequest,
+    db: Session = Depends(get_db),
+    _: User = Depends(current_user),
+):
+    instance = db.get(PaymentInstance, instance_id)
+    if not instance:
+        raise HTTPException(status_code=404, detail="Payment instance not found")
+
+    instance.status = PaymentStatus.paid
+    instance.paid_at = datetime.now(timezone.utc)
+    instance.paid_amount = body.paid_amount if body.paid_amount is not None else instance.amount
+    if body.notes:
+        instance.notes = body.notes
+    db.commit()
+
+    # auto-generate next period instance if template has auto_generate on
+    if instance.template.auto_generate:
+        generate_next_instance(db, instance.template, instance.period)
+
+    db.refresh(instance)
+    return instance

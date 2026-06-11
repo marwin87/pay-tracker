@@ -1,0 +1,24 @@
+# Dependencies
+frontend/node_modules/
+backend/.venv/
+
+# Build output
+frontend/.next/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+backend/.ruff_cache/
+
+# Editor
+.idea/
+.vscode/
+
+# OS
+.DS_Store
