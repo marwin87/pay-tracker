@@ -1,5 +1,6 @@
 from datetime import date, datetime
-from pydantic import BaseModel
+from decimal import Decimal
+from pydantic import BaseModel, Field
 from app.models.bill import BillFrequency, PaymentStatus
 
 
@@ -7,8 +8,8 @@ class BillTemplateCreate(BaseModel):
     name: str
     category: str | None = None
     frequency: BillFrequency
-    amount: float
-    due_day: int | None = None
+    amount: Decimal
+    due_day: int | None = Field(None, ge=1, le=31)
     notes: str | None = None
     is_paused: bool = False
 
@@ -17,8 +18,8 @@ class BillTemplateUpdate(BaseModel):
     name: str | None = None
     category: str | None = None
     frequency: BillFrequency | None = None
-    amount: float | None = None
-    due_day: int | None = None
+    amount: Decimal | None = None
+    due_day: int | None = Field(None, ge=1, le=31)
     notes: str | None = None
     is_paused: bool | None = None
 
@@ -30,7 +31,7 @@ class BillTemplateOut(BaseModel):
     name: str
     category: str | None
     frequency: BillFrequency
-    amount: float
+    amount: Decimal
     due_day: int | None
     notes: str | None
     is_archived: bool
@@ -45,13 +46,13 @@ class PaymentInstanceOut(BaseModel):
     bill_id: int
     period: str
     due_date: date
-    amount: float
+    amount: Decimal
     status: PaymentStatus
     paid_at: datetime | None
-    paid_amount: float | None
+    paid_amount: Decimal | None
     notes: str | None
 
 
 class MarkPaidRequest(BaseModel):
-    paid_amount: float | None = None  # defaults to template amount when None
+    paid_amount: Decimal | None = None  # defaults to template amount when None
     notes: str | None = None

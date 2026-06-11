@@ -1,4 +1,5 @@
 from datetime import date, datetime, timezone
+from decimal import Decimal
 from enum import Enum
 
 from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
@@ -29,7 +30,7 @@ class BillTemplate(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     category: Mapped[str | None] = mapped_column(String(100))
     frequency: Mapped[BillFrequency] = mapped_column(String(20), nullable=False)
-    amount: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False)
+    amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     due_day: Mapped[int | None] = mapped_column(Integer)  # day-of-month for monthly bills
     notes: Mapped[str | None] = mapped_column(Text)
     is_archived: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -53,12 +54,12 @@ class PaymentInstance(Base):
     bill_id: Mapped[int] = mapped_column(ForeignKey("bill_templates.id"), nullable=False)
     period: Mapped[str] = mapped_column(String(7), nullable=False)  # "YYYY-MM"
     due_date: Mapped[date] = mapped_column(Date, nullable=False)
-    amount: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False)
+    amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     status: Mapped[PaymentStatus] = mapped_column(
         String(10), nullable=False, default=PaymentStatus.upcoming
     )
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
-    paid_amount: Mapped[float | None] = mapped_column(Numeric(12, 2))
+    paid_amount: Mapped[Decimal | None] = mapped_column(Numeric(12, 2))
     notes: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)

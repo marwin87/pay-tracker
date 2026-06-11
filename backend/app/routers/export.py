@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 import pandas as pd
 from fastapi import APIRouter, Depends
 from fastapi.responses import Response, StreamingResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
 from app.core.deps import current_user
@@ -20,7 +20,7 @@ def export_xlsx(
     db: Session = Depends(get_db),
     _: User = Depends(current_user),
 ):
-    instances = db.query(PaymentInstance).order_by(PaymentInstance.due_date).all()
+    instances = db.query(PaymentInstance).options(selectinload(PaymentInstance.template)).order_by(PaymentInstance.due_date).all()
     rows = [
         {
             "Bill": i.template.name,
@@ -60,7 +60,7 @@ def export_json(
             {
                 "id": t.id,
                 "name": t.name,
-                "frequency": t.frequency,
+                "frequency": t.frequency.value,
                 "amount": float(t.amount),
                 "due_day": t.due_day,
                 "notes": t.notes,
@@ -77,7 +77,7 @@ def export_json(
                 "period": i.period,
                 "due_date": i.due_date.isoformat(),
                 "amount": float(i.amount),
-                "status": i.status,
+                "status": i.status.value,
                 "paid_at": i.paid_at.isoformat() if i.paid_at else None,
                 "paid_amount": float(i.paid_amount) if i.paid_amount else None,
                 "notes": i.notes,
