@@ -1,9 +1,10 @@
 ---
 change_id: db-schema-migration
 title: DB Schema Migration
-status: impl_reviewed
+status: archived
 created: 2026-06-11
 updated: 2026-06-11
+archived_at: 2026-06-11T14:04:52Z
 roadmap_id: F-01
 ---
 
