@@ -64,8 +64,9 @@ def export_json(
                 "amount": float(t.amount),
                 "due_day": t.due_day,
                 "notes": t.notes,
+                "category": t.category,
                 "is_archived": t.is_archived,
-                "auto_generate": t.auto_generate,
+                "is_paused": t.is_paused,
             }
             for t in templates
         ],

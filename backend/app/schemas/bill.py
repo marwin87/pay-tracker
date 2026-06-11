@@ -5,20 +5,22 @@ from app.models.bill import BillFrequency, PaymentStatus
 
 class BillTemplateCreate(BaseModel):
     name: str
+    category: str | None = None
     frequency: BillFrequency
     amount: float
     due_day: int | None = None
     notes: str | None = None
-    auto_generate: bool = True
+    is_paused: bool = False
 
 
 class BillTemplateUpdate(BaseModel):
     name: str | None = None
+    category: str | None = None
     frequency: BillFrequency | None = None
     amount: float | None = None
     due_day: int | None = None
     notes: str | None = None
-    auto_generate: bool | None = None
+    is_paused: bool | None = None
 
 
 class BillTemplateOut(BaseModel):
@@ -26,12 +28,13 @@ class BillTemplateOut(BaseModel):
 
     id: int
     name: str
+    category: str | None
     frequency: BillFrequency
     amount: float
     due_day: int | None
     notes: str | None
     is_archived: bool
-    auto_generate: bool
+    is_paused: bool
     created_at: datetime
 
 

@@ -1,7 +1,7 @@
 from datetime import date, datetime, timezone
 from enum import Enum
 
-from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -27,12 +27,13 @@ class BillTemplate(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
+    category: Mapped[str | None] = mapped_column(String(100))
     frequency: Mapped[BillFrequency] = mapped_column(String(20), nullable=False)
     amount: Mapped[float] = mapped_column(Numeric(12, 2), nullable=False)
     due_day: Mapped[int | None] = mapped_column(Integer)  # day-of-month for monthly bills
     notes: Mapped[str | None] = mapped_column(Text)
     is_archived: Mapped[bool] = mapped_column(Boolean, default=False)
-    auto_generate: Mapped[bool] = mapped_column(Boolean, default=True)
+    is_paused: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
@@ -46,6 +47,7 @@ class PaymentInstance(Base):
     """A single payment record for a specific period. Idempotent: (bill_id, period) is unique."""
 
     __tablename__ = "payment_instances"
+    __table_args__ = (UniqueConstraint("bill_id", "period", name="uq_payment_instance_bill_period"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     bill_id: Mapped[int] = mapped_column(ForeignKey("bill_templates.id"), nullable=False)

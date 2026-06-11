@@ -104,8 +104,8 @@ def mark_paid(
         instance.notes = body.notes
     db.commit()
 
-    # auto-generate next period instance if template has auto_generate on
-    if instance.template.auto_generate:
+    # auto-create next period instance unless template is paused
+    if not instance.template.is_paused:
         generate_next_instance(db, instance.template, instance.period)
 
     db.refresh(instance)
