@@ -22,9 +22,4 @@ This gives you control over what gets committed and the final commit message. On
 
 ## Project
 
-`pay-tracker` is a new project (MIT License, 2026). The repository is currently empty — no source code, build system, or framework has been scaffolded yet.
-
-Once the stack is chosen and the project is bootstrapped, update this file with:
-- Build, lint, and test commands (including how to run a single test)
-- High-level architecture and module boundaries
-- Any conventions or constraints specific to this codebase
+See @AGENTS.md for project structure, build commands, coding conventions, and domain rules.
