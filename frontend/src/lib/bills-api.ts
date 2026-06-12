@@ -1,6 +1,6 @@
 import { apiFetch } from "./api";
 
-export type BillFrequency = "monthly" | "quarterly" | "annual" | "one_off";
+export type BillFrequency = "monthly" | "every_2_months" | "quarterly" | "annual" | "one_off";
 
 export interface BillTemplateOut {
   id: number;

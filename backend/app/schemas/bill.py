@@ -8,7 +8,7 @@ class BillTemplateCreate(BaseModel):
     name: str
     category: str | None = None
     frequency: BillFrequency
-    amount: Decimal
+    amount: Decimal = Decimal("0")
     currency: str = "PLN"
     due_day: int | None = Field(None, ge=1, le=31)
     notes: str | None = None
@@ -54,6 +54,9 @@ class PaymentInstanceOut(BaseModel):
     paid_at: datetime | None
     paid_amount: Decimal | None
     notes: str | None
+    bill_name: str
+    currency: str
+    frequency: BillFrequency
 
 
 class MarkPaidRequest(BaseModel):

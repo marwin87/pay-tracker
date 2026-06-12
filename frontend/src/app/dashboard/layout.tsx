@@ -3,13 +3,14 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Wallet, Receipt, LogOut } from "lucide-react";
+import { Wallet, Receipt, CreditCard, LogOut } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
 
 const NAV_ITEMS = [
+  { href: "/dashboard/payments", labelKey: "payments" as const, icon: CreditCard },
   { href: "/dashboard/bills", labelKey: "bills" as const, icon: Receipt },
 ];
 

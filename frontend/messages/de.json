@@ -17,12 +17,15 @@
     "alreadyHaveAccount": "Bereits ein Konto?"
   },
   "DashboardLayout": {
+    "payments": "Zahlungen",
     "bills": "Rechnungen",
     "logOut": "Abmelden"
   },
   "Dashboard": {
     "title": "Willkommen bei Pay Tracker",
     "subtitle": "Verwalten Sie Ihre Haushaltsrechnungen an einem Ort.",
+    "paymentsTitle": "Zahlungen",
+    "paymentsDesc": "Rechnungen dieses Monats anzeigen und als bezahlt markieren",
     "manageBillsTitle": "Rechnungen verwalten",
     "manageBillsDesc": "Erstellen, bearbeiten und verfolgen Sie Ihre wiederkehrenden Rechnungen",
     "archivedBillsTitle": "Archivierte Rechnungen",
@@ -46,6 +49,7 @@
     "archived": "Archiviert",
     "frequency": {
       "monthly": "Monatlich",
+      "every_2_months": "Alle 2 Monate",
       "quarterly": "Vierteljährlich",
       "annual": "Jährlich",
       "one_off": "Einmalig"
@@ -64,6 +68,7 @@
     "frequencyLabel": "Häufigkeit",
     "frequency": {
       "monthly": "Monatlich",
+      "every_2_months": "Alle 2 Monate",
       "quarterly": "Vierteljährlich",
       "annual": "Jährlich",
       "one_off": "Einmalig"
@@ -87,6 +92,7 @@
     "archive": "Archivieren",
     "frequency": {
       "monthly": "Monatlich",
+      "every_2_months": "Alle 2 Monate",
       "quarterly": "Vierteljährlich",
       "annual": "Jährlich",
       "one_off": "Einmalig"
@@ -99,8 +105,48 @@
     "archive": "Archivieren",
     "archiving": "Archivierung…"
   },
+  "DayPicker": {
+    "placeholder": "Tag auswählen",
+    "selectedDay": "Tag {day}",
+    "heading": "Tag des Monats",
+    "shortMonthWarning": "Manche Monate haben weniger Tage — die Rechnung fällt dann auf den letzten verfügbaren Tag."
+  },
   "CategoryCombobox": {
     "placeholder": "z. B. Nebenkosten"
+  },
+  "PaymentsPage": {
+    "title": "Zahlungen",
+    "loadError": "Zahlungen konnten nicht geladen werden.",
+    "noPayments": "Keine Rechnungen für diesen Monat",
+    "addBills": "Rechnungen hinzufügen →"
+  },
+  "PaymentRow": {
+    "status": {
+      "upcoming": "Bevorstehend",
+      "overdue": "Überfällig",
+      "paid": "Bezahlt"
+    },
+    "markAsPaid": "Als bezahlt markieren",
+    "paidOn": "Bezahlt am",
+    "delete": "Zahlung löschen"
+  },
+  "DeletePaymentDialog": {
+    "title": "Zahlung löschen?",
+    "descriptionRecurring": "Damit wird der Eintrag des aktuellen Monats sowie alle zukünftigen Einträge dieser wiederkehrenden Rechnung gelöscht. Die Rechnung wird archiviert.",
+    "descriptionOneOff": "Dieser einmalige Zahlungseintrag wird dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "cancel": "Abbrechen",
+    "confirm": "Löschen",
+    "deleting": "Löschen…",
+    "deleteFailed": "Zahlung konnte nicht gelöscht werden."
+  },
+  "MarkPaidDialog": {
+    "title": "Als bezahlt markieren: {billName}",
+    "amountLabel": "Bezahlter Betrag",
+    "notesLabel": "Notizen (optional)",
+    "cancel": "Abbrechen",
+    "confirm": "Als bezahlt markieren",
+    "confirming": "Speichern…",
+    "saveFailed": "Zahlung konnte nicht gespeichert werden."
   },
   "ThemeToggle": {
     "ariaLabel": "Design umschalten"

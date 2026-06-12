@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Receipt, Archive } from "lucide-react";
+import { Receipt, Archive, CreditCard } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function DashboardPage() {
@@ -16,6 +16,23 @@ export default function DashboardPage() {
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2">
+        <Link
+          href="/dashboard/payments"
+          className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all dark:bg-slate-800 dark:border-slate-700 dark:hover:border-emerald-500"
+        >
+          <div className="rounded-xl bg-emerald-100 p-3 text-emerald-600 group-hover:bg-emerald-200 transition-colors dark:bg-emerald-900/40 dark:text-emerald-400">
+            <CreditCard size={24} />
+          </div>
+          <div>
+            <h2 className="font-semibold text-slate-800 dark:text-slate-100">
+              {t("paymentsTitle")}
+            </h2>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+              {t("paymentsDesc")}
+            </p>
+          </div>
+        </Link>
+
         <Link
           href="/dashboard/bills"
           className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all dark:bg-slate-800 dark:border-slate-700 dark:hover:border-indigo-500"

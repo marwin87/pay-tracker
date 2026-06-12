@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
@@ -14,7 +14,7 @@ from app.schemas.bill import (
     MarkPaidRequest,
     PaymentInstanceOut,
 )
-from app.services.recurrence import generate_next_instance
+from app.services.recurrence import ensure_current_period_instances, generate_next_instance
 
 # PRD §Access Control: flat household model — all authenticated users share one view.
 # current_user is injected for auth enforcement only; no per-user data scoping is applied.
@@ -54,10 +54,43 @@ def list_payments(
     db: Session = Depends(get_db),
     _: User = Depends(current_user),
 ):
-    q = db.query(PaymentInstance)
-    if month:
-        q = q.filter(PaymentInstance.period == month)
-    return q.order_by(PaymentInstance.due_date).all()
+    today = date.today()
+    current_month = today.strftime("%Y-%m")
+    if month is None:
+        month = current_month
+
+    # Seed current and future months; skip past to avoid retroactive overdue flooding
+    if month >= current_month:
+        ensure_current_period_instances(db, month)
+
+    instances = (
+        db.query(PaymentInstance)
+        .filter(PaymentInstance.period == month)
+        .order_by(PaymentInstance.due_date)
+        .all()
+    )
+
+    result = []
+    for inst in instances:
+        d = {
+            "id": inst.id,
+            "bill_id": inst.bill_id,
+            "period": inst.period,
+            "due_date": inst.due_date,
+            "amount": inst.amount,
+            "status": inst.status,
+            "paid_at": inst.paid_at,
+            "paid_amount": inst.paid_amount,
+            "notes": inst.notes,
+            "bill_name": inst.template.name,
+            "currency": inst.template.currency,
+            "frequency": inst.template.frequency,
+        }
+        # Dynamic overdue: override status in response without writing to DB
+        if inst.status == PaymentStatus.upcoming and inst.due_date < today:
+            d["status"] = PaymentStatus.overdue
+        result.append(d)
+    return result
 
 
 @router.post("/payments/{instance_id}/pay", response_model=PaymentInstanceOut)
@@ -84,7 +117,48 @@ def mark_paid(
         generate_next_instance(db, template, instance.period)
 
     db.refresh(instance)
-    return instance
+    return {
+        "id": instance.id,
+        "bill_id": instance.bill_id,
+        "period": instance.period,
+        "due_date": instance.due_date,
+        "amount": instance.amount,
+        "status": instance.status,
+        "paid_at": instance.paid_at,
+        "paid_amount": instance.paid_amount,
+        "notes": instance.notes,
+        "bill_name": template.name,
+        "currency": template.currency,
+        "frequency": template.frequency,
+    }
+
+
+@router.delete("/payments/{instance_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_payment(
+    instance_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(current_user),
+):
+    instance = db.get(PaymentInstance, instance_id)
+    if not instance:
+        raise HTTPException(status_code=404, detail="Payment instance not found")
+
+    template = instance.template
+    from app.models.bill import BillFrequency as BF
+
+    if template.frequency == BF.one_off:
+        # One-off: delete just this instance; template stays (no loop to stop)
+        db.delete(instance)
+    else:
+        # Recurring: delete this period and all future instances, then archive the template
+        # so ensure_current_period_instances won't regenerate them
+        db.query(PaymentInstance).filter(
+            PaymentInstance.bill_id == template.id,
+            PaymentInstance.period >= instance.period,
+        ).delete(synchronize_session=False)
+        template.is_archived = True
+
+    db.commit()
 
 
 @router.patch("/{bill_id}", response_model=BillTemplateOut)

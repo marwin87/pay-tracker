@@ -21,7 +21,9 @@
       "Bash(docker-compose exec *)",
       "Bash(docker-compose logs *)",
       "Bash(python *)",
-      "Bash(docker compose exec *)"
+      "Bash(docker compose exec *)",
+      "Bash(python3 -m json.tool)",
+      "Bash(docker compose *)"
     ],
     "deny": [
       "Bash(rm -rf *)"

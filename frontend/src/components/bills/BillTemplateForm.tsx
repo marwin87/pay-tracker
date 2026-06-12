@@ -1,15 +1,22 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import CategoryCombobox from "./CategoryCombobox";
+import DayPicker from "./DayPicker";
 import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
 
 const PRESET_CURRENCIES = ["EUR", "PLN", "USD"] as const;
 
-const FREQUENCY_VALUES: BillFrequency[] = ["monthly", "quarterly", "annual", "one_off"];
+const FREQUENCY_VALUES: BillFrequency[] = ["monthly", "every_2_months", "quarterly", "annual", "one_off"];
 
-const DUE_DAY_FREQUENCIES: BillFrequency[] = ["monthly", "quarterly"];
+const DUE_DAY_FREQUENCIES: BillFrequency[] = ["monthly", "every_2_months", "quarterly"];
+
+const LOCALE_DEFAULT_CURRENCY: Record<string, string> = {
+  pl: "PLN",
+  de: "EUR",
+  en: "USD",
+};
 
 type CurrencyOption = (typeof PRESET_CURRENCIES)[number] | "custom";
 
@@ -38,13 +45,14 @@ export default function BillTemplateForm({
   onCancel,
 }: Props) {
   const t = useTranslations("BillTemplateForm");
+  const locale = useLocale();
   const [name, setName] = useState(initial?.name ?? "");
   const [category, setCategory] = useState(initial?.category ?? "");
   const [frequency, setFrequency] = useState<BillFrequency>(
     initial?.frequency ?? "monthly",
   );
   const [amount, setAmount] = useState(initial?.amount ?? "");
-  const initialCurrency = initial?.currency ?? "EUR";
+  const initialCurrency = initial?.currency ?? LOCALE_DEFAULT_CURRENCY[locale] ?? "EUR";
   const isPreset = (PRESET_CURRENCIES as readonly string[]).includes(initialCurrency);
   const [currencyOption, setCurrencyOption] = useState<CurrencyOption>(
     isPreset ? (initialCurrency as CurrencyOption) : "custom",
@@ -70,10 +78,6 @@ export default function BillTemplateForm({
   }): Errors {
     const e: Errors = {};
     if (!fields.name.trim()) e.name = t("nameRequired");
-    const trimmed = fields.amount.trim();
-    const amt = Number(trimmed);
-    if (!trimmed || !/^(0|[1-9]\d*)(\.\d+)?$/.test(trimmed) || amt <= 0)
-      e.amount = t("amountPositive");
     if (fields.showDueDay && fields.dueDay) {
       const day = parseInt(fields.dueDay, 10);
       if (isNaN(day) || day < 1 || day > 31)
@@ -114,7 +118,7 @@ export default function BillTemplateForm({
         name: name.trim(),
         category: category.trim() || null,
         frequency,
-        amount,
+        amount: amount.trim() || "0",
         currency: resolvedCurrency || "EUR",
         due_day: showDueDay && dueDay ? parseInt(dueDay, 10) : null,
         notes: notes.trim() || null,
@@ -157,7 +161,7 @@ export default function BillTemplateForm({
         {/* Amount + Currency */}
         <div>
           <label htmlFor="bill-amount" className={labelClass}>
-            {t("amountLabel")} <span className="text-red-500">*</span>
+            {t("amountLabel")}
           </label>
           <div className="flex gap-2">
             <input
@@ -219,15 +223,8 @@ export default function BillTemplateForm({
         {/* Due day (conditional) */}
         {showDueDay && (
           <div>
-            <label htmlFor="bill-due-day" className={labelClass}>{t("dueDayLabel")}</label>
-            <input
-              id="bill-due-day"
-              value={dueDay}
-              onChange={(e) => handleChange(setDueDay)(e.target.value)}
-              placeholder="e.g. 15"
-              inputMode="numeric"
-              className={inputClass}
-            />
+            <label className={labelClass}>{t("dueDayLabel")}</label>
+            <DayPicker value={dueDay} onChange={handleChange(setDueDay)} />
             {errors.due_day && (
               <p className="mt-1 text-xs text-red-500">{errors.due_day}</p>
             )}

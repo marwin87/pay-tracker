@@ -17,12 +17,15 @@
     "alreadyHaveAccount": "Already have an account?"
   },
   "DashboardLayout": {
+    "payments": "Payments",
     "bills": "Bills",
     "logOut": "Log out"
   },
   "Dashboard": {
     "title": "Welcome to Pay Tracker",
     "subtitle": "Manage your household bills in one place.",
+    "paymentsTitle": "Payments",
+    "paymentsDesc": "View and mark this month's bills as paid",
     "manageBillsTitle": "Manage Bills",
     "manageBillsDesc": "Create, edit, and track your recurring bills",
     "archivedBillsTitle": "Archived Bills",
@@ -46,6 +49,7 @@
     "archived": "Archived",
     "frequency": {
       "monthly": "Monthly",
+      "every_2_months": "Every 2 months",
       "quarterly": "Quarterly",
       "annual": "Annual",
       "one_off": "One-off"
@@ -64,6 +68,7 @@
     "frequencyLabel": "Frequency",
     "frequency": {
       "monthly": "Monthly",
+      "every_2_months": "Every 2 months",
       "quarterly": "Quarterly",
       "annual": "Annual",
       "one_off": "One-off"
@@ -87,6 +92,7 @@
     "archive": "Archive",
     "frequency": {
       "monthly": "Monthly",
+      "every_2_months": "Every 2 months",
       "quarterly": "Quarterly",
       "annual": "Annual",
       "one_off": "One-off"
@@ -99,8 +105,48 @@
     "archive": "Archive",
     "archiving": "Archiving…"
   },
+  "DayPicker": {
+    "placeholder": "Select day",
+    "selectedDay": "Day {day}",
+    "heading": "Day of month",
+    "shortMonthWarning": "Some months have fewer days — the bill will fall on the last available day."
+  },
   "CategoryCombobox": {
     "placeholder": "e.g. Utilities"
+  },
+  "PaymentsPage": {
+    "title": "Payments",
+    "loadError": "Failed to load payments.",
+    "noPayments": "No bills for this month",
+    "addBills": "Add bills →"
+  },
+  "PaymentRow": {
+    "status": {
+      "upcoming": "Upcoming",
+      "overdue": "Overdue",
+      "paid": "Paid"
+    },
+    "markAsPaid": "Mark as Paid",
+    "paidOn": "Paid on",
+    "delete": "Delete payment"
+  },
+  "DeletePaymentDialog": {
+    "title": "Delete this payment?",
+    "descriptionRecurring": "This will delete this month's entry and all future entries for this recurring bill. The bill will be archived.",
+    "descriptionOneOff": "This one-off payment entry will be permanently removed. This cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Delete",
+    "deleting": "Deleting…",
+    "deleteFailed": "Failed to delete payment."
+  },
+  "MarkPaidDialog": {
+    "title": "Mark as Paid: {billName}",
+    "amountLabel": "Amount paid",
+    "notesLabel": "Notes (optional)",
+    "cancel": "Cancel",
+    "confirm": "Mark as Paid",
+    "confirming": "Marking…",
+    "saveFailed": "Failed to record payment."
   },
   "ThemeToggle": {
     "ariaLabel": "Toggle theme"

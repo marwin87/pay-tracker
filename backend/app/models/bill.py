@@ -10,6 +10,7 @@ from app.core.database import Base
 
 class BillFrequency(str, Enum):
     monthly = "monthly"
+    every_2_months = "every_2_months"
     quarterly = "quarterly"
     annual = "annual"
     one_off = "one_off"

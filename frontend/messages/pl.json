@@ -17,12 +17,15 @@
     "alreadyHaveAccount": "Masz już konto?"
   },
   "DashboardLayout": {
+    "payments": "Płatności",
     "bills": "Rachunki",
     "logOut": "Wyloguj się"
   },
   "Dashboard": {
     "title": "Witaj w Pay Tracker",
     "subtitle": "Zarządzaj rachunkami domowymi w jednym miejscu.",
+    "paymentsTitle": "Płatności",
+    "paymentsDesc": "Przeglądaj i oznaczaj rachunki z tego miesiąca jako opłacone",
     "manageBillsTitle": "Zarządzaj rachunkami",
     "manageBillsDesc": "Twórz, edytuj i śledź swoje cykliczne rachunki",
     "archivedBillsTitle": "Zarchiwizowane rachunki",
@@ -46,6 +49,7 @@
     "archived": "Zarchiwizowany",
     "frequency": {
       "monthly": "Miesięcznie",
+      "every_2_months": "Co 2 miesiące",
       "quarterly": "Kwartalnie",
       "annual": "Rocznie",
       "one_off": "Jednorazowo"
@@ -64,6 +68,7 @@
     "frequencyLabel": "Częstotliwość",
     "frequency": {
       "monthly": "Miesięcznie",
+      "every_2_months": "Co 2 miesiące",
       "quarterly": "Kwartalnie",
       "annual": "Rocznie",
       "one_off": "Jednorazowo"
@@ -87,6 +92,7 @@
     "archive": "Archiwizuj",
     "frequency": {
       "monthly": "Miesięcznie",
+      "every_2_months": "Co 2 miesiące",
       "quarterly": "Kwartalnie",
       "annual": "Rocznie",
       "one_off": "Jednorazowo"
@@ -99,8 +105,48 @@
     "archive": "Archiwizuj",
     "archiving": "Archiwizowanie…"
   },
+  "DayPicker": {
+    "placeholder": "Wybierz dzień",
+    "selectedDay": "Dzień {day}",
+    "heading": "Dzień miesiąca",
+    "shortMonthWarning": "Niektóre miesiące mają mniej dni — rachunek przypadnie na ostatni dostępny dzień."
+  },
   "CategoryCombobox": {
     "placeholder": "np. Media"
+  },
+  "PaymentsPage": {
+    "title": "Płatności",
+    "loadError": "Nie udało się załadować płatności.",
+    "noPayments": "Brak rachunków w tym miesiącu",
+    "addBills": "Dodaj rachunki →"
+  },
+  "PaymentRow": {
+    "status": {
+      "upcoming": "Nadchodzące",
+      "overdue": "Zaległe",
+      "paid": "Opłacone"
+    },
+    "markAsPaid": "Oznacz jako opłacone",
+    "paidOn": "Opłacono",
+    "delete": "Usuń płatność"
+  },
+  "DeletePaymentDialog": {
+    "title": "Usunąć tę płatność?",
+    "descriptionRecurring": "Spowoduje to usunięcie wpisu z bieżącego miesiąca oraz wszystkich przyszłych wpisów dla tego cyklicznego rachunku. Rachunek zostanie zarchiwizowany.",
+    "descriptionOneOff": "Ten jednorazowy wpis płatności zostanie trwale usunięty. Tej operacji nie można cofnąć.",
+    "cancel": "Anuluj",
+    "confirm": "Usuń",
+    "deleting": "Usuwanie…",
+    "deleteFailed": "Nie udało się usunąć płatności."
+  },
+  "MarkPaidDialog": {
+    "title": "Oznacz jako opłacone: {billName}",
+    "amountLabel": "Zapłacona kwota",
+    "notesLabel": "Notatki (opcjonalnie)",
+    "cancel": "Anuluj",
+    "confirm": "Oznacz jako opłacone",
+    "confirming": "Zapisywanie…",
+    "saveFailed": "Nie udało się zapisać płatności."
   },
   "ThemeToggle": {
     "ariaLabel": "Przełącz motyw"

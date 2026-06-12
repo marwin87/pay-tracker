@@ -1,0 +1,41 @@
+import { apiFetch } from "./api";
+import type { BillFrequency } from "./bills-api";
+
+export type { BillFrequency };
+export type PaymentStatus = "upcoming" | "overdue" | "paid";
+
+export interface PaymentInstanceOut {
+  id: number;
+  bill_id: number;
+  period: string;
+  due_date: string;
+  amount: string;
+  status: PaymentStatus;
+  paid_at: string | null;
+  paid_amount: string | null;
+  notes: string | null;
+  bill_name: string;
+  currency: string;
+  frequency: BillFrequency;
+}
+
+export function fetchPayments(month: string): Promise<PaymentInstanceOut[]> {
+  return apiFetch<PaymentInstanceOut[]>(
+    `/bills/payments?month=${encodeURIComponent(month)}`,
+  );
+}
+
+export function markPaid(
+  instanceId: number,
+  paidAmount: number,
+  notes?: string,
+): Promise<PaymentInstanceOut> {
+  return apiFetch<PaymentInstanceOut>(`/bills/payments/${instanceId}/pay`, {
+    method: "POST",
+    body: JSON.stringify({ paid_amount: paidAmount, notes: notes ?? null }),
+  });
+}
+
+export function deletePayment(instanceId: number): Promise<void> {
+  return apiFetch<void>(`/bills/payments/${instanceId}`, { method: "DELETE" });
+}
