@@ -9,6 +9,7 @@ class BillTemplateCreate(BaseModel):
     category: str | None = None
     frequency: BillFrequency
     amount: Decimal
+    currency: str = "PLN"
     due_day: int | None = Field(None, ge=1, le=31)
     notes: str | None = None
     is_paused: bool = False
@@ -19,6 +20,7 @@ class BillTemplateUpdate(BaseModel):
     category: str | None = None
     frequency: BillFrequency | None = None
     amount: Decimal | None = None
+    currency: str | None = None
     due_day: int | None = Field(None, ge=1, le=31)
     notes: str | None = None
     is_paused: bool | None = None
@@ -32,6 +34,7 @@ class BillTemplateOut(BaseModel):
     category: str | None
     frequency: BillFrequency
     amount: Decimal
+    currency: str
     due_day: int | None
     notes: str | None
     is_archived: bool

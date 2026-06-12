@@ -95,8 +95,9 @@ household finance manager does not need to check the dashboard proactively.
 
 ### Bill Templates
 
-- FR-003: User can create a bill template with name, amount, category, due day of month,
+- FR-003: User can create a bill template with name, amount, currency, category, due day of month,
   recurrence type, and paused flag. Priority: must-have
+  > Currency is a per-template string (PLN / EUR / USD / custom); default is PLN.
   > Socratic: Category kept as must-have — needed for export reporting and filtering.
 
 - FR-004: User can edit an existing bill template. Priority: must-have

@@ -4,6 +4,8 @@ import { FormEvent, useState } from "react";
 import CategoryCombobox from "./CategoryCombobox";
 import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
 
+const PRESET_CURRENCIES = ["EUR", "PLN", "USD"] as const;
+
 const FREQUENCIES: { value: BillFrequency; label: string }[] = [
   { value: "monthly", label: "Monthly" },
   { value: "quarterly", label: "Quarterly" },
@@ -12,6 +14,8 @@ const FREQUENCIES: { value: BillFrequency; label: string }[] = [
 ];
 
 const DUE_DAY_FREQUENCIES: BillFrequency[] = ["monthly", "quarterly"];
+
+type CurrencyOption = (typeof PRESET_CURRENCIES)[number] | "custom";
 
 interface Props {
   initial?: Partial<BillTemplateCreate>;
@@ -43,6 +47,12 @@ export default function BillTemplateForm({
     initial?.frequency ?? "monthly",
   );
   const [amount, setAmount] = useState(initial?.amount ?? "");
+  const initialCurrency = initial?.currency ?? "EUR";
+  const isPreset = (PRESET_CURRENCIES as readonly string[]).includes(initialCurrency);
+  const [currencyOption, setCurrencyOption] = useState<CurrencyOption>(
+    isPreset ? (initialCurrency as CurrencyOption) : "custom",
+  );
+  const [customCurrency, setCustomCurrency] = useState(isPreset ? "" : initialCurrency);
   const [dueDay, setDueDay] = useState(
     initial?.due_day != null ? String(initial.due_day) : "",
   );
@@ -100,11 +110,14 @@ export default function BillTemplateForm({
     setSaving(true);
     setApiError(null);
     try {
+      const resolvedCurrency =
+        currencyOption === "custom" ? customCurrency.trim().toUpperCase() : currencyOption;
       const payload: BillTemplateCreate = {
         name: name.trim(),
         category: category.trim() || null,
         frequency,
         amount,
+        currency: resolvedCurrency || "EUR",
         due_day: showDueDay && dueDay ? parseInt(dueDay, 10) : null,
         notes: notes.trim() || null,
         is_paused: isPaused,
@@ -143,19 +156,42 @@ export default function BillTemplateForm({
           )}
         </div>
 
-        {/* Amount */}
+        {/* Amount + Currency */}
         <div>
           <label htmlFor="bill-amount" className={labelClass}>
-            Amount (€) <span className="text-red-500">*</span>
+            Amount <span className="text-red-500">*</span>
           </label>
-          <input
-            id="bill-amount"
-            value={amount}
-            onChange={(e) => handleChange(setAmount)(e.target.value)}
-            placeholder="0.00"
-            inputMode="decimal"
-            className={inputClass}
-          />
+          <div className="flex gap-2">
+            <input
+              id="bill-amount"
+              value={amount}
+              onChange={(e) => handleChange(setAmount)(e.target.value)}
+              placeholder="0.00"
+              inputMode="decimal"
+              className={inputClass}
+            />
+            <select
+              aria-label="Currency"
+              value={currencyOption}
+              onChange={(e) => setCurrencyOption(e.target.value as CurrencyOption)}
+              className="w-28 shrink-0 rounded-xl border border-slate-200 bg-white px-2 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-indigo-500 dark:focus:ring-indigo-900/40"
+            >
+              {PRESET_CURRENCIES.map((c) => (
+                <option key={c} value={c}>{c}</option>
+              ))}
+              <option value="custom">Custom…</option>
+            </select>
+          </div>
+          {currencyOption === "custom" && (
+            <input
+              aria-label="Custom currency code"
+              value={customCurrency}
+              onChange={(e) => setCustomCurrency(e.target.value)}
+              placeholder="e.g. CHF"
+              maxLength={10}
+              className={inputClass + " mt-2"}
+            />
+          )}
           {errors.amount && (
             <p className="mt-1 text-xs text-red-500">{errors.amount}</p>
           )}

@@ -39,7 +39,7 @@ export default function BillTemplateRow({
             {template.name}
           </span>
           <span className="font-medium text-indigo-600 dark:text-indigo-400">
-            €{template.amount}
+            {template.amount} {template.currency}
           </span>
           <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-700 dark:text-slate-300">
             {FREQUENCY_LABEL[template.frequency] ?? template.frequency}
@@ -91,6 +91,7 @@ export default function BillTemplateRow({
               category: template.category,
               frequency: template.frequency,
               amount: template.amount,
+              currency: template.currency,
               due_day: template.due_day,
               notes: template.notes,
               is_paused: template.is_paused,

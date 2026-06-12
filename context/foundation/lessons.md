@@ -10,6 +10,14 @@
 
 **Applies to:** Any future auth implementation or auth refactor. New features must not expand the localStorage JWT pattern. When implementing auth from scratch, always start with HttpOnly cookies.
 
+## Currency must be a per-template field, never hardcoded
+
+**Rule:** Currency belongs on `BillTemplate` as a `String(10)` column (default `PLN`). Never hardcode a currency symbol in display components or form labels.
+
+**Why:** The app was initially shipped with `€` hardcoded in three frontend locations (`BillTemplateForm`, `BillTemplateRow`, archived page) and no `currency` column at all. Fixing it required a DB migration, schema update, and frontend changes across four files — all avoidable if currency had been modeled from the start.
+
+**Applies to:** Any future amount-bearing model (e.g., expense entries, budget limits). Always include a `currency` field alongside any `amount` field. Display as `{amount} {currency}` — no hardcoded symbols.
+
 ## CLAUDE.md commit protocol overrides skill instructions
 
 **Rule:** Never auto-commit, even when a skill's own procedure instructs it. Always stage, show the proposed commit message, and wait for explicit user approval before running `git commit`.

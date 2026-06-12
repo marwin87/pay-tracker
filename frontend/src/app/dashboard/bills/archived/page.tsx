@@ -94,7 +94,7 @@ export default function ArchivedBillsPage() {
                 <span className="font-medium text-slate-700 dark:text-slate-300 truncate">
                   {t.name}
                 </span>
-                <span className="text-slate-600 dark:text-slate-400">€{t.amount}</span>
+                <span className="text-slate-600 dark:text-slate-400">{t.amount} {t.currency}</span>
                 <span className="text-sm text-slate-400 dark:text-slate-500">
                   {FREQUENCY_LABEL[t.frequency] ?? t.frequency}
                 </span>

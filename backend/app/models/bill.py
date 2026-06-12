@@ -31,6 +31,7 @@ class BillTemplate(Base):
     category: Mapped[str | None] = mapped_column(String(100))
     frequency: Mapped[BillFrequency] = mapped_column(String(20), nullable=False)
     amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
+    currency: Mapped[str] = mapped_column(String(10), nullable=False, default="PLN")
     due_day: Mapped[int | None] = mapped_column(Integer)  # day-of-month for monthly bills
     notes: Mapped[str | None] = mapped_column(Text)
     is_archived: Mapped[bool] = mapped_column(Boolean, default=False)

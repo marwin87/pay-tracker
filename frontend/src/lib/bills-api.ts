@@ -8,6 +8,7 @@ export interface BillTemplateOut {
   category: string | null;
   frequency: BillFrequency;
   amount: string;
+  currency: string;
   due_day: number | null;
   notes: string | null;
   is_archived: boolean;
@@ -20,6 +21,7 @@ export interface BillTemplateCreate {
   category?: string | null;
   frequency: BillFrequency;
   amount: string;
+  currency?: string;
   due_day?: number | null;
   notes?: string | null;
   is_paused?: boolean;

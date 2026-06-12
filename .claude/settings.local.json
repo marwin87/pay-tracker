@@ -20,7 +20,8 @@
       "Bash(docker-compose down *)",
       "Bash(docker-compose exec *)",
       "Bash(docker-compose logs *)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(docker compose exec *)"
     ],
     "deny": [
       "Bash(rm -rf *)"
