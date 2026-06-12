@@ -1,7 +1,7 @@
 ---
 id: core-payment-tracking-loop
 title: Core Payment Tracking Loop
-status: implemented
+status: impl_reviewed
 created: 2026-06-12
 updated: 2026-06-12
 completed: 2026-06-12
