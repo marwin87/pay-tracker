@@ -169,6 +169,18 @@ household finance manager does not need to check the dashboard proactively.
   > Socratic: Local-first sequencing reduces cloud-provider dependency risk during initial
   > development.
 
+### Localisation
+
+- FR-016: UI is available in English and Polish. The user can switch language via a toggle
+  in the UI. Priority: must-have
+  > Socratic: Two languages cover the primary household (Polish-speaking) and English as
+  > universal fallback. Additional locales deferred to v2.
+
+- FR-017: The user's selected language is persisted per account and restored automatically
+  after login. Priority: must-have
+  > Socratic: Without persistence the user must re-select the language on every session,
+  > which contradicts the "household-first" convenience goal.
+
 ## Non-Functional Requirements
 
 - **Data persistence:** All payment data is retained durably. The user's payment history

@@ -46,6 +46,7 @@ slice only matters if this loop works.
 | S-04 | export-and-backup            | export payment history to .xlsx and download a full JSON backup                   | S-01          | FR-010, FR-011                            | proposed |
 | S-05 | pwa-installability           | install the app from the browser on mobile and desktop in both deployment modes   | S-03          | FR-013                                    | proposed |
 | S-06 | dual-deployment-modes        | run the app identically in local Docker Compose mode and cloud-hosted mode via env-var switching | S-03 | FR-014, FR-015                  | proposed |
+| S-07 | language-support             | switch the UI between English and Polish; preference is saved per account and restored after login | S-01 | FR-016, FR-017                 | planned  |
 
 ## Streams
 
@@ -56,6 +57,7 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | A      | Core tracking loop     | `F-01` → `S-01` → `S-02` → `S-03`         | The must-have path to the north star; every other stream branches off this one.       |
 | B      | Data portability       | `S-01` → `S-04`                            | Parallel with S-02; backend export already scaffolded — just needs a frontend button. |
 | C      | Ship & deploy          | `S-03` → `S-05` / `S-06`                  | Both run after the north star lands; S-05 and S-06 are parallel with each other.      |
+| D      | Localisation           | `S-01` → `S-07`                            | Independent of the core loop; can run in parallel with any other stream after S-01.   |
 
 ## Baseline
 
@@ -171,6 +173,20 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** DEPLOY_MODE switching is already an architectural commitment (AGENTS.md hard rule: no DEPLOY_MODE-specific logic in new code; env vars only). The risk is that some code path written during S-01–S-03 inadvertently introduces mode-specific branching. Sequenced last so the full app is exercised in local mode before cloud compatibility is tested.
 - **Status:** proposed
 
+### S-07: Language support
+
+- **Outcome:** user can switch the UI between English and Polish via a toggle in the dashboard nav bar; the selected language is detected automatically from the browser on first use and restored from the user's account on subsequent logins.
+- **Change ID:** language-support
+- **PRD refs:** FR-016, FR-017
+- **Prerequisites:** S-01 (per-user persistence requires auth and a `/auth/me` endpoint built on the existing JWT infrastructure)
+- **Parallel with:** S-02, S-03, S-04, S-05, S-06 — no data dependencies on any other slice
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** All ~80 user-visible strings must be extracted from 13 files; a missing translation key causes a runtime error in next-intl, so message files must be complete before Phase 3 ships. Plan is at `context/changes/language-support/plan.md`.
+- **Status:** planned
+
+---
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                  | Suggested issue title                                        | Ready for `/10x-plan` | Notes                                          |
@@ -182,6 +198,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-04       | export-and-backup          | Frontend: .xlsx export and JSON backup download              | no                    | Needs S-01 done; can run parallel with S-02    |
 | S-05       | pwa-installability         | PWA manifest, service worker, 375px layout verification      | no                    | Needs S-03 done first                          |
 | S-06       | dual-deployment-modes      | Verify local + cloud env-var switching end-to-end            | no                    | Needs S-03 done; Supabase project required     |
+| S-07       | language-support           | EN/PL i18n: next-intl, language toggle, per-user persistence | yes                   | Plan ready; run `/10x-implement language-support phase 1` |
 
 ## Open Roadmap Questions
 
