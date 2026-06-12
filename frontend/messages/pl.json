@@ -1,0 +1,113 @@
+{
+  "Auth": {
+    "loginSubtitle": "Zaloguj się na swoje konto domowe",
+    "registerSubtitle": "Utwórz konto domowe",
+    "emailLabel": "E-mail",
+    "passwordLabel": "Hasło",
+    "passwordHint": "Minimum 8 znaków",
+    "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków",
+    "signIn": "Zaloguj się",
+    "signingIn": "Logowanie…",
+    "loginFailed": "Logowanie nie powiodło się",
+    "noAccount": "Nie masz konta?",
+    "register": "Zarejestruj się",
+    "createAccount": "Utwórz konto",
+    "creatingAccount": "Tworzenie konta…",
+    "registrationFailed": "Rejestracja nie powiodła się",
+    "alreadyHaveAccount": "Masz już konto?"
+  },
+  "DashboardLayout": {
+    "bills": "Rachunki",
+    "logOut": "Wyloguj się"
+  },
+  "Dashboard": {
+    "title": "Witaj w Pay Tracker",
+    "subtitle": "Zarządzaj rachunkami domowymi w jednym miejscu.",
+    "manageBillsTitle": "Zarządzaj rachunkami",
+    "manageBillsDesc": "Twórz, edytuj i śledź swoje cykliczne rachunki",
+    "archivedBillsTitle": "Zarchiwizowane rachunki",
+    "archivedBillsDesc": "Przeglądaj historię płatności"
+  },
+  "BillsPage": {
+    "title": "Twoje rachunki",
+    "newBill": "Nowy rachunek",
+    "cancel": "Anuluj",
+    "loadError": "Nie udało się załadować rachunków.",
+    "noBillsYet": "Brak rachunków",
+    "addFirstBill": "Dodaj pierwszy rachunek"
+  },
+  "ArchivedBillsPage": {
+    "backToActive": "← Aktywne rachunki",
+    "title": "Zarchiwizowane rachunki",
+    "subtitle": "Historia płatności jest zachowana dla wszystkich zarchiwizowanych rachunków.",
+    "loadError": "Nie udało się załadować zarchiwizowanych rachunków.",
+    "noArchivedBills": "Brak zarchiwizowanych rachunków",
+    "willAppearHere": "Tutaj pojawią się zarchiwizowane rachunki",
+    "archived": "Zarchiwizowany",
+    "frequency": {
+      "monthly": "Miesięcznie",
+      "quarterly": "Kwartalnie",
+      "annual": "Rocznie",
+      "one_off": "Jednorazowo"
+    }
+  },
+  "BillTemplateForm": {
+    "nameLabel": "Nazwa",
+    "namePlaceholder": "np. Prąd",
+    "nameRequired": "Nazwa jest wymagana.",
+    "amountLabel": "Kwota",
+    "amountPositive": "Podaj kwotę dodatnią.",
+    "currencyAriaLabel": "Waluta",
+    "customOption": "Inna…",
+    "customCurrencyAriaLabel": "Kod waluty niestandardowej",
+    "customCurrencyPlaceholder": "np. CHF",
+    "frequencyLabel": "Częstotliwość",
+    "frequency": {
+      "monthly": "Miesięcznie",
+      "quarterly": "Kwartalnie",
+      "annual": "Rocznie",
+      "one_off": "Jednorazowo"
+    },
+    "dueDayLabel": "Dzień miesiąca płatności",
+    "dueDayRange": "Musi być między 1 a 31.",
+    "categoryLabel": "Kategoria",
+    "notesLabel": "Notatki",
+    "notesPlaceholder": "Opcjonalne notatki",
+    "pauseRecurrence": "Wstrzymaj cykl (brak nowych instancji)",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "saving": "Zapisywanie…",
+    "saveFailed": "Zapis nie powiódł się."
+  },
+  "BillTemplateRow": {
+    "day": "dzień",
+    "paused": "Wstrzymany",
+    "close": "Zamknij",
+    "edit": "Edytuj",
+    "archive": "Archiwizuj",
+    "frequency": {
+      "monthly": "Miesięcznie",
+      "quarterly": "Kwartalnie",
+      "annual": "Rocznie",
+      "one_off": "Jednorazowo"
+    }
+  },
+  "ArchiveConfirmDialog": {
+    "title": "Zarchiwizować „{billName}”?",
+    "description": "Ten rachunek zostanie ukryty z aktywnej listy. Historia płatności zostanie zachowana i będzie dostępna w widoku zarchiwizowanych.",
+    "cancel": "Anuluj",
+    "archive": "Archiwizuj",
+    "archiving": "Archiwizowanie…"
+  },
+  "CategoryCombobox": {
+    "placeholder": "np. Media"
+  },
+  "ThemeToggle": {
+    "ariaLabel": "Przełącz motyw"
+  },
+  "LanguageToggle": {
+    "ariaLabel": "Zmień język",
+    "label": "Język:",
+    "name": "Polski"
+  }
+}

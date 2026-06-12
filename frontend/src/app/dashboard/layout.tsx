@@ -4,11 +4,13 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Wallet, Receipt, LogOut } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import ThemeToggle from "@/components/ThemeToggle";
+import LanguageToggle from "@/components/LanguageToggle";
 
 const NAV_ITEMS = [
-  { href: "/dashboard/bills", label: "Bills", icon: Receipt },
+  { href: "/dashboard/bills", labelKey: "bills" as const, icon: Receipt },
 ];
 
 export default function DashboardLayout({
@@ -17,6 +19,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { isAuthenticated, logout } = useAuth();
+  const t = useTranslations("DashboardLayout");
   const router = useRouter();
   const pathname = usePathname();
 
@@ -42,7 +45,7 @@ export default function DashboardLayout({
 
           {/* Nav links */}
           <nav className="flex flex-1 items-center gap-1 ml-4">
-            {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+            {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
               const active =
                 pathname === href || pathname.startsWith(href + "/");
               return (
@@ -56,7 +59,7 @@ export default function DashboardLayout({
                   }`}
                 >
                   <Icon size={15} />
-                  {label}
+                  {t(labelKey)}
                 </Link>
               );
             })}
@@ -64,14 +67,15 @@ export default function DashboardLayout({
 
           {/* Right side */}
           <div className="flex items-center gap-1">
+            <LanguageToggle />
             <ThemeToggle />
             <button
               onClick={logout}
-              aria-label="Log out"
+              aria-label={t("logOut")}
               className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
             >
               <LogOut size={15} />
-              <span className="hidden sm:inline">Log out</span>
+              <span className="hidden sm:inline">{t("logOut")}</span>
             </button>
           </div>
         </div>

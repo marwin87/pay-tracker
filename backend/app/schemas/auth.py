@@ -14,3 +14,14 @@ class LoginRequest(BaseModel):
 class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
+
+
+class UserProfileOut(BaseModel):
+    model_config = {"from_attributes": True}
+
+    email: EmailStr
+    language_preference: str | None
+
+
+class UserProfileUpdate(BaseModel):
+    language_preference: str | None = None

@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { Receipt, Archive } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function DashboardPage() {
+  const t = useTranslations("Dashboard");
   return (
     <div className="mx-auto max-w-4xl px-4 py-10">
       <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100 mb-1">
-        Welcome to Pay Tracker
+        {t("title")}
       </h1>
       <p className="text-slate-500 dark:text-slate-400 mb-8">
-        Manage your household bills in one place.
+        {t("subtitle")}
       </p>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -23,10 +25,10 @@ export default function DashboardPage() {
           </div>
           <div>
             <h2 className="font-semibold text-slate-800 dark:text-slate-100">
-              Manage Bills
+              {t("manageBillsTitle")}
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-              Create, edit, and track your recurring bills
+              {t("manageBillsDesc")}
             </p>
           </div>
         </Link>
@@ -40,10 +42,10 @@ export default function DashboardPage() {
           </div>
           <div>
             <h2 className="font-semibold text-slate-800 dark:text-slate-100">
-              Archived Bills
+              {t("archivedBillsTitle")}
             </h2>
             <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-              View past bills and payment history
+              {t("archivedBillsDesc")}
             </p>
           </div>
         </Link>

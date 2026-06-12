@@ -3,16 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Archive } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { fetchBills, type BillTemplateOut } from "@/lib/bills-api";
 
-const FREQUENCY_LABEL: Record<string, string> = {
-  monthly: "Monthly",
-  quarterly: "Quarterly",
-  annual: "Annual",
-  one_off: "One-off",
-};
-
 export default function ArchivedBillsPage() {
+  const t = useTranslations("ArchivedBillsPage");
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -28,14 +23,14 @@ export default function ArchivedBillsPage() {
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setLoadError(err instanceof Error ? err.message : "Failed to load archived bills.");
+          setLoadError(err instanceof Error ? err.message : t("loadError"));
           setLoading(false);
         }
       });
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [t]);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
@@ -44,13 +39,13 @@ export default function ArchivedBillsPage() {
           href="/dashboard/bills"
           className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
         >
-          ← Active bills
+          {t("backToActive")}
         </Link>
         <h1 className="mt-1 text-2xl font-semibold text-slate-800 dark:text-slate-100">
-          Archived Bills
+          {t("title")}
         </h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          Payment history is preserved for all archived bills.
+          {t("subtitle")}
         </p>
       </div>
 
@@ -76,36 +71,36 @@ export default function ArchivedBillsPage() {
           <div className="mb-3 rounded-full bg-slate-100 dark:bg-slate-700 p-4 text-slate-400">
             <Archive size={28} />
           </div>
-          <p className="font-medium text-slate-700 dark:text-slate-300">No archived bills</p>
+          <p className="font-medium text-slate-700 dark:text-slate-300">{t("noArchivedBills")}</p>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Bills you archive will appear here
+            {t("willAppearHere")}
           </p>
         </div>
       )}
 
       {!loading && templates.length > 0 && (
         <div className="flex flex-col gap-2">
-          {templates.map((t) => (
+          {templates.map((tmpl) => (
             <div
-              key={t.id}
+              key={tmpl.id}
               className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 opacity-70 dark:bg-slate-800 dark:border-slate-700"
             >
               <div className="flex flex-1 flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
                 <span className="font-medium text-slate-700 dark:text-slate-300 truncate">
-                  {t.name}
+                  {tmpl.name}
                 </span>
-                <span className="text-slate-600 dark:text-slate-400">{t.amount} {t.currency}</span>
+                <span className="text-slate-600 dark:text-slate-400">{tmpl.amount} {tmpl.currency}</span>
                 <span className="text-sm text-slate-400 dark:text-slate-500">
-                  {FREQUENCY_LABEL[t.frequency] ?? t.frequency}
+                  {t(`frequency.${tmpl.frequency}` as never) ?? tmpl.frequency}
                 </span>
-                {t.category && (
+                {tmpl.category && (
                   <span className="text-sm text-slate-400 dark:text-slate-500">
-                    {t.category}
+                    {tmpl.category}
                   </span>
                 )}
               </div>
               <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
-                Archived
+                {t("archived")}
               </span>
             </div>
           ))}

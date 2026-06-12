@@ -4,6 +4,7 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Wallet } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { apiFetch, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 
@@ -13,6 +14,7 @@ const inputClass =
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
+  const t = useTranslations("Auth");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -33,7 +35,7 @@ export default function LoginPage() {
       login(data.access_token);
       router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Login failed");
+      setError(err instanceof Error ? err.message : t("loginFailed"));
     } finally {
       setLoading(false);
     }
@@ -51,7 +53,7 @@ export default function LoginPage() {
             Pay Tracker
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Sign in to your household account
+            {t("loginSubtitle")}
           </p>
         </div>
 
@@ -62,7 +64,7 @@ export default function LoginPage() {
                 htmlFor="email"
                 className="text-sm font-medium text-slate-700 dark:text-slate-300"
               >
-                Email
+                {t("emailLabel")}
               </label>
               <input
                 id="email"
@@ -79,7 +81,7 @@ export default function LoginPage() {
                 htmlFor="password"
                 className="text-sm font-medium text-slate-700 dark:text-slate-300"
               >
-                Password
+                {t("passwordLabel")}
               </label>
               <input
                 id="password"
@@ -102,18 +104,18 @@ export default function LoginPage() {
               disabled={loading}
               className="mt-1 rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50 transition-colors"
             >
-              {loading ? "Signing in…" : "Sign in"}
+              {loading ? t("signingIn") : t("signIn")}
             </button>
           </form>
         </div>
 
         <p className="mt-5 text-center text-sm text-slate-500 dark:text-slate-400">
-          No account?{" "}
+          {t("noAccount")}{" "}
           <Link
             href="/register"
             className="font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
           >
-            Register
+            {t("register")}
           </Link>
         </p>
       </div>

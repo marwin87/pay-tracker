@@ -4,6 +4,7 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Wallet } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { apiFetch, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 
@@ -13,6 +14,7 @@ const inputClass =
 export default function RegisterPage() {
   const router = useRouter();
   const { login } = useAuth();
+  const t = useTranslations("Auth");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +28,7 @@ export default function RegisterPage() {
     const password = form.get("password") as string;
 
     if (password.length < 8) {
-      setError("Password must be at least 8 characters");
+      setError(t("passwordTooShort"));
       setLoading(false);
       return;
     }
@@ -39,7 +41,7 @@ export default function RegisterPage() {
       login(data.access_token);
       router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed");
+      setError(err instanceof Error ? err.message : t("registrationFailed"));
     } finally {
       setLoading(false);
     }
@@ -57,7 +59,7 @@ export default function RegisterPage() {
             Pay Tracker
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">
-            Create your household account
+            {t("registerSubtitle")}
           </p>
         </div>
 
@@ -68,7 +70,7 @@ export default function RegisterPage() {
                 htmlFor="email"
                 className="text-sm font-medium text-slate-700 dark:text-slate-300"
               >
-                Email
+                {t("emailLabel")}
               </label>
               <input
                 id="email"
@@ -85,7 +87,7 @@ export default function RegisterPage() {
                 htmlFor="password"
                 className="text-sm font-medium text-slate-700 dark:text-slate-300"
               >
-                Password
+                {t("passwordLabel")}
               </label>
               <input
                 id="password"
@@ -96,7 +98,7 @@ export default function RegisterPage() {
                 className={inputClass}
               />
               <p className="text-xs text-slate-400 dark:text-slate-500">
-                Minimum 8 characters
+                {t("passwordHint")}
               </p>
             </div>
 
@@ -111,18 +113,18 @@ export default function RegisterPage() {
               disabled={loading}
               className="mt-1 rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50 transition-colors"
             >
-              {loading ? "Creating account…" : "Create account"}
+              {loading ? t("creatingAccount") : t("createAccount")}
             </button>
           </form>
         </div>
 
         <p className="mt-5 text-center text-sm text-slate-500 dark:text-slate-400">
-          Already have an account?{" "}
+          {t("alreadyHaveAccount")}{" "}
           <Link
             href="/login"
             className="font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
           >
-            Sign in
+            {t("signIn")}
           </Link>
         </p>
       </div>

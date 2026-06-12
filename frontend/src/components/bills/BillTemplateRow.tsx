@@ -1,15 +1,9 @@
 "use client";
 
 import { Pencil, Archive as ArchiveIcon, ChevronUp, PauseCircle } from "lucide-react";
+import { useTranslations } from "next-intl";
 import BillTemplateForm from "./BillTemplateForm";
 import type { BillTemplateOut, BillTemplateUpdate } from "@/lib/bills-api";
-
-const FREQUENCY_LABEL: Record<string, string> = {
-  monthly: "Monthly",
-  quarterly: "Quarterly",
-  annual: "Annual",
-  one_off: "One-off",
-};
 
 interface Props {
   template: BillTemplateOut;
@@ -28,6 +22,7 @@ export default function BillTemplateRow({
   onSave,
   onArchive,
 }: Props) {
+  const t = useTranslations("BillTemplateRow");
   return (
     <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm dark:bg-slate-800 dark:border-slate-700">
       {/* Collapsed row */}
@@ -42,11 +37,11 @@ export default function BillTemplateRow({
             {template.amount} {template.currency}
           </span>
           <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-700 dark:text-slate-300">
-            {FREQUENCY_LABEL[template.frequency] ?? template.frequency}
+            {t(`frequency.${template.frequency}` as never) ?? template.frequency}
           </span>
           {template.due_day != null && (
             <span className="text-sm text-slate-400 dark:text-slate-500">
-              day&nbsp;{template.due_day}
+              {t("day")}&nbsp;{template.due_day}
             </span>
           )}
           {template.category && (
@@ -57,7 +52,7 @@ export default function BillTemplateRow({
           {template.is_paused && (
             <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
               <PauseCircle size={11} />
-              Paused
+              {t("paused")}
             </span>
           )}
         </div>
@@ -65,19 +60,19 @@ export default function BillTemplateRow({
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEditToggle}
-            aria-label={isExpanded ? "Close" : "Edit"}
+            aria-label={isExpanded ? t("close") : t("edit")}
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-500 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900/30 dark:hover:text-indigo-300 transition-colors"
           >
             {isExpanded ? <ChevronUp size={15} /> : <Pencil size={15} />}
-            <span className="hidden sm:inline">{isExpanded ? "Close" : "Edit"}</span>
+            <span className="hidden sm:inline">{isExpanded ? t("close") : t("edit")}</span>
           </button>
           <button
             onClick={onArchive}
-            aria-label="Archive"
+            aria-label={t("archive")}
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
           >
             <ArchiveIcon size={15} />
-            <span className="hidden sm:inline">Archive</span>
+            <span className="hidden sm:inline">{t("archive")}</span>
           </button>
         </div>
       </div>

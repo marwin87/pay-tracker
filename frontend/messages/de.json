@@ -1,0 +1,113 @@
+{
+  "Auth": {
+    "loginSubtitle": "Melden Sie sich bei Ihrem Haushaltskonto an",
+    "registerSubtitle": "Haushaltskonto erstellen",
+    "emailLabel": "E-Mail",
+    "passwordLabel": "Passwort",
+    "passwordHint": "Mindestens 8 Zeichen",
+    "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein",
+    "signIn": "Anmelden",
+    "signingIn": "Anmeldung…",
+    "loginFailed": "Anmeldung fehlgeschlagen",
+    "noAccount": "Noch kein Konto?",
+    "register": "Registrieren",
+    "createAccount": "Konto erstellen",
+    "creatingAccount": "Konto wird erstellt…",
+    "registrationFailed": "Registrierung fehlgeschlagen",
+    "alreadyHaveAccount": "Bereits ein Konto?"
+  },
+  "DashboardLayout": {
+    "bills": "Rechnungen",
+    "logOut": "Abmelden"
+  },
+  "Dashboard": {
+    "title": "Willkommen bei Pay Tracker",
+    "subtitle": "Verwalten Sie Ihre Haushaltsrechnungen an einem Ort.",
+    "manageBillsTitle": "Rechnungen verwalten",
+    "manageBillsDesc": "Erstellen, bearbeiten und verfolgen Sie Ihre wiederkehrenden Rechnungen",
+    "archivedBillsTitle": "Archivierte Rechnungen",
+    "archivedBillsDesc": "Vergangene Rechnungen und Zahlungshistorie anzeigen"
+  },
+  "BillsPage": {
+    "title": "Ihre Rechnungen",
+    "newBill": "Neue Rechnung",
+    "cancel": "Abbrechen",
+    "loadError": "Rechnungen konnten nicht geladen werden.",
+    "noBillsYet": "Noch keine Rechnungen",
+    "addFirstBill": "Erste Rechnung hinzufügen"
+  },
+  "ArchivedBillsPage": {
+    "backToActive": "← Aktive Rechnungen",
+    "title": "Archivierte Rechnungen",
+    "subtitle": "Die Zahlungshistorie aller archivierten Rechnungen bleibt erhalten.",
+    "loadError": "Archivierte Rechnungen konnten nicht geladen werden.",
+    "noArchivedBills": "Keine archivierten Rechnungen",
+    "willAppearHere": "Archivierte Rechnungen erscheinen hier",
+    "archived": "Archiviert",
+    "frequency": {
+      "monthly": "Monatlich",
+      "quarterly": "Vierteljährlich",
+      "annual": "Jährlich",
+      "one_off": "Einmalig"
+    }
+  },
+  "BillTemplateForm": {
+    "nameLabel": "Name",
+    "namePlaceholder": "z. B. Strom",
+    "nameRequired": "Name ist erforderlich.",
+    "amountLabel": "Betrag",
+    "amountPositive": "Bitte einen positiven Betrag eingeben.",
+    "currencyAriaLabel": "Währung",
+    "customOption": "Andere…",
+    "customCurrencyAriaLabel": "Benutzerdefinierter Währungscode",
+    "customCurrencyPlaceholder": "z. B. CHF",
+    "frequencyLabel": "Häufigkeit",
+    "frequency": {
+      "monthly": "Monatlich",
+      "quarterly": "Vierteljährlich",
+      "annual": "Jährlich",
+      "one_off": "Einmalig"
+    },
+    "dueDayLabel": "Fälligkeitstag im Monat",
+    "dueDayRange": "Muss zwischen 1 und 31 liegen.",
+    "categoryLabel": "Kategorie",
+    "notesLabel": "Notizen",
+    "notesPlaceholder": "Optionale Notizen",
+    "pauseRecurrence": "Wiederholung pausieren (keine neuen Instanzen)",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "saving": "Speichern…",
+    "saveFailed": "Speichern fehlgeschlagen."
+  },
+  "BillTemplateRow": {
+    "day": "Tag",
+    "paused": "Pausiert",
+    "close": "Schließen",
+    "edit": "Bearbeiten",
+    "archive": "Archivieren",
+    "frequency": {
+      "monthly": "Monatlich",
+      "quarterly": "Vierteljährlich",
+      "annual": "Jährlich",
+      "one_off": "Einmalig"
+    }
+  },
+  "ArchiveConfirmDialog": {
+    "title": "„{billName}“ archivieren?",
+    "description": "Diese Rechnung wird aus der aktiven Liste ausgeblendet. Die Zahlungshistorie bleibt erhalten und ist in der archivierten Ansicht zugänglich.",
+    "cancel": "Abbrechen",
+    "archive": "Archivieren",
+    "archiving": "Archivierung…"
+  },
+  "CategoryCombobox": {
+    "placeholder": "z. B. Nebenkosten"
+  },
+  "ThemeToggle": {
+    "ariaLabel": "Design umschalten"
+  },
+  "LanguageToggle": {
+    "ariaLabel": "Sprache wechseln",
+    "label": "Sprache:",
+    "name": "Deutsch"
+  }
+}

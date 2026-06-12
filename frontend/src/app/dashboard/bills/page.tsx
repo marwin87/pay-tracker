@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
+import { useTranslations } from "next-intl";
 import {
   fetchBills,
   createBill,
@@ -16,6 +17,7 @@ import BillTemplateRow from "@/components/bills/BillTemplateRow";
 import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
 
 export default function BillsPage() {
+  const t = useTranslations("BillsPage");
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -36,14 +38,14 @@ export default function BillsPage() {
       })
       .catch((err: unknown) => {
         if (!cancelled) {
-          setLoadError(err instanceof Error ? err.message : "Failed to load bills.");
+          setLoadError(err instanceof Error ? err.message : t("loadError"));
           setLoading(false);
         }
       });
     return () => {
       cancelled = true;
     };
-  }, [refreshKey]);
+  }, [refreshKey, t]);
 
   const categorySuggestions = Array.from(
     new Set(templates.map((t) => t.category).filter((c): c is string => c !== null)),
@@ -106,14 +108,14 @@ export default function BillsPage() {
       {/* Page header */}
       <div className="mb-6 flex items-center justify-between gap-4">
         <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
-          Your Bills
+          {t("title")}
         </h1>
         <button
           onClick={() => toggleExpand("new")}
           className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800 transition-colors"
         >
           <Plus size={16} />
-          {expandedId === "new" ? "Cancel" : "New Bill"}
+          {expandedId === "new" ? t("cancel") : t("newBill")}
         </button>
       </div>
 
@@ -140,15 +142,15 @@ export default function BillsPage() {
           <div className="mb-3 rounded-full bg-indigo-100 dark:bg-indigo-900/30 p-4 text-indigo-500">
             <Plus size={28} />
           </div>
-          <p className="font-medium text-slate-700 dark:text-slate-300">No bills yet</p>
+          <p className="font-medium text-slate-700 dark:text-slate-300">{t("noBillsYet")}</p>
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Add your first bill to get started
+            {t("addFirstBill")}
           </p>
           <button
             onClick={() => toggleExpand("new")}
             className="mt-4 rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors"
           >
-            Add your first bill
+            {t("addFirstBill")}
           </button>
         </div>
       ) : (

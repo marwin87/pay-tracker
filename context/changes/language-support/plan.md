@@ -319,52 +319,52 @@ Existing users will have `language_preference = null` after the migration. The `
 
 #### Automated
 
-- [ ] 1.1 Migration generates cleanly (no unexpected diffs)
-- [ ] 1.2 Migration applies: `alembic upgrade head`
-- [ ] 1.3 Backend starts without errors after rebuild
+- [x] 1.1 Migration generates cleanly (no unexpected diffs)
+- [x] 1.2 Migration applies: `alembic upgrade head`
+- [x] 1.3 Backend starts without errors after rebuild
 
 #### Manual
 
-- [ ] 1.4 `GET /auth/me` returns `language_preference: null` for existing user
-- [ ] 1.5 `PATCH /auth/me` updates and returns the new preference
-- [ ] 1.6 Unauthenticated `GET /auth/me` returns 401
+- [x] 1.4 `GET /auth/me` returns `language_preference: null` for existing user
+- [x] 1.5 `PATCH /auth/me` updates and returns the new preference
+- [x] 1.6 Unauthenticated `GET /auth/me` returns 401
 
 ### Phase 2: Frontend i18n Infrastructure
 
 #### Automated
 
-- [ ] 2.1 `npm install` completes without errors
-- [ ] 2.2 `npm run lint` passes
-- [ ] 2.3 `npx tsc --noEmit` passes
+- [x] 2.1 `npm install` completes without errors
+- [x] 2.2 `npm run lint` passes
+- [x] 2.3 `npx tsc --noEmit` passes
 
 #### Manual
 
-- [ ] 2.4 App loads without console errors
-- [ ] 2.5 `document.documentElement.lang` reflects browser language
-- [ ] 2.6 `useTranslations()` does not throw in a test component
+- [x] 2.4 App loads without console errors
+- [x] 2.5 `document.documentElement.lang` reflects browser language
+- [x] 2.6 `useTranslations()` does not throw in a test component
 
 ### Phase 3: Replace Hardcoded Strings
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes across all 13 modified files
-- [ ] 3.2 `npx tsc --noEmit` passes
+- [x] 3.1 `npm run lint` passes across all 13 modified files
+- [x] 3.2 `npx tsc --noEmit` passes
 
 #### Manual
 
-- [ ] 3.3 App renders fully in English with no missing keys
-- [ ] 3.4 Hardcoded `"pl"` in LocaleProvider shows all strings in Polish
+- [x] 3.3 App renders fully in English with no missing keys
+- [x] 3.4 Hardcoded `"pl"` in LocaleProvider shows all strings in Polish
 
 ### Phase 4: Language Switcher UI
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` passes
-- [ ] 4.2 `npx tsc --noEmit` passes
+- [x] 4.1 `npm run lint` passes
+- [x] 4.2 `npx tsc --noEmit` passes
 
 #### Manual
 
-- [ ] 4.3 Toggle appears in dashboard header alongside ThemeToggle
-- [ ] 4.4 Switching language updates all strings immediately
-- [ ] 4.5 Preference persists across page refresh
-- [ ] 4.6 Preference restored after login from a different session
+- [x] 4.3 Toggle appears in dashboard header alongside ThemeToggle
+- [x] 4.4 Switching language updates all strings immediately
+- [x] 4.5 Preference persists across page refresh
+- [x] 4.6 Preference restored after login from a different session

@@ -1,9 +1,10 @@
 ---
 change_id: language-support
 title: Language support
-status: planned
+status: implemented
 created: 2026-06-12
 updated: 2026-06-12
+
 archived_at: null
 ---
 
