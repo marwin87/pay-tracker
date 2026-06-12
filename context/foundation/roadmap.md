@@ -41,7 +41,7 @@ slice only matters if this loop works.
 | ---- | ---------------------------- | --------------------------------------------------------------------------------- | ------------- | ----------------------------------------- | -------- |
 | F-01 | db-schema-migration          | (foundation) DB schema migrated to head; tables for users, bill_templates, payment_instances exist | — | NFR data-persistence                 | done     |
 | S-01 | auth-ui                      | register and log in via the Next.js frontend                                      | F-01          | FR-001, FR-002                            | done     |
-| S-02 | bill-template-management     | create, edit, and archive bill templates via UI                                   | S-01          | FR-003, FR-004, FR-005                    | proposed |
+| S-02 | bill-template-management     | create, edit, and archive bill templates via UI                                   | S-01          | FR-003, FR-004, FR-005                    | done     |
 | S-03 | core-payment-tracking-loop   | view payment instances by due date, mark them paid with amount override, and watch next month's instance auto-appear | S-01, S-02 | US-01, FR-006, FR-007, FR-008, FR-009 | proposed |
 | S-04 | export-and-backup            | export payment history to .xlsx and download a full JSON backup                   | S-01          | FR-010, FR-011                            | proposed |
 | S-05 | pwa-installability           | install the app from the browser on mobile and desktop in both deployment modes   | S-03          | FR-013                                    | proposed |
@@ -110,7 +110,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Backend bills router is already scaffolded (`backend/app/routers/bills.py`, 112 lines); this slice is primarily a frontend CRUD form and list. Sequenced before the payment loop (S-03) because instances cannot be generated without templates. Main risk: the "paused" flag and "archive" soft-delete semantics must be wired consistently between model, API, and UI — an inconsistency here would break FR-009 suppression logic downstream.
-- **Status:** proposed
+- **Status:** done
 
 ---
 
@@ -202,3 +202,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **F-01: (foundation) DB schema migrated to head; tables for users, bill_templates, payment_instances exist** — Archived 2026-06-11 → `context/archive/2026-06-11-db-schema-migration/`. Lesson: —.
 - **S-01: user can register with email and password and log in via the Next.js frontend; a valid JWT is stored in the browser and sent on subsequent API calls.** — Archived 2026-06-12 → `context/archive/2026-06-12-auth-ui/`. Lesson: —.
+- **S-02: create, edit, and archive bill templates via UI** — Archived 2026-06-12 → `context/archive/2026-06-12-bill-template-management/`. Lesson: —.
