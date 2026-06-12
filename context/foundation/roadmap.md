@@ -42,7 +42,7 @@ slice only matters if this loop works.
 | F-01 | db-schema-migration          | (foundation) DB schema migrated to head; tables for users, bill_templates, payment_instances exist | — | NFR data-persistence                 | done     |
 | S-01 | auth-ui                      | register and log in via the Next.js frontend                                      | F-01          | FR-001, FR-002                            | done     |
 | S-02 | bill-template-management     | create, edit, and archive bill templates via UI                                   | S-01          | FR-003, FR-004, FR-005                    | done     |
-| S-03 | core-payment-tracking-loop   | view payment instances by due date, mark them paid with amount override, and watch next month's instance auto-appear | S-01, S-02 | US-01, FR-006, FR-007, FR-008, FR-009 | proposed |
+| S-03 | core-payment-tracking-loop   | view payment instances by due date, mark them paid with amount override, and watch next month's instance auto-appear | S-01, S-02 | US-01, FR-006, FR-007, FR-008, FR-009 | done     |
 | S-04 | export-and-backup            | export payment history to .xlsx and download a full JSON backup                   | S-01          | FR-010, FR-011                            | proposed |
 | S-05 | pwa-installability           | install the app from the browser on mobile and desktop in both deployment modes   | S-03          | FR-013                                    | proposed |
 | S-06 | dual-deployment-modes        | run the app identically in local Docker Compose mode and cloud-hosted mode via env-var switching | S-03 | FR-014, FR-015                  | proposed |
@@ -127,7 +127,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Does `backend/app/services/recurrence.py` already implement FR-006 (idempotent instance generation) and FR-009 (auto-create next period on paid)? — Owner: user. Block: no (planning can proceed; implementation will read the file and complete or extend it).
 - **Risk:** This is the most complex slice — it exercises the two domain rules simultaneously (status classification + recurrence automation). The idempotency key `(bill_id, period)` must be enforced at the DB constraint level to prevent duplicate instances at month boundaries (see AGENTS.md hard rule). Sequenced after template management because instances are derived from templates.
-- **Status:** proposed
+- **Status:** done
 
 ---
 
@@ -221,3 +221,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-01: user can register with email and password and log in via the Next.js frontend; a valid JWT is stored in the browser and sent on subsequent API calls.** — Archived 2026-06-12 → `context/archive/2026-06-12-auth-ui/`. Lesson: —.
 - **S-02: create, edit, and archive bill templates via UI** — Archived 2026-06-12 → `context/archive/2026-06-12-bill-template-management/`. Lesson: —.
 - **S-07: user can switch the UI between English and Polish via a toggle in the dashboard nav bar; the selected language is detected automatically from the browser on first use and restored from the user's account on subsequent logins.** — Archived 2026-06-12 → `context/archive/2026-06-12-language-support/`. Lesson: —.
+- **S-03: user can view a unified payment list sorted by due date with status indicators (upcoming / overdue / paid), mark a payment instance as paid with the amount defaulting to the template amount (overridable), and watch the next month's instance appear automatically on the dashboard** — Archived 2026-06-12 → `context/archive/2026-06-12-core-payment-tracking-loop/`. Lesson: —.

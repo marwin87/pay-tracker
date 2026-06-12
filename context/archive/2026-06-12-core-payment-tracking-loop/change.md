@@ -1,9 +1,10 @@
 ---
 id: core-payment-tracking-loop
 title: Core Payment Tracking Loop
-status: impl_reviewed
+status: archived
 created: 2026-06-12
 updated: 2026-06-12
+archived_at: 2026-06-12T15:15:20Z
 completed: 2026-06-12
 roadmap_ref: S-03
 prd_refs: US-01, FR-006, FR-007, FR-008, FR-009
