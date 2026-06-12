@@ -1,9 +1,10 @@
 ---
 id: auth-ui
 title: Auth UI — Login, Register, Session Management
-status: impl_reviewed
+status: archived
 created: 2026-06-12
 updated: 2026-06-12
+archived_at: 2026-06-12T08:17:39Z
 prd_refs: FR-001, FR-002
 ---
 
