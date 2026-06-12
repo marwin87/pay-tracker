@@ -1,6 +1,7 @@
 services:
   backend:
     build: ./backend
+    container_name: backend
     restart: unless-stopped
     env_file: .env
     volumes:
@@ -10,6 +11,7 @@ services:
 
   frontend:
     build: ./frontend
+    container_name: frontend
     restart: unless-stopped
     env_file: .env
     depends_on:
