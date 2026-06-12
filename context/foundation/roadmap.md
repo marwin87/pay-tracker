@@ -43,10 +43,13 @@ slice only matters if this loop works.
 | S-01 | auth-ui                      | register and log in via the Next.js frontend                                      | F-01          | FR-001, FR-002                            | done     |
 | S-02 | bill-template-management     | create, edit, and archive bill templates via UI                                   | S-01          | FR-003, FR-004, FR-005                    | done     |
 | S-03 | core-payment-tracking-loop   | view payment instances by due date, mark them paid with amount override, and watch next month's instance auto-appear | S-01, S-02 | US-01, FR-006, FR-007, FR-008, FR-009 | done     |
-| S-04 | export-and-backup            | export payment history to .xlsx and download a full JSON backup                   | S-01          | FR-010, FR-011                            | proposed |
+| S-04 | xlsx-export                  | export payment history to a downloadable .xlsx spreadsheet file                   | S-01          | FR-010                                    | proposed |
 | S-05 | pwa-installability           | install the app from the browser on mobile and desktop in both deployment modes   | S-03          | FR-013                                    | proposed |
 | S-06 | dual-deployment-modes        | run the app identically in local Docker Compose mode and cloud-hosted mode via env-var switching | S-03 | FR-014, FR-015                  | proposed |
 | S-07 | language-support             | switch the UI between English and Polish; preference is saved per account and restored after login | S-01 | FR-016, FR-017                 | done     |
+| S-08 | data-backup                  | download a full JSON backup of all templates and payment history                  | S-01          | FR-011                                    | proposed |
+| S-09 | data-import                  | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | proposed |
+| S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | proposed |
 
 ## Streams
 
@@ -55,9 +58,10 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | Stream | Theme                  | Chain                                      | Note                                                                                  |
 | ------ | ---------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------- |
 | A      | Core tracking loop     | `F-01` → `S-01` → `S-02` → `S-03`         | The must-have path to the north star; every other stream branches off this one.       |
-| B      | Data portability       | `S-01` → `S-04`                            | Parallel with S-02; backend export already scaffolded — just needs a frontend button. |
+| B      | Data portability       | `S-01` → `S-04` → `S-08` → `S-09`         | S-04 (.xlsx) and S-08 (backup) parallel with S-02; S-09 (import) needs S-08 first. |
 | C      | Ship & deploy          | `S-03` → `S-05` / `S-06`                  | Both run after the north star lands; S-05 and S-06 are parallel with each other.      |
 | D      | Localisation           | `S-01` → `S-07`                            | Independent of the core loop; can run in parallel with any other stream after S-01.   |
+| E      | Notifications          | `S-03` → `S-10`                            | Needs the core loop so there are real overdue events to notify about; SMTP config required. |
 
 ## Baseline
 
@@ -131,16 +135,16 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ---
 
-### S-04: Export & backup
+### S-04: .xlsx export
 
-- **Outcome:** user can export all payment data to a `.xlsx` spreadsheet file, and download a full data backup in a portable machine-readable format (JSON).
-- **Change ID:** export-and-backup
-- **PRD refs:** FR-010, FR-011
+- **Outcome:** user can export all payment history to a downloadable `.xlsx` spreadsheet file directly from the dashboard.
+- **Change ID:** xlsx-export
+- **PRD refs:** FR-010
 - **Prerequisites:** S-01 (authenticated session required to access export endpoints)
-- **Parallel with:** S-02 (the backend export router already exists at `backend/app/routers/export.py`, 93 lines; frontend download buttons can be built alongside template UI)
+- **Parallel with:** S-02, S-08 (backend export router already exists at `backend/app/routers/export.py`; frontend trigger is the only remaining work)
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Backend export is already scaffolded; this slice adds the frontend trigger (download buttons or an export page) and verifies the `.xlsx` output is correct and complete. Low risk. Can be deferred without blocking the north star, but parallel execution saves calendar time.
+- **Risk:** Backend export is already scaffolded; this slice adds the frontend download button and verifies the `.xlsx` output is correct and complete. Low risk.
 - **Status:** proposed
 
 ---
@@ -187,6 +191,53 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ---
 
+### S-08: JSON backup
+
+- **Outcome:** user can download a full machine-readable JSON backup of all bill templates and payment history from the dashboard.
+- **Change ID:** data-backup
+- **PRD refs:** FR-011
+- **Prerequisites:** S-01 (authenticated session required)
+- **Parallel with:** S-04 (both use the existing export router; can be built in the same pass or separately)
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Backend endpoint may already be scaffolded in `export.py`; verify coverage before planning. Low risk.
+- **Status:** proposed
+
+---
+
+### S-09: Import from backup
+
+- **Outcome:** user can upload a JSON backup file and restore all bill templates and payment history from it; existing data is replaced or merged (strategy TBD at plan time).
+- **Change ID:** data-import
+- **PRD refs:** FR-018 (new — add to PRD)
+- **Prerequisites:** S-08 (backup format must be stable before import can be implemented)
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:**
+  - Replace-all vs. merge strategy — destructive restore resets the DB; merge strategy preserves existing records. Must be decided during `/10x-plan data-import`. — Owner: user. Block: no (planning can proceed with both options on the table).
+  - Auth guard for import — import is a destructive admin-level action; must confirm whether the existing `current_user` dependency is sufficient or a confirmation step is needed.
+- **Risk:** Most complex of the three data-portability slices. A destructive import without adequate confirmation or a transaction rollback path could result in data loss. Plan must include a dry-run or confirmation gate.
+- **Status:** proposed
+
+---
+
+### S-10: Email reminders
+
+- **Outcome:** user receives an email reminder N days before a bill's due date when the instance is still unpaid; the lead time is configurable per template or globally.
+- **Change ID:** email-reminders
+- **PRD refs:** FR-012
+- **Prerequisites:** S-03 (payment instances must exist to trigger reminders)
+- **Parallel with:** S-04, S-08, S-09 (no data dependencies on export/import)
+- **Blockers:** SMTP provider and credentials must be configured in the deployment environment before this slice can be verified end-to-end.
+- **Unknowns:**
+  - SMTP provider — Resend, SendGrid, Mailgun, or self-hosted (Postfix). Choice affects the backend library and credential format. Must be decided before `/10x-plan email-reminders`. — Owner: user. Block: no (implementation can be provider-agnostic via SMTP; provider is a deployment concern).
+  - Reminder timing — how many days before due date? Fixed value (e.g., 3 days) or per-template setting? — Owner: user. Block: no (default to a fixed configurable value; per-template setting can be added later).
+  - Delivery mechanism — a scheduled background job (APScheduler or a cron container) or a queue (Celery + Redis). Scheduled job is simpler; queue is more robust under load. — Owner: implementation team. Block: no (APScheduler embedded in FastAPI is sufficient for a household-scale app).
+- **Risk:** Adds a background scheduler and an external SMTP dependency — both are new infrastructure for this project. Main risk is silent delivery failures (bounces, spam filtering) that are hard to detect without logging or a delivery webhook. Plan must include a delivery log table or at minimum structured logging per send attempt.
+- **Status:** proposed
+
+---
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                  | Suggested issue title                                        | Ready for `/10x-plan` | Notes                                          |
@@ -195,20 +246,20 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-01       | auth-ui                    | Frontend auth: register and login pages                      | no                    | Needs F-01 done first                          |
 | S-02       | bill-template-management   | Frontend: create, edit, and archive bill templates           | no                    | Needs S-01 done first                          |
 | S-03       | core-payment-tracking-loop | Frontend + backend: payment list, mark paid, auto-recurrence | no                    | Needs S-01, S-02 done first                    |
-| S-04       | export-and-backup          | Frontend: .xlsx export and JSON backup download              | no                    | Needs S-01 done; can run parallel with S-02    |
+| S-04       | xlsx-export                | Frontend: .xlsx export download button                       | yes                   | Backend already scaffolded; frontend trigger only |
 | S-05       | pwa-installability         | PWA manifest, service worker, 375px layout verification      | no                    | Needs S-03 done first                          |
 | S-06       | dual-deployment-modes      | Verify local + cloud env-var switching end-to-end            | no                    | Needs S-03 done; Supabase project required     |
 | S-07       | language-support           | EN/PL i18n: next-intl, language toggle, per-user persistence | yes                   | Plan ready; run `/10x-implement language-support phase 1` |
+| S-08       | data-backup                | Frontend: JSON backup download                               | yes                   | Backend may already be scaffolded; verify first   |
+| S-09       | data-import                | Backend + frontend: upload and restore from JSON backup      | no                    | Needs S-08 done; define replace vs. merge strategy first |
+| S-10       | email-reminders            | Backend scheduler + email: overdue reminders via SMTP        | no                    | Needs S-03 done; SMTP provider and lead-time must be decided first |
 
 ## Open Roadmap Questions
 
 1. **Local-mode PWA and HTTPS** — A self-hosted deployment without HTTPS cannot install as a PWA on most browsers. A reverse-proxy or certificate setup guide is needed in deployment documentation. — Owner: implementation team. Block: S-05 (no — does not affect core PWA config or cloud-mode installability).
 
-2. **Email delivery configuration** — The mail provider, credentials, and configuration format for email reminders (FR-012) are deployment concerns. Must be documented in deployment guides for both modes. — Owner: implementation team. Block: no (FR-012 is nice-to-have; does not gate any must-have slice).
-
 ## Parked
 
-- **Email reminders (FR-012)** — Why parked: nice-to-have priority in PRD; main_goal is low-complexity; adds SMTP configuration complexity and a background scheduler. Revisit after the core loop (S-03) is stable.
 - **CI/CD pipeline** — Why parked: no CI/CD workflow exists yet; not an FR; tech-stack.md names GitHub Actions but this is infrastructure polish. Add after the first working end-to-end deployment is confirmed.
 - **Budgeting and savings goals** — Why parked: PRD §Non-Goals. Out of scope for v1.
 - **Bank / card integrations** — Why parked: PRD §Non-Goals. No automatic transaction import of any kind.
