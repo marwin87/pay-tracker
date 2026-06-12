@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, EmailStr
 
 
@@ -24,4 +26,4 @@ class UserProfileOut(BaseModel):
 
 
 class UserProfileUpdate(BaseModel):
-    language_preference: str | None = None
+    language_preference: Literal["en", "pl", "de"] | None = None

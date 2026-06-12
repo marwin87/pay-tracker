@@ -2,7 +2,7 @@ import { apiFetch } from "@/lib/api";
 
 export interface UserProfile {
   email: string;
-  language_preference: "en" | "pl" | null;
+  language_preference: "en" | "pl" | "de" | null;
 }
 
 export function fetchMe(): Promise<UserProfile> {

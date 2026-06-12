@@ -1,7 +1,7 @@
 ---
 change_id: language-support
 title: Language support
-status: implemented
+status: impl_reviewed
 created: 2026-06-12
 updated: 2026-06-12
 

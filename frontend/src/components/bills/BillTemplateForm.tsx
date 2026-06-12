@@ -72,7 +72,7 @@ export default function BillTemplateForm({
     if (!fields.name.trim()) e.name = t("nameRequired");
     const trimmed = fields.amount.trim();
     const amt = Number(trimmed);
-    if (!trimmed || !/^\d+(\.\d+)?$/.test(trimmed) || amt <= 0)
+    if (!trimmed || !/^(0|[1-9]\d*)(\.\d+)?$/.test(trimmed) || amt <= 0)
       e.amount = t("amountPositive");
     if (fields.showDueDay && fields.dueDay) {
       const day = parseInt(fields.dueDay, 10);

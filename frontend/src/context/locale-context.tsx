@@ -23,6 +23,8 @@ const messagesMap: Record<Locale, typeof enMessages> = {
   de: deMessages,
 };
 
+const VALID_LOCALES: Locale[] = ["en", "pl", "de"];
+
 function detectBrowserLocale(): Locale {
   if (typeof navigator === "undefined") return "en";
   const lang = navigator.language;
@@ -44,15 +46,21 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     if (!isAuthenticated) return;
+    let cancelled = false;
     fetchMe()
       .then((profile) => {
-        if (profile.language_preference) {
+        if (
+          !cancelled &&
+          profile.language_preference &&
+          VALID_LOCALES.includes(profile.language_preference as Locale)
+        ) {
           setLocaleState(profile.language_preference as Locale);
         }
       })
-      .catch(() => {
-        // fall back to browser detection on error
-      });
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, [isAuthenticated]);
 
   useEffect(() => {
