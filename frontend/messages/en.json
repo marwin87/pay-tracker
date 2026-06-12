@@ -105,6 +105,13 @@
     "archive": "Archive",
     "archiving": "Archiving…"
   },
+  "Frequencies": {
+    "monthly": "Monthly",
+    "every_2_months": "Every 2 months",
+    "quarterly": "Quarterly",
+    "annual": "Annual",
+    "one_off": "One-off"
+  },
   "DayPicker": {
     "placeholder": "Select day",
     "selectedDay": "Day {day}",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { markPaid, type PaymentInstanceOut } from "@/lib/payments-api";
@@ -24,6 +24,8 @@ export default function MarkPaidDialog({
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mounted = useRef(true);
+  useEffect(() => () => { mounted.current = false; }, []);
 
   if (!isOpen) return null;
 
@@ -33,9 +35,10 @@ export default function MarkPaidDialog({
     setIsSubmitting(true);
     setError(null);
     try {
-      const updated = await markPaid(instance.id, amount, notes || undefined);
+      const updated = await markPaid(instance.id, paidAmount, notes || undefined);
       onConfirm(updated);
     } catch (err) {
+      if (!mounted.current) return;
       setError(err instanceof Error ? err.message : t("saveFailed"));
       setIsSubmitting(false);
     }

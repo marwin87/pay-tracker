@@ -43,9 +43,9 @@ A user with existing bill templates opens `/dashboard/payments`, sees the curren
 
 - No background job for overdue detection — dynamic computation at response time is sufficient for MVP
 - No auto-generation for past months — only the current month is seeded on GET; navigating to past months shows what's in the DB
-- No auto-generation for future months — the mark-paid cascade handles future month seeding
+- No auto-generation for future months retroactively in bulk — future months are seeded on demand when the user navigates to them (guard: `month >= current_month`)
 - No email reminders (FR-012, nice-to-have, parked in roadmap)
-- No payment deletion — instances can be marked paid; no "undo paid" in v1
+- No undo-paid action — once marked paid the status is permanent (deletion of the instance is supported as a separate action)
 - No statistics, charts, or summary totals on the payments page
 - No category filter on the payments page — filtering deferred to v2
 

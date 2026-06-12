@@ -36,10 +36,15 @@ export default function PaymentsPage() {
 
   const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth);
   const [instances, setInstances] = useState<PaymentInstanceOut[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadedMonth, setLoadedMonth] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [dialogTarget, setDialogTarget] = useState<PaymentInstanceOut | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<PaymentInstanceOut | null>(null);
+
+  // Derived: true whenever selectedMonth hasn't finished loading yet.
+  // Becomes true immediately when selectedMonth changes (same render), so no
+  // synchronous setState inside useEffect is needed.
+  const loading = loadedMonth !== selectedMonth;
 
   const isReadOnly = selectedMonth < currentMonth;
 
@@ -50,13 +55,13 @@ export default function PaymentsPage() {
         if (!cancelled) {
           setInstances(data);
           setLoadError(null);
-          setLoading(false);
+          setLoadedMonth(selectedMonth);
         }
       })
       .catch((err: unknown) => {
         if (!cancelled) {
           setLoadError(err instanceof Error ? err.message : t("loadError"));
-          setLoading(false);
+          setLoadedMonth(selectedMonth);
         }
       });
     return () => {

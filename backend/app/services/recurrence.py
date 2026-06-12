@@ -41,9 +41,10 @@ def _bill_active_in_period(template: BillTemplate, period: str) -> bool:
     if template.frequency == BillFrequency.monthly:
         return True
 
-    # Use the creation month as the anchor for the recurrence schedule.
-    start_year = template.created_at.year
-    start_month = template.created_at.month
+    # Use start_period (YYYY-MM) as the recurrence anchor when set.
+    # Falls back to created_at UTC month for rows predating the column.
+    anchor = template.start_period or template.created_at.strftime("%Y-%m")
+    start_year, start_month = map(int, anchor.split("-"))
     target_year, target_month = map(int, period.split("-"))
     months_diff = (target_year - start_year) * 12 + (target_month - start_month)
 

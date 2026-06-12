@@ -37,6 +37,10 @@ class BillTemplate(Base):
     notes: Mapped[str | None] = mapped_column(Text)
     is_archived: Mapped[bool] = mapped_column(Boolean, default=False)
     is_paused: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Recurrence anchor: YYYY-MM string set at creation from UTC month.
+    # Avoids UTC-vs-local off-by-one when created_at straddles a month boundary.
+    # NULL for rows created before this column existed; code falls back to created_at.
+    start_period: Mapped[str | None] = mapped_column(String(7))
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )

@@ -1,11 +1,11 @@
 from datetime import date, datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.core.database import get_db
 from app.core.deps import current_user
-from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
+from app.models.bill import BillFrequency, BillTemplate, PaymentInstance, PaymentStatus
 from app.models.user import User
 from app.schemas.bill import (
     BillTemplateCreate,
@@ -39,7 +39,8 @@ def create_bill(
     db: Session = Depends(get_db),
     _: User = Depends(current_user),
 ):
-    bill = BillTemplate(**body.model_dump())
+    now = datetime.now(timezone.utc)
+    bill = BillTemplate(**body.model_dump(), start_period=now.strftime("%Y-%m"))
     db.add(bill)
     db.commit()
     db.refresh(bill)
@@ -65,6 +66,7 @@ def list_payments(
 
     instances = (
         db.query(PaymentInstance)
+        .options(joinedload(PaymentInstance.template))
         .filter(PaymentInstance.period == month)
         .order_by(PaymentInstance.due_date)
         .all()
@@ -144,9 +146,8 @@ def delete_payment(
         raise HTTPException(status_code=404, detail="Payment instance not found")
 
     template = instance.template
-    from app.models.bill import BillFrequency as BF
 
-    if template.frequency == BF.one_off:
+    if template.frequency == BillFrequency.one_off:
         # One-off: delete just this instance; template stays (no loop to stop)
         db.delete(instance)
     else:

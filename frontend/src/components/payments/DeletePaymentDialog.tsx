@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { deletePayment, type PaymentInstanceOut } from "@/lib/payments-api";
@@ -19,22 +19,25 @@ export default function DeletePaymentDialog({
   onDeleted,
 }: Props) {
   const t = useTranslations("DeletePaymentDialog");
-  const tFreq = useTranslations("BillTemplateForm");
+  const tFreq = useTranslations("Frequencies");
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const mounted = useRef(true);
+  useEffect(() => () => { mounted.current = false; }, []);
 
   if (!isOpen) return null;
 
   const isRecurring = instance.frequency !== "one_off";
-  const frequencyLabel = tFreq(`frequency.${instance.frequency}` as Parameters<typeof tFreq>[0]);
+  const frequencyLabel = tFreq(instance.frequency as Parameters<typeof tFreq>[0]);
 
   async function handleConfirm() {
     setIsDeleting(true);
     setError(null);
     try {
       await deletePayment(instance.id);
-      onDeleted(instance.id);
+      if (mounted.current) onDeleted(instance.id);
     } catch (err) {
+      if (!mounted.current) return;
       setError(err instanceof Error ? err.message : t("deleteFailed"));
       setIsDeleting(false);
     }
