@@ -379,11 +379,11 @@ The `ensure_current_period_instances` function runs one query per active templat
 
 #### Manual
 
-- [ ] 3.4 Mark as Paid dialog opens pre-filled with template amount
-- [ ] 3.5 Amount override works; row updates to paid on confirm
-- [ ] 3.6 Next-period instance appears for monthly bill after marking paid
-- [ ] 3.7 Paused template: marking paid does NOT generate next instance
-- [ ] 3.8 One-off template: marking paid does NOT generate next instance
-- [ ] 3.9 Dialog closes cleanly on Cancel
-- [ ] 3.10 German UI shows all dialog strings correctly
-- [ ] 3.11 Bill templates page has no regressions
+- [x] 3.4 Mark as Paid dialog opens pre-filled with template amount
+- [x] 3.5 Amount override works; row updates to paid on confirm
+- [x] 3.6 Next-period instance appears for monthly bill after marking paid
+- [x] 3.7 Paused template: marking paid does NOT generate next instance
+- [x] 3.8 One-off template: marking paid does NOT generate next instance
+- [x] 3.9 Dialog closes cleanly on Cancel
+- [x] 3.10 German UI shows all dialog strings correctly
+- [x] 3.11 Bill templates page has no regressions
