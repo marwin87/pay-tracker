@@ -1,11 +1,11 @@
 ---
 change_id: language-support
 title: Language support
-status: impl_reviewed
+status: archived
 created: 2026-06-12
 updated: 2026-06-12
 
-archived_at: null
+archived_at: 2026-06-12T12:43:55Z
 ---
 
 ## Notes
