@@ -74,6 +74,7 @@ export default function BillTemplateForm({
     return e;
   }
 
+  // React guarantees setter refs are stable — safe for identity comparison here.
   function handleChange<T>(setter: (v: T) => void) {
     return (v: T) => {
       setter(v);
@@ -127,10 +128,11 @@ export default function BillTemplateForm({
       <div className="grid gap-4 sm:grid-cols-2">
         {/* Name */}
         <div>
-          <label className={labelClass}>
+          <label htmlFor="bill-name" className={labelClass}>
             Name <span className="text-red-500">*</span>
           </label>
           <input
+            id="bill-name"
             value={name}
             onChange={(e) => handleChange(setName)(e.target.value)}
             placeholder="e.g. Electricity"
@@ -143,10 +145,11 @@ export default function BillTemplateForm({
 
         {/* Amount */}
         <div>
-          <label className={labelClass}>
+          <label htmlFor="bill-amount" className={labelClass}>
             Amount (€) <span className="text-red-500">*</span>
           </label>
           <input
+            id="bill-amount"
             value={amount}
             onChange={(e) => handleChange(setAmount)(e.target.value)}
             placeholder="0.00"
@@ -160,10 +163,11 @@ export default function BillTemplateForm({
 
         {/* Frequency */}
         <div>
-          <label className={labelClass}>
+          <label htmlFor="bill-frequency" className={labelClass}>
             Frequency <span className="text-red-500">*</span>
           </label>
           <select
+            id="bill-frequency"
             value={frequency}
             onChange={(e) =>
               handleChange(setFrequency)(e.target.value as BillFrequency)
@@ -181,8 +185,9 @@ export default function BillTemplateForm({
         {/* Due day (conditional) */}
         {showDueDay && (
           <div>
-            <label className={labelClass}>Due day of month</label>
+            <label htmlFor="bill-due-day" className={labelClass}>Due day of month</label>
             <input
+              id="bill-due-day"
               value={dueDay}
               onChange={(e) => handleChange(setDueDay)(e.target.value)}
               placeholder="e.g. 15"
@@ -197,8 +202,9 @@ export default function BillTemplateForm({
 
         {/* Category */}
         <div>
-          <label className={labelClass}>Category</label>
+          <label htmlFor="bill-category" className={labelClass}>Category</label>
           <CategoryCombobox
+            id="bill-category"
             value={category as string}
             onChange={setCategory}
             suggestions={categorySuggestions}
@@ -207,8 +213,9 @@ export default function BillTemplateForm({
 
         {/* Notes */}
         <div className="sm:col-span-2">
-          <label className={labelClass}>Notes</label>
+          <label htmlFor="bill-notes" className={labelClass}>Notes</label>
           <textarea
+            id="bill-notes"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}

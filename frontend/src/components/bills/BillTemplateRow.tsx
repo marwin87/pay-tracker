@@ -65,7 +65,7 @@ export default function BillTemplateRow({
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEditToggle}
-            title="Edit"
+            aria-label={isExpanded ? "Close" : "Edit"}
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-500 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900/30 dark:hover:text-indigo-300 transition-colors"
           >
             {isExpanded ? <ChevronUp size={15} /> : <Pencil size={15} />}
@@ -73,7 +73,7 @@ export default function BillTemplateRow({
           </button>
           <button
             onClick={onArchive}
-            title="Archive"
+            aria-label="Archive"
             className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
           >
             <ArchiveIcon size={15} />

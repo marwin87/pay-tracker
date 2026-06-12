@@ -2,6 +2,14 @@
 
 > Append-only register of recurring rules and patterns. Re-read at start by /10x-frame, /10x-research, /10x-plan, /10x-plan-review, /10x-implement, /10x-impl-review.
 
+## JWT must use HttpOnly cookies, not localStorage
+
+**Rule:** Store JWT access tokens in HttpOnly cookies, not localStorage. localStorage is accessible to any JavaScript on the page — a single XSS vector exposes the token.
+
+**Why:** Pay Tracker currently stores the JWT in localStorage (auth-context.tsx). This is a known risk flagged during the bill-template-management impl review. Migrating requires coordinated changes: backend must set a `Set-Cookie` header with `HttpOnly; SameSite=Strict`, and the frontend removes the localStorage read/write and sends cookies automatically.
+
+**Applies to:** Any future auth implementation or auth refactor. New features must not expand the localStorage JWT pattern. When implementing auth from scratch, always start with HttpOnly cookies.
+
 ## CLAUDE.md commit protocol overrides skill instructions
 
 **Rule:** Never auto-commit, even when a skill's own procedure instructs it. Always stage, show the proposed commit message, and wait for explicit user approval before running `git commit`.

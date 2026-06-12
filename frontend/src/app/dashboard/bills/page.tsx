@@ -22,6 +22,7 @@ export default function BillsPage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [expandedId, setExpandedId] = useState<number | "new" | null>(null);
   const [archiveTarget, setArchiveTarget] = useState<BillTemplateOut | null>(null);
+  const [archiving, setArchiving] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -61,10 +62,15 @@ export default function BillsPage() {
   }
 
   async function handleArchiveConfirm() {
-    if (!archiveTarget) return;
-    await archiveBill(archiveTarget.id);
-    setArchiveTarget(null);
-    setRefreshKey((k) => k + 1);
+    if (!archiveTarget || archiving) return;
+    setArchiving(true);
+    try {
+      await archiveBill(archiveTarget.id);
+      setArchiveTarget(null);
+      setRefreshKey((k) => k + 1);
+    } finally {
+      setArchiving(false);
+    }
   }
 
   function toggleExpand(id: number | "new") {
@@ -93,6 +99,7 @@ export default function BillsPage() {
           billName={archiveTarget.name}
           onConfirm={handleArchiveConfirm}
           onCancel={() => setArchiveTarget(null)}
+          archiving={archiving}
         />
       )}
 

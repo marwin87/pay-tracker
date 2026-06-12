@@ -1,7 +1,7 @@
 ---
 change_id: bill-template-management
 title: Bill template management UI
-status: implemented
+status: impl_reviewed
 created: 2026-06-12
 updated: 2026-06-12
 archived_at: null

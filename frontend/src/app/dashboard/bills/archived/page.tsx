@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { Archive } from "lucide-react";
 import { fetchBills, type BillTemplateOut } from "@/lib/bills-api";
 
@@ -39,7 +40,13 @@ export default function ArchivedBillsPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8">
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
+        <Link
+          href="/dashboard/bills"
+          className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+        >
+          ← Active bills
+        </Link>
+        <h1 className="mt-1 text-2xl font-semibold text-slate-800 dark:text-slate-100">
           Archived Bills
         </h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
