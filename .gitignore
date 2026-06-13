@@ -22,3 +22,5 @@ backend/.ruff_cache/
 
 # OS
 .DS_Store
+
+/.claude/
