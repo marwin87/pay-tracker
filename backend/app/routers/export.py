@@ -86,9 +86,8 @@ def export_xlsx(
 @router.get("/json")
 def export_json(
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
-    users = db.query(User).all()
     templates = db.query(BillTemplate).all()
     instances = db.query(PaymentInstance).all()
     payload = {
@@ -96,14 +95,13 @@ def export_json(
         "exported_at": datetime.now(timezone.utc).isoformat(),
         "users": [
             {
-                "id": u.id,
-                "email": u.email,
-                "password_hash": u.password_hash,
-                "is_active": u.is_active,
-                "language_preference": u.language_preference,
-                "created_at": u.created_at.isoformat(),
+                "id": me.id,
+                "email": me.email,
+                "password_hash": me.password_hash,
+                "is_active": me.is_active,
+                "language_preference": me.language_preference,
+                "created_at": me.created_at.isoformat(),
             }
-            for u in users
         ],
         "bill_templates": [
             {
