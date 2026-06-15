@@ -39,3 +39,9 @@ export function markPaid(
 export function deletePayment(instanceId: number): Promise<void> {
   return apiFetch<void>(`/bills/payments/${instanceId}`, { method: "DELETE" });
 }
+
+export function revertPay(instanceId: number): Promise<PaymentInstanceOut> {
+  return apiFetch<PaymentInstanceOut>(`/bills/payments/${instanceId}/unpay`, {
+    method: "POST",
+  });
+}

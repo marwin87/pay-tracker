@@ -125,7 +125,11 @@
     "title": "Payments",
     "loadError": "Failed to load payments.",
     "noPayments": "No bills for this month",
-    "addBills": "Add bills →"
+    "addBills": "Add bills →",
+    "pastMonth": "Past",
+    "exportXlsx": "Excel Export",
+    "exportXlsxLoading": "Exporting…",
+    "exportXlsxError": "Export failed. Please try again."
   },
   "PaymentRow": {
     "status": {
@@ -134,6 +138,7 @@
       "paid": "Paid"
     },
     "markAsPaid": "Mark as Paid",
+    "revert": "Revert payment",
     "paidOn": "Paid on",
     "delete": "Delete payment"
   },

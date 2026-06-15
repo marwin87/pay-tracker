@@ -5,12 +5,20 @@ from app.core.database import get_db
 from app.core.deps import current_user
 from app.core.security import create_access_token, hash_password, verify_password
 from app.models.user import User
-from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse, UserProfileOut, UserProfileUpdate
+from app.schemas.auth import (
+    LoginRequest,
+    RegisterRequest,
+    TokenResponse,
+    UserProfileOut,
+    UserProfileUpdate,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED
+)
 def register(body: RegisterRequest, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == body.email).first():
         raise HTTPException(status_code=400, detail="Email already registered")

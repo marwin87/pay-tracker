@@ -125,7 +125,11 @@
     "title": "Zahlungen",
     "loadError": "Zahlungen konnten nicht geladen werden.",
     "noPayments": "Keine Rechnungen für diesen Monat",
-    "addBills": "Rechnungen hinzufügen →"
+    "addBills": "Rechnungen hinzufügen →",
+    "pastMonth": "Vergangen",
+    "exportXlsx": "Excel-Export",
+    "exportXlsxLoading": "Exportiere…",
+    "exportXlsxError": "Export fehlgeschlagen. Bitte erneut versuchen."
   },
   "PaymentRow": {
     "status": {
@@ -134,6 +138,7 @@
       "paid": "Bezahlt"
     },
     "markAsPaid": "Als bezahlt markieren",
+    "revert": "Zahlung rückgängig machen",
     "paidOn": "Bezahlt am",
     "delete": "Zahlung löschen"
   },

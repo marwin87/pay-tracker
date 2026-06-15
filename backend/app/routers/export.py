@@ -1,9 +1,10 @@
+import calendar
 import io
 import json
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 
 import pandas as pd
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query
 from fastapi.responses import Response, StreamingResponse
 from sqlalchemy.orm import Session, selectinload
 
@@ -14,32 +15,67 @@ from app.models.user import User
 
 router = APIRouter(prefix="/export", tags=["export"])
 
+_COLUMNS = [
+    "Bill",
+    "Category",
+    "Period",
+    "Due Date",
+    "Amount",
+    "Currency",
+    "Status",
+    "Paid Amount",
+    "Paid At",
+    "Notes",
+]
+
 
 @router.get("/xlsx")
 def export_xlsx(
+    year: int = Query(default_factory=lambda: date.today().year),
     db: Session = Depends(get_db),
     _: User = Depends(current_user),
 ):
-    instances = db.query(PaymentInstance).options(selectinload(PaymentInstance.template)).order_by(PaymentInstance.due_date).all()
-    rows = [
-        {
-            "Bill": i.template.name,
-            "Period": i.period,
-            "Due Date": i.due_date.isoformat(),
-            "Amount": float(i.amount),
-            "Status": i.status,
-            "Paid Amount": float(i.paid_amount) if i.paid_amount else None,
-            "Paid At": i.paid_at.isoformat() if i.paid_at else None,
-            "Notes": i.notes,
-        }
-        for i in instances
-    ]
-    df = pd.DataFrame(rows)
+    instances = (
+        db.query(PaymentInstance)
+        .options(selectinload(PaymentInstance.template))
+        .filter(PaymentInstance.period.startswith(f"{year}-"))
+        .order_by(PaymentInstance.due_date)
+        .all()
+    )
+
+    # Index instances by month number (1–12)
+    by_month: dict[int, list[dict]] = {m: [] for m in range(1, 13)}
+    for i in instances:
+        month = int(i.period[5:7])
+        by_month[month].append(
+            {
+                "Bill": i.template.name,
+                "Category": i.template.category,
+                "Period": i.period,
+                "Due Date": i.due_date.isoformat(),
+                "Amount": float(i.amount),
+                "Currency": i.template.currency,
+                "Status": i.status,
+                "Paid Amount": float(i.paid_amount) if i.paid_amount else None,
+                "Paid At": i.paid_at.isoformat() if i.paid_at else None,
+                "Notes": i.notes,
+            }
+        )
+
     buf = io.BytesIO()
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
-        df.to_excel(writer, index=False, sheet_name="Payments")
+        for month in range(1, 13):
+            sheet_name = f"{calendar.month_abbr[month]} {year}"
+            rows = by_month[month]
+            df = (
+                pd.DataFrame(rows, columns=_COLUMNS)
+                if rows
+                else pd.DataFrame(columns=_COLUMNS)
+            )
+            df.to_excel(writer, index=False, sheet_name=sheet_name)
     buf.seek(0)
-    filename = f"pay-tracker-{datetime.now(timezone.utc).date()}.xlsx"
+
+    filename = f"pay-tracker-{year}.xlsx"
     return StreamingResponse(
         buf,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -77,7 +113,7 @@ def export_json(
                 "period": i.period,
                 "due_date": i.due_date.isoformat(),
                 "amount": float(i.amount),
-                "status": i.status.value,
+                "status": i.status,
                 "paid_at": i.paid_at.isoformat() if i.paid_at else None,
                 "paid_amount": float(i.paid_amount) if i.paid_amount else None,
                 "notes": i.notes,

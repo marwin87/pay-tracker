@@ -125,7 +125,11 @@
     "title": "Płatności",
     "loadError": "Nie udało się załadować płatności.",
     "noPayments": "Brak rachunków w tym miesiącu",
-    "addBills": "Dodaj rachunki →"
+    "addBills": "Dodaj rachunki →",
+    "pastMonth": "Poprzedni",
+    "exportXlsx": "Eksport Excel",
+    "exportXlsxLoading": "Eksportowanie…",
+    "exportXlsxError": "Eksport nie powiódł się. Spróbuj ponownie."
   },
   "PaymentRow": {
     "status": {
@@ -134,6 +138,7 @@
       "paid": "Opłacone"
     },
     "markAsPaid": "Oznacz jako opłacone",
+    "revert": "Cofnij płatność",
     "paidOn": "Opłacono",
     "delete": "Usuń płatność"
   },

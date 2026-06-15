@@ -2,7 +2,17 @@ from datetime import date, datetime, timezone
 from decimal import Decimal
 from enum import Enum
 
-from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
+from sqlalchemy import (
+    Boolean,
+    Date,
+    DateTime,
+    ForeignKey,
+    Integer,
+    Numeric,
+    String,
+    Text,
+    UniqueConstraint,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -33,7 +43,9 @@ class BillTemplate(Base):
     frequency: Mapped[BillFrequency] = mapped_column(String(20), nullable=False)
     amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     currency: Mapped[str] = mapped_column(String(10), nullable=False, default="PLN")
-    due_day: Mapped[int | None] = mapped_column(Integer)  # day-of-month for monthly bills
+    due_day: Mapped[int | None] = mapped_column(
+        Integer
+    )  # day-of-month for monthly bills
     notes: Mapped[str | None] = mapped_column(Text)
     is_archived: Mapped[bool] = mapped_column(Boolean, default=False)
     is_paused: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -54,10 +66,14 @@ class PaymentInstance(Base):
     """A single payment record for a specific period. Idempotent: (bill_id, period) is unique."""
 
     __tablename__ = "payment_instances"
-    __table_args__ = (UniqueConstraint("bill_id", "period", name="uq_payment_instance_bill_period"),)
+    __table_args__ = (
+        UniqueConstraint("bill_id", "period", name="uq_payment_instance_bill_period"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    bill_id: Mapped[int] = mapped_column(ForeignKey("bill_templates.id"), nullable=False)
+    bill_id: Mapped[int] = mapped_column(
+        ForeignKey("bill_templates.id"), nullable=False
+    )
     period: Mapped[str] = mapped_column(String(7), nullable=False)  # "YYYY-MM"
     due_date: Mapped[date] = mapped_column(Date, nullable=False)
     amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)

@@ -1,8 +1,10 @@
 "use client";
 
-import { CheckCircle, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle, Loader2, RotateCcw, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import type { PaymentInstanceOut } from "@/lib/payments-api";
+import { revertPay } from "@/lib/payments-api";
 
 const STATUS_STYLES: Record<string, string> = {
   upcoming:
@@ -16,12 +18,24 @@ interface Props {
   instance: PaymentInstanceOut;
   onMarkPaid: (instance: PaymentInstanceOut) => void;
   onDelete: (instance: PaymentInstanceOut) => void;
+  onReverted: (updated: PaymentInstanceOut) => void;
   /** True for past months — hides the Mark as Paid button. */
   readOnly?: boolean;
 }
 
-export default function PaymentRow({ instance, onMarkPaid, onDelete, readOnly = false }: Props) {
+export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted, readOnly = false }: Props) {
   const t = useTranslations("PaymentRow");
+  const [reverting, setReverting] = useState(false);
+
+  async function handleRevert() {
+    setReverting(true);
+    try {
+      const updated = await revertPay(instance.id);
+      onReverted(updated);
+    } finally {
+      setReverting(false);
+    }
+  }
 
   // Append T00:00:00 so JS treats due_date as local time, not UTC midnight
   const dueDate = new Date(instance.due_date + "T00:00:00");
@@ -67,7 +81,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, readOnly = 
         </div>
 
         <div className="flex items-center gap-1 shrink-0">
-          {/* Mark as Paid button — hidden for past months (readOnly) and already-paid instances */}
+          {/* Mark as Paid — hidden for past months and already-paid instances */}
           {!readOnly && instance.status !== "paid" && (
             <button
               onClick={() => onMarkPaid(instance)}
@@ -77,6 +91,19 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, readOnly = 
               <span className="hidden sm:inline">{t("markAsPaid")}</span>
             </button>
           )}
+          {/* Revert — visible for paid instances */}
+          {instance.status === "paid" && (
+            <button
+              onClick={handleRevert}
+              disabled={reverting}
+              title={t("revert")}
+              aria-label={t("revert")}
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
+            >
+              {reverting ? <Loader2 size={15} className="animate-spin" /> : <RotateCcw size={15} />}
+            </button>
+          )}
+          <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
           <button
             onClick={() => onDelete(instance)}
             aria-label={t("delete")}

@@ -14,7 +14,10 @@ from app.schemas.bill import (
     MarkPaidRequest,
     PaymentInstanceOut,
 )
-from app.services.recurrence import ensure_current_period_instances, generate_next_instance
+from app.services.recurrence import (
+    ensure_current_period_instances,
+    generate_next_instance,
+)
 
 # PRD §Access Control: flat household model — all authenticated users share one view.
 # current_user is injected for auth enforcement only; no per-user data scoping is applied.
@@ -106,10 +109,14 @@ def mark_paid(
     if not instance:
         raise HTTPException(status_code=404, detail="Payment instance not found")
 
-    template = instance.template  # read before commit; expire_on_commit would force a lazy re-load after
+    template = (
+        instance.template
+    )  # read before commit; expire_on_commit would force a lazy re-load after
     instance.status = PaymentStatus.paid
     instance.paid_at = datetime.now(timezone.utc)
-    instance.paid_amount = body.paid_amount if body.paid_amount is not None else instance.amount
+    instance.paid_amount = (
+        body.paid_amount if body.paid_amount is not None else instance.amount
+    )
     if body.notes:
         instance.notes = body.notes
     db.commit()
@@ -118,6 +125,43 @@ def mark_paid(
     if not template.is_paused:
         generate_next_instance(db, template, instance.period)
 
+    db.refresh(instance)
+    return {
+        "id": instance.id,
+        "bill_id": instance.bill_id,
+        "period": instance.period,
+        "due_date": instance.due_date,
+        "amount": instance.amount,
+        "status": instance.status,
+        "paid_at": instance.paid_at,
+        "paid_amount": instance.paid_amount,
+        "notes": instance.notes,
+        "bill_name": template.name,
+        "currency": template.currency,
+        "frequency": template.frequency,
+    }
+
+
+@router.post("/payments/{instance_id}/unpay", response_model=PaymentInstanceOut)
+def revert_payment(
+    instance_id: int,
+    db: Session = Depends(get_db),
+    _: User = Depends(current_user),
+):
+    instance = db.get(PaymentInstance, instance_id)
+    if not instance:
+        raise HTTPException(status_code=404, detail="Payment instance not found")
+    if instance.status != PaymentStatus.paid:
+        raise HTTPException(status_code=400, detail="Payment is not marked as paid")
+
+    template = instance.template
+    today = date.today()
+    instance.status = (
+        PaymentStatus.overdue if instance.due_date < today else PaymentStatus.upcoming
+    )
+    instance.paid_at = None
+    instance.paid_amount = None
+    db.commit()
     db.refresh(instance)
     return {
         "id": instance.id,

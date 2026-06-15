@@ -81,7 +81,7 @@ export default function BillsPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-3xl px-4 py-8">
+      <div className="mx-auto max-w-4xl px-4 py-8">
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
             <div
@@ -95,7 +95,7 @@ export default function BillsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-8">
+    <div className="mx-auto max-w-4xl px-4 py-8">
       {archiveTarget && (
         <ArchiveConfirmDialog
           billName={archiveTarget.name}
