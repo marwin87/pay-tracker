@@ -4,7 +4,6 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file="../.env", extra="ignore")
 
-    deploy_mode: str = "LOCAL"
     database_url: str = "postgresql://paytracker:changeme@localhost:5432/paytracker"
 
     jwt_secret: str = "changeme-use-a-long-random-string"

@@ -55,7 +55,7 @@ when they mark this month's payment instance as paid (accepting the default amou
 or overriding with the actual amount paid), then the system automatically generates next
 month's instance and it appears on the dashboard — with no manual intervention required.
 
-Validated in both deployment modes (local self-hosted first, cloud-hosted second).
+Validated in local self-hosted deployment.
 
 ### Secondary
 
@@ -66,10 +66,7 @@ household finance manager does not need to check the dashboard proactively.
 
 1. **No data loss.** Payment history is never silently corrupted or deleted. Exports and
    backups produce accurate, complete data at any point in time.
-2. **Auth secure in both modes.** No unauthenticated access to any finance data in either
-   local or cloud deployment.
-3. **Both deployment modes operate end-to-end.** Local self-hosted and cloud-hosted modes
-   both work in v1. Local ships first; cloud follows in the same sprint.
+2. **Auth secure.** No unauthenticated access to any finance data.
 
 ## User Stories
 
@@ -159,22 +156,9 @@ household finance manager does not need to check the dashboard proactively.
 
 ### PWA
 
-- FR-013: App is installable as a PWA on mobile and desktop in both deployment modes.
+- FR-013: App is installable as a PWA on mobile and desktop.
   Priority: must-have
-  > Socratic: PWA requirement kept for both modes — portability is the core value. Local
-  > operators are expected to configure HTTPS; guidance deferred to deployment docs.
-
-### Deployment Modes
-
-- FR-014: App runs in cloud-hosted mode with no code changes required vs. local mode.
-  Priority: must-have
-  > Socratic: Both modes ship in v1. Local ships first; cloud follows in the same sprint.
-  > Shipping cloud-only would contradict the portability value proposition.
-
-- FR-015: App runs in self-hosted local mode with no code changes required vs. cloud mode.
-  Priority: must-have
-  > Socratic: Local-first sequencing reduces cloud-provider dependency risk during initial
-  > development.
+  > Local operators are expected to configure HTTPS; guidance deferred to deployment docs.
 
 ### Localisation
 
@@ -257,5 +241,5 @@ by the household.
 
 2. **Email delivery configuration (FR-012).** The mail provider, credentials, and
    configuration format for email reminders are deployment concerns, not product concerns.
-   These must be documented in deployment guides for both local and cloud modes. — Owner:
-   implementation team. Block: no (FR-012 is nice-to-have; deferred to deployment docs).
+   These must be documented in deployment guides. — Owner: implementation team. Block: no
+   (FR-012 is nice-to-have; deferred to deployment docs).

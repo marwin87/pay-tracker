@@ -44,8 +44,7 @@ slice only matters if this loop works.
 | S-02 | bill-template-management     | create, edit, and archive bill templates via UI                                   | S-01          | FR-003, FR-004, FR-005                    | done     |
 | S-03 | core-payment-tracking-loop   | view payment instances by due date, mark them paid with amount override, and watch next month's instance auto-appear | S-01, S-02 | US-01, FR-006, FR-007, FR-008, FR-009 | done     |
 | S-04 | xlsx-export                  | export payment history to a downloadable .xlsx spreadsheet file                   | S-01          | FR-010                                    | done     |
-| S-05 | pwa-installability           | install the app from the browser on mobile and desktop in both deployment modes   | S-03          | FR-013                                    | proposed |
-| S-06 | dual-deployment-modes        | run the app identically in local Docker Compose mode and cloud-hosted mode via env-var switching | S-03 | FR-014, FR-015                  | proposed |
+| S-05 | pwa-installability           | install the app from the browser on mobile and desktop                            | S-03          | FR-013                                    | proposed |
 | S-07 | language-support             | switch the UI between English and Polish; preference is saved per account and restored after login | S-01 | FR-016, FR-017                 | done     |
 | S-08 | data-backup                  | download a full JSON backup of all templates and payment history                  | S-01          | FR-011                                    | proposed |
 | S-09 | data-import                  | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | proposed |
@@ -59,7 +58,7 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | ------ | ---------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------- |
 | A      | Core tracking loop     | `F-01` → `S-01` → `S-02` → `S-03`         | The must-have path to the north star; every other stream branches off this one.       |
 | B      | Data portability       | `S-01` → `S-04` → `S-08` → `S-09`         | S-04 (.xlsx) and S-08 (backup) parallel with S-02; S-09 (import) needs S-08 first. |
-| C      | Ship & deploy          | `S-03` → `S-05` / `S-06`                  | Both run after the north star lands; S-05 and S-06 are parallel with each other.      |
+| C      | Ship & deploy          | `S-03` → `S-05`                            | Runs after the north star lands.                                                       |
 | D      | Localisation           | `S-01` → `S-07`                            | Independent of the core loop; can run in parallel with any other stream after S-01.   |
 | E      | Notifications          | `S-03` → `S-10`                            | Needs the core loop so there are real overdue events to notify about; SMTP config required. |
 
@@ -151,31 +150,18 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-05: PWA installability
 
-- **Outcome:** user can install the app from the browser as a Progressive Web App on both mobile and desktop, in both deployment modes; all primary views are fully operable on 375px-wide screens without pinch-zoom.
+- **Outcome:** user can install the app from the browser as a Progressive Web App on both mobile and desktop; all primary views are fully operable on 375px-wide screens without pinch-zoom.
 - **Change ID:** pwa-installability
 - **PRD refs:** FR-013
 - **Prerequisites:** S-03 (the core app must be functional before PWA installation is meaningful to verify)
-- **Parallel with:** S-06
+- **Parallel with:** —
 - **Blockers:** —
 - **Unknowns:**
-  - Local-mode PWA requires HTTPS; self-hosted deployments need a reverse-proxy or self-signed cert. Guidance deferred to deployment docs. — Owner: implementation team. Block: no (does not affect core PWA configuration or the app's installability in cloud mode).
+  - Local-mode PWA requires HTTPS; self-hosted deployments need a reverse-proxy or self-signed cert. Guidance deferred to deployment docs. — Owner: implementation team. Block: no (does not affect core PWA configuration).
 - **Risk:** Next.js supports PWA via `next-pwa` or a custom service worker; the manifest and service worker are configuration work. Mobile usability (375px layouts) should be addressed incrementally during S-01–S-04 but final verification is here. Low risk if layouts are kept simple throughout.
 - **Status:** proposed
 
 ---
-
-### S-06: Dual deployment modes
-
-- **Outcome:** the app runs identically in local Docker Compose mode (`DEPLOY_MODE=LOCAL`, FastAPI JWT auth, PostgreSQL) and in cloud-hosted mode (`DEPLOY_MODE=CLOUD`, Supabase auth + RLS) with no code changes — only environment variable differences.
-- **Change ID:** dual-deployment-modes
-- **PRD refs:** FR-014, FR-015
-- **Prerequisites:** S-03 (the full core loop must work in local mode before cloud mode can be verified)
-- **Parallel with:** S-05
-- **Blockers:** —
-- **Unknowns:**
-  - Cloud mode requires a Supabase project to be provisioned and credentials configured. — Owner: user. Block: no (local mode ships first; cloud verification can be scheduled once a Supabase project exists).
-- **Risk:** DEPLOY_MODE switching is already an architectural commitment (AGENTS.md hard rule: no DEPLOY_MODE-specific logic in new code; env vars only). The risk is that some code path written during S-01–S-03 inadvertently introduces mode-specific branching. Sequenced last so the full app is exercised in local mode before cloud compatibility is tested.
-- **Status:** proposed
 
 ### S-07: Language support
 
@@ -248,7 +234,6 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-03       | core-payment-tracking-loop | Frontend + backend: payment list, mark paid, auto-recurrence | no                    | Needs S-01, S-02 done first                    |
 | S-04       | xlsx-export                | Frontend: .xlsx export download button                       | yes                   | Backend already scaffolded; frontend trigger only |
 | S-05       | pwa-installability         | PWA manifest, service worker, 375px layout verification      | no                    | Needs S-03 done first                          |
-| S-06       | dual-deployment-modes      | Verify local + cloud env-var switching end-to-end            | no                    | Needs S-03 done; Supabase project required     |
 | S-07       | language-support           | EN/PL i18n: next-intl, language toggle, per-user persistence | yes                   | Plan ready; run `/10x-implement language-support phase 1` |
 | S-08       | data-backup                | Frontend: JSON backup download                               | yes                   | Backend may already be scaffolded; verify first   |
 | S-09       | data-import                | Backend + frontend: upload and restore from JSON backup      | no                    | Needs S-08 done; define replace vs. merge strategy first |

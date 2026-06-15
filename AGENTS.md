@@ -5,7 +5,6 @@ Pay Tracker is a household bill-tracking PWA. Stack: Next.js 16 (App Router, Typ
 ## Hard Rules
 
 - **Next.js 16 has breaking changes from training data.** Before writing any frontend code, read `@frontend/AGENTS.md` — its warning is load-bearing.
-- **Never use `DEPLOY_MODE`-specific logic in new code.** Dual-mode switching (LOCAL vs CLOUD) is handled by env vars only; the application code must stay mode-agnostic.
 - **Recurrence auto-generation is idempotent.** The key is `(bill_id, period)`. Never insert a `PaymentInstance` without checking for an existing row on that pair — see `@backend/app/services/recurrence.py`.
 - **Archive templates, never delete.** Set `is_archived = True` on `BillTemplate`; hard deletes cascade to payment history.
 - **Migrations run automatically on container start.** `alembic upgrade head` fires in the supervisord uvicorn command. New model changes require a new revision: `docker compose exec backend uv run alembic revision --autogenerate -m "<desc>"`.
@@ -18,7 +17,6 @@ frontend/   Next.js 16 PWA — App Router, src/, Tailwind
 backend/    FastAPI — app/{routers,models,schemas,services,core}/
             PostgreSQL 17 data at /var/lib/postgresql/17/main (named volume)
 infra/      nginx configs, compose overrides (empty — future use)
-supabase/   Migrations for CLOUD mode (empty — future use)
 context/    10x workflow artifacts (PRD, tech-stack, bootstrap log)
 ```
 
@@ -39,7 +37,7 @@ API docs: `http://localhost:8010/docs`.
 
 - **Frontend:** No `any`. Do not add a `pages/` directory — this project is App Router only. Components in `frontend/src/`.
 - **Backend:** All request/response types use Pydantic schemas in `backend/app/schemas/`. Never use raw dicts as router return types. Routers in `backend/app/routers/`, business logic in `backend/app/services/`.
-- **Env vars:** copy `.env.example` → `.env`; never commit `.env`. `DEPLOY_MODE=LOCAL` uses JWT auth in FastAPI; `DEPLOY_MODE=CLOUD` defers auth to Supabase.
+- **Env vars:** copy `.env.example` → `.env`; never commit `.env`.
 
 ## Commit Guidelines
 

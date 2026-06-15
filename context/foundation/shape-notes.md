@@ -42,7 +42,7 @@ owns the setup and maintenance.
 
 ## Access Control
 
-Authentication: email + password login. Works in both local and cloud deployment modes.
+Authentication: email + password login.
 
 Role model: **flat** — all authenticated users share the same household view. No permissions
 differences between accounts.
@@ -61,7 +61,7 @@ when they mark this month's payment instance as paid (defaulting to €120 or ov
 to the actual amount), then the system automatically generates next month's instance on
 the dashboard — with no manual intervention required.
 
-Validated in both deployment modes (local first, cloud second).
+Validated in local self-hosted deployment.
 
 ### Secondary
 
@@ -72,10 +72,7 @@ doesn't need to check the dashboard proactively.
 
 1. **No data loss.** Payment history is never silently corrupted or deleted. Exports and
    backups produce accurate, complete data.
-2. **Auth secure in both modes.** No unauthenticated access to any finance data in either
-   local or cloud deployment.
-3. **Both deployment modes work.** Local self-hosted and cloud (Supabase) modes both
-   run end-to-end in v1. Local ships first; cloud follows in the same sprint.
+2. **Auth secure.** No unauthenticated access to any finance data.
 
 ## Timeline acknowledgment
 
@@ -133,7 +130,7 @@ and weekends; user accepted with eyes open.
 
 - FR-010: User can export payment data to Excel (.xlsx). Priority: must-have
   > Socrates: Both export and backup kept as must-have — Excel for family review,
-  > backup for portability between deployment modes.
+  > backup for data portability.
 
 - FR-011: User can download a full data backup in JSON or SQL format. Priority: must-have
   > Socrates: Backup and Excel export serve distinct purposes; both justified for v1.
@@ -143,24 +140,13 @@ and weekends; user accepted with eyes open.
 - FR-012: System sends email reminders for upcoming and overdue payments via SMTP.
   Priority: nice-to-have
   > Socrates: Scoped to email-only — push notifications deferred (service worker + backend
-  > push complexity). Email works in both deployment modes via SMTP configuration.
+  > push complexity).
 
 ### PWA
 
-- FR-013: App is installable as a PWA on mobile and desktop in both deployment modes.
+- FR-013: App is installable as a PWA on mobile and desktop.
   Priority: must-have
-  > Socrates: PWA kept for both modes — portability is core value. Local operators are
-  > expected to configure HTTPS; guidance deferred to deployment docs.
-
-### Deployment Modes
-
-- FR-014: App runs in cloud mode using Supabase (Postgres + Auth + RLS) without code
-  changes vs. local mode. Priority: must-have
-  > Socrates: Both modes ship in v1. Local ships first; cloud follows in the same sprint.
-
-- FR-015: App runs in local self-hosted mode using Docker Compose (Postgres + FastAPI auth)
-  without code changes vs. cloud mode. Priority: must-have
-  > Socrates: Local-first sequencing reduces Supabase dependency risk during development.
+  > Local operators are expected to configure HTTPS; guidance deferred to deployment docs.
 
 ## User Stories
 
@@ -236,11 +222,9 @@ The following preferences were expressed in the seed document and should inform
 tech-stack selection but are NOT part of the PRD:
 
 - Frontend: Next.js (React), PWA
-- Backend: Python, FastAPI, Pandas, OpenPyXL
-- Database: PostgreSQL (portable schema)
-- Auth: Supabase Auth (cloud mode) / FastAPI JWT (local mode)
+- Backend: Python, FastAPI, OpenPyXL
+- Database: PostgreSQL
+- Auth: FastAPI JWT
 - Infrastructure: Docker, Docker Compose
-- Cloud mode backend: Supabase (Postgres + Auth + RLS + DB triggers)
-- Local mode backend: FastAPI CRUD + FastAPI Auth + Postgres triggers or background tasks
-- Export: .xlsx via OpenPyXL; backup as JSON/SQL
+- Export: .xlsx via OpenPyXL; backup as JSON
 - Reminder delivery: email via SMTP

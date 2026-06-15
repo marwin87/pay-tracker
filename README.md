@@ -117,7 +117,7 @@ Overdue status is computed at response time. After fetching instances from the d
 
 ### Authentication
 
-JWT-based. The frontend stores the token in memory via AuthContext and attaches it to every API call. Token expiry causes a redirect to login. The DEPLOY_MODE environment variable switches between local JWT auth (FastAPI handles everything) and cloud auth (Supabase, deferred to a future slice).
+JWT-based. The frontend stores the token in memory via AuthContext and attaches it to every API call. Token expiry causes a redirect to login. FastAPI handles all auth via JWT; no external auth provider.
 
 ### Internationalisation
 
@@ -169,7 +169,6 @@ The new file appears in backend/alembic/versions/ and is applied on the next con
 
 | Variable | Description |
 | --- | --- |
-| DEPLOY_MODE | LOCAL or CLOUD — controls auth mode |
 | SECRET_KEY | JWT signing secret |
 | DATABASE_URL | PostgreSQL connection string |
 | NEXT_PUBLIC_API_URL | Backend URL seen by the browser |

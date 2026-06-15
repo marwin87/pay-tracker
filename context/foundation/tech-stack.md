@@ -28,15 +28,14 @@ hints:
 
 Pay Tracker is a solo, 7-week after-hours project with auth, background tasks
 (auto-generated payment instances + email reminders), Excel/JSON export, and a
-hard requirement for dual-mode deployment: self-hosted Docker Compose as the
-primary target and an optional cloud mode via environment-variable switching.
+self-hosted Docker Compose deployment target.
 The stack is intentionally polyglot: Next.js (TypeScript, App Router) is the
 frontend and primary scaffolding layer — it passes all four agent-friendly gates
 and ships from an official CLI (create-next-app); FastAPI (Python, Pydantic,
-uv) handles the backend API, export via OpenPyXL/Pandas, auth in local mode,
-and email reminders — functionality that genuinely benefits from Python's data
-library ecosystem. Both starters pass all four quality gates. Bootstrapper will
-scaffold the Next.js shell; the FastAPI backend is a second service scaffolded
-manually alongside it and wired together by Docker Compose. No Cloudflare or
-Vercel lock-in; self-host is a first-class deployment target in the Next.js
-card. CI runs on GitHub Actions with auto-deploy-on-merge.
+uv) handles the backend API, export via OpenPyXL, JWT auth, and email reminders
+— functionality that genuinely benefits from Python's data library ecosystem.
+Both starters pass all four quality gates. Bootstrapper will scaffold the
+Next.js shell; the FastAPI backend is a second service scaffolded manually
+alongside it and wired together by Docker Compose. No Cloudflare or Vercel
+lock-in; self-host is the deployment target. CI runs on GitHub Actions with
+auto-deploy-on-merge.
