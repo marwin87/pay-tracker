@@ -168,7 +168,8 @@
     "cancel": "Cancel",
     "confirm": "Replace My Data",
     "restoring": "Restoring…",
-    "error": "Restore failed. Please check the file and try again."
+    "error": "Restore failed. Please check the file and try again.",
+    "fileTooLarge": "File too large. Backup files must be under 10 MB."
   },
   "BackupButton": {
     "ariaLabel": "Download backup",

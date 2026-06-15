@@ -168,7 +168,8 @@
     "cancel": "Abbrechen",
     "confirm": "Meine Daten ersetzen",
     "restoring": "Wird wiederhergestellt…",
-    "error": "Wiederherstellung fehlgeschlagen. Bitte Datei prüfen und erneut versuchen."
+    "error": "Wiederherstellung fehlgeschlagen. Bitte Datei prüfen und erneut versuchen.",
+    "fileTooLarge": "Datei zu groß. Backup-Dateien müssen kleiner als 10 MB sein."
   },
   "BackupButton": {
     "ariaLabel": "Backup herunterladen",

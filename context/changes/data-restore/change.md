@@ -1,7 +1,7 @@
 ---
 id: data-restore
 title: Data Restore from Backup
-status: implemented
+status: impl_reviewed
 created: 2026-06-15
 updated: 2026-06-15
 implemented: 2026-06-15

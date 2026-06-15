@@ -68,7 +68,7 @@ class BackupTemplate(BaseModel):
     id: int
     name: str
     category: str | None
-    frequency: str
+    frequency: BillFrequency
     amount: float
     currency: str
     due_day: int | None
@@ -85,7 +85,7 @@ class BackupInstance(BaseModel):
     period: str
     due_date: str
     amount: float
-    status: str
+    status: PaymentStatus
     paid_at: str | None
     paid_amount: float | None
     notes: str | None

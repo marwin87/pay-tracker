@@ -168,7 +168,8 @@
     "cancel": "Anuluj",
     "confirm": "Zastąp moje dane",
     "restoring": "Przywracanie…",
-    "error": "Przywracanie nie powiodło się. Sprawdź plik i spróbuj ponownie."
+    "error": "Przywracanie nie powiodło się. Sprawdź plik i spróbuj ponownie.",
+    "fileTooLarge": "Plik jest za duży. Kopie zapasowe muszą mieć mniej niż 10 MB."
   },
   "BackupButton": {
     "ariaLabel": "Pobierz kopię zapasową",

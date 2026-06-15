@@ -156,7 +156,13 @@ async def restore_json(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
-    content = await file.read()
+    _ALLOWED_TYPES = ("application/json", "text/plain", "application/octet-stream")
+    if file.content_type and file.content_type not in _ALLOWED_TYPES:
+        raise HTTPException(status_code=415, detail="Unsupported file type")
+    _MAX_UPLOAD = 10 * 1024 * 1024  # 10 MB
+    content = await file.read(_MAX_UPLOAD + 1)
+    if len(content) > _MAX_UPLOAD:
+        raise HTTPException(status_code=413, detail="Backup file too large (max 10 MB)")
     try:
         raw = json.loads(content)
     except json.JSONDecodeError:

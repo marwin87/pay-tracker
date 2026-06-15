@@ -155,4 +155,4 @@ def test_restore_requires_auth(client):
             "file": ("backup.json", json.dumps(payload).encode(), "application/json")
         },
     )
-    assert r.status_code in (401, 403)
+    assert r.status_code == 401

@@ -22,10 +22,14 @@ export default function RestoreButton() {
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
+    e.target.value = "";
+    if (file.size > 10 * 1024 * 1024) {
+      setErrorMsg(t("fileTooLarge"));
+      setState("error");
+      return;
+    }
     setSelectedFile(file);
     setState("confirming");
-    // Reset input so the same file can be re-selected after an error
-    e.target.value = "";
   }
 
   function handleCancel() {
@@ -77,7 +81,6 @@ export default function RestoreButton() {
               role="dialog"
               aria-modal="true"
               aria-labelledby="restore-dialog-title"
-              onKeyDown={(e) => e.key === "Escape" && handleCancel()}
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:bg-slate-800 dark:border-slate-700"
             >
@@ -96,6 +99,7 @@ export default function RestoreButton() {
               <div className="flex gap-3">
                 <button
                   onClick={handleCancel}
+                  onKeyDown={(e) => e.key === "Escape" && handleCancel()}
                   disabled={state === "restoring"}
                   autoFocus
                   className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
