@@ -245,7 +245,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Parked
 
-- **CI/CD pipeline** — Why parked: no CI/CD workflow exists yet; not an FR; tech-stack.md names GitHub Actions but this is infrastructure polish. Add after the first working end-to-end deployment is confirmed.
+- **CI/CD pipeline** — Shipped 2026-06-15. GitHub Actions workflow at `.github/workflows/ci.yml`: frontend build + lint, backend black format check, backend tests placeholder, Docker smoke test (build → up → health check → down). Not an FR; infrastructure polish.
 - **Budgeting and savings goals** — Why parked: PRD §Non-Goals. Out of scope for v1.
 - **Bank / card integrations** — Why parked: PRD §Non-Goals. No automatic transaction import of any kind.
 - **Multi-household / SaaS mode** — Why parked: PRD §Non-Goals. One household per deployment instance.
