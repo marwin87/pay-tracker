@@ -88,6 +88,8 @@ def export_json(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
+    # Full-history export by design — no date filter, no LIMIT.
+    # This is a backup, not a report; all rows are intentionally included.
     templates = db.query(BillTemplate).all()
     instances = db.query(PaymentInstance).all()
     payload = {

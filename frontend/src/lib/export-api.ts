@@ -9,7 +9,7 @@ export async function downloadBackup(): Promise<void> {
   });
 
   if (!res.ok) {
-    throw new Error("Backup failed");
+    throw new Error(`Backup failed: ${res.status}`);
   }
 
   const blob = await res.blob();

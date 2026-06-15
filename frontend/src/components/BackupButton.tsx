@@ -62,6 +62,7 @@ export default function BackupButton() {
                 <button
                   onClick={() => setState("idle")}
                   disabled={state === "downloading"}
+                  autoFocus
                   className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
                 >
                   {t("cancel")}
