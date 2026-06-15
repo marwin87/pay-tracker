@@ -191,7 +191,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ---
 
-### S-09: Import from backup
+### S-09: Restore from backup file
 
 - **Outcome:** user can upload a JSON backup file and restore all bill templates and payment history from it; existing data is replaced or merged (strategy TBD at plan time).
 - **Change ID:** data-restore
