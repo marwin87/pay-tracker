@@ -49,18 +49,20 @@ slice only matters if this loop works.
 | S-08 | data-backup                  | download a full JSON backup of all templates and payment history                  | S-01          | FR-011                                    | done     |
 | S-09 | data-restore                 | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | proposed |
 | S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | proposed |
+| S-11 | per-user-data-scoping        | only see own bills and payments; User A cannot access User B's data               | F-01, S-01    | FR-020 (new — security, blocking)         | proposed |
 
 ## Streams
 
 Navigation aid — groups items that share a Prerequisites chain. Canonical ordering still lives in the dependency graph below; this table is the proposed reading order across parallel tracks.
 
-| Stream | Theme                  | Chain                                      | Note                                                                                  |
-| ------ | ---------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------- |
-| A      | Core tracking loop     | `F-01` → `S-01` → `S-02` → `S-03`         | The must-have path to the north star; every other stream branches off this one.       |
-| B      | Data portability       | `S-01` → `S-04` → `S-08` → `S-09`         | S-04 (.xlsx) and S-08 (backup) parallel with S-02; S-09 (import) needs S-08 first. |
-| C      | Ship & deploy          | `S-03` → `S-05`                            | Runs after the north star lands.                                                       |
-| D      | Localisation           | `S-01` → `S-07`                            | Independent of the core loop; can run in parallel with any other stream after S-01.   |
-| E      | Notifications          | `S-03` → `S-10`                            | Needs the core loop so there are real overdue events to notify about; SMTP config required. |
+| Stream | Theme                  | Chain                                      | Note                                                                                                               |
+| ------ | ---------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| A      | Core tracking loop     | `F-01` → `S-01` → `S-02` → `S-03`         | The must-have path to the north star; every other stream branches off this one.                                    |
+| B      | Data portability       | `S-01` → `S-04` → `S-08` → `S-09`         | S-04 (.xlsx) and S-08 (backup) parallel with S-02; S-09 (import) needs S-08 first.                                |
+| C      | Ship & deploy          | `S-03` → `S-05`                            | Runs after the north star lands.                                                                                   |
+| D      | Localisation           | `S-01` → `S-07`                            | Independent of the core loop; can run in parallel with any other stream after S-01.                               |
+| E      | Notifications          | `S-03` → `S-10`                            | Needs the core loop so there are real overdue events to notify about; SMTP config required.                        |
+| F      | Security (blocking)    | `F-01` → `S-01` → `S-11`                  | Breaking schema change. Must land before S-09 (restore) — user-scoped restore depends on user-scoped data model.  |
 
 ## Baseline
 
@@ -191,6 +193,21 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ---
 
+### S-11: Per-user data scoping *(security — blocking)*
+
+- **Outcome:** each user can only see and manage their own bill templates and payment instances; User A cannot read, create, update, or delete User B's data under any circumstance.
+- **Change ID:** per-user-data-scoping
+- **PRD refs:** FR-020
+- **Prerequisites:** F-01 (schema), S-01 (auth / `current_user`)
+- **Parallel with:** nothing — this is a breaking schema change; all bill/payment work is blocked until this lands
+- **Blockers:** —
+- **Unknowns:**
+  - Migration strategy for existing rows — existing `BillTemplate` rows have no `user_id`. The migration must either assign them to a single owner or truncate. Decision must be made during planning. — Owner: user. Block: yes (migration cannot run without this decision).
+- **Risk:** Breaking change. Requires: (1) Alembic migration to add non-nullable `user_id` FK on `BillTemplate`; (2) all bill router queries filtered by `current_user.id`; (3) all export/backup endpoints scoped to `current_user.id`; (4) recurrence service must never touch another user's templates. A missed filter is a data-leak bug — each router endpoint must be audited individually. PaymentInstance does NOT need a direct `user_id` column — scope is inherited transitively via `bill_id → BillTemplate.user_id`.
+- **Status:** proposed
+
+---
+
 ### S-09: Restore from backup file
 
 - **Outcome:** user can upload a JSON backup file and restore all bill templates and payment history from it; existing data is replaced or merged (strategy TBD at plan time).
@@ -236,8 +253,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-05       | pwa-installability         | PWA manifest, service worker, 375px layout verification      | no                    | Needs S-03 done first                          |
 | S-07       | language-support           | EN/PL i18n: next-intl, language toggle, per-user persistence | yes                   | Plan ready; run `/10x-implement language-support phase 1` |
 | S-08       | data-backup                | Frontend: JSON backup download                               | yes                   | Backend may already be scaffolded; verify first   |
-| S-09       | data-restore               | Backend + frontend: upload and restore from JSON backup      | no                    | Needs S-08 done; define replace vs. merge strategy first |
+| S-09       | data-restore               | Backend + frontend: upload and restore from JSON backup      | no                    | Needs S-08 + S-11 done; define replace vs. merge strategy first   |
 | S-10       | email-reminders            | Backend scheduler + email: overdue reminders via SMTP        | no                    | Needs S-03 done; SMTP provider and lead-time must be decided first |
+| S-11       | per-user-data-scoping      | Add user_id FK to bill_templates; scope all queries to current_user | yes             | **Security/blocking.** Decide migration strategy for existing rows first. |
 
 ## Open Roadmap Questions
 

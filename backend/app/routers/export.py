@@ -33,12 +33,16 @@ _COLUMNS = [
 def export_xlsx(
     year: int = Query(default_factory=lambda: date.today().year),
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
     instances = (
         db.query(PaymentInstance)
         .options(selectinload(PaymentInstance.template))
-        .filter(PaymentInstance.period.startswith(f"{year}-"))
+        .join(BillTemplate, PaymentInstance.bill_id == BillTemplate.id)
+        .filter(
+            BillTemplate.user_id == me.id,
+            PaymentInstance.period.startswith(f"{year}-"),
+        )
         .order_by(PaymentInstance.due_date)
         .all()
     )
@@ -88,23 +92,19 @@ def export_json(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
-    # Full-history export by design — no date filter, no LIMIT.
-    # This is a backup, not a report; all rows are intentionally included.
-    templates = db.query(BillTemplate).all()
-    instances = db.query(PaymentInstance).all()
+    templates = db.query(BillTemplate).filter(BillTemplate.user_id == me.id).all()
+    template_ids = [t.id for t in templates]
+    instances = (
+        db.query(PaymentInstance)
+        .filter(PaymentInstance.bill_id.in_(template_ids))
+        .all()
+        if template_ids
+        else []
+    )
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
+        "exported_by": me.email,
         "exported_at": datetime.now(timezone.utc).isoformat(),
-        "users": [
-            {
-                "id": me.id,
-                "email": me.email,
-                "password_hash": me.password_hash,
-                "is_active": me.is_active,
-                "language_preference": me.language_preference,
-                "created_at": me.created_at.isoformat(),
-            }
-        ],
         "bill_templates": [
             {
                 "id": t.id,

@@ -1,7 +1,7 @@
 from datetime import date, datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
 from app.core.deps import current_user
@@ -19,8 +19,6 @@ from app.services.recurrence import (
     generate_next_instance,
 )
 
-# PRD §Access Control: flat household model — all authenticated users share one view.
-# current_user is injected for auth enforcement only; no per-user data scoping is applied.
 router = APIRouter(prefix="/bills", tags=["bills"])
 
 
@@ -28,9 +26,9 @@ router = APIRouter(prefix="/bills", tags=["bills"])
 def list_bills(
     include_archived: bool = False,
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
-    q = db.query(BillTemplate)
+    q = db.query(BillTemplate).filter(BillTemplate.user_id == me.id)
     if not include_archived:
         q = q.filter(BillTemplate.is_archived.is_(False))
     return q.order_by(BillTemplate.name).all()
@@ -40,10 +38,12 @@ def list_bills(
 def create_bill(
     body: BillTemplateCreate,
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
     now = datetime.now(timezone.utc)
-    bill = BillTemplate(**body.model_dump(), start_period=now.strftime("%Y-%m"))
+    bill = BillTemplate(
+        **body.model_dump(), user_id=me.id, start_period=now.strftime("%Y-%m")
+    )
     db.add(bill)
     db.commit()
     db.refresh(bill)
@@ -56,7 +56,7 @@ def create_bill(
 def list_payments(
     month: str | None = None,  # "YYYY-MM"
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
     today = date.today()
     current_month = today.strftime("%Y-%m")
@@ -65,12 +65,16 @@ def list_payments(
 
     # Seed current and future months; skip past to avoid retroactive overdue flooding
     if month >= current_month:
-        ensure_current_period_instances(db, month)
+        ensure_current_period_instances(db, month, me.id)
 
     instances = (
         db.query(PaymentInstance)
-        .options(joinedload(PaymentInstance.template))
-        .filter(PaymentInstance.period == month)
+        .options(selectinload(PaymentInstance.template))
+        .join(BillTemplate, PaymentInstance.bill_id == BillTemplate.id)
+        .filter(
+            BillTemplate.user_id == me.id,
+            PaymentInstance.period == month,
+        )
         .order_by(PaymentInstance.due_date)
         .all()
     )
@@ -103,7 +107,7 @@ def mark_paid(
     instance_id: int,
     body: MarkPaidRequest,
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
     instance = db.get(PaymentInstance, instance_id)
     if not instance:
@@ -112,6 +116,9 @@ def mark_paid(
     template = (
         instance.template
     )  # read before commit; expire_on_commit would force a lazy re-load after
+    if template.user_id != me.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
     instance.status = PaymentStatus.paid
     instance.paid_at = datetime.now(timezone.utc)
     instance.paid_amount = (
@@ -146,7 +153,7 @@ def mark_paid(
 def revert_payment(
     instance_id: int,
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
     instance = db.get(PaymentInstance, instance_id)
     if not instance:
@@ -155,6 +162,9 @@ def revert_payment(
         raise HTTPException(status_code=400, detail="Payment is not marked as paid")
 
     template = instance.template
+    if template.user_id != me.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
     today = date.today()
     instance.status = (
         PaymentStatus.overdue if instance.due_date < today else PaymentStatus.upcoming
@@ -183,13 +193,15 @@ def revert_payment(
 def delete_payment(
     instance_id: int,
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
     instance = db.get(PaymentInstance, instance_id)
     if not instance:
         raise HTTPException(status_code=404, detail="Payment instance not found")
 
     template = instance.template
+    if template.user_id != me.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
 
     if template.frequency == BillFrequency.one_off:
         # One-off: delete just this instance; template stays (no loop to stop)
@@ -211,11 +223,13 @@ def update_bill(
     bill_id: int,
     body: BillTemplateUpdate,
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
     bill = db.get(BillTemplate, bill_id)
     if not bill:
         raise HTTPException(status_code=404, detail="Bill not found")
+    if bill.user_id != me.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
     for field, value in body.model_dump(exclude_unset=True).items():
         setattr(bill, field, value)
     db.commit()
@@ -227,10 +241,12 @@ def update_bill(
 def archive_bill(
     bill_id: int,
     db: Session = Depends(get_db),
-    _: User = Depends(current_user),
+    me: User = Depends(current_user),
 ):
     bill = db.get(BillTemplate, bill_id)
     if not bill:
         raise HTTPException(status_code=404, detail="Bill not found")
+    if bill.user_id != me.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
     bill.is_archived = True
     db.commit()

@@ -61,11 +61,12 @@ def _bill_active_in_period(template: BillTemplate, period: str) -> bool:
     return False
 
 
-def ensure_current_period_instances(db: Session, period: str) -> None:
+def ensure_current_period_instances(db: Session, period: str, user_id: int) -> None:
     """Idempotently seed payment instances for eligible templates that are due in period."""
     templates = (
         db.query(BillTemplate)
         .filter(
+            BillTemplate.user_id == user_id,
             BillTemplate.is_archived.is_(False),
             BillTemplate.is_paused.is_(False),
             BillTemplate.frequency != BillFrequency.one_off,

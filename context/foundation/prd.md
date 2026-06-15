@@ -41,8 +41,9 @@ bills in a spreadsheet, manually updates it each month, and relies on their own 
 reminders. They want a web app that replaces the spreadsheet with automation, while keeping
 data under their control (either self-hosted or privately cloud-hosted).
 
-**Secondary persona:** Other family members who can view the unified payment list and mark
-individual bills as paid, but who do not own template creation or system maintenance.
+**Secondary persona:** Other family members who each have their own account. Each account
+has a fully isolated view — their own bill templates and payment instances, separate from
+every other account on the same deployment.
 
 ## Success Criteria
 
@@ -136,14 +137,26 @@ household finance manager does not need to check the dashboard proactively.
   > by the original mark-paid action is preserved to avoid cascading data loss. Action is
   > trivially reversible (user can mark paid again), so no confirmation gate is needed.
 
+- FR-020: Bill templates and payment instances are owned by the user who created them.
+  User A cannot read, modify, or delete User B's templates or payment instances.
+  All API endpoints that return or mutate bill or payment data must filter by the
+  authenticated user's ID. Priority: must-have (security — blocking)
+  > This is enforced at the data layer (`BillTemplate.user_id` FK), not at the router
+  > level alone. PaymentInstance inherits user scope transitively through its
+  > `bill_id → BillTemplate.user_id` FK; no direct `user_id` column is needed on
+  > `PaymentInstance`. Every query on bill or payment data must join or filter through
+  > `BillTemplate.user_id = current_user.id`.
+
 ### Export & Backup
 
-- FR-010: User can export payment data to a spreadsheet file (.xlsx). Priority: must-have
+- FR-010: User can export their own payment data to a spreadsheet file (.xlsx). The export
+  is scoped to the authenticated user's templates and instances only. Priority: must-have
   > Socratic: Both export and backup are must-have — spreadsheet export serves family
   > review; data backup enables portability between deployment modes.
 
-- FR-011: User can download a full data backup in a portable machine-readable format.
-  Priority: must-have
+- FR-011: User can download a full data backup of their own data in a portable
+  machine-readable format. The backup is scoped to the authenticated user's templates and
+  instances only. Priority: must-have
   > Socratic: Backup and spreadsheet export serve distinct purposes; both justified for v1.
 
 ### Reminders
@@ -209,14 +222,15 @@ All users authenticate before accessing any finance data.
 
 Authentication method: email and password.
 
-Role model: flat — all authenticated users share the same household view. There are no
-ownership tiers or permission differences between accounts. Any authenticated user can
-create templates, mark payments, and access exports.
+Role model: per-user isolation. Each authenticated user owns their own bill templates and
+payment instances. User A cannot see, edit, or delete User B's data. There are no
+shared views, no cross-account reads, and no admin override path in the application
+layer. Isolation is enforced at the data layer via `BillTemplate.user_id` — see FR-020.
 
 Self-registration is supported so family members can join without requiring an invitation
 from another user. Registration is intentionally open to anyone who knows the app's URL —
 appropriate for a privately deployed household tool where URL distribution is controlled
-by the household.
+by the household. Each registrant gets a fully isolated data partition.
 
 ## Non-Goals
 
@@ -227,7 +241,9 @@ by the household.
   banking, no statement parsing). All data is entered manually by the user.
 
 - **No multi-household or SaaS mode.** One household per deployment instance. No public
-  sign-up, no per-user billing, no tenant isolation. Personal-first, not platform-first.
+  sign-up, no per-user billing. Within a deployment, each user account is data-isolated
+  (FR-020) — this is a security property, not a SaaS feature. Personal-first, not
+  platform-first.
 
 - **No native mobile app.** PWA is the mobile story. No app store distribution, no
   platform-specific build.

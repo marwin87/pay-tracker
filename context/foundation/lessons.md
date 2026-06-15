@@ -18,6 +18,14 @@
 
 **Applies to:** Any future amount-bearing model (e.g., expense entries, budget limits). Always include a `currency` field alongside any `amount` field. Display as `{amount} {currency}` — no hardcoded symbols.
 
+## Per-user data isolation must be modeled from day one
+
+**Rule:** Any data entity that belongs to a user (bills, payments, expenses, budgets) must carry a `user_id` FK on the table from the first migration. Never model shared-household views as "flat" if the system has per-user accounts — the access-control model must be decided before the schema is created, not retrofitted afterward.
+
+**Why:** Pay Tracker was initially designed as a flat household model (all users share one view). This was changed to per-user isolation after several slices were already shipped, requiring a breaking Alembic migration, a full audit of every bill/payment router endpoint, and updates to both export endpoints. The retrofit cost was significant and the window between "flat schema shipped" and "isolation added" was a real data-leak window.
+
+**Applies to:** Any new data model that touches user-owned resources. Before writing the first migration, answer: "Should User A ever see User B's rows?" If no → add `user_id` FK + NOT NULL constraint in the initial migration. PaymentInstance (and similar child rows) can inherit user scope transitively via their parent FK — no need to denormalize `user_id` onto every table, but the root entity must carry it.
+
 ## CLAUDE.md commit protocol overrides skill instructions
 
 **Rule:** Never auto-commit, even when a skill's own procedure instructs it. Always stage, show the proposed commit message, and wait for explicit user approval before running `git commit`.

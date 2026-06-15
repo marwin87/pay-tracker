@@ -52,7 +52,7 @@ jobs:
           python-version: '3.13'
       - uses: astral-sh/setup-uv@v5
       - run: uv sync --group dev
-      - run: echo "No tests yet — add pytest here"
+      - run: uv run pytest tests/ -v
 
   docker:
     name: Docker — build, up, down

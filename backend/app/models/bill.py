@@ -1,6 +1,9 @@
+from __future__ import annotations
+
 from datetime import date, datetime, timezone
 from decimal import Decimal
 from enum import Enum
+from typing import TYPE_CHECKING
 
 from sqlalchemy import (
     Boolean,
@@ -16,6 +19,9 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
 
 
 class BillFrequency(str, Enum):
@@ -53,10 +59,12 @@ class BillTemplate(Base):
     # Avoids UTC-vs-local off-by-one when created_at straddles a month boundary.
     # NULL for rows created before this column existed; code falls back to created_at.
     start_period: Mapped[str | None] = mapped_column(String(7))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
 
+    user: Mapped[User] = relationship(back_populates="bills")
     instances: Mapped[list["PaymentInstance"]] = relationship(
         back_populates="template", cascade="all, delete-orphan"
     )
