@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/context/auth-context";
 import { LocaleProvider } from "@/context/locale-context";
+import PwaRegister from "@/components/pwa-register";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -17,6 +18,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Pay Tracker",
   description: "Household bill tracking made simple",
+  themeColor: "#2563eb",
 };
 
 export default function RootLayout({
@@ -38,6 +40,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-slate-50 dark:bg-slate-900 antialiased">
+        <PwaRegister />
         <AuthProvider>
           <LocaleProvider>{children}</LocaleProvider>
         </AuthProvider>

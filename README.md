@@ -176,6 +176,30 @@ The new file appears in backend/alembic/versions/ and is applied on the next con
 Copy .env.example to .env and fill in the values. Never commit .env.
 
 
+## Installing as a PWA
+
+Pay Tracker can be installed as a standalone app on desktop and mobile — no app store required.
+
+### Chrome / Brave on macOS or Windows
+
+1. Open the app and log in
+2. Look for the install icon (⊕) in the address bar on the right side
+3. Click it and choose **Install**
+
+If the icon is not visible: browser menu → **Cast, save, and share** → **Install Pay Tracker…**
+
+### Android (Chrome / Brave)
+
+Browser menu (⋮) → **Add to Home screen**
+
+### iOS Safari
+
+Share button (⎋) → **Add to Home Screen**
+
+> **Note:** Installation requires HTTPS. On localhost the browser allows it as an exception. In production, configure a TLS certificate on your reverse proxy — see the deployment notes in the Open Questions section of `context/foundation/prd.md`.
+
+---
+
 ## Export
 
 Two export endpoints are available at /export/xlsx and /export/json (authentication required).
