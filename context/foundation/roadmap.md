@@ -49,7 +49,7 @@ slice only matters if this loop works.
 | S-08 | data-backup                  | download a full JSON backup of all templates and payment history                  | S-01          | FR-011                                    | done     |
 | S-09 | data-restore                 | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | proposed |
 | S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | proposed |
-| S-11 | per-user-data-scoping        | only see own bills and payments; User A cannot access User B's data               | F-01, S-01    | FR-020 (new — security, blocking)         | proposed |
+| S-11 | per-user-data-scoping        | only see own bills and payments; User A cannot access User B's data               | F-01, S-01    | FR-020 (new — security, blocking)         | done     |
 
 ## Streams
 
@@ -204,7 +204,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Migration strategy for existing rows — existing `BillTemplate` rows have no `user_id`. The migration must either assign them to a single owner or truncate. Decision must be made during planning. — Owner: user. Block: yes (migration cannot run without this decision).
 - **Risk:** Breaking change. Requires: (1) Alembic migration to add non-nullable `user_id` FK on `BillTemplate`; (2) all bill router queries filtered by `current_user.id`; (3) all export/backup endpoints scoped to `current_user.id`; (4) recurrence service must never touch another user's templates. A missed filter is a data-leak bug — each router endpoint must be audited individually. PaymentInstance does NOT need a direct `user_id` column — scope is inherited transitively via `bill_id → BillTemplate.user_id`.
-- **Status:** proposed
+- **Status:** done
 
 ---
 
@@ -279,3 +279,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-04: user can export all payment history to a downloadable .xlsx spreadsheet file directly from the dashboard** — Archived 2026-06-15 → `context/archive/2026-06-13-xlsx-export/`. Lesson: —.
 - **S-05: install the app from the browser on mobile and desktop** — Archived 2026-06-15 → `context/archive/2026-06-15-pwa-installability/`. Lesson: —.
 - **S-08: download a full JSON backup of all templates and payment history** — Archived 2026-06-15 → `context/archive/2026-06-15-data-backup/`. Lesson: —.
+- **S-11: only see own bills and payments; User A cannot access User B's data** — Archived 2026-06-15 → `context/archive/2026-06-15-per-user-data-scoping/`. Lesson: —.
