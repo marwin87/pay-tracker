@@ -58,7 +58,7 @@ frontend/
       auth.ts                 Login and register calls
       bills-api.ts            Bill template CRUD
       payments-api.ts         Payment instance fetch, mark-paid, revert, delete
-      export-api.ts           Blob download utility for .xlsx export
+      export-api.ts           Download utilities for .xlsx and JSON export; restore upload
       user-api.ts             User preferences (locale)
     context/
       auth-context.tsx        JWT storage and current-user state
@@ -76,7 +76,7 @@ backend/
     routers/
       auth.py                 POST /auth/register, POST /auth/login
       bills.py                Bill template CRUD + payment endpoints (scoped to current user)
-      export.py               GET /export/xlsx, GET /export/json (scoped to current user)
+      export.py               GET /export/xlsx, GET /export/json, POST /export/restore (scoped to current user)
     services/
       recurrence.py           Instance generation and frequency scheduling (per-user)
     core/
@@ -87,6 +87,7 @@ backend/
   tests/
     conftest.py               SQLite in-memory test DB, TestClient fixture
     test_user_scoping.py      8 tests: per-user data isolation across all endpoints
+    test_restore.py           6 tests: restore happy path, validation failures, user isolation
 
 alembic/                      Database migration revisions
 ```
@@ -228,6 +229,20 @@ The JSON export (GET /export/json) produces a structured backup of the authentic
 Both endpoints are accessible from the API docs at http://localhost:8010/docs.
 
 
+## Restore
+
+`POST /export/restore` accepts a JSON backup file (produced by `GET /export/json`) and atomically replaces the authenticated user's data with its contents. Existing bill templates and payment instances are deleted first; the backup's templates and instances are then re-inserted with new database IDs. The operation is all-or-nothing — any validation failure leaves the existing data untouched.
+
+Validation checks before any data is written:
+
+- File must be valid JSON
+- `schema_version` must be `2`
+- All `payment_instances[].bill_id` values must reference a template present in the same file
+- `frequency` and `status` values must be valid enum members
+
+A **Restore** button (upload icon) appears in the dashboard header next to the Backup button. Clicking it opens a file picker restricted to `.json` files, then shows a confirmation dialog naming the selected file before the upload begins.
+
+
 ## Backend tests
 
 The backend has a pytest suite that runs against an in-memory SQLite database — no Docker or PostgreSQL required.
@@ -236,6 +251,6 @@ The backend has a pytest suite that runs against an in-memory SQLite database �
 cd backend && uv run pytest tests/ -v
 ```
 
-The suite covers per-user data isolation: list endpoints return only the current user's data, and cross-user mutation attempts (mark paid, revert, update, archive) return 403. Tests also verify that both export endpoints scope their output to the authenticated user.
+The suite covers per-user data isolation, export scoping, and restore behaviour: happy path, wrong schema version, orphaned payment instances, replace-existing-data semantics, user isolation, and unauthenticated access.
 
 CI runs these tests automatically on every push via GitHub Actions (`backend-tests` job).
