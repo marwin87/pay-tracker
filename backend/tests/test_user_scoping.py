@@ -25,11 +25,11 @@ def _create_bill(client, token: str) -> int:
 
 
 def _seed_payment(client, token: str, bill_id: int) -> int:
-    """Trigger instance seeding by fetching the payment list, return first instance id."""
+    """Trigger instance seeding by fetching the payment list, return the instance id for bill_id."""
     r = client.get("/bills/payments", headers=auth(token))
     assert r.status_code == 200, r.text
-    instances = r.json()
-    assert instances, "Expected at least one payment instance after seeding"
+    instances = [i for i in r.json() if i["bill_id"] == bill_id]
+    assert instances, f"No payment instance found for bill_id={bill_id}"
     return instances[0]["id"]
 
 
@@ -72,8 +72,8 @@ def test_mark_paid_other_user_returns_403(client):
     tok_a = register_and_login(client, "a@test.com")
     tok_b = register_and_login(client, "b@test.com")
 
-    _create_bill(client, tok_a)
-    instance_id = _seed_payment(client, tok_a, 0)
+    bill_id = _create_bill(client, tok_a)
+    instance_id = _seed_payment(client, tok_a, bill_id)
 
     r = client.post(
         f"/bills/payments/{instance_id}/pay",
@@ -87,8 +87,8 @@ def test_revert_payment_other_user_returns_403(client):
     tok_a = register_and_login(client, "a@test.com")
     tok_b = register_and_login(client, "b@test.com")
 
-    _create_bill(client, tok_a)
-    instance_id = _seed_payment(client, tok_a, 0)
+    bill_id = _create_bill(client, tok_a)
+    instance_id = _seed_payment(client, tok_a, bill_id)
 
     # A marks paid first
     client.post(
@@ -151,6 +151,9 @@ def test_export_json_scoped(client):
 
 
 def test_export_xlsx_scoped(client):
+    import io
+    import openpyxl
+
     tok_a = register_and_login(client, "a@test.com")
     tok_b = register_and_login(client, "b@test.com")
 
@@ -162,3 +165,7 @@ def test_export_xlsx_scoped(client):
         r.headers["content-type"]
         == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+    wb = openpyxl.load_workbook(io.BytesIO(r.content))
+    for sheet in wb.worksheets:
+        # Each sheet has a header row only; no data rows for user B.
+        assert sheet.max_row <= 1, f"Sheet {sheet.title} has unexpected data rows"

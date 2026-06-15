@@ -16,6 +16,7 @@ from app.main import app
 
 # StaticPool forces every SQLAlchemy checkout to reuse the same underlying
 # SQLite connection, so tables created by create_all() survive into requests.
+# NOTE: StaticPool singleton — incompatible with pytest-xdist (-n auto).
 _ENGINE = create_engine(
     "sqlite:///:memory:",
     connect_args={"check_same_thread": False},

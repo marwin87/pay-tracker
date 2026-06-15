@@ -158,12 +158,11 @@ def revert_payment(
     instance = db.get(PaymentInstance, instance_id)
     if not instance:
         raise HTTPException(status_code=404, detail="Payment instance not found")
-    if instance.status != PaymentStatus.paid:
-        raise HTTPException(status_code=400, detail="Payment is not marked as paid")
-
     template = instance.template
     if template.user_id != me.id:
         raise HTTPException(status_code=403, detail="Not authorized")
+    if instance.status != PaymentStatus.paid:
+        raise HTTPException(status_code=400, detail="Payment is not marked as paid")
 
     today = date.today()
     instance.status = (

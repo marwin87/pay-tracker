@@ -19,8 +19,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # Truncate all per-user data; existing rows have no user_id and cannot
-    # be assigned to an owner without arbitrary guessing. Dev/test data only.
+    # DANGER: destroys all data — dev/test only, never run on a populated DB.
+    # Existing rows have no user_id and cannot be assigned to an owner without
+    # arbitrary guessing. Downgrade cannot restore truncated rows.
     op.execute("TRUNCATE TABLE bill_templates CASCADE")
     op.add_column(
         "bill_templates",

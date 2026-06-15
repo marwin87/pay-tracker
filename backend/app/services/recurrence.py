@@ -94,7 +94,8 @@ def ensure_current_period_instances(db: Session, period: str, user_id: int) -> N
             status=PaymentStatus.upcoming,
         )
         db.add(instance)
-    db.commit()
+    if db.new:
+        db.commit()
 
 
 def generate_next_instance(

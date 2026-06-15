@@ -1,7 +1,7 @@
 ---
 id: per-user-data-scoping
 title: Per-User Data Scoping
-status: implementing
+status: impl_reviewed
 created: 2026-06-15
 updated: 2026-06-15
 prd_refs:

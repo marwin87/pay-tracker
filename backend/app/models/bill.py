@@ -59,7 +59,7 @@ class BillTemplate(Base):
     # Avoids UTC-vs-local off-by-one when created_at straddles a month boundary.
     # NULL for rows created before this column existed; code falls back to created_at.
     start_period: Mapped[str | None] = mapped_column(String(7))
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )

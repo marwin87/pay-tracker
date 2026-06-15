@@ -36,6 +36,9 @@ jobs:
         with:
           python-version: '3.13'
       - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
       - run: uv sync --group dev
       - run: uv run black --check --target-version py313 .
 
@@ -51,6 +54,9 @@ jobs:
         with:
           python-version: '3.13'
       - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: backend/uv.lock
       - run: uv sync --group dev
       - run: uv run pytest tests/ -v
 
