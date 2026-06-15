@@ -50,7 +50,7 @@ slice only matters if this loop works.
 | S-09 | data-restore                 | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | done     |
 | S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | proposed |
 | S-11 | per-user-data-scoping        | only see own bills and payments; User A cannot access User B's data               | F-01, S-01    | FR-020 (new — security, blocking)         | done     |
-| S-12 | browser-notification         | get a browser notification for each unpaid bill due today when opening the dashboard | S-05       | FR-013 (extension)                        | planned  |
+| S-12 | browser-notification         | get a browser notification for each unpaid bill due today when opening the dashboard | S-05       | FR-013 (extension)                        | done     |
 
 ## Streams
 
@@ -235,7 +235,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Client-side only; no backend changes. iOS requires app installed as PWA (Add to Home Screen) and iOS 16.4+ — silently no-ops on older versions. Dedup via localStorage so repeated page loads don't spam the user. Low risk overall.
-- **Status:** planned — plan at `context/changes/browser-notification/plan.md`
+- **Status:** done
 
 ---
 
@@ -297,3 +297,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-08: download a full JSON backup of all templates and payment history** — Archived 2026-06-15 → `context/archive/2026-06-15-data-backup/`. Lesson: —.
 - **S-11: only see own bills and payments; User A cannot access User B's data** — Archived 2026-06-15 → `context/archive/2026-06-15-per-user-data-scoping/`. Lesson: —.
 - **S-09: upload a JSON backup and restore all data from it** — Archived 2026-06-15 → `context/archive/2026-06-15-data-restore/`. Lesson: —.
+- **S-12: user gets one browser notification per unpaid bill due today each time the dashboard is opened; notifications require one-time permission grant via a Bell icon in the dashboard header.** — Archived 2026-06-15 → `context/archive/2026-06-15-browser-notification/`. Lesson: —.

@@ -21,7 +21,7 @@ This gives you control over what gets committed and the final commit message. On
 
 **Exception**: Skip this if you explicitly say "commit as is" or "go ahead and commit" in your message.
 
-**Skill override**: This rule applies even when a skill's own instructions include a commit step (e.g. `/10x-archive`, `/10x-implement`). Skill procedures are general-purpose; CLAUDE.md is project law. Stage + show message + wait, always.
+**Skill override**: This rule applies even when a skill's own instructions include a commit step (e.g. `/10x-plan`, `/10x-implement`, `/10x-impl-review`, `/10x-archive`). Skill procedures are general-purpose; CLAUDE.md is project law. Stage + show message + wait, always.
 
 ## Project
 
