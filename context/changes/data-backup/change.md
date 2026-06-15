@@ -1,7 +1,7 @@
 ---
 id: data-backup
 title: Full Data Backup Download
-status: implemented
+status: impl_reviewed
 created: 2026-06-15
 updated: 2026-06-15
 prd_refs:
