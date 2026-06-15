@@ -1,9 +1,10 @@
 ---
 id: xlsx-export
 title: .xlsx export — year-by-month spreadsheet download
-status: impl_reviewed
+status: archived
 created: 2026-06-13
 updated: 2026-06-15
+archived_at: 2026-06-15T08:33:26Z
 prd_refs:
   - FR-010
 roadmap_id: S-04
