@@ -301,8 +301,8 @@ The `output: "standalone"` setting in `next.config.ts` is preserved — the SW f
 
 #### Manual
 
-- [ ] 2.4 DevTools Application → Service Workers: SW registered and activated
-- [ ] 2.5 DevTools Application → Manifest: Installability section shows no errors
-- [ ] 2.6 Chrome address bar shows install icon; native prompt fires on click
-- [ ] 2.7 Installed app opens in standalone mode
-- [ ] 2.8 Lighthouse PWA audit: Installable check passes
+- [x] 2.4 DevTools Application → Service Workers: SW registered and activated
+- [x] 2.5 DevTools Application → Manifest: Installability section shows no errors
+- [x] 2.6 Chrome address bar shows install icon; native prompt fires on click
+- [x] 2.7 Installed app opens in standalone mode
+- [x] 2.8 Lighthouse PWA audit: Installable check passes

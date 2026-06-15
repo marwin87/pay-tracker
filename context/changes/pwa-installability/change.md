@@ -1,9 +1,10 @@
 ---
 id: pwa-installability
 title: PWA Installability
-status: implementing
+status: implemented
 created: 2026-06-15
 updated: 2026-06-15
+
 prd_ref: FR-013
 ---
 
