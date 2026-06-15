@@ -1,9 +1,10 @@
 ---
 id: revert-payment
 title: Revert payment — undo accidental "Mark as Paid"
-status: implemented
+status: archived
 created: 2026-06-15
 updated: 2026-06-15
+archived_at: 2026-06-15T08:33:26Z
 prd_refs: []
 roadmap_id: null
 prerequisites:

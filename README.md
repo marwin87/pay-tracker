@@ -57,7 +57,8 @@ frontend/
       api.ts                  Base fetch wrapper (attaches JWT, handles errors)
       auth.ts                 Login and register calls
       bills-api.ts            Bill template CRUD
-      payments-api.ts         Payment instance fetch, mark-paid, delete
+      payments-api.ts         Payment instance fetch, mark-paid, revert, delete
+      export-api.ts           Blob download utility for .xlsx export
       user-api.ts             User preferences (locale)
     context/
       auth-context.tsx        JWT storage and current-user state
@@ -101,6 +102,10 @@ Due dates are clamped to the last day of shorter months. A template with due_day
 ### Marking a bill paid
 
 The user opens the mark-paid dialog, optionally overrides the amount, adds a note, and confirms. The backend records paid_at, paid_amount, and status = paid, then calls generate_next_instance which inserts the following period's instance (again idempotent). The frontend replaces the updated row in local state without a full re-fetch.
+
+### Reverting a payment
+
+An icon button (↺) appears on any paid instance. Clicking it calls POST /bills/payments/{id}/unpay, which clears paid_at and paid_amount and resets status to upcoming or overdue based on whether the due date has passed. The auto-generated next-period instance created by the original mark-paid is kept intact to avoid cascading data loss. No confirmation dialog — the action is trivially reversible by marking paid again.
 
 ### Deleting a payment
 
@@ -174,6 +179,10 @@ Copy .env.example to .env and fill in the values. Never commit .env.
 
 ## Export
 
-Two export endpoints are available at /export/xlsx and /export/json (authentication required). The .xlsx export contains all payment instances with bill name, period, due date, amounts, and status. The JSON export contains all bill templates and payment instances in a structured format suitable for backup and restore.
+Two export endpoints are available at /export/xlsx and /export/json (authentication required).
+
+The .xlsx export (GET /export/xlsx?year=YYYY) produces a 12-sheet workbook — one sheet per calendar month — with columns: Bill, Category, Period, Due Date, Amount, Currency, Status, Paid Amount, Paid At, Notes. Defaults to the current year; empty months produce a sheet with headers only. An Export button on the Payments page triggers the download directly from the UI.
+
+The JSON export contains all bill templates and payment instances in a structured format suitable for backup and restore.
 
 Both are accessible from the API docs at http://localhost:8010/docs.

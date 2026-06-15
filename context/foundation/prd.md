@@ -132,6 +132,13 @@ household finance manager does not need to check the dashboard proactively.
   > Socratic: Pause flag at template level allows stopping recurrence without deleting the
   > template or losing its payment history.
 
+- FR-019: User can revert an accidentally marked-as-paid payment instance back to its
+  natural unpaid state (upcoming or overdue) without a confirmation dialog. Priority: must-have
+  > Reverting clears paid_at and paid_amount; status is recomputed dynamically (overdue if
+  > due_date < today, otherwise upcoming). The auto-generated next-period instance created
+  > by the original mark-paid action is preserved to avoid cascading data loss. Action is
+  > trivially reversible (user can mark paid again), so no confirmation gate is needed.
+
 ### Export & Backup
 
 - FR-010: User can export payment data to a spreadsheet file (.xlsx). Priority: must-have
