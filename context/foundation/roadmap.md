@@ -46,7 +46,7 @@ slice only matters if this loop works.
 | S-04 | xlsx-export                  | export payment history to a downloadable .xlsx spreadsheet file                   | S-01          | FR-010                                    | done     |
 | S-05 | pwa-installability           | install the app from the browser on mobile and desktop                            | S-03          | FR-013                                    | done     |
 | S-07 | language-support             | switch the UI between English and Polish; preference is saved per account and restored after login | S-01 | FR-016, FR-017                 | done     |
-| S-08 | data-backup                  | download a full JSON backup of all templates and payment history                  | S-01          | FR-011                                    | proposed |
+| S-08 | data-backup                  | download a full JSON backup of all templates and payment history                  | S-01          | FR-011                                    | done     |
 | S-09 | data-restore                 | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | proposed |
 | S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | proposed |
 
@@ -187,7 +187,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Backend endpoint may already be scaffolded in `export.py`; verify coverage before planning. Low risk.
-- **Status:** proposed
+- **Status:** done
 
 ---
 
@@ -260,3 +260,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-03: user can view a unified payment list sorted by due date with status indicators (upcoming / overdue / paid), mark a payment instance as paid with the amount defaulting to the template amount (overridable), and watch the next month's instance appear automatically on the dashboard** — Archived 2026-06-12 → `context/archive/2026-06-12-core-payment-tracking-loop/`. Lesson: —.
 - **S-04: user can export all payment history to a downloadable .xlsx spreadsheet file directly from the dashboard** — Archived 2026-06-15 → `context/archive/2026-06-13-xlsx-export/`. Lesson: —.
 - **S-05: install the app from the browser on mobile and desktop** — Archived 2026-06-15 → `context/archive/2026-06-15-pwa-installability/`. Lesson: —.
+- **S-08: download a full JSON backup of all templates and payment history** — Archived 2026-06-15 → `context/archive/2026-06-15-data-backup/`. Lesson: —.

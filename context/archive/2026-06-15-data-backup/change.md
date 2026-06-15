@@ -1,9 +1,10 @@
 ---
 id: data-backup
 title: Full Data Backup Download
-status: impl_reviewed
+status: archived
 created: 2026-06-15
 updated: 2026-06-15
+archived_at: 2026-06-15T11:53:58Z
 prd_refs:
   - FR-011
 ---
