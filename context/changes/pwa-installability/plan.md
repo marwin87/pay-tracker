@@ -48,6 +48,11 @@ are the authoritative reference.
   providers.
 - `next.config.ts` currently uses `export default` ESM syntax — any headers config must
   follow the same pattern (not `module.exports`).
+- **Next.js 16 treats `proxy.ts` as a route-level auth guard** (analogous to `middleware.ts`
+  in earlier versions — confirmed via `PROXY_FILENAME = 'proxy'` in Next.js constants). The
+  existing `proxy.ts` was intercepting `/manifest.webmanifest` and `/sw.js`, redirecting
+  unauthenticated requests to `/login`. Its matcher was updated to exclude these two PWA
+  assets plus the icon PNGs so they are publicly accessible without authentication.
 
 ## What We're NOT Doing
 
