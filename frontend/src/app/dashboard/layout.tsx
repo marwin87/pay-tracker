@@ -101,6 +101,7 @@ export default function DashboardLayout({
           {/* Mobile: utility icons + hamburger */}
           <div className="flex md:hidden items-center gap-1 ml-auto">
             <LanguageToggle />
+            <NotificationToggle />
             <button
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Toggle menu"
@@ -136,7 +137,6 @@ export default function DashboardLayout({
                   <div className="flex items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-700 mt-1">
                     <BackupButton />
                     <RestoreButton />
-                    <NotificationToggle />
                     <ThemeToggle />
                     <button
                       onClick={() => { setMenuOpen(false); logout(); }}

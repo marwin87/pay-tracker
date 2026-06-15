@@ -1,7 +1,7 @@
 ---
 change_id: browser-notification
 title: Browser notification
-status: implemented
+status: impl_reviewed
 created: 2026-06-15
 updated: 2026-06-15
 archived_at: null
