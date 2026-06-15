@@ -47,7 +47,7 @@ slice only matters if this loop works.
 | S-05 | pwa-installability           | install the app from the browser on mobile and desktop                            | S-03          | FR-013                                    | done     |
 | S-07 | language-support             | switch the UI between English and Polish; preference is saved per account and restored after login | S-01 | FR-016, FR-017                 | done     |
 | S-08 | data-backup                  | download a full JSON backup of all templates and payment history                  | S-01          | FR-011                                    | proposed |
-| S-09 | data-import                  | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | proposed |
+| S-09 | data-restore                 | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | proposed |
 | S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | proposed |
 
 ## Streams
@@ -194,13 +194,13 @@ Foundations below assume these are present and do NOT re-scaffold them.
 ### S-09: Import from backup
 
 - **Outcome:** user can upload a JSON backup file and restore all bill templates and payment history from it; existing data is replaced or merged (strategy TBD at plan time).
-- **Change ID:** data-import
+- **Change ID:** data-restore
 - **PRD refs:** FR-018 (new — add to PRD)
 - **Prerequisites:** S-08 (backup format must be stable before import can be implemented)
 - **Parallel with:** —
 - **Blockers:** —
 - **Unknowns:**
-  - Replace-all vs. merge strategy — destructive restore resets the DB; merge strategy preserves existing records. Must be decided during `/10x-plan data-import`. — Owner: user. Block: no (planning can proceed with both options on the table).
+  - Replace-all vs. merge strategy — destructive restore resets the DB; merge strategy preserves existing records. Must be decided during `/10x-plan data-restore`. — Owner: user. Block: no (planning can proceed with both options on the table).
   - Auth guard for import — import is a destructive admin-level action; must confirm whether the existing `current_user` dependency is sufficient or a confirmation step is needed.
 - **Risk:** Most complex of the three data-portability slices. A destructive import without adequate confirmation or a transaction rollback path could result in data loss. Plan must include a dry-run or confirmation gate.
 - **Status:** proposed
@@ -236,7 +236,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-05       | pwa-installability         | PWA manifest, service worker, 375px layout verification      | no                    | Needs S-03 done first                          |
 | S-07       | language-support           | EN/PL i18n: next-intl, language toggle, per-user persistence | yes                   | Plan ready; run `/10x-implement language-support phase 1` |
 | S-08       | data-backup                | Frontend: JSON backup download                               | yes                   | Backend may already be scaffolded; verify first   |
-| S-09       | data-import                | Backend + frontend: upload and restore from JSON backup      | no                    | Needs S-08 done; define replace vs. merge strategy first |
+| S-09       | data-restore               | Backend + frontend: upload and restore from JSON backup      | no                    | Needs S-08 done; define replace vs. merge strategy first |
 | S-10       | email-reminders            | Backend scheduler + email: overdue reminders via SMTP        | no                    | Needs S-03 done; SMTP provider and lead-time must be decided first |
 
 ## Open Roadmap Questions
