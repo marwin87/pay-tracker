@@ -1,7 +1,7 @@
 ---
 id: xlsx-export
 title: .xlsx export — year-by-month spreadsheet download
-status: implemented
+status: impl_reviewed
 created: 2026-06-13
 updated: 2026-06-15
 prd_refs:
