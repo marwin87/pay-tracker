@@ -19,9 +19,10 @@ function getCurrentMonth(): string {
 }
 
 function getMonthLabel(year: number, monthIndex: number, locale: string): string {
-  return new Intl.DateTimeFormat(locale, { month: "short" }).format(
+  const label = new Intl.DateTimeFormat(locale, { month: "short" }).format(
     new Date(year, monthIndex),
   );
+  return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
 function monthKey(year: number, monthIndex: number): string {
@@ -186,12 +187,15 @@ export default function PaymentsPage() {
       <div className="mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
         <div className="flex items-center gap-2">
           <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-            {new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
-              new Date(
-                parseInt(selectedMonth.split("-")[0]),
-                parseInt(selectedMonth.split("-")[1]) - 1,
-              ),
-            )}
+            {(() => {
+              const label = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
+                new Date(
+                  parseInt(selectedMonth.split("-")[0]),
+                  parseInt(selectedMonth.split("-")[1]) - 1,
+                ),
+              );
+              return label.charAt(0).toUpperCase() + label.slice(1);
+            })()}
           </h2>
           {isReadOnly && (
             <span className="rounded-md px-1.5 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400">

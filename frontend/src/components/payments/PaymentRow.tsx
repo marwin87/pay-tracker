@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { CheckCircle, Loader2, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import type { PaymentInstanceOut } from "@/lib/payments-api";
 import { revertPay } from "@/lib/payments-api";
 
@@ -25,6 +25,7 @@ interface Props {
 
 export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted, readOnly = false }: Props) {
   const t = useTranslations("PaymentRow");
+  const locale = useLocale();
   const [reverting, setReverting] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
   const noteRef = useRef<HTMLDivElement>(null);
@@ -52,15 +53,17 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
 
   // Append T00:00:00 so JS treats due_date as local time, not UTC midnight
   const dueDate = new Date(instance.due_date + "T00:00:00");
-  const dueDateFormatted = dueDate.toLocaleDateString(undefined, {
-    day: "numeric",
-    month: "short",
-  });
+  function formatDate(date: Date): string {
+    const fmt = new Intl.DateTimeFormat(locale, { day: "numeric", month: "short" });
+    return fmt.formatToParts(date).map(({ type, value }) =>
+      type === "month" ? value.charAt(0).toUpperCase() + value.slice(1) : value
+    ).join("");
+  }
+
+  const dueDateFormatted = formatDate(dueDate);
 
   const paidAt = instance.paid_at ? new Date(instance.paid_at) : null;
-  const paidAtFormatted = paidAt
-    ? paidAt.toLocaleDateString(undefined, { day: "numeric", month: "short" })
-    : null;
+  const paidAtFormatted = paidAt ? formatDate(paidAt) : null;
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:bg-slate-800 dark:border-slate-700">
