@@ -187,5 +187,11 @@
     "ariaLabel": "Switch language",
     "label": "Language:",
     "name": "English"
+  },
+  "NotificationToggle": {
+    "enable": "Enable notifications",
+    "enabled": "Notifications enabled — click to re-check",
+    "blocked": "Notifications blocked — allow in browser settings",
+    "paymentIncoming": "Payment incoming"
   }
 }

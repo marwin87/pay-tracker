@@ -187,5 +187,11 @@
     "ariaLabel": "Sprache wechseln",
     "label": "Sprache:",
     "name": "Deutsch"
+  },
+  "NotificationToggle": {
+    "enable": "Benachrichtigungen aktivieren",
+    "enabled": "Benachrichtigungen aktiviert — klicken zum Prüfen",
+    "blocked": "Benachrichtigungen blockiert — in Browsereinstellungen erlauben",
+    "paymentIncoming": "Zahlung ausstehend"
   }
 }

@@ -10,6 +10,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
 import BackupButton from "@/components/BackupButton";
 import RestoreButton from "@/components/RestoreButton";
+import NotificationToggle from "@/components/NotificationToggle";
 
 const NAV_ITEMS = [
   { href: "/dashboard/payments", labelKey: "payments" as const, icon: CreditCard },
@@ -85,6 +86,7 @@ export default function DashboardLayout({
             <LanguageToggle />
             <BackupButton />
             <RestoreButton />
+            <NotificationToggle />
             <ThemeToggle />
             <button
               onClick={logout}
@@ -134,6 +136,7 @@ export default function DashboardLayout({
                   <div className="flex items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-700 mt-1">
                     <BackupButton />
                     <RestoreButton />
+                    <NotificationToggle />
                     <ThemeToggle />
                     <button
                       onClick={() => { setMenuOpen(false); logout(); }}

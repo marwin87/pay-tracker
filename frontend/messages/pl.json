@@ -187,5 +187,11 @@
     "ariaLabel": "Zmień język",
     "label": "Język:",
     "name": "Polski"
+  },
+  "NotificationToggle": {
+    "enable": "Włącz powiadomienia",
+    "enabled": "Powiadomienia włączone — kliknij, aby sprawdzić",
+    "blocked": "Powiadomienia zablokowane — zezwól w ustawieniach przeglądarki",
+    "paymentIncoming": "Nadchodząca płatność"
   }
 }

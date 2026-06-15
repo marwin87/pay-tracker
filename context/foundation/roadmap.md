@@ -50,6 +50,7 @@ slice only matters if this loop works.
 | S-09 | data-restore                 | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | done     |
 | S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | proposed |
 | S-11 | per-user-data-scoping        | only see own bills and payments; User A cannot access User B's data               | F-01, S-01    | FR-020 (new — security, blocking)         | done     |
+| S-12 | browser-notification         | get a browser notification for each unpaid bill due today when opening the dashboard | S-05       | FR-013 (extension)                        | planned  |
 
 ## Streams
 
@@ -61,7 +62,7 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | B      | Data portability       | `S-01` → `S-04` → `S-08` → `S-09`         | S-04 (.xlsx) and S-08 (backup) parallel with S-02; S-09 (import) needs S-08 first.                                |
 | C      | Ship & deploy          | `S-03` → `S-05`                            | Runs after the north star lands.                                                                                   |
 | D      | Localisation           | `S-01` → `S-07`                            | Independent of the core loop; can run in parallel with any other stream after S-01.                               |
-| E      | Notifications          | `S-03` → `S-10`                            | Needs the core loop so there are real overdue events to notify about; SMTP config required.                        |
+| E      | Notifications          | `S-03` → `S-10` · `S-05` → `S-12`         | S-10: email reminders, needs SMTP config. S-12: browser push on due date, client-side only, needs PWA SW.         |
 | F      | Security (blocking)    | `F-01` → `S-01` → `S-11`                  | Breaking schema change. Must land before S-09 (restore) — user-scoped restore depends on user-scoped data model.  |
 
 ## Baseline
@@ -224,6 +225,20 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ---
 
+### S-12: Browser notifications
+
+- **Outcome:** user gets one browser notification per unpaid bill due today each time the dashboard is opened; notifications require one-time permission grant via a Bell icon in the dashboard header.
+- **Change ID:** browser-notification
+- **PRD refs:** FR-013 (extension — PWA notification capability)
+- **Prerequisites:** S-05 (service worker must be registered for `showNotification()`)
+- **Parallel with:** S-10 (independent notification channel; no shared dependencies)
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Client-side only; no backend changes. iOS requires app installed as PWA (Add to Home Screen) and iOS 16.4+ — silently no-ops on older versions. Dedup via localStorage so repeated page loads don't spam the user. Low risk overall.
+- **Status:** planned — plan at `context/changes/browser-notification/plan.md`
+
+---
+
 ### S-10: Email reminders
 
 - **Outcome:** user receives an email reminder N days before a bill's due date when the instance is still unpaid; the lead time is configurable per template or globally.
@@ -255,6 +270,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-08       | data-backup                | Frontend: JSON backup download                               | yes                   | Backend may already be scaffolded; verify first   |
 | S-09       | data-restore               | Backend + frontend: upload and restore from JSON backup      | no                    | Needs S-08 + S-11 done; define replace vs. merge strategy first   |
 | S-10       | email-reminders            | Backend scheduler + email: overdue reminders via SMTP        | no                    | Needs S-03 done; SMTP provider and lead-time must be decided first |
+| S-12       | browser-notification       | Bell icon + browser notification for bills due today         | yes                   | Plan ready; run `/10x-implement browser-notification phase 1` |
 | S-11       | per-user-data-scoping      | Add user_id FK to bill_templates; scope all queries to current_user | yes             | **Security/blocking.** Decide migration strategy for existing rows first. |
 
 ## Open Roadmap Questions
