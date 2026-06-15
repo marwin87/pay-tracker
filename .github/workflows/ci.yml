@@ -37,7 +37,7 @@ jobs:
           python-version: '3.13'
       - uses: astral-sh/setup-uv@v5
       - run: uv sync --group dev
-      - run: uv run black --check .
+      - run: uv run black --check --target-version py313 .
 
   backend-tests:
     name: Backend — tests

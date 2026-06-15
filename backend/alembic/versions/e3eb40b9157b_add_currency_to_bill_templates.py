@@ -5,15 +5,15 @@ Revises: 7d724b18e569
 Create Date: 2026-06-12 09:47:13.884425
 
 """
+
 from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
 
-
 # revision identifiers, used by Alembic.
-revision: str = 'e3eb40b9157b'
-down_revision: Union[str, Sequence[str], None] = '7d724b18e569'
+revision: str = "e3eb40b9157b"
+down_revision: Union[str, Sequence[str], None] = "7d724b18e569"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
