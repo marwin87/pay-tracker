@@ -311,29 +311,29 @@ German (`de.json`):
 
 #### Automated
 
-- [ ] 1.1 Backend starts without import errors after change to `export.py`
-- [ ] 1.2 `GET /export/json` returns HTTP 200 with all five top-level keys
-- [ ] 1.3 `bill_templates` entries include `currency`, `start_period`, `created_at`
-- [ ] 1.4 `payment_instances` entries include `created_at`
+- [x] 1.1 Backend starts without import errors after change to `export.py`
+- [x] 1.2 `GET /export/json` returns HTTP 200 with all five top-level keys
+- [x] 1.3 `bill_templates` entries include `currency`, `start_period`, `created_at`
+- [x] 1.4 `payment_instances` entries include `created_at`
 
 #### Manual
 
-- [ ] 1.5 Swagger UI download contains user rows with `password_hash`
-- [ ] 1.6 Filename is `pay-tracker-backup-<date>.json`
+- [x] 1.5 Swagger UI download contains user rows with `password_hash`
+- [x] 1.6 Filename is `pay-tracker-backup-<date>.json`
 
 ### Phase 2: Frontend — Backup button + dialog + nav integration
 
 #### Automated
 
-- [ ] 2.1 ESLint passes: `cd frontend && npm run lint`
-- [ ] 2.2 No TypeScript errors
+- [x] 2.1 ESLint passes: `cd frontend && npm run lint`
+- [x] 2.2 No TypeScript errors
 
 #### Manual
 
-- [ ] 2.3 Backup icon button visible in nav between language and theme toggles
-- [ ] 2.4 Clicking button opens confirmation dialog
-- [ ] 2.5 Escape and Cancel close dialog without downloading
-- [ ] 2.6 Download button triggers file download with correct filename and JSON structure
-- [ ] 2.7 Error message shown in dialog when backend is unreachable
-- [ ] 2.8 Dialog strings correct in PL and DE locales
-- [ ] 2.9 No regressions on xlsx export buttons
+- [x] 2.3 Backup icon button visible in nav between language and theme toggles
+- [x] 2.4 Clicking button opens confirmation dialog
+- [x] 2.5 Escape and Cancel close dialog without downloading
+- [x] 2.6 Download button triggers file download with correct filename and JSON structure
+- [x] 2.7 Error message shown in dialog when backend is unreachable
+- [x] 2.8 Dialog strings correct in PL and DE locales
+- [x] 2.9 No regressions on xlsx export buttons

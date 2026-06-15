@@ -88,21 +88,37 @@ def export_json(
     db: Session = Depends(get_db),
     _: User = Depends(current_user),
 ):
+    users = db.query(User).all()
     templates = db.query(BillTemplate).all()
     instances = db.query(PaymentInstance).all()
     payload = {
+        "schema_version": 1,
         "exported_at": datetime.now(timezone.utc).isoformat(),
+        "users": [
+            {
+                "id": u.id,
+                "email": u.email,
+                "password_hash": u.password_hash,
+                "is_active": u.is_active,
+                "language_preference": u.language_preference,
+                "created_at": u.created_at.isoformat(),
+            }
+            for u in users
+        ],
         "bill_templates": [
             {
                 "id": t.id,
                 "name": t.name,
-                "frequency": t.frequency.value,
+                "category": t.category,
+                "frequency": t.frequency,
                 "amount": float(t.amount),
+                "currency": t.currency,
                 "due_day": t.due_day,
                 "notes": t.notes,
-                "category": t.category,
                 "is_archived": t.is_archived,
                 "is_paused": t.is_paused,
+                "start_period": t.start_period,
+                "created_at": t.created_at.isoformat(),
             }
             for t in templates
         ],
@@ -117,6 +133,7 @@ def export_json(
                 "paid_at": i.paid_at.isoformat() if i.paid_at else None,
                 "paid_amount": float(i.paid_amount) if i.paid_amount else None,
                 "notes": i.notes,
+                "created_at": i.created_at.isoformat(),
             }
             for i in instances
         ],

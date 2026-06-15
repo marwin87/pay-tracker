@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
+import BackupButton from "@/components/BackupButton";
 
 const NAV_ITEMS = [
   { href: "/dashboard/payments", labelKey: "payments" as const, icon: CreditCard },
@@ -69,6 +70,7 @@ export default function DashboardLayout({
           {/* Right side */}
           <div className="flex items-center gap-1">
             <LanguageToggle />
+            <BackupButton />
             <ThemeToggle />
             <button
               onClick={logout}

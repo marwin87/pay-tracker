@@ -160,6 +160,15 @@
     "confirming": "Speichern…",
     "saveFailed": "Zahlung konnte nicht gespeichert werden."
   },
+  "BackupButton": {
+    "ariaLabel": "Backup herunterladen",
+    "dialogTitle": "Backup herunterladen",
+    "dialogDescription": "Es wird eine vollständige Kopie aller Pay Tracker-Daten heruntergeladen – Rechnungsvorlagen, Zahlungshistorie und Benutzerkonten. Bewahren Sie die Datei sicher auf.",
+    "cancel": "Abbrechen",
+    "confirm": "Herunterladen",
+    "downloading": "Wird heruntergeladen…",
+    "error": "Backup fehlgeschlagen. Bitte erneut versuchen."
+  },
   "ThemeToggle": {
     "ariaLabel": "Design umschalten"
   },

@@ -160,6 +160,15 @@
     "confirming": "Zapisywanie…",
     "saveFailed": "Nie udało się zapisać płatności."
   },
+  "BackupButton": {
+    "ariaLabel": "Pobierz kopię zapasową",
+    "dialogTitle": "Pobierz kopię zapasową",
+    "dialogDescription": "Zostanie pobrana pełna kopia danych Pay Tracker — szablony rachunków, historia płatności i konta użytkowników. Przechowuj plik w bezpiecznym miejscu.",
+    "cancel": "Anuluj",
+    "confirm": "Pobierz",
+    "downloading": "Pobieranie…",
+    "error": "Tworzenie kopii nie powiodło się. Spróbuj ponownie."
+  },
   "ThemeToggle": {
     "ariaLabel": "Przełącz motyw"
   },

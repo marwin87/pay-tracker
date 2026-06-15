@@ -160,6 +160,15 @@
     "confirming": "Marking…",
     "saveFailed": "Failed to record payment."
   },
+  "BackupButton": {
+    "ariaLabel": "Download backup",
+    "dialogTitle": "Download Backup",
+    "dialogDescription": "This will download a complete copy of all Pay Tracker data — bill templates, payment history, and user accounts. Store the file securely.",
+    "cancel": "Cancel",
+    "confirm": "Download",
+    "downloading": "Downloading…",
+    "error": "Backup failed. Please try again."
+  },
   "ThemeToggle": {
     "ariaLabel": "Toggle theme"
   },
