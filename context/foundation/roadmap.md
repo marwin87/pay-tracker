@@ -44,7 +44,7 @@ slice only matters if this loop works.
 | S-02 | bill-template-management     | create, edit, and archive bill templates via UI                                   | S-01          | FR-003, FR-004, FR-005                    | done     |
 | S-03 | core-payment-tracking-loop   | view payment instances by due date, mark them paid with amount override, and watch next month's instance auto-appear | S-01, S-02 | US-01, FR-006, FR-007, FR-008, FR-009 | done     |
 | S-04 | xlsx-export                  | export payment history to a downloadable .xlsx spreadsheet file                   | S-01          | FR-010                                    | done     |
-| S-05 | pwa-installability           | install the app from the browser on mobile and desktop                            | S-03          | FR-013                                    | proposed |
+| S-05 | pwa-installability           | install the app from the browser on mobile and desktop                            | S-03          | FR-013                                    | done     |
 | S-07 | language-support             | switch the UI between English and Polish; preference is saved per account and restored after login | S-01 | FR-016, FR-017                 | done     |
 | S-08 | data-backup                  | download a full JSON backup of all templates and payment history                  | S-01          | FR-011                                    | proposed |
 | S-09 | data-import                  | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | proposed |
@@ -159,7 +159,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Local-mode PWA requires HTTPS; self-hosted deployments need a reverse-proxy or self-signed cert. Guidance deferred to deployment docs. — Owner: implementation team. Block: no (does not affect core PWA configuration).
 - **Risk:** Next.js supports PWA via `next-pwa` or a custom service worker; the manifest and service worker are configuration work. Mobile usability (375px layouts) should be addressed incrementally during S-01–S-04 but final verification is here. Low risk if layouts are kept simple throughout.
-- **Status:** proposed
+- **Status:** done
 
 ---
 
@@ -259,3 +259,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-07: user can switch the UI between English and Polish via a toggle in the dashboard nav bar; the selected language is detected automatically from the browser on first use and restored from the user's account on subsequent logins.** — Archived 2026-06-12 → `context/archive/2026-06-12-language-support/`. Lesson: —.
 - **S-03: user can view a unified payment list sorted by due date with status indicators (upcoming / overdue / paid), mark a payment instance as paid with the amount defaulting to the template amount (overridable), and watch the next month's instance appear automatically on the dashboard** — Archived 2026-06-12 → `context/archive/2026-06-12-core-payment-tracking-loop/`. Lesson: —.
 - **S-04: user can export all payment history to a downloadable .xlsx spreadsheet file directly from the dashboard** — Archived 2026-06-15 → `context/archive/2026-06-13-xlsx-export/`. Lesson: —.
+- **S-05: install the app from the browser on mobile and desktop** — Archived 2026-06-15 → `context/archive/2026-06-15-pwa-installability/`. Lesson: —.
