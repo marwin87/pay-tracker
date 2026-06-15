@@ -140,7 +140,8 @@
     "markAsPaid": "Oznacz jako opłacone",
     "revert": "Cofnij płatność",
     "paidOn": "Opłacono",
-    "delete": "Usuń płatność"
+    "delete": "Usuń płatność",
+    "paymentNote": "Notatka do płatności"
   },
   "DeletePaymentDialog": {
     "title": "Usunąć tę płatność?",

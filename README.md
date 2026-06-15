@@ -2,7 +2,7 @@
 
 A self-hosted household bill tracking web app. Each month's payment instances are generated automatically from bill templates, the dashboard shows what is upcoming and overdue at a glance, and any family member can mark bills paid from any device.
 
-No third-party data sharing. No ongoing subscription cost. Runs locally with Docker Compose or in the cloud by switching an environment variable.
+No third-party data sharing. No ongoing subscription cost. Runs locally with Docker Compose or in the cloud by switching an environment variable. Each user's data is fully isolated — User A cannot see or modify User B's bills or payments.
 
 
 ## What it does
@@ -68,22 +68,25 @@ backend/
   app/
     main.py                   FastAPI app, router registration, CORS
     models/
-      user.py                 User (id, email, hashed_password)
-      bill.py                 BillTemplate, PaymentInstance, enums
+      user.py                 User (id, email, hashed_password, bills relationship)
+      bill.py                 BillTemplate (user_id FK), PaymentInstance, enums
     schemas/
       auth.py                 Register / login request and token response
       bill.py                 All bill and payment Pydantic schemas
     routers/
       auth.py                 POST /auth/register, POST /auth/login
-      bills.py                Bill template CRUD + payment endpoints
-      export.py               GET /export/xlsx, GET /export/json
+      bills.py                Bill template CRUD + payment endpoints (scoped to current user)
+      export.py               GET /export/xlsx, GET /export/json (scoped to current user)
     services/
-      recurrence.py           Instance generation and frequency scheduling
+      recurrence.py           Instance generation and frequency scheduling (per-user)
     core/
       database.py             SQLAlchemy engine and session
       deps.py                 current_user dependency (JWT decode)
       security.py             Password hashing, JWT creation
       config.py               Environment variable loading
+  tests/
+    conftest.py               SQLite in-memory test DB, TestClient fixture
+    test_user_scoping.py      8 tests: per-user data isolation across all endpoints
 
 alembic/                      Database migration revisions
 ```
@@ -114,6 +117,10 @@ For one-off bills: the single instance is deleted. For recurring bills: the curr
 ### Status classification
 
 Overdue status is computed at response time. After fetching instances from the database, any instance with due_date before today and status = upcoming is returned as overdue in the API response. The database value is not changed — this avoids scheduled jobs and keeps the logic simple.
+
+### Data isolation
+
+Every bill template is owned by the user who created it via a `user_id` FK on `BillTemplate`. Payment instances inherit scope transitively through `bill_id → BillTemplate.user_id`. Every query in the bills and export routers filters by `current_user.id` — there is no endpoint that allows reading or mutating another user's data. Cross-user mutation attempts return HTTP 403.
 
 ### Authentication
 
@@ -206,6 +213,29 @@ Two export endpoints are available at /export/xlsx and /export/json (authenticat
 
 The .xlsx export (GET /export/xlsx?year=YYYY) produces a 12-sheet workbook — one sheet per calendar month — with columns: Bill, Category, Period, Due Date, Amount, Currency, Status, Paid Amount, Paid At, Notes. Defaults to the current year; empty months produce a sheet with headers only. An Export button on the Payments page triggers the download directly from the UI.
 
-The JSON export contains all bill templates and payment instances in a structured format suitable for backup and restore.
+The JSON export (GET /export/json) produces a structured backup of the authenticated user's data only. Format (schema_version 2):
 
-Both are accessible from the API docs at http://localhost:8010/docs.
+```json
+{
+  "schema_version": 2,
+  "exported_by": "user@example.com",
+  "exported_at": "2026-06-15T12:00:00+00:00",
+  "bill_templates": [...],
+  "payment_instances": [...]
+}
+```
+
+Both endpoints are accessible from the API docs at http://localhost:8010/docs.
+
+
+## Backend tests
+
+The backend has a pytest suite that runs against an in-memory SQLite database — no Docker or PostgreSQL required.
+
+```bash
+cd backend && uv run pytest tests/ -v
+```
+
+The suite covers per-user data isolation: list endpoints return only the current user's data, and cross-user mutation attempts (mark paid, revert, update, archive) return 403. Tests also verify that both export endpoints scope their output to the authenticated user.
+
+CI runs these tests automatically on every push via GitHub Actions (`backend-tests` job).

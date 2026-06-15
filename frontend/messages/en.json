@@ -140,7 +140,8 @@
     "markAsPaid": "Mark as Paid",
     "revert": "Revert payment",
     "paidOn": "Paid on",
-    "delete": "Delete payment"
+    "delete": "Delete payment",
+    "paymentNote": "Payment note"
   },
   "DeletePaymentDialog": {
     "title": "Delete this payment?",

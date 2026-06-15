@@ -140,7 +140,8 @@
     "markAsPaid": "Als bezahlt markieren",
     "revert": "Zahlung rückgängig machen",
     "paidOn": "Bezahlt am",
-    "delete": "Zahlung löschen"
+    "delete": "Zahlung löschen",
+    "paymentNote": "Zahlungsnotiz"
   },
   "DeletePaymentDialog": {
     "title": "Zahlung löschen?",
