@@ -62,3 +62,37 @@ class PaymentInstanceOut(BaseModel):
 class MarkPaidRequest(BaseModel):
     paid_amount: Decimal | None = None  # defaults to template amount when None
     notes: str | None = None
+
+
+class BackupTemplate(BaseModel):
+    id: int
+    name: str
+    category: str | None
+    frequency: str
+    amount: float
+    currency: str
+    due_day: int | None
+    notes: str | None
+    is_archived: bool
+    is_paused: bool
+    start_period: str | None
+    created_at: str
+
+
+class BackupInstance(BaseModel):
+    id: int
+    bill_id: int
+    period: str
+    due_date: str
+    amount: float
+    status: str
+    paid_at: str | None
+    paid_amount: float | None
+    notes: str | None
+    created_at: str
+
+
+class BackupPayload(BaseModel):
+    schema_version: int
+    bill_templates: list[BackupTemplate]
+    payment_instances: list[BackupInstance]

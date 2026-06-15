@@ -161,6 +161,15 @@
     "confirming": "Speichern…",
     "saveFailed": "Zahlung konnte nicht gespeichert werden."
   },
+  "RestoreButton": {
+    "ariaLabel": "Aus Backup wiederherstellen",
+    "dialogTitle": "Aus Backup wiederherstellen",
+    "dialogDescription": "Dadurch werden alle Ihre aktuellen Daten dauerhaft durch den Inhalt von \"{filename}\" ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "cancel": "Abbrechen",
+    "confirm": "Meine Daten ersetzen",
+    "restoring": "Wird wiederhergestellt…",
+    "error": "Wiederherstellung fehlgeschlagen. Bitte Datei prüfen und erneut versuchen."
+  },
   "BackupButton": {
     "ariaLabel": "Backup herunterladen",
     "dialogTitle": "Backup herunterladen",

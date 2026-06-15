@@ -161,6 +161,15 @@
     "confirming": "Zapisywanie…",
     "saveFailed": "Nie udało się zapisać płatności."
   },
+  "RestoreButton": {
+    "ariaLabel": "Przywróć z kopii zapasowej",
+    "dialogTitle": "Przywróć z kopii zapasowej",
+    "dialogDescription": "Spowoduje to trwałe zastąpienie wszystkich Twoich danych zawartością pliku \"{filename}\". Tej operacji nie można cofnąć.",
+    "cancel": "Anuluj",
+    "confirm": "Zastąp moje dane",
+    "restoring": "Przywracanie…",
+    "error": "Przywracanie nie powiodło się. Sprawdź plik i spróbuj ponownie."
+  },
   "BackupButton": {
     "ariaLabel": "Pobierz kopię zapasową",
     "dialogTitle": "Pobierz kopię zapasową",

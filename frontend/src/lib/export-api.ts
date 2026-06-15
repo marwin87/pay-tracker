@@ -22,6 +22,24 @@ export async function downloadBackup(): Promise<void> {
   URL.revokeObjectURL(url);
 }
 
+export async function restoreFromBackup(
+  file: File
+): Promise<{ restored_templates: number; restored_instances: number }> {
+  const token = getAuthToken();
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch(`${BASE_URL}/export/restore`, {
+    method: "POST",
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    body: form,
+  });
+  if (!res.ok) {
+    const detail = await res.json().catch(() => ({}));
+    throw new Error(detail?.detail ?? `Restore failed: ${res.status}`);
+  }
+  return res.json();
+}
+
 export async function downloadXlsx(year: number): Promise<void> {
   const token = getAuthToken();
   const res = await fetch(`${BASE_URL}/export/xlsx?year=${year}`, {

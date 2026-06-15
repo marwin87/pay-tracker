@@ -2,16 +2,19 @@ import calendar
 import io
 import json
 from datetime import date, datetime, timezone
+from decimal import Decimal
 
 import pandas as pd
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from fastapi.responses import Response, StreamingResponse
+from pydantic import ValidationError
 from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
 from app.core.deps import current_user
-from app.models.bill import BillTemplate, PaymentInstance
+from app.models.bill import BillFrequency, BillTemplate, PaymentInstance, PaymentStatus
 from app.models.user import User
+from app.schemas.bill import BackupPayload
 
 router = APIRouter(prefix="/export", tags=["export"])
 
@@ -145,3 +148,86 @@ def export_json(
             "Content-Disposition": f'attachment; filename="pay-tracker-backup-{datetime.now(timezone.utc).date()}.json"'
         },
     )
+
+
+@router.post("/restore")
+async def restore_json(
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    content = await file.read()
+    try:
+        raw = json.loads(content)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=422, detail="Invalid JSON")
+
+    if raw.get("schema_version") != 2:
+        raise HTTPException(status_code=422, detail="Unsupported schema version")
+
+    try:
+        backup = BackupPayload.model_validate(raw)
+    except ValidationError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+
+    template_ids_in_backup = {t.id for t in backup.bill_templates}
+    orphaned = [
+        i for i in backup.payment_instances if i.bill_id not in template_ids_in_backup
+    ]
+    if orphaned:
+        raise HTTPException(
+            status_code=422, detail="Backup contains orphaned payment instances"
+        )
+
+    existing_ids = [
+        t.id
+        for t in db.query(BillTemplate.id).filter(BillTemplate.user_id == me.id).all()
+    ]
+    if existing_ids:
+        db.query(PaymentInstance).filter(
+            PaymentInstance.bill_id.in_(existing_ids)
+        ).delete(synchronize_session=False)
+        db.query(BillTemplate).filter(BillTemplate.user_id == me.id).delete(
+            synchronize_session=False
+        )
+
+    id_map: dict[int, int] = {}
+    for bt in backup.bill_templates:
+        obj = BillTemplate(
+            name=bt.name,
+            category=bt.category,
+            frequency=BillFrequency(bt.frequency),
+            amount=Decimal(str(bt.amount)),
+            currency=bt.currency,
+            due_day=bt.due_day,
+            notes=bt.notes,
+            is_archived=bt.is_archived,
+            is_paused=bt.is_paused,
+            start_period=bt.start_period,
+            user_id=me.id,
+        )
+        db.add(obj)
+        db.flush()
+        id_map[bt.id] = obj.id
+
+    for bi in backup.payment_instances:
+        obj = PaymentInstance(
+            bill_id=id_map[bi.bill_id],
+            period=bi.period,
+            due_date=date.fromisoformat(bi.due_date),
+            amount=Decimal(str(bi.amount)),
+            status=PaymentStatus(bi.status),
+            paid_at=datetime.fromisoformat(bi.paid_at) if bi.paid_at else None,
+            paid_amount=(
+                Decimal(str(bi.paid_amount)) if bi.paid_amount is not None else None
+            ),
+            notes=bi.notes,
+        )
+        db.add(obj)
+
+    db.commit()
+
+    return {
+        "restored_templates": len(backup.bill_templates),
+        "restored_instances": len(backup.payment_instances),
+    }

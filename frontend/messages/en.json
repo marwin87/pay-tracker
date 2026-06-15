@@ -161,6 +161,15 @@
     "confirming": "Marking…",
     "saveFailed": "Failed to record payment."
   },
+  "RestoreButton": {
+    "ariaLabel": "Restore from backup",
+    "dialogTitle": "Restore from Backup",
+    "dialogDescription": "This will permanently replace all your current data with the contents of \"{filename}\". This action cannot be undone.",
+    "cancel": "Cancel",
+    "confirm": "Replace My Data",
+    "restoring": "Restoring…",
+    "error": "Restore failed. Please check the file and try again."
+  },
   "BackupButton": {
     "ariaLabel": "Download backup",
     "dialogTitle": "Download Backup",
