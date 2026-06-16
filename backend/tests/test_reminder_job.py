@@ -38,7 +38,7 @@ def _make_user(
     notify_1_day_before=True,
     notify_on_day=False,
     notify_1_day_after=False,
-    reminder_send_hour=8,
+    reminder_send_minute=480,
 ) -> User:
     user = User(
         email=email,
@@ -49,7 +49,7 @@ def _make_user(
         notify_1_day_before=notify_1_day_before,
         notify_on_day=notify_on_day,
         notify_1_day_after=notify_1_day_after,
-        reminder_send_hour=reminder_send_hour,
+        reminder_send_minute=reminder_send_minute,
     )
     db.add(user)
     db.flush()
@@ -117,7 +117,7 @@ def test_upcoming_instance_sends_and_flips_flag(mock_send):
 
     with patch("app.services.reminder_job.settings") as mock_settings:
         _smtp_settings(mock_settings)
-        send_daily_reminders(_SessionLocal, send_hour=8)
+        send_daily_reminders(_SessionLocal, send_minute=480)
 
     mock_send.assert_called_once()
     call_kwargs = mock_send.call_args.kwargs
@@ -143,7 +143,7 @@ def test_1_day_after_instance_sends_and_flips_flag(mock_send):
 
     with patch("app.services.reminder_job.settings") as mock_settings:
         _smtp_settings(mock_settings)
-        send_daily_reminders(_SessionLocal, send_hour=8)
+        send_daily_reminders(_SessionLocal, send_minute=480)
 
     mock_send.assert_called_once()
     call_kwargs = mock_send.call_args.kwargs
@@ -169,7 +169,7 @@ def test_2_days_before_instance_sends_and_flips_flag(mock_send):
 
     with patch("app.services.reminder_job.settings") as mock_settings:
         _smtp_settings(mock_settings)
-        send_daily_reminders(_SessionLocal, send_hour=8)
+        send_daily_reminders(_SessionLocal, send_minute=480)
 
     mock_send.assert_called_once()
     call_kwargs = mock_send.call_args.kwargs
@@ -194,7 +194,7 @@ def test_on_day_instance_sends_and_flips_flag(mock_send):
 
     with patch("app.services.reminder_job.settings") as mock_settings:
         _smtp_settings(mock_settings)
-        send_daily_reminders(_SessionLocal, send_hour=8)
+        send_daily_reminders(_SessionLocal, send_minute=480)
 
     mock_send.assert_called_once()
     call_kwargs = mock_send.call_args.kwargs
@@ -223,7 +223,7 @@ def test_already_sent_flag_skips_email(mock_send):
 
     with patch("app.services.reminder_job.settings") as mock_settings:
         _smtp_settings(mock_settings)
-        send_daily_reminders(_SessionLocal, send_hour=8)
+        send_daily_reminders(_SessionLocal, send_minute=480)
 
     mock_send.assert_not_called()
 
@@ -247,7 +247,7 @@ def test_opt_out_user_skips_email(mock_send):
 
     with patch("app.services.reminder_job.settings") as mock_settings:
         _smtp_settings(mock_settings)
-        send_daily_reminders(_SessionLocal, send_hour=8)
+        send_daily_reminders(_SessionLocal, send_minute=480)
 
     mock_send.assert_not_called()
 
@@ -269,7 +269,7 @@ def test_smtp_exception_does_not_flip_flag(mock_send):
 
     with patch("app.services.reminder_job.settings") as mock_settings:
         _smtp_settings(mock_settings)
-        send_daily_reminders(_SessionLocal, send_hour=8)
+        send_daily_reminders(_SessionLocal, send_minute=480)
 
     mock_send.assert_called_once()
 

@@ -69,7 +69,7 @@ def send_reminders_for_user(db: Session, user: User) -> int:
 
 
 def send_daily_reminders(
-    SessionLocal: sessionmaker, send_hour: int | None = None
+    SessionLocal: sessionmaker, send_minute: int | None = None
 ) -> None:
     if settings.smtp_host is None:
         logger.warning("Reminder job: SMTP not configured, skipping")
@@ -77,7 +77,7 @@ def send_daily_reminders(
 
     now_utc = datetime.now(timezone.utc)
     current_minute = (
-        send_hour if send_hour is not None else now_utc.hour * 60 + now_utc.minute
+        send_minute if send_minute is not None else now_utc.hour * 60 + now_utc.minute
     )
     today = now_utc.date()
     logger.info("Reminder job started (today=%s UTC, minute=%d)", today, current_minute)
