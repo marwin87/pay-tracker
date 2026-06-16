@@ -232,7 +232,11 @@
       "oneDayAfter": "1 dzień po terminie",
       "noneWarning": "Wybierz co najmniej jedną opcję, aby otrzymywać przypomnienia e-mail.",
       "sendTimeLabel": "Godzina wysyłki (UTC)",
-      "sendTimePlaceholder": "Wybierz godzinę"
+      "sendTimePlaceholder": "Wybierz godzinę",
+      "sendNowButton": "Wyślij powiadomienie teraz",
+      "sendNowSending": "Wysyłanie...",
+      "sendNowSent": "Wysłano {count} przypomnienie(ń)",
+      "sendNowNoReminders": "Brak nadchodzących przypomnień do wysłania"
     },
     "browserNotifications": {
       "title": "Powiadomienia przeglądarki",

@@ -12,6 +12,8 @@ import {
   Mail,
   AlertTriangle,
   CheckCircle2,
+  Send,
+  Loader2,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
@@ -19,6 +21,7 @@ import {
   updateMe,
   changePassword,
   changeEmail,
+  sendNotificationNow,
   UserProfile,
 } from "@/lib/user-api";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -310,6 +313,10 @@ function EmailNotificationsTile({
   const [sendHour, setSendHour] = useState(profile.reminder_send_hour);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [isSendingNow, setIsSendingNow] = useState(false);
+  const [sendNowResult, setSendNowResult] = useState<
+    { sent: number } | { error: string } | null
+  >(null);
 
   const isDirty =
     notify2 !== profile.notify_2_days_before ||
@@ -349,6 +356,21 @@ function EmailNotificationsTile({
       setSaveError(tp("saveFailed"));
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function handleSendNow() {
+    setIsSendingNow(true);
+    setSendNowResult(null);
+    try {
+      const result = await sendNotificationNow();
+      setSendNowResult(result);
+    } catch (err) {
+      const msg =
+        err instanceof Error ? err.message : tp("saveFailed");
+      setSendNowResult({ error: msg });
+    } finally {
+      setIsSendingNow(false);
     }
   }
 
@@ -418,6 +440,40 @@ function EmailNotificationsTile({
             </option>
           ))}
         </select>
+      </div>
+
+      <div className="flex flex-col gap-2 pt-1 border-t border-slate-100 dark:border-slate-700">
+        <button
+          onClick={handleSendNow}
+          disabled={
+            isSendingNow || !profile.email_reminders_enabled || isDirty
+          }
+          className="flex items-center gap-2 self-start rounded-lg px-4 py-1.5 text-sm font-medium border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 transition-colors"
+        >
+          {isSendingNow ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <Send size={14} />
+          )}
+          {isSendingNow
+            ? tp("emailNotifications.sendNowSending")
+            : tp("emailNotifications.sendNowButton")}
+        </button>
+
+        {sendNowResult && "error" in sendNowResult && (
+          <p className="text-sm text-red-600 dark:text-red-400">
+            {sendNowResult.error}
+          </p>
+        )}
+        {sendNowResult && "sent" in sendNowResult && (
+          <p className="text-sm text-green-600 dark:text-green-500">
+            {sendNowResult.sent === 0
+              ? tp("emailNotifications.sendNowNoReminders")
+              : tp("emailNotifications.sendNowSent", {
+                  count: sendNowResult.sent,
+                })}
+          </p>
+        )}
       </div>
     </Tile>
   );

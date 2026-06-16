@@ -232,7 +232,11 @@
       "oneDayAfter": "1 Tag nach Fälligkeit",
       "noneWarning": "Wählen Sie mindestens eine Option, um E-Mail-Erinnerungen zu erhalten.",
       "sendTimeLabel": "Sendezeit (UTC)",
-      "sendTimePlaceholder": "Stunde auswählen"
+      "sendTimePlaceholder": "Stunde auswählen",
+      "sendNowButton": "Benachrichtigung jetzt senden",
+      "sendNowSending": "Wird gesendet...",
+      "sendNowSent": "{count} Erinnerung(en) gesendet",
+      "sendNowNoReminders": "Keine bevorstehenden Erinnerungen zum Senden"
     },
     "browserNotifications": {
       "title": "Browser-Benachrichtigungen",

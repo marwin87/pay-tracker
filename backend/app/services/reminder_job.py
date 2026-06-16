@@ -12,6 +12,55 @@ from app.services.email import send_reminder_email
 logger = logging.getLogger(__name__)
 
 
+def send_reminders_for_user(db: Session, user: User) -> int:
+    """Send due reminders for a single user. Returns count of emails sent."""
+    now_utc = datetime.now(timezone.utc)
+    today = now_utc.date()
+    tomorrow = today + timedelta(days=1)
+    two_days_out = today + timedelta(days=2)
+    yesterday = today - timedelta(days=1)
+
+    template_ids = [
+        t.id
+        for t in db.query(BillTemplate.id).filter(BillTemplate.user_id == user.id).all()
+    ]
+    if not template_ids:
+        return 0
+
+    lang = user.language_preference or "en"
+    sent = 0
+
+    windows: list[tuple[str, date, str]] = []
+    if user.notify_2_days_before:
+        windows.append(("2_days_before", two_days_out, "reminder_sent_2_days_before"))
+    if user.notify_1_day_before:
+        windows.append(("upcoming", tomorrow, "reminder_sent_upcoming"))
+    if user.notify_on_day:
+        windows.append(("on_day", today, "reminder_sent_on_day"))
+    if user.notify_1_day_after:
+        windows.append(("1_day_after", yesterday, "reminder_sent_overdue"))
+
+    for kind, due, flag_attr in windows:
+        instances = (
+            db.query(PaymentInstance)
+            .options(selectinload(PaymentInstance.template))
+            .filter(
+                PaymentInstance.bill_id.in_(template_ids),
+                PaymentInstance.due_date == due,
+                PaymentInstance.status != PaymentStatus.paid,
+                getattr(PaymentInstance, flag_attr).is_(False),
+            )
+            .all()
+        )
+        for instance in instances:
+            if _send_and_flag(
+                db, user, instance, kind=kind, flag_attr=flag_attr, language=lang
+            ):
+                sent += 1
+
+    return sent
+
+
 def send_daily_reminders(
     SessionLocal: sessionmaker, send_hour: int | None = None
 ) -> None:
@@ -22,9 +71,6 @@ def send_daily_reminders(
     now_utc = datetime.now(timezone.utc)
     current_hour = send_hour if send_hour is not None else now_utc.hour
     today = now_utc.date()
-    tomorrow = today + timedelta(days=1)
-    two_days_out = today + timedelta(days=2)
-    yesterday = today - timedelta(days=1)
     logger.info("Reminder job started (today=%s UTC, hour=%d)", today, current_hour)
 
     db: Session = SessionLocal()
@@ -46,55 +92,7 @@ def send_daily_reminders(
         )
 
         for user in users:
-            template_ids = [
-                t.id
-                for t in db.query(BillTemplate.id)
-                .filter(BillTemplate.user_id == user.id)
-                .all()
-            ]
-            if not template_ids:
-                continue
-
-            lang = user.language_preference or "en"
-
-            windows = []
-            if user.notify_2_days_before:
-                windows.append(
-                    (
-                        "2_days_before",
-                        two_days_out,
-                        "reminder_sent_2_days_before",
-                    )
-                )
-            if user.notify_1_day_before:
-                windows.append(("upcoming", tomorrow, "reminder_sent_upcoming"))
-            if user.notify_on_day:
-                windows.append(("on_day", today, "reminder_sent_on_day"))
-            if user.notify_1_day_after:
-                windows.append(("1_day_after", yesterday, "reminder_sent_overdue"))
-
-            for kind, due, flag_attr in windows:
-                instances = (
-                    db.query(PaymentInstance)
-                    .options(selectinload(PaymentInstance.template))
-                    .filter(
-                        PaymentInstance.bill_id.in_(template_ids),
-                        PaymentInstance.due_date == due,
-                        PaymentInstance.status != PaymentStatus.paid,
-                        getattr(PaymentInstance, flag_attr).is_(False),
-                    )
-                    .all()
-                )
-                for instance in instances:
-                    if _send_and_flag(
-                        db,
-                        user,
-                        instance,
-                        kind=kind,
-                        flag_attr=flag_attr,
-                        language=lang,
-                    ):
-                        sent += 1
+            sent += send_reminders_for_user(db, user)
     finally:
         db.close()
 

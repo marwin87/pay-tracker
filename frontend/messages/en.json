@@ -232,7 +232,11 @@
       "oneDayAfter": "1 day after due date",
       "noneWarning": "Select at least one option to receive email reminders.",
       "sendTimeLabel": "Send time (UTC)",
-      "sendTimePlaceholder": "Select hour"
+      "sendTimePlaceholder": "Select hour",
+      "sendNowButton": "Send notification now",
+      "sendNowSending": "Sending...",
+      "sendNowSent": "Sent {count} reminder(s)",
+      "sendNowNoReminders": "No upcoming reminders to send"
     },
     "browserNotifications": {
       "title": "Browser Notifications",

@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
 from app.core.security import create_access_token, hash_password, verify_password
@@ -10,10 +11,12 @@ from app.schemas.auth import (
     ChangePasswordRequest,
     LoginRequest,
     RegisterRequest,
+    SendNotificationNowOut,
     TokenResponse,
     UserProfileOut,
     UserProfileUpdate,
 )
+from app.services.reminder_job import send_reminders_for_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -73,6 +76,17 @@ def change_password(
         )
     user.password_hash = hash_password(body.new_password)
     db.commit()
+
+
+@router.post("/send-notification-now", response_model=SendNotificationNowOut)
+def send_notification_now(
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+):
+    if settings.smtp_host is None:
+        raise HTTPException(status_code=400, detail="SMTP not configured")
+    sent = send_reminders_for_user(db, user)
+    return SendNotificationNowOut(sent=sent)
 
 
 @router.patch("/change-email", response_model=UserProfileOut)

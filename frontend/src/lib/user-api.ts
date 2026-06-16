@@ -47,6 +47,12 @@ export function changePassword(
   });
 }
 
+export function sendNotificationNow(): Promise<{ sent: number }> {
+  return apiFetch<{ sent: number }>("/auth/send-notification-now", {
+    method: "POST",
+  });
+}
+
 export function changeEmail(
   newEmail: string,
   currentPassword: string,

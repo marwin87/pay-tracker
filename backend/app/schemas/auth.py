@@ -48,3 +48,7 @@ class ChangePasswordRequest(BaseModel):
 class ChangeEmailRequest(BaseModel):
     new_email: EmailStr
     current_password: str
+
+
+class SendNotificationNowOut(BaseModel):
+    sent: int
