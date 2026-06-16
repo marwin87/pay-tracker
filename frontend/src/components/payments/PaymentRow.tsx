@@ -74,7 +74,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
             {instance.bill_name}
           </span>
           {parseFloat(instance.amount) > 0 && (
-            <span className="font-medium text-indigo-600 dark:text-indigo-400">
+            <span className="font-medium text-green-700 dark:text-green-500">
               {instance.amount} {instance.currency}
             </span>
           )}

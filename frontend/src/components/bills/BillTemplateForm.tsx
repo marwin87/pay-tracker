@@ -34,7 +34,7 @@ interface Errors {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-indigo-500 dark:focus:ring-indigo-900/40";
+  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
 
 const labelClass = "block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1";
 
@@ -176,7 +176,7 @@ export default function BillTemplateForm({
               aria-label={t("currencyAriaLabel")}
               value={currencyOption}
               onChange={(e) => setCurrencyOption(e.target.value as CurrencyOption)}
-              className="w-28 shrink-0 rounded-xl border border-slate-200 bg-white px-2 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-indigo-500 dark:focus:ring-indigo-900/40"
+              className="w-28 shrink-0 rounded-xl border border-slate-200 bg-white px-2 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40"
             >
               {PRESET_CURRENCIES.map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -262,7 +262,7 @@ export default function BillTemplateForm({
           type="checkbox"
           checked={isPaused}
           onChange={(e) => setIsPaused(e.target.checked)}
-          className="h-4 w-4 rounded accent-indigo-600"
+          className="h-4 w-4 rounded accent-green-700"
         />
         {t("pauseRecurrence")}
       </label>
@@ -278,7 +278,7 @@ export default function BillTemplateForm({
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+          className="rounded-xl bg-green-700 px-5 py-2 text-sm font-medium text-white hover:bg-green-800 disabled:opacity-50 transition-colors"
         >
           {saving ? t("saving") : t("save")}
         </button>

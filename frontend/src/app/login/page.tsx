@@ -9,7 +9,7 @@ import { apiFetch, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-indigo-500";
+  "w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -100,7 +100,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-1 rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-50 transition-colors"
+              className="mt-1 rounded-xl bg-green-700 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-800 active:bg-green-900 disabled:opacity-50 transition-colors"
             >
               {loading ? t("signingIn") : t("signIn")}
             </button>
@@ -111,7 +111,7 @@ export default function LoginPage() {
           {t("noAccount")}{" "}
           <Link
             href="/register"
-            className="font-medium text-indigo-600 hover:text-indigo-700 dark:text-indigo-400"
+            className="font-medium text-green-700 hover:text-green-800 dark:text-green-500"
           >
             {t("register")}
           </Link>

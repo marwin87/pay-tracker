@@ -51,7 +51,7 @@ export default function BackupButton({ label }: { label?: string } = {}) {
               onClick={(e) => e.stopPropagation()}
               className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:bg-slate-800 dark:border-slate-700"
             >
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
                 <HardDriveDownload size={22} />
               </div>
               <h2
@@ -75,7 +75,7 @@ export default function BackupButton({ label }: { label?: string } = {}) {
                 <button
                   onClick={handleConfirm}
                   disabled={state === "downloading"}
-                  className="flex-1 rounded-xl bg-indigo-600 py-2.5 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
+                  className="flex-1 rounded-xl bg-green-700 py-2.5 text-sm font-medium text-white hover:bg-green-800 disabled:opacity-50 transition-colors flex items-center justify-center gap-2"
                 >
                   {state === "downloading" ? (
                     <>

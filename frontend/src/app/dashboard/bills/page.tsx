@@ -112,7 +112,7 @@ export default function BillsPage() {
         </h1>
         <button
           onClick={() => toggleExpand("new")}
-          className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 active:bg-indigo-800 transition-colors"
+          className="flex items-center gap-2 rounded-xl bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 active:bg-green-900 transition-colors"
         >
           <Plus size={16} />
           {expandedId === "new" ? t("cancel") : t("newBill")}
@@ -139,7 +139,7 @@ export default function BillsPage() {
       {/* Template list */}
       {templates.length === 0 && expandedId !== "new" ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 px-6 py-16 text-center">
-          <div className="mb-3 rounded-full bg-indigo-100 dark:bg-indigo-900/30 p-4 text-indigo-500">
+          <div className="mb-3 rounded-full bg-green-100 dark:bg-green-900/30 p-4 text-green-700">
             <Plus size={28} />
           </div>
           <p className="font-medium text-slate-700 dark:text-slate-300">{t("noBillsYet")}</p>
@@ -148,7 +148,7 @@ export default function BillsPage() {
           </p>
           <button
             onClick={() => toggleExpand("new")}
-            className="mt-4 rounded-xl bg-indigo-600 px-5 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition-colors"
+            className="mt-4 rounded-xl bg-green-700 px-5 py-2 text-sm font-medium text-white hover:bg-green-800 transition-colors"
           >
             {t("addFirstBill")}
           </button>

@@ -46,7 +46,7 @@ export default function DayPicker({ value, onChange }: Props) {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-colors hover:border-indigo-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:hover:border-indigo-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-900/40"
+        className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-colors hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:hover:border-green-600 dark:focus:border-green-600 dark:focus:ring-green-900/40"
         aria-haspopup="true"
         aria-expanded={open}
       >
@@ -75,8 +75,8 @@ export default function DayPicker({ value, onChange }: Props) {
                 onClick={() => handleSelect(day)}
                 className={`flex h-8 w-8 items-center justify-center rounded-lg text-sm transition-colors ${
                   day === selected
-                    ? "bg-indigo-600 font-semibold text-white"
-                    : "text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 dark:text-slate-300 dark:hover:bg-indigo-900/30 dark:hover:text-indigo-300"
+                    ? "bg-green-700 font-semibold text-white"
+                    : "text-slate-700 hover:bg-green-50 hover:text-green-800 dark:text-slate-300 dark:hover:bg-green-900/30 dark:hover:text-green-300"
                 }`}
               >
                 {day}

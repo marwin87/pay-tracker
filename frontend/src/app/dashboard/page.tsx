@@ -35,9 +35,9 @@ export default function DashboardPage() {
 
         <Link
           href="/dashboard/bills"
-          className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-indigo-300 hover:shadow-md transition-all dark:bg-slate-800 dark:border-slate-700 dark:hover:border-indigo-500"
+          className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-green-300 hover:shadow-md transition-all dark:bg-slate-800 dark:border-slate-700 dark:hover:border-green-600"
         >
-          <div className="rounded-xl bg-indigo-100 p-3 text-indigo-600 group-hover:bg-indigo-200 transition-colors dark:bg-indigo-900/40 dark:text-indigo-400">
+          <div className="rounded-xl bg-green-100 p-3 text-green-700 group-hover:bg-green-200 transition-colors dark:bg-green-900/40 dark:text-green-400">
             <Receipt size={24} />
           </div>
           <div>

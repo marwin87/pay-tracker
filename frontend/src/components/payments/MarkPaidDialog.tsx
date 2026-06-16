@@ -71,7 +71,7 @@ export default function MarkPaidDialog({
           >
             {t("amountLabel")}
           </label>
-          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 focus-within:border-indigo-400 focus-within:ring-2 focus-within:ring-indigo-100 dark:border-slate-600 dark:bg-slate-900/40 dark:focus-within:border-indigo-500">
+          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-100 dark:border-slate-600 dark:bg-slate-900/40 dark:focus-within:border-green-600">
             <input
               id="paid-amount"
               type="number"
@@ -99,7 +99,7 @@ export default function MarkPaidDialog({
             rows={2}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-100 dark:focus:border-indigo-500"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-800 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-900/40 dark:text-slate-100 dark:focus:border-green-600"
           />
         </div>
 

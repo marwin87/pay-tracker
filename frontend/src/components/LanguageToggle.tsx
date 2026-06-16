@@ -19,7 +19,7 @@ export default function LanguageToggle() {
         value={locale}
         onChange={(e) => setLocale(e.target.value as Locale)}
         aria-label={t("ariaLabel")}
-        className="appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-7 py-1.5 text-sm font-medium text-slate-600 outline-none transition-colors hover:border-slate-300 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-500 dark:focus:border-indigo-500 dark:focus:ring-indigo-900/40 cursor-pointer"
+        className="appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-7 py-1.5 text-sm font-medium text-slate-600 outline-none transition-colors hover:border-slate-300 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-slate-500 dark:focus:border-green-600 dark:focus:ring-green-900/40 cursor-pointer"
       >
         {LOCALES.map(({ value, flag, name }) => (
           <option key={value} value={value}>

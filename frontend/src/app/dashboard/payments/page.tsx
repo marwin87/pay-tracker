@@ -150,7 +150,7 @@ export default function PaymentsPage() {
                       onClick={() => setSelectedMonth(key)}
                       className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                         isSelected
-                          ? "bg-indigo-600 text-white shadow-sm"
+                          ? "bg-green-700 text-white shadow-sm"
                           : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
                       }`}
                     >
@@ -265,7 +265,7 @@ export default function PaymentsPage() {
           {!isReadOnly && (
             <Link
               href="/dashboard/bills"
-              className="mt-3 text-sm font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+              className="mt-3 text-sm font-medium text-green-700 hover:underline dark:text-green-500"
             >
               {t("addBills")}
             </Link>

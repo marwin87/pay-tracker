@@ -106,7 +106,7 @@ function Tile({
             <button
               onClick={onSave}
               disabled={isSaving}
-              className="rounded-lg px-4 py-1.5 text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+              className="rounded-lg px-4 py-1.5 text-sm font-medium bg-green-700 text-white hover:bg-green-800 disabled:opacity-50 transition-colors"
             >
               {isSaving ? t("saving") : t("save")}
             </button>
@@ -461,7 +461,7 @@ function BrowserNotificationsTile({
       ) : (
         <button
           onClick={requestPermission}
-          className="rounded-lg px-4 py-1.5 text-sm font-medium bg-indigo-600 text-white hover:bg-indigo-700 transition-colors"
+          className="rounded-lg px-4 py-1.5 text-sm font-medium bg-green-700 text-white hover:bg-green-800 transition-colors"
         >
           {tp("browserNotifications.enable")}
         </button>

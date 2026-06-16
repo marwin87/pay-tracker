@@ -52,7 +52,7 @@ export default function DashboardLayout({
           {/* Brand */}
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 font-semibold text-indigo-600 dark:text-indigo-400"
+            className="flex items-center gap-2 font-semibold text-green-700 dark:text-green-500"
           >
             <Image src="/pt-logo.png" alt="Pay Tracker" width={28} height={28} className="rounded-md" />
             <span className="text-lg">Pay Tracker</span>
@@ -68,7 +68,7 @@ export default function DashboardLayout({
                   href={href}
                   className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                     active
-                      ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300"
+                      ? "bg-green-50 text-green-800 dark:bg-green-900/40 dark:text-green-300"
                       : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-100"
                   }`}
                 >
@@ -87,7 +87,7 @@ export default function DashboardLayout({
               href="/dashboard/settings"
               className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
                 pathname === "/dashboard/settings"
-                  ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300"
+                  ? "bg-green-50 text-green-800 dark:bg-green-900/40 dark:text-green-300"
                   : "text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
               }`}
             >
@@ -129,7 +129,7 @@ export default function DashboardLayout({
                         onClick={() => setMenuOpen(false)}
                         className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                           active
-                            ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300"
+                            ? "bg-green-50 text-green-800 dark:bg-green-900/40 dark:text-green-300"
                             : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-100"
                         }`}
                       >

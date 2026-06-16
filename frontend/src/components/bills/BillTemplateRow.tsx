@@ -33,7 +33,7 @@ export default function BillTemplateRow({
           <span className="font-semibold text-base text-slate-800 dark:text-slate-100 truncate">
             {template.name}
           </span>
-          <span className="font-medium text-indigo-600 dark:text-indigo-400">
+          <span className="font-medium text-green-700 dark:text-green-500">
             {template.amount} {template.currency}
           </span>
           <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-700 dark:text-slate-300">
@@ -61,7 +61,7 @@ export default function BillTemplateRow({
           <button
             onClick={onEditToggle}
             aria-label={isExpanded ? t("close") : t("edit")}
-            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-500 hover:bg-indigo-50 hover:text-indigo-700 dark:hover:bg-indigo-900/30 dark:hover:text-indigo-300 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-500 hover:bg-green-50 hover:text-green-800 dark:hover:bg-green-900/30 dark:hover:text-green-300 transition-colors"
           >
             {isExpanded ? <ChevronUp size={15} /> : <Pencil size={15} />}
             <span className="hidden sm:inline">{isExpanded ? t("close") : t("edit")}</span>
