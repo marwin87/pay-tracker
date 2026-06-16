@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Wallet, Receipt, CreditCard, LogOut, Menu, X, Settings } from "lucide-react";
+import { Receipt, CreditCard, LogOut, Menu, X, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -53,7 +54,7 @@ export default function DashboardLayout({
             href="/dashboard"
             className="flex items-center gap-2 font-semibold text-indigo-600 dark:text-indigo-400"
           >
-            <Wallet size={22} />
+            <Image src="/pt-logo.png" alt="Pay Tracker" width={28} height={28} className="rounded-md" />
             <span className="text-lg">Pay Tracker</span>
           </Link>
 

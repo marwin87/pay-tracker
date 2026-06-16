@@ -3,7 +3,7 @@
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Wallet } from "lucide-react";
+import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { apiFetch, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
@@ -52,9 +52,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-sm">
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center gap-2">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-600 text-white shadow-md">
-            <Wallet size={28} />
-          </div>
+          <Image src="/pt-logo.png" alt="Pay Tracker" width={80} height={80} className="rounded-2xl shadow-md" priority />
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
             Pay Tracker
           </h1>
