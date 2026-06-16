@@ -7,6 +7,7 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { apiFetch, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
+import { useNotifications } from "@/hooks/useNotifications";
 
 const inputClass =
   "w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600";
@@ -14,6 +15,7 @@ const inputClass =
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuth();
+  const { notifyDueToday } = useNotifications();
   const t = useTranslations("Auth");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -33,6 +35,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
       login(data.access_token);
+      void notifyDueToday();
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : t("loginFailed"));

@@ -11,7 +11,6 @@ import {
   HardDriveUpload,
   Mail,
   AlertTriangle,
-  CheckCircle2,
   Send,
   Loader2,
 } from "lucide-react";
@@ -27,6 +26,7 @@ import {
 import { useNotifications } from "@/hooks/useNotifications";
 import BackupButton from "@/components/BackupButton";
 import RestoreButton from "@/components/RestoreButton";
+import { Switch } from "@/components/ui/Switch";
 
 // ---------------------------------------------------------------------------
 // Tile wrapper
@@ -331,6 +331,7 @@ function EmailNotificationsTile({
 }) {
   const tp = useTranslations("SettingsPage");
 
+  const [emailEnabled, setEmailEnabled] = useState(profile.email_reminders_enabled);
   const [notify2, setNotify2] = useState(profile.notify_2_days_before);
   const [notify1, setNotify1] = useState(profile.notify_1_day_before);
   const [notifyOn, setNotifyOn] = useState(profile.notify_on_day);
@@ -344,6 +345,7 @@ function EmailNotificationsTile({
   >(null);
 
   const isDirty =
+    emailEnabled !== profile.email_reminders_enabled ||
     notify2 !== profile.notify_2_days_before ||
     notify1 !== profile.notify_1_day_before ||
     notifyOn !== profile.notify_on_day ||
@@ -357,6 +359,7 @@ function EmailNotificationsTile({
   }, [isDirty, onDirtyChange]);
 
   function cancel() {
+    setEmailEnabled(profile.email_reminders_enabled);
     setNotify2(profile.notify_2_days_before);
     setNotify1(profile.notify_1_day_before);
     setNotifyOn(profile.notify_on_day);
@@ -370,6 +373,7 @@ function EmailNotificationsTile({
     setSaveError(null);
     try {
       const updated = await updateMe({
+        email_reminders_enabled: emailEnabled,
         notify_2_days_before: notify2,
         notify_1_day_before: notify1,
         notify_on_day: notifyOn,
@@ -424,54 +428,61 @@ function EmailNotificationsTile({
       onCancel={cancel}
       t={t}
     >
-      <div className="space-y-2">
-        {checkboxes.map(([checked, setter, label]) => (
-          <label key={label} className="flex items-center">
-            <input
-              type="checkbox"
-              checked={checked}
-              onChange={(e) => setter(e.target.checked)}
-              className={checkboxClass}
-            />
-            <span className={labelClass}>{label}</span>
-          </label>
-        ))}
-      </div>
+      <Switch
+        checked={emailEnabled}
+        onChange={setEmailEnabled}
+        label={tp("emailNotifications.masterToggle")}
+      />
 
-      {noneSelected && (
-        <div className="flex items-start gap-2 rounded-lg bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 px-3 py-2">
-          <AlertTriangle
-            size={15}
-            className="text-yellow-600 dark:text-yellow-400 mt-0.5 shrink-0"
-          />
-          <p className="text-sm text-yellow-700 dark:text-yellow-300">
-            {tp("emailNotifications.noneWarning")}
-          </p>
-        </div>
-      )}
-
-      <div className="flex items-center gap-3 pt-1">
-        <label className="text-sm font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
-          {tp("emailNotifications.sendTimeLabel")}
-        </label>
-        <select
-          value={sendHour}
-          onChange={(e) => setSendHour(Number(e.target.value))}
-          className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        >
-          {HOURS.map((h) => (
-            <option key={h} value={h}>
-              {fmtHour(h)}
-            </option>
+      <div className={!emailEnabled ? "opacity-50 pointer-events-none" : ""}>
+        <div className="space-y-2">
+          {checkboxes.map(([checked, setter, label]) => (
+            <label key={label} className="flex items-center">
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={(e) => setter(e.target.checked)}
+                className={checkboxClass}
+              />
+              <span className={labelClass}>{label}</span>
+            </label>
           ))}
-        </select>
-      </div>
+        </div>
 
-      <div className="flex flex-col gap-2 pt-1 border-t border-slate-100 dark:border-slate-700">
+        {noneSelected && (
+          <div className="flex items-start gap-2 rounded-lg bg-yellow-50 dark:bg-yellow-900/30 border border-yellow-200 dark:border-yellow-700 px-3 py-2 mt-2">
+            <AlertTriangle
+              size={15}
+              className="text-yellow-600 dark:text-yellow-400 mt-0.5 shrink-0"
+            />
+            <p className="text-sm text-yellow-700 dark:text-yellow-300">
+              {tp("emailNotifications.noneWarning")}
+            </p>
+          </div>
+        )}
+
+        <div className="flex items-center gap-3 pt-1">
+          <label className="text-sm font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
+            {tp("emailNotifications.sendTimeLabel")}
+          </label>
+          <select
+            value={sendHour}
+            onChange={(e) => setSendHour(Number(e.target.value))}
+            className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          >
+            {HOURS.map((h) => (
+              <option key={h} value={h}>
+                {fmtHour(h)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-2 pt-1 border-t border-slate-100 dark:border-slate-700">
         <button
           onClick={handleSendNow}
           disabled={
-            isSendingNow || !profile.email_reminders_enabled || isDirty
+            isSendingNow || !emailEnabled || isDirty
           }
           className="flex items-center gap-2 self-start rounded-lg px-4 py-1.5 text-sm font-medium border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 transition-colors"
         >
@@ -499,6 +510,7 @@ function EmailNotificationsTile({
                 })}
           </p>
         )}
+        </div>
       </div>
     </Tile>
   );
@@ -514,7 +526,7 @@ function BrowserNotificationsTile({
   t: ReturnType<typeof useTranslations>;
 }) {
   const tp = useTranslations("SettingsPage");
-  const { permission, requestPermission } = useNotifications();
+  const { permission, isEnabled, requestPermission, setEnabled } = useNotifications();
 
   return (
     <Tile
@@ -525,19 +537,25 @@ function BrowserNotificationsTile({
       t={t}
     >
       {permission === "denied" ? (
-        <div className="flex items-start gap-2 rounded-lg bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 px-3 py-2">
+        <div className="flex items-start gap-2 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 px-3 py-2">
           <BellOff
             size={15}
-            className="text-amber-600 dark:text-amber-400 mt-0.5 shrink-0"
+            className="text-red-600 dark:text-red-400 mt-0.5 shrink-0"
           />
-          <p className="text-sm text-amber-700 dark:text-amber-300">
+          <p className="text-sm text-red-700 dark:text-red-300">
             {tp("browserNotifications.blockedWarning")}
           </p>
         </div>
       ) : permission === "granted" ? (
-        <div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400">
-          <CheckCircle2 size={15} />
-          {tp("browserNotifications.enabled")}
+        <div className="flex flex-col gap-2">
+          <Switch
+            checked={isEnabled}
+            onChange={setEnabled}
+            label={tp("browserNotifications.toggle")}
+          />
+          <p className="text-xs text-slate-400 dark:text-slate-500">
+            {tp("browserNotifications.osHint")}
+          </p>
         </div>
       ) : (
         <button

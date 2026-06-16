@@ -234,6 +234,7 @@
       "noneWarning": "Wybierz co najmniej jedną opcję, aby otrzymywać przypomnienia e-mail.",
       "sendTimeLabel": "Godzina wysyłki (UTC)",
       "sendTimePlaceholder": "Wybierz godzinę",
+      "masterToggle": "Włącz powiadomienia e-mail",
       "sendNowButton": "Wyślij powiadomienie teraz",
       "sendNowSending": "Wysyłanie...",
       "sendNowSent": "Wysłano {count} przypomnienie(ń)",
@@ -244,6 +245,8 @@
       "description": "Otrzymuj powiadomienie, gdy rachunek jest płatny dzisiaj.",
       "enable": "Włącz powiadomienia",
       "enabled": "Powiadomienia włączone",
+      "toggle": "Włącz powiadomienia przeglądarki",
+      "osHint": "Nie widzisz powiadomień? Sprawdź ustawienia powiadomień systemu (macOS: Ustawienia systemowe → Powiadomienia).",
       "blockedWarning": "Powiadomienia przeglądarki są zablokowane. Włącz je w ustawieniach przeglądarki lub systemu operacyjnego.",
       "requestFailed": "Nie udało się poprosić o uprawnienie do powiadomień."
     },

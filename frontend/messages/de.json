@@ -234,6 +234,7 @@
       "noneWarning": "Wählen Sie mindestens eine Option, um E-Mail-Erinnerungen zu erhalten.",
       "sendTimeLabel": "Sendezeit (UTC)",
       "sendTimePlaceholder": "Stunde auswählen",
+      "masterToggle": "E-Mail-Benachrichtigungen aktivieren",
       "sendNowButton": "Benachrichtigung jetzt senden",
       "sendNowSending": "Wird gesendet...",
       "sendNowSent": "{count} Erinnerung(en) gesendet",
@@ -244,6 +245,8 @@
       "description": "Erhalten Sie eine Benachrichtigung, wenn eine Rechnung heute fällig ist.",
       "enable": "Benachrichtigungen aktivieren",
       "enabled": "Benachrichtigungen aktiviert",
+      "toggle": "Browser-Benachrichtigungen aktivieren",
+      "osHint": "Keine Benachrichtigungen sichtbar? Prüfen Sie die Systembenachrichtigungseinstellungen (macOS: Systemeinstellungen → Mitteilungen).",
       "blockedWarning": "Browser-Benachrichtigungen sind blockiert. Aktivieren Sie sie in den Browser- oder Betriebssystemeinstellungen.",
       "requestFailed": "Benachrichtigungsberechtigung konnte nicht angefordert werden."
     },
