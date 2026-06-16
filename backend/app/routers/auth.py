@@ -48,6 +48,7 @@ def update_me(
     user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ):
+    # UserProfileUpdate is the security boundary — only fields declared there are patchable.
     for field, value in body.model_dump(exclude_unset=True).items():
         setattr(user, field, value)
     db.commit()

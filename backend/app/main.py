@@ -1,12 +1,11 @@
-import asyncio
 import logging
 from contextlib import asynccontextmanager
 
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-logging.basicConfig(level=logging.INFO)
+logging.getLogger("app").setLevel(logging.INFO)
 
 from app.core.database import SessionLocal
 from app.routers import auth, bills, export
@@ -15,7 +14,7 @@ from app.services.reminder_job import send_daily_reminders
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    scheduler = AsyncIOScheduler()
+    scheduler = BackgroundScheduler()
     scheduler.add_job(
         send_daily_reminders,
         "cron",
@@ -25,9 +24,9 @@ async def lifespan(app: FastAPI):
     )
     scheduler.start()
     # Run once on startup so a restart doesn't miss the day's reminders
-    asyncio.get_event_loop().run_in_executor(None, send_daily_reminders, SessionLocal)
+    send_daily_reminders(SessionLocal)
     yield
-    scheduler.shutdown()
+    scheduler.shutdown(wait=False)
 
 
 app = FastAPI(title="Pay Tracker API", version="0.1.0", lifespan=lifespan)

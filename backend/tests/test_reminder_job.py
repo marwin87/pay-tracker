@@ -192,3 +192,36 @@ def test_opt_out_user_skips_email(mock_send):
         send_daily_reminders(_SessionLocal)
 
     mock_send.assert_not_called()
+
+
+@patch("app.services.reminder_job.send_reminder_email")
+def test_smtp_exception_does_not_flip_flag(mock_send):
+    import smtplib
+
+    mock_send.side_effect = smtplib.SMTPException("connection refused")
+
+    today = date.today()
+    db = _SessionLocal()
+    user = _make_user(db)
+    bill = _make_bill(db, user.id)
+    inst = _make_instance(db, bill.id, due_date=today + timedelta(days=1))
+    inst_id = inst.id
+    db.commit()
+    db.close()
+
+    with patch("app.services.reminder_job.settings") as mock_settings:
+        mock_settings.smtp_host = "smtp.test"
+        mock_settings.smtp_port = 587
+        mock_settings.smtp_user = None
+        mock_settings.smtp_password = None
+        mock_settings.reminder_from = "r@test.com"
+
+        send_daily_reminders(_SessionLocal)
+
+    mock_send.assert_called_once()
+
+    db = _SessionLocal()
+    refreshed = db.get(PaymentInstance, inst_id)
+    assert refreshed.reminder_sent_upcoming is False
+    assert refreshed.reminder_sent_overdue is False
+    db.close()

@@ -52,7 +52,8 @@ def send_reminder_email(
     smtp_port: int,
     smtp_user: str | None,
     smtp_password: str | None,
-    from_addr: str,
+    smtp_use_tls: bool = True,
+    from_addr: str = "",
     to_addr: str,
     bill_name: str,
     due_date: date,
@@ -76,7 +77,8 @@ def send_reminder_email(
     msg.set_content(_BODIES[(is_overdue, lang)].format(**ctx))
 
     with smtplib.SMTP(smtp_host, smtp_port) as smtp:
-        smtp.starttls()
+        if smtp_use_tls:
+            smtp.starttls()
         if smtp_user:
             smtp.login(smtp_user, smtp_password or "")
         smtp.send_message(msg)

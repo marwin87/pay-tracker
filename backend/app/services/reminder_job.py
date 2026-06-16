@@ -1,7 +1,8 @@
 import logging
-from datetime import date, timedelta
+import smtplib
+from datetime import date, datetime, timedelta, timezone
 
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.orm import Session, selectinload, sessionmaker
 
 from app.core.config import settings
 from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
@@ -16,9 +17,9 @@ def send_daily_reminders(SessionLocal: sessionmaker) -> None:
         logger.warning("Reminder job: SMTP not configured, skipping")
         return
 
-    today = date.today()
+    today = datetime.now(timezone.utc).date()
     tomorrow = today + timedelta(days=1)
-    logger.info("Reminder job started (today=%s)", today)
+    logger.info("Reminder job started (today=%s UTC)", today)
 
     db: Session = SessionLocal()
     sent = 0
@@ -41,6 +42,7 @@ def send_daily_reminders(SessionLocal: sessionmaker) -> None:
 
             upcoming = (
                 db.query(PaymentInstance)
+                .options(selectinload(PaymentInstance.template))
                 .filter(
                     PaymentInstance.bill_id.in_(template_ids),
                     PaymentInstance.due_date == tomorrow,
@@ -52,6 +54,7 @@ def send_daily_reminders(SessionLocal: sessionmaker) -> None:
 
             overdue = (
                 db.query(PaymentInstance)
+                .options(selectinload(PaymentInstance.template))
                 .filter(
                     PaymentInstance.bill_id.in_(template_ids),
                     PaymentInstance.due_date < today,
@@ -84,8 +87,6 @@ def _send_and_flag(
     is_overdue: bool,
     language: str,
 ) -> bool:
-    import smtplib
-
     bill_name = (
         instance.template.name if instance.template else f"bill#{instance.bill_id}"
     )
@@ -98,6 +99,7 @@ def _send_and_flag(
             smtp_port=settings.smtp_port,
             smtp_user=settings.smtp_user,
             smtp_password=settings.smtp_password,
+            smtp_use_tls=settings.smtp_use_tls,
             from_addr=settings.reminder_from or settings.smtp_user or "",
             to_addr=user.email,
             bill_name=bill_name,
@@ -111,9 +113,32 @@ def _send_and_flag(
             instance.reminder_sent_overdue = True
         else:
             instance.reminder_sent_upcoming = True
-        db.commit()
-        logger.info("Sent %s reminder to %s for '%s' (instance %s)", kind, user.email, bill_name, instance.id)
+        try:
+            db.commit()
+        except Exception as commit_exc:
+            db.rollback()
+            logger.critical(
+                "Email sent to %s for instance %s but flag commit failed — "
+                "duplicate send possible on next run: %s",
+                user.email,
+                instance.id,
+                commit_exc,
+            )
+            return False
+        logger.info(
+            "Sent %s reminder to %s for '%s' (instance %s)",
+            kind,
+            user.email,
+            bill_name,
+            instance.id,
+        )
         return True
     except smtplib.SMTPException as exc:
-        logger.error("Failed to send %s reminder to %s for instance %s: %s", kind, user.email, instance.id, exc)
+        logger.error(
+            "Failed to send %s reminder to %s for instance %s: %s",
+            kind,
+            user.email,
+            instance.id,
+            exc,
+        )
         return False

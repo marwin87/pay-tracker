@@ -24,7 +24,14 @@ def upgrade() -> None:
     op.drop_constraint(
         op.f("fk_bill_templates_user_id"), "bill_templates", type_="foreignkey"
     )
-    op.create_foreign_key(None, "bill_templates", "users", ["user_id"], ["id"])
+    op.create_foreign_key(
+        "bill_templates_user_id_fkey",
+        "bill_templates",
+        "users",
+        ["user_id"],
+        ["id"],
+        ondelete="CASCADE",
+    )
     op.add_column(
         "payment_instances",
         sa.Column(
@@ -61,7 +68,9 @@ def downgrade() -> None:
     op.drop_column("users", "email_reminders_enabled")
     op.drop_column("payment_instances", "reminder_sent_overdue")
     op.drop_column("payment_instances", "reminder_sent_upcoming")
-    op.drop_constraint(None, "bill_templates", type_="foreignkey")
+    op.drop_constraint(
+        "bill_templates_user_id_fkey", "bill_templates", type_="foreignkey"
+    )
     op.create_foreign_key(
         op.f("fk_bill_templates_user_id"),
         "bill_templates",

@@ -33,6 +33,7 @@ export default function EmailRemindersToggle() {
       onClick={toggle}
       aria-label={enabled ? t("disable") : t("enable")}
       aria-pressed={enabled}
+      suppressHydrationWarning
       className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
     >
       <AtSign size={18} className={enabled ? "" : "opacity-40"} />
