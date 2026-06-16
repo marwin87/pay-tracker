@@ -1,256 +1,122 @@
 # Pay Tracker
 
-A self-hosted household bill tracking web app. Each month's payment instances are generated automatically from bill templates, the dashboard shows what is upcoming and overdue at a glance, and any family member can mark bills paid from any device.
+A self-hosted household bill tracking PWA. Define your recurring bills once, then each month's payment instances are generated automatically. Mark bills paid from any device — phone, tablet, or desktop.
 
-No third-party data sharing. No ongoing subscription cost. Runs locally with Docker Compose or in the cloud by switching an environment variable. Each user's data is fully isolated — User A cannot see or modify User B's bills or payments.
+No third-party data sharing. No subscription. Runs locally with Docker Compose or in the cloud. Each user's data is fully isolated.
 
 
 ## What it does
 
-You define a bill template once: name, amount, currency, recurrence frequency, and the day of month it is due. Pay Tracker then generates a payment instance for each applicable period automatically. When you open the payments page for a month, any missing instances are seeded on the spot — no background job needed.
-
-Each instance carries a live status:
-
-- Upcoming — due date is in the future
-- Overdue — due date has passed and the bill is unpaid (computed at response time, not stored)
-- Paid — marked paid by the user, with the actual amount paid and the date recorded
-
-Marking a bill paid triggers generation of the next period's instance. Recurring bills continue indefinitely until you archive the template. One-off bills produce no follow-on instance.
+- **Bill templates** — define a bill once: name, amount, currency, recurrence frequency, due day of month. Pay Tracker generates payment instances automatically each period.
+- **Payment tracking** — view upcoming, overdue, and paid bills for any month. Mark as paid with an optional amount override and note. Revert if you made a mistake.
+- **Email reminders** — optional. Configure SMTP credentials and a send time (30-minute precision) and the app emails you before or after each bill's due date.
+- **Email sent indicator** — each payment row shows an `@` icon: gray if no reminder has been sent, amber if one was sent. Click it to see the exact timestamp.
+- **Export & backup** — download payment history as `.xlsx` (one sheet per month) or a full JSON backup. Restore from backup at any time.
+- **Multilingual** — English, Polish, German. Language is saved per account.
+- **Installable as PWA** — works offline-first on mobile and desktop.
 
 
-## Stack
+## Getting started
 
-- Frontend: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, next-intl
-- Backend: FastAPI, Python 3.13, SQLAlchemy 2.0, Alembic, Pydantic v2
-- Database: PostgreSQL 17 (co-located in the backend container)
-- Runtime: Docker Compose (backend on port 8010, frontend on port 3010)
-
-
-## Project structure
-
-```
-frontend/
-  src/
-    app/
-      dashboard/
-        page.tsx              Landing page after login
-        layout.tsx            Nav bar shared across dashboard pages
-        bills/
-          page.tsx            Active bill templates list
-          archived/page.tsx   Archived templates with payment history
-        payments/
-          page.tsx            Payment list with month selector
-    components/
-      bills/
-        BillTemplateForm.tsx  Create / edit form for a bill template
-        BillTemplateRow.tsx   Single row in the templates list
-        DayPicker.tsx         Calendar-style day-of-month selector (1-31)
-        CategoryCombobox.tsx  Free-text category input with suggestions
-        ArchiveConfirmDialog.tsx
-      payments/
-        PaymentRow.tsx        Single payment instance row with status badge
-        MarkPaidDialog.tsx    Amount-override dialog for marking a bill paid
-        DeletePaymentDialog.tsx Confirmation dialog for deleting a payment
-      LanguageToggle.tsx      EN / PL / DE switcher saved per user account
-      ThemeToggle.tsx         Light / dark mode toggle
-    lib/
-      api.ts                  Base fetch wrapper (attaches JWT, handles errors)
-      auth.ts                 Login and register calls
-      bills-api.ts            Bill template CRUD
-      payments-api.ts         Payment instance fetch, mark-paid, revert, delete
-      export-api.ts           Download utilities for .xlsx and JSON export; restore upload
-      user-api.ts             User preferences (locale)
-    context/
-      auth-context.tsx        JWT storage and current-user state
-      locale-context.tsx      Active locale for next-intl
-
-backend/
-  app/
-    main.py                   FastAPI app, router registration, CORS
-    models/
-      user.py                 User (id, email, hashed_password, bills relationship)
-      bill.py                 BillTemplate (user_id FK), PaymentInstance, enums
-    schemas/
-      auth.py                 Register / login request and token response
-      bill.py                 All bill and payment Pydantic schemas
-    routers/
-      auth.py                 POST /auth/register, POST /auth/login
-      bills.py                Bill template CRUD + payment endpoints (scoped to current user)
-      export.py               GET /export/xlsx, GET /export/json, POST /export/restore (scoped to current user)
-    services/
-      recurrence.py           Instance generation and frequency scheduling (per-user)
-    core/
-      database.py             SQLAlchemy engine and session
-      deps.py                 current_user dependency (JWT decode)
-      security.py             Password hashing, JWT creation
-      config.py               Environment variable loading
-  tests/
-    conftest.py               SQLite in-memory test DB, TestClient fixture
-    test_user_scoping.py      8 tests: per-user data isolation across all endpoints
-    test_restore.py           6 tests: restore happy path, validation failures, user isolation
-
-alembic/                      Database migration revisions
-```
-
-
-## How it works
-
-### Bill templates and recurrence
-
-A BillTemplate is the source of truth for a recurring bill. It stores the recurrence frequency (monthly, every 2 months, quarterly, annual, one-off) and a start_period anchor (YYYY-MM, set at creation time) which the scheduler uses to determine whether the template falls on a given month.
-
-When a user opens the payments page for the current month, the backend calls ensure_current_period_instances. For each active, non-paused, non-one-off template it checks whether the month is on-schedule using the anchor and frequency, then inserts a PaymentInstance if one does not already exist. The (bill_id, period) unique constraint makes this idempotent — the call can fire on every page load without creating duplicates.
-
-Due dates are clamped to the last day of shorter months. A template with due_day 31 lands on 28, 29, or 30 depending on the month.
-
-### Marking a bill paid
-
-The user opens the mark-paid dialog, optionally overrides the amount, adds a note, and confirms. The backend records paid_at, paid_amount, and status = paid, then calls generate_next_instance which inserts the following period's instance (again idempotent). The frontend replaces the updated row in local state without a full re-fetch.
-
-### Reverting a payment
-
-An icon button (↺) appears on any paid instance. Clicking it calls POST /bills/payments/{id}/unpay, which clears paid_at and paid_amount and resets status to upcoming or overdue based on whether the due date has passed. The auto-generated next-period instance created by the original mark-paid is kept intact to avoid cascading data loss. No confirmation dialog — the action is trivially reversible by marking paid again.
-
-### Deleting a payment
-
-For one-off bills: the single instance is deleted. For recurring bills: the current and all future instances for that template are deleted, and the template is archived so no new instances are generated.
-
-### Status classification
-
-Overdue status is computed at response time. After fetching instances from the database, any instance with due_date before today and status = upcoming is returned as overdue in the API response. The database value is not changed — this avoids scheduled jobs and keeps the logic simple.
-
-### Data isolation
-
-Every bill template is owned by the user who created it via a `user_id` FK on `BillTemplate`. Payment instances inherit scope transitively through `bill_id → BillTemplate.user_id`. Every query in the bills and export routers filters by `current_user.id` — there is no endpoint that allows reading or mutating another user's data. Cross-user mutation attempts return HTTP 403.
-
-### Authentication
-
-JWT-based. The frontend stores the token in memory via AuthContext and attaches it to every API call. Token expiry causes a redirect to login. FastAPI handles all auth via JWT; no external auth provider.
-
-### Internationalisation
-
-next-intl with three locales: English (en), Polish (pl), German (de). The active locale is saved to the user's account and restored on login. Currency defaults are locale-aware: pl defaults to PLN, de to EUR, en to USD.
-
-
-## Running the app
-
-Copy the environment file and start everything with Docker Compose:
+### 1. Set up environment
 
 ```bash
 cp .env.example .env
+```
+
+Edit `.env` and set a strong `JWT_SECRET`. Everything else works with the defaults for local use.
+
+### 2. Start the app
+
+```bash
 docker compose up --build
 ```
 
-The frontend is at http://localhost:3010 and the API docs are at http://localhost:8010/docs.
+- Frontend: http://localhost:3010
+- API docs: http://localhost:8010/docs
 
-To wipe the database and start clean:
+### 3. Create your account
 
-```bash
-docker compose down -v && docker compose up --build
-```
+Open http://localhost:3010 and register. Each account is isolated — register separately for each family member.
 
-To run only the frontend (against a running backend):
+### 4. Add your first bill
 
-```bash
-cd frontend && npm run dev
-```
+Go to **Bills → New Bill**. Fill in the name, amount, frequency, and due day of month. Save it — Pay Tracker will generate this month's payment instance automatically.
 
-To run only the backend:
+### 5. Track payments
 
-```bash
-cd backend && uv run uvicorn app.main:app --reload
-```
+Go to **Payments**. Use the month selector to browse any period. Click **Mark as Paid** when a bill is settled. The next month's instance is created automatically for recurring bills.
 
+### 6. Set up email reminders (optional)
 
-## Database migrations
+Add SMTP credentials to `.env` (see the `# Reminders` section in `.env.example`), then restart. Go to **Settings → Email Notifications** to configure when reminders are sent and which timing windows to use (2 days before, 1 day before, on the day, 1 day after).
 
-Migrations run automatically on container start via Alembic. To generate a new revision after changing a model:
-
-```bash
-docker compose exec backend uv run alembic revision --autogenerate -m "describe the change"
-```
-
-The new file appears in backend/alembic/versions/ and is applied on the next container start.
+The settings page also shows the current server time (UTC) so you can set the send time relative to your timezone.
 
 
 ## Environment variables
 
-| Variable | Description |
-| --- | --- |
-| SECRET_KEY | JWT signing secret |
-| DATABASE_URL | PostgreSQL connection string |
-| NEXT_PUBLIC_API_URL | Backend URL seen by the browser |
+| Variable | Required | Description |
+| --- | --- | --- |
+| `JWT_SECRET` | yes | JWT signing secret — use a long random string |
+| `DATABASE_URL` | yes | PostgreSQL connection string |
+| `NEXT_PUBLIC_API_URL` | yes | Backend URL as seen by the browser |
+| `SMTP_HOST` | no | SMTP server for email reminders |
+| `SMTP_PORT` | no | SMTP port (default: 587) |
+| `SMTP_USER` | no | SMTP login |
+| `SMTP_PASSWORD` | no | SMTP password |
+| `REMINDER_FROM` | no | From address for reminder emails |
 
-Copy .env.example to .env and fill in the values. Never commit .env.
+Copy `.env.example` to `.env`. Never commit `.env`.
+
+
+## Stack
+
+- **Frontend:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, next-intl
+- **Backend:** FastAPI, Python 3.13, SQLAlchemy 2.0, Alembic, Pydantic v2
+- **Database:** PostgreSQL 17 (co-located in the backend container)
+- **Runtime:** Docker Compose
+
+
+## Development commands
+
+```bash
+# Start everything
+docker compose up --build
+
+# Wipe DB and start clean
+docker compose down -v && docker compose up --build
+
+# Frontend only (against a running backend)
+cd frontend && npm run dev
+
+# Backend only
+cd backend && uv run uvicorn app.main:app --reload
+
+# Lint
+cd frontend && npm run lint
+
+# Backend tests
+cd backend && uv run pytest tests/ -v
+
+# New DB migration after changing a model
+docker compose exec backend uv run alembic revision --autogenerate -m "describe the change"
+```
+
+> **Migration note:** Always read the generated migration file before applying — autogenerate can miss new columns. For renames, write `add_column` + `UPDATE` + `drop_column` manually instead of relying on `alter_column(new_column_name=...)`.
 
 
 ## Installing as a PWA
 
-Pay Tracker can be installed as a standalone app on desktop and mobile — no app store required.
+- **Chrome / Brave (desktop):** install icon (⊕) in the address bar, or browser menu → Install Pay Tracker
+- **Android:** browser menu (⋮) → Add to Home screen
+- **iOS Safari:** Share (⎋) → Add to Home Screen
 
-### Chrome / Brave on macOS or Windows
-
-1. Open the app and log in
-2. Look for the install icon (⊕) in the address bar on the right side
-3. Click it and choose **Install**
-
-If the icon is not visible: browser menu → **Cast, save, and share** → **Install Pay Tracker…**
-
-### Android (Chrome / Brave)
-
-Browser menu (⋮) → **Add to Home screen**
-
-### iOS Safari
-
-Share button (⎋) → **Add to Home Screen**
-
-> **Note:** Installation requires HTTPS. On localhost the browser allows it as an exception. In production, configure a TLS certificate on your reverse proxy — see the deployment notes in the Open Questions section of `context/foundation/prd.md`.
-
----
-
-## Export
-
-Two export endpoints are available at /export/xlsx and /export/json (authentication required).
-
-The .xlsx export (GET /export/xlsx?year=YYYY) produces a 12-sheet workbook — one sheet per calendar month — with columns: Bill, Category, Period, Due Date, Amount, Currency, Status, Paid Amount, Paid At, Notes. Defaults to the current year; empty months produce a sheet with headers only. An Export button on the Payments page triggers the download directly from the UI.
-
-The JSON export (GET /export/json) produces a structured backup of the authenticated user's data only. Format (schema_version 2):
-
-```json
-{
-  "schema_version": 2,
-  "exported_by": "user@example.com",
-  "exported_at": "2026-06-15T12:00:00+00:00",
-  "bill_templates": [...],
-  "payment_instances": [...]
-}
-```
-
-Both endpoints are accessible from the API docs at http://localhost:8010/docs.
+Requires HTTPS in production. Localhost works as an exception in most browsers.
 
 
-## Restore
+## Export & backup
 
-`POST /export/restore` accepts a JSON backup file (produced by `GET /export/json`) and atomically replaces the authenticated user's data with its contents. Existing bill templates and payment instances are deleted first; the backup's templates and instances are then re-inserted with new database IDs. The operation is all-or-nothing — any validation failure leaves the existing data untouched.
-
-Validation checks before any data is written:
-
-- File must be valid JSON
-- `schema_version` must be `2`
-- All `payment_instances[].bill_id` values must reference a template present in the same file
-- `frequency` and `status` values must be valid enum members
-
-A **Restore** button (upload icon) appears in the dashboard header next to the Backup button. Clicking it opens a file picker restricted to `.json` files, then shows a confirmation dialog naming the selected file before the upload begins.
-
-
-## Backend tests
-
-The backend has a pytest suite that runs against an in-memory SQLite database — no Docker or PostgreSQL required.
-
-```bash
-cd backend && uv run pytest tests/ -v
-```
-
-The suite covers per-user data isolation, export scoping, and restore behaviour: happy path, wrong schema version, orphaned payment instances, replace-existing-data semantics, user isolation, and unauthenticated access.
-
-CI runs these tests automatically on every push via GitHub Actions (`backend-tests` job).
+- **XLSX** — Payments page → Export Excel. One sheet per month, all columns.
+- **JSON backup** — Settings → Download Backup. Full data export scoped to your account.
+- **Restore** — Settings → Restore from Backup. Atomically replaces your data. Requires `schema_version: 2`.

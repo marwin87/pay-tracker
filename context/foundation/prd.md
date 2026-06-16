@@ -174,9 +174,20 @@ household finance manager does not need to check the dashboard proactively.
 
 - FR-012: System sends email reminders for upcoming and overdue payments.
   Priority: nice-to-have
-  > Socratic: Scoped to email-only delivery — browser push notifications deferred due to
+  > Scoped to email-only delivery — browser push notifications deferred due to
   > implementation complexity. Email works in both deployment modes with appropriate mail
   > provider configuration.
+  > Reminder send time is configurable per user in 30-minute increments (00:00–23:30,
+  > stored as minutes since midnight). The scheduler fires every 30 minutes and matches
+  > users whose configured time equals the current UTC time. Server time (UTC) is shown
+  > in the settings UI so users can account for the timezone offset.
+
+- FR-022: Each payment row displays an email notification indicator (@ icon): gray when
+  no reminder has been sent for that instance, amber when at least one reminder was sent.
+  Clicking the icon shows the timestamp of the most recent send. Priority: nice-to-have
+  > Implemented via `email_sent_at` (timestamptz, nullable) on `PaymentInstance` — stamped
+  > on every successful reminder send. Exposed in `PaymentInstanceOut` and rendered in the
+  > frontend without a separate API call.
 
 ### PWA
 

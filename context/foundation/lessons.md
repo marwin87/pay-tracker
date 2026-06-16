@@ -34,6 +34,16 @@
 
 **Applies to:** Any future child entity that is seeded idempotently from a parent template. If the child can be dismissed/deleted by the user, soft-delete on the child is always the right approach — do not reach up to the parent to prevent re-seeding.
 
+## Alembic autogenerate misses columns; alter_column rename is unreliable — write migrations manually
+
+**Rule:** Never trust Alembic autogenerate output without verifying it actually captured the intended change. Always read the generated file before running `upgrade head`. For column renames, use add + data-copy + drop instead of `op.alter_column(..., new_column_name=...)`.
+
+**Why:** Two failures in this project:
+1. Autogenerate produced a migration that only contained FK noise (drop/recreate a foreign key) while completely missing the new `email_sent_at` column and the `reminder_send_hour → reminder_send_minute` rename. The app started, migrations appeared to succeed, but the column was absent at runtime.
+2. `op.alter_column` with `server_default` on PostgreSQL requires `existing_type` — omitting it causes a silent no-op or error depending on Alembic/SQLAlchemy version. The rename appeared in the migration but did not apply, leaving the old column name in the DB and crashing the startup reminder job.
+
+**Applies to:** Every new migration. After generating with `--autogenerate`, read the file and verify it contains the expected DDL. For renames: write `add_column` + `op.execute("UPDATE … SET new = old")` + `drop_column` explicitly. Never rely on `new_column_name` alone.
+
 ## CLAUDE.md commit protocol overrides skill instructions
 
 **Rule:** Never auto-commit, even when a skill's own procedure instructs it. Always stage, show the proposed commit message, and wait for explicit user approval before running `git commit`.
