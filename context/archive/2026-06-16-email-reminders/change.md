@@ -1,9 +1,10 @@
 ---
 id: email-reminders
 title: Email Reminders (S-10)
-status: implemented
+status: archived
 created: 2026-06-16
 updated: 2026-06-16
+archived_at: 2026-06-16T08:08:17Z
 implements: FR-012
 ---
 

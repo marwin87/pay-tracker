@@ -3,7 +3,7 @@ project: pay-tracker
 version: 1
 status: draft
 created: 2026-06-11
-updated: 2026-06-15
+updated: 2026-06-16
 prd_version: 1
 main_goal: low-complexity
 top_blocker: none
@@ -48,7 +48,7 @@ slice only matters if this loop works.
 | S-07 | language-support             | switch the UI between English and Polish; preference is saved per account and restored after login | S-01 | FR-016, FR-017                 | done     |
 | S-08 | data-backup                  | download a full JSON backup of all templates and payment history                  | S-01          | FR-011                                    | done     |
 | S-09 | data-restore                 | upload a JSON backup and restore all data from it                                 | S-08          | FR-018 (new)                              | done     |
-| S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | proposed |
+| S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | done     |
 | S-11 | per-user-data-scoping        | only see own bills and payments; User A cannot access User B's data               | F-01, S-01    | FR-020 (new — security, blocking)         | done     |
 | S-12 | browser-notification         | get a browser notification for each unpaid bill due today when opening the dashboard | S-05       | FR-013 (extension)                        | done     |
 
@@ -252,7 +252,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Reminder timing — how many days before due date? Fixed value (e.g., 3 days) or per-template setting? — Owner: user. Block: no (default to a fixed configurable value; per-template setting can be added later).
   - Delivery mechanism — a scheduled background job (APScheduler or a cron container) or a queue (Celery + Redis). Scheduled job is simpler; queue is more robust under load. — Owner: implementation team. Block: no (APScheduler embedded in FastAPI is sufficient for a household-scale app).
 - **Risk:** Adds a background scheduler and an external SMTP dependency — both are new infrastructure for this project. Main risk is silent delivery failures (bounces, spam filtering) that are hard to detect without logging or a delivery webhook. Plan must include a delivery log table or at minimum structured logging per send attempt.
-- **Status:** proposed
+- **Status:** done
 
 ---
 
@@ -298,3 +298,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-11: only see own bills and payments; User A cannot access User B's data** — Archived 2026-06-15 → `context/archive/2026-06-15-per-user-data-scoping/`. Lesson: —.
 - **S-09: upload a JSON backup and restore all data from it** — Archived 2026-06-15 → `context/archive/2026-06-15-data-restore/`. Lesson: —.
 - **S-12: user gets one browser notification per unpaid bill due today each time the dashboard is opened; notifications require one-time permission grant via a Bell icon in the dashboard header.** — Archived 2026-06-15 → `context/archive/2026-06-15-browser-notification/`. Lesson: —.
+- **S-10: user receives an email reminder N days before a bill's due date when the instance is still unpaid; the lead time is configurable per template or globally.** — Archived 2026-06-16 → `context/archive/2026-06-16-email-reminders/`. Lesson: —.
