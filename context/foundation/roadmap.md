@@ -51,7 +51,7 @@ slice only matters if this loop works.
 | S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | done     |
 | S-11 | per-user-data-scoping        | only see own bills and payments; User A cannot access User B's data               | F-01, S-01    | FR-020 (new — security, blocking)         | done     |
 | S-12 | browser-notification         | get a browser notification for each unpaid bill due today when opening the dashboard | S-05       | FR-013 (extension)                        | done     |
-| S-13 | settings-page                | manage user profile, email/browser notification preferences, and backup/restore from a dedicated Settings page | S-10, S-12 | FR-001, FR-011, FR-012, FR-013, FR-018    | planned  |
+| S-13 | settings-page                | manage user profile, email/browser notification preferences, and backup/restore from a dedicated Settings page | S-10, S-12 | FR-001, FR-011, FR-012, FR-013, FR-018    | done     |
 
 ## Streams
 
@@ -268,7 +268,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:** —
 - **TODO (impl-review follow-up):** Wire a master "Enable email reminders" toggle UI on the settings page — a checkbox or switch bound to `email_reminders_enabled` that calls `updateMe({ email_reminders_enabled })`. The backend field and scheduler filter are now correctly wired (impl-review fix, 2026-06-16); only the settings page UI toggle remains.
 - **Risk:** Email reminder timing adds 4 new User model columns and tightens the `reminder_sent_overdue` semantics from "any overdue" to "exactly 1 day after due" — a behavioral change for existing users. Migration defaults `notify_1_day_before = True` to preserve prior behavior. Plan at `context/changes/settings-page/plan.md`.
-- **Status:** planned
+- **Status:** done
 
 ---
 
@@ -316,3 +316,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-09: upload a JSON backup and restore all data from it** — Archived 2026-06-15 → `context/archive/2026-06-15-data-restore/`. Lesson: —.
 - **S-12: user gets one browser notification per unpaid bill due today each time the dashboard is opened; notifications require one-time permission grant via a Bell icon in the dashboard header.** — Archived 2026-06-15 → `context/archive/2026-06-15-browser-notification/`. Lesson: —.
 - **S-10: user receives an email reminder N days before a bill's due date when the instance is still unpaid; the lead time is configurable per template or globally.** — Archived 2026-06-16 → `context/archive/2026-06-16-email-reminders/`. Lesson: —.
+- **S-13: user can manage their account (email, password), configure email reminder timing (2 days before / 1 day before / on day / 1 day after), enable/disable browser notifications, and trigger backup and restore — all from a single dedicated Settings page accessible via a gear icon in the nav header. The crowded header icon buttons are removed.** — Archived 2026-06-16 → `context/archive/2026-06-16-settings-page/`. Lesson: —.
