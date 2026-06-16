@@ -20,6 +20,7 @@ export function updateMe(
     Pick<
       UserProfile,
       | "language_preference"
+      | "email_reminders_enabled"
       | "notify_2_days_before"
       | "notify_1_day_before"
       | "notify_on_day"

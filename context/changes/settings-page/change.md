@@ -1,9 +1,10 @@
 ---
 change_id: settings-page
 title: Settings page
-status: implemented
+status: impl_reviewed
 created: 2026-06-16
 updated: 2026-06-16
+reviewed: 2026-06-16
 archived_at: null
 ---
 

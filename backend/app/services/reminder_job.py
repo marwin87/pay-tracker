@@ -22,7 +22,13 @@ def send_reminders_for_user(db: Session, user: User) -> int:
 
     template_ids = [
         t.id
-        for t in db.query(BillTemplate.id).filter(BillTemplate.user_id == user.id).all()
+        for t in db.query(BillTemplate.id)
+        .filter(
+            BillTemplate.user_id == user.id,
+            BillTemplate.is_archived.is_(False),
+            BillTemplate.is_paused.is_(False),
+        )
+        .all()
     ]
     if not template_ids:
         return 0
@@ -48,6 +54,7 @@ def send_reminders_for_user(db: Session, user: User) -> int:
                 PaymentInstance.bill_id.in_(template_ids),
                 PaymentInstance.due_date == due,
                 PaymentInstance.status != PaymentStatus.paid,
+                PaymentInstance.is_deleted.is_(False),
                 getattr(PaymentInstance, flag_attr).is_(False),
             )
             .all()
@@ -80,6 +87,7 @@ def send_daily_reminders(
             db.query(User)
             .filter(
                 User.is_active.is_(True),
+                User.email_reminders_enabled.is_(True),
                 User.reminder_send_hour == current_hour,
                 (
                     User.notify_1_day_before.is_(True)

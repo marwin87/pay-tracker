@@ -221,7 +221,8 @@
       "newPasswordPlaceholder": "Minimum 8 characters",
       "passwordTooShort": "Password must be at least 8 characters.",
       "wrongPassword": "Current password is incorrect.",
-      "emailTaken": "That email is already registered."
+      "emailTaken": "That email is already registered.",
+      "emailAndPasswordRequired": "Please enter both a new email address and your current password."
     },
     "emailNotifications": {
       "title": "Email Notifications",

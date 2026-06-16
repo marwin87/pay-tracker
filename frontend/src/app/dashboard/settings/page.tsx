@@ -144,78 +144,75 @@ function ProfileTile({
 }) {
   const tp = useTranslations("SettingsPage");
 
+  // Email change sub-form
   const [emailInput, setEmailInput] = useState("");
   const [emailPassword, setEmailPassword] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
+  const [isEmailSaving, setIsEmailSaving] = useState(false);
+
+  // Password change sub-form
   const [curPassword, setCurPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [isSaving, setIsSaving] = useState(false);
+  const [isPasswordSaving, setIsPasswordSaving] = useState(false);
 
-  const isDirty =
-    emailInput.length > 0 ||
-    emailPassword.length > 0 ||
-    curPassword.length > 0 ||
-    newPassword.length > 0;
+  const isEmailDirty = emailInput.length > 0 || emailPassword.length > 0;
+  const isPasswordDirty = curPassword.length > 0 || newPassword.length > 0;
+  const isDirty = isEmailDirty || isPasswordDirty;
 
   useEffect(() => {
     onDirtyChange(isDirty);
   }, [isDirty, onDirtyChange]);
 
-  function cancel() {
-    setEmailInput("");
-    setEmailPassword("");
+  async function saveEmail() {
+    if (!emailInput || !emailPassword) {
+      setEmailError(tp("profile.emailAndPasswordRequired"));
+      return;
+    }
     setEmailError(null);
-    setCurPassword("");
-    setNewPassword("");
-    setPasswordError(null);
+    setIsEmailSaving(true);
+    try {
+      const updated = await changeEmail(emailInput, emailPassword);
+      onProfileUpdate(updated);
+      setEmailInput("");
+      setEmailPassword("");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "";
+      setEmailError(
+        msg.includes("already registered")
+          ? tp("profile.emailTaken")
+          : tp("profile.wrongPassword"),
+      );
+    } finally {
+      setIsEmailSaving(false);
+    }
   }
 
-  async function save() {
-    setEmailError(null);
+  async function savePassword() {
+    if (newPassword.length < 8) {
+      setPasswordError(tp("profile.passwordTooShort"));
+      return;
+    }
     setPasswordError(null);
-    setIsSaving(true);
-    let ok = true;
-
-    if (emailInput || emailPassword) {
-      try {
-        const updated = await changeEmail(emailInput, emailPassword);
-        onProfileUpdate(updated);
-        setEmailInput("");
-        setEmailPassword("");
-      } catch (err) {
-        ok = false;
-        const msg = err instanceof Error ? err.message : "";
-        setEmailError(
-          msg.includes("already registered")
-            ? tp("profile.emailTaken")
-            : tp("profile.wrongPassword"),
-        );
-      }
+    setIsPasswordSaving(true);
+    try {
+      await changePassword(curPassword, newPassword);
+      setCurPassword("");
+      setNewPassword("");
+    } catch {
+      setPasswordError(tp("profile.wrongPassword"));
+    } finally {
+      setIsPasswordSaving(false);
     }
-
-    if (curPassword || newPassword) {
-      if (newPassword.length < 8) {
-        setPasswordError(tp("profile.passwordTooShort"));
-        ok = false;
-      } else {
-        try {
-          await changePassword(curPassword, newPassword);
-          setCurPassword("");
-          setNewPassword("");
-        } catch {
-          ok = false;
-          setPasswordError(tp("profile.wrongPassword"));
-        }
-      }
-    }
-
-    setIsSaving(false);
-    if (ok) cancel();
   }
 
   const inputClass =
     "w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500";
+
+  const btnSave =
+    "rounded-lg px-4 py-1.5 text-sm font-medium bg-green-700 text-white hover:bg-green-800 disabled:opacity-50 transition-colors";
+  const btnCancel =
+    "rounded-lg px-4 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors";
 
   return (
     <Tile
@@ -223,16 +220,13 @@ function ProfileTile({
       icon={User}
       title={tp("profile.title")}
       description={tp("profile.description")}
-      isDirty={isDirty}
-      isSaving={isSaving}
-      onSave={save}
-      onCancel={cancel}
       t={t}
     >
       <p className="text-sm text-slate-500 dark:text-slate-400">
         {profile.email}
       </p>
 
+      {/* Email change */}
       <div className="space-y-2">
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           {tp("profile.emailLabel")}
@@ -254,8 +248,25 @@ function ProfileTile({
         {emailError && (
           <p className="text-sm text-red-600 dark:text-red-400">{emailError}</p>
         )}
+        {isEmailDirty && (
+          <div className="flex gap-2 pt-1">
+            <button onClick={saveEmail} disabled={isEmailSaving} className={btnSave}>
+              {isEmailSaving ? tp("saving") : tp("save")}
+            </button>
+            <button
+              onClick={() => { setEmailInput(""); setEmailPassword(""); setEmailError(null); }}
+              disabled={isEmailSaving}
+              className={btnCancel}
+            >
+              {tp("cancel")}
+            </button>
+          </div>
+        )}
       </div>
 
+      <hr className="border-slate-200 dark:border-slate-700" />
+
+      {/* Password change */}
       <div className="space-y-2">
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           {tp("profile.newPasswordLabel")}
@@ -278,6 +289,20 @@ function ProfileTile({
           <p className="text-sm text-red-600 dark:text-red-400">
             {passwordError}
           </p>
+        )}
+        {isPasswordDirty && (
+          <div className="flex gap-2 pt-1">
+            <button onClick={savePassword} disabled={isPasswordSaving} className={btnSave}>
+              {isPasswordSaving ? tp("saving") : tp("save")}
+            </button>
+            <button
+              onClick={() => { setCurPassword(""); setNewPassword(""); setPasswordError(null); }}
+              disabled={isPasswordSaving}
+              className={btnCancel}
+            >
+              {tp("cancel")}
+            </button>
+          </div>
         )}
       </div>
     </Tile>

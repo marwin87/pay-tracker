@@ -221,7 +221,8 @@
       "newPasswordPlaceholder": "Minimum 8 znaków",
       "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
       "wrongPassword": "Aktualne hasło jest nieprawidłowe.",
-      "emailTaken": "Ten adres e-mail jest już zarejestrowany."
+      "emailTaken": "Ten adres e-mail jest już zarejestrowany.",
+      "emailAndPasswordRequired": "Podaj nowy adres e-mail oraz aktualne hasło."
     },
     "emailNotifications": {
       "title": "Powiadomienia e-mail",

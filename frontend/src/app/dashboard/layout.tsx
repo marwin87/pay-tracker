@@ -13,6 +13,7 @@ import LanguageToggle from "@/components/LanguageToggle";
 const NAV_ITEMS = [
   { href: "/dashboard/payments", labelKey: "payments" as const, icon: CreditCard },
   { href: "/dashboard/bills", labelKey: "bills" as const, icon: Receipt },
+  { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings },
 ];
 
 export default function DashboardLayout({
@@ -83,17 +84,6 @@ export default function DashboardLayout({
           <div className="hidden md:flex items-center gap-1 ml-auto">
             <LanguageToggle />
             <ThemeToggle />
-            <Link
-              href="/dashboard/settings"
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                pathname === "/dashboard/settings"
-                  ? "bg-green-50 text-green-800 dark:bg-green-900/40 dark:text-green-300"
-                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
-              }`}
-            >
-              <Settings size={15} />
-              <span>{t("settings")}</span>
-            </Link>
             <button
               onClick={logout}
               aria-label={t("logOut")}
@@ -120,7 +110,7 @@ export default function DashboardLayout({
             {menuOpen && (
               <div className="absolute top-full inset-x-0 border-b border-slate-200 bg-white shadow-md dark:border-slate-700 dark:bg-slate-800">
                 <div className="mx-auto max-w-4xl px-4 py-3 flex flex-col gap-1">
-                  {[...NAV_ITEMS, { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings }].map(({ href, labelKey, icon: Icon }) => {
+                  {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
                     const active = pathname === href || pathname.startsWith(href + "/");
                     return (
                       <Link

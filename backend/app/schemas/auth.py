@@ -1,6 +1,6 @@
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class RegisterRequest(BaseModel):
@@ -33,11 +33,12 @@ class UserProfileOut(BaseModel):
 
 class UserProfileUpdate(BaseModel):
     language_preference: Literal["en", "pl", "de"] | None = None
+    email_reminders_enabled: bool | None = None
     notify_2_days_before: bool | None = None
     notify_1_day_before: bool | None = None
     notify_on_day: bool | None = None
     notify_1_day_after: bool | None = None
-    reminder_send_hour: int | None = None
+    reminder_send_hour: Annotated[int, Field(ge=0, le=23)] | None = None
 
 
 class ChangePasswordRequest(BaseModel):

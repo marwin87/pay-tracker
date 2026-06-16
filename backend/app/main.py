@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from contextlib import asynccontextmanager
 
@@ -22,8 +23,9 @@ async def lifespan(app: FastAPI):
         args=[SessionLocal],
     )
     scheduler.start()
-    # Run once on startup so the current hour's reminders aren't missed after a restart
-    send_daily_reminders(SessionLocal)
+    # Run once on startup (non-blocking) so the current hour's reminders aren't missed after a restart
+    loop = asyncio.get_event_loop()
+    loop.run_in_executor(None, send_daily_reminders, SessionLocal)
     yield
     scheduler.shutdown(wait=False)
 

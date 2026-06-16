@@ -266,6 +266,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Parallel with:** —
 - **Blockers:** —
 - **Unknowns:** —
+- **TODO (impl-review follow-up):** Wire a master "Enable email reminders" toggle UI on the settings page — a checkbox or switch bound to `email_reminders_enabled` that calls `updateMe({ email_reminders_enabled })`. The backend field and scheduler filter are now correctly wired (impl-review fix, 2026-06-16); only the settings page UI toggle remains.
 - **Risk:** Email reminder timing adds 4 new User model columns and tightens the `reminder_sent_overdue` semantics from "any overdue" to "exactly 1 day after due" — a behavioral change for existing users. Migration defaults `notify_1_day_before = True` to preserve prior behavior. Plan at `context/changes/settings-page/plan.md`.
 - **Status:** planned
 
