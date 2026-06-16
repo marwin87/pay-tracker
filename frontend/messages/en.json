@@ -19,6 +19,7 @@
   "DashboardLayout": {
     "payments": "Payments",
     "bills": "Bills",
+    "settings": "Settings",
     "logOut": "Log out"
   },
   "Dashboard": {
@@ -197,5 +198,57 @@
   "EmailRemindersToggle": {
     "enable": "Enable email reminders",
     "disable": "Disable email reminders"
+  },
+  "SettingsPage": {
+    "navLabel": "Settings",
+    "pageTitle": "Settings",
+    "unsavedTitle": "Unsaved changes",
+    "unsavedDescription": "You have unsaved changes. Leave without saving?",
+    "unsavedLeave": "Leave",
+    "unsavedStay": "Stay",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "saveFailed": "Save failed. Please try again.",
+    "profile": {
+      "title": "User Profile",
+      "description": "Update your login email and password.",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "new@email.com",
+      "currentPasswordLabel": "Current password",
+      "currentPasswordPlaceholder": "Enter current password",
+      "newPasswordLabel": "New password",
+      "newPasswordPlaceholder": "Minimum 8 characters",
+      "passwordTooShort": "Password must be at least 8 characters.",
+      "wrongPassword": "Current password is incorrect.",
+      "emailTaken": "That email is already registered."
+    },
+    "emailNotifications": {
+      "title": "Email Notifications",
+      "description": "Choose when to receive email reminders for upcoming and overdue bills.",
+      "twoDaysBefore": "2 days before due date",
+      "oneDayBefore": "1 day before due date",
+      "onDay": "On the payment date",
+      "oneDayAfter": "1 day after due date",
+      "noneWarning": "Select at least one option to receive email reminders.",
+      "sendTimeLabel": "Send time (UTC)",
+      "sendTimePlaceholder": "Select hour"
+    },
+    "browserNotifications": {
+      "title": "Browser Notifications",
+      "description": "Get notified when a bill is due today.",
+      "enable": "Enable notifications",
+      "enabled": "Notifications enabled",
+      "blockedWarning": "Browser notifications are blocked. Enable them in your browser or operating system settings.",
+      "requestFailed": "Could not request notification permission."
+    },
+    "backup": {
+      "title": "Backup Data",
+      "description": "Download a complete copy of all your Pay Tracker data as a JSON file."
+    },
+    "restore": {
+      "title": "Restore Data",
+      "description": "Replace all current data with a previously downloaded backup file."
+    }
   }
 }

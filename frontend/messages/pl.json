@@ -19,6 +19,7 @@
   "DashboardLayout": {
     "payments": "Płatności",
     "bills": "Rachunki",
+    "settings": "Ustawienia",
     "logOut": "Wyloguj się"
   },
   "Dashboard": {
@@ -197,5 +198,57 @@
   "EmailRemindersToggle": {
     "enable": "Włącz przypomnienia e-mail",
     "disable": "Wyłącz przypomnienia e-mail"
+  },
+  "SettingsPage": {
+    "navLabel": "Ustawienia",
+    "pageTitle": "Ustawienia",
+    "unsavedTitle": "Niezapisane zmiany",
+    "unsavedDescription": "Masz niezapisane zmiany. Wyjść bez zapisywania?",
+    "unsavedLeave": "Wyjdź",
+    "unsavedStay": "Zostań",
+    "save": "Zapisz",
+    "saving": "Zapisywanie…",
+    "cancel": "Anuluj",
+    "saveFailed": "Zapis nie powiódł się. Spróbuj ponownie.",
+    "profile": {
+      "title": "Profil użytkownika",
+      "description": "Zmień swój adres e-mail i hasło.",
+      "emailLabel": "Adres e-mail",
+      "emailPlaceholder": "nowy@email.com",
+      "currentPasswordLabel": "Aktualne hasło",
+      "currentPasswordPlaceholder": "Wprowadź aktualne hasło",
+      "newPasswordLabel": "Nowe hasło",
+      "newPasswordPlaceholder": "Minimum 8 znaków",
+      "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+      "wrongPassword": "Aktualne hasło jest nieprawidłowe.",
+      "emailTaken": "Ten adres e-mail jest już zarejestrowany."
+    },
+    "emailNotifications": {
+      "title": "Powiadomienia e-mail",
+      "description": "Wybierz, kiedy otrzymywać przypomnienia e-mail o nadchodzących i zaległych rachunkach.",
+      "twoDaysBefore": "2 dni przed terminem",
+      "oneDayBefore": "1 dzień przed terminem",
+      "onDay": "W dniu płatności",
+      "oneDayAfter": "1 dzień po terminie",
+      "noneWarning": "Wybierz co najmniej jedną opcję, aby otrzymywać przypomnienia e-mail.",
+      "sendTimeLabel": "Godzina wysyłki (UTC)",
+      "sendTimePlaceholder": "Wybierz godzinę"
+    },
+    "browserNotifications": {
+      "title": "Powiadomienia przeglądarki",
+      "description": "Otrzymuj powiadomienie, gdy rachunek jest płatny dzisiaj.",
+      "enable": "Włącz powiadomienia",
+      "enabled": "Powiadomienia włączone",
+      "blockedWarning": "Powiadomienia przeglądarki są zablokowane. Włącz je w ustawieniach przeglądarki lub systemu operacyjnego.",
+      "requestFailed": "Nie udało się poprosić o uprawnienie do powiadomień."
+    },
+    "backup": {
+      "title": "Kopia zapasowa",
+      "description": "Pobierz pełną kopię wszystkich danych Pay Tracker jako plik JSON."
+    },
+    "restore": {
+      "title": "Przywracanie danych",
+      "description": "Zastąp wszystkie bieżące dane wcześniej pobraną kopią zapasową."
+    }
   }
 }

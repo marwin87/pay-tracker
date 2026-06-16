@@ -8,7 +8,7 @@ import { restoreFromBackup } from "@/lib/export-api";
 
 type State = "idle" | "confirming" | "restoring" | "error";
 
-export default function RestoreButton() {
+export default function RestoreButton({ label }: { label?: string } = {}) {
   const t = useTranslations("RestoreButton");
   const [state, setState] = useState<State>("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -66,9 +66,14 @@ export default function RestoreButton() {
       <button
         onClick={handleButtonClick}
         aria-label={t("ariaLabel")}
-        className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
+        className={
+          label
+            ? "flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100 transition-colors"
+            : "rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
+        }
       >
         <HardDriveUpload size={18} />
+        {label && <span>{label}</span>}
       </button>
 
       {(state === "confirming" || state === "restoring" || state === "error") &&

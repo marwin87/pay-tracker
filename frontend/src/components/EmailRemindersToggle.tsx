@@ -11,7 +11,7 @@ export default function EmailRemindersToggle() {
 
   useEffect(() => {
     fetchMe()
-      .then((profile) => setEnabled(profile.email_reminders_enabled))
+      .then((profile) => setEnabled(profile.notify_1_day_before))
       .catch(() => {});
   }, []);
 
@@ -20,7 +20,7 @@ export default function EmailRemindersToggle() {
     const next = !enabled;
     setEnabled(next);
     try {
-      await updateMe({ email_reminders_enabled: next });
+      await updateMe({ notify_1_day_before: next });
     } catch {
       setEnabled(enabled);
     }

@@ -24,8 +24,27 @@ class UserProfileOut(BaseModel):
     email: EmailStr
     language_preference: str | None
     email_reminders_enabled: bool
+    notify_2_days_before: bool
+    notify_1_day_before: bool
+    notify_on_day: bool
+    notify_1_day_after: bool
+    reminder_send_hour: int
 
 
 class UserProfileUpdate(BaseModel):
     language_preference: Literal["en", "pl", "de"] | None = None
-    email_reminders_enabled: bool | None = None
+    notify_2_days_before: bool | None = None
+    notify_1_day_before: bool | None = None
+    notify_on_day: bool | None = None
+    notify_1_day_after: bool | None = None
+    reminder_send_hour: int | None = None
+
+
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
+
+
+class ChangeEmailRequest(BaseModel):
+    new_email: EmailStr
+    current_password: str

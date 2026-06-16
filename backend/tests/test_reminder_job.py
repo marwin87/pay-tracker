@@ -31,12 +31,25 @@ def fresh_db():
     Base.metadata.drop_all(bind=_ENGINE)
 
 
-def _make_user(db, email="u@test.com", reminders=True) -> User:
+def _make_user(
+    db,
+    email="u@test.com",
+    notify_2_days_before=False,
+    notify_1_day_before=True,
+    notify_on_day=False,
+    notify_1_day_after=False,
+    reminder_send_hour=8,
+) -> User:
     user = User(
         email=email,
         password_hash="x",
         is_active=True,
-        email_reminders_enabled=reminders,
+        email_reminders_enabled=True,
+        notify_2_days_before=notify_2_days_before,
+        notify_1_day_before=notify_1_day_before,
+        notify_on_day=notify_on_day,
+        notify_1_day_after=notify_1_day_after,
+        reminder_send_hour=reminder_send_hour,
     )
     db.add(user)
     db.flush()
@@ -70,6 +83,14 @@ def _make_instance(db, bill_id: int, due_date: date, **kwargs) -> PaymentInstanc
     return inst
 
 
+def _smtp_settings(mock_settings):
+    mock_settings.smtp_host = "smtp.test"
+    mock_settings.smtp_port = 587
+    mock_settings.smtp_user = None
+    mock_settings.smtp_password = None
+    mock_settings.reminder_from = "r@test.com"
+
+
 # ---------------------------------------------------------------------------
 
 
@@ -87,7 +108,7 @@ def test_no_smtp_skips_all(mock_send, mock_settings):
 def test_upcoming_instance_sends_and_flips_flag(mock_send):
     today = date.today()
     db = _SessionLocal()
-    user = _make_user(db)
+    user = _make_user(db, notify_1_day_before=True)
     bill = _make_bill(db, user.id)
     inst = _make_instance(db, bill.id, due_date=today + timedelta(days=1))
     inst_id = inst.id
@@ -95,17 +116,12 @@ def test_upcoming_instance_sends_and_flips_flag(mock_send):
     db.close()
 
     with patch("app.services.reminder_job.settings") as mock_settings:
-        mock_settings.smtp_host = "smtp.test"
-        mock_settings.smtp_port = 587
-        mock_settings.smtp_user = None
-        mock_settings.smtp_password = None
-        mock_settings.reminder_from = "r@test.com"
-
-        send_daily_reminders(_SessionLocal)
+        _smtp_settings(mock_settings)
+        send_daily_reminders(_SessionLocal, send_hour=8)
 
     mock_send.assert_called_once()
     call_kwargs = mock_send.call_args.kwargs
-    assert call_kwargs["is_overdue"] is False
+    assert call_kwargs["kind"] == "upcoming"
 
     db = _SessionLocal()
     refreshed = db.get(PaymentInstance, inst_id)
@@ -115,10 +131,10 @@ def test_upcoming_instance_sends_and_flips_flag(mock_send):
 
 
 @patch("app.services.reminder_job.send_reminder_email")
-def test_overdue_instance_sends_and_flips_flag(mock_send):
+def test_1_day_after_instance_sends_and_flips_flag(mock_send):
     today = date.today()
     db = _SessionLocal()
-    user = _make_user(db)
+    user = _make_user(db, notify_1_day_before=False, notify_1_day_after=True)
     bill = _make_bill(db, user.id)
     inst = _make_instance(db, bill.id, due_date=today - timedelta(days=1))
     inst_id = inst.id
@@ -126,17 +142,12 @@ def test_overdue_instance_sends_and_flips_flag(mock_send):
     db.close()
 
     with patch("app.services.reminder_job.settings") as mock_settings:
-        mock_settings.smtp_host = "smtp.test"
-        mock_settings.smtp_port = 587
-        mock_settings.smtp_user = None
-        mock_settings.smtp_password = None
-        mock_settings.reminder_from = "r@test.com"
-
-        send_daily_reminders(_SessionLocal)
+        _smtp_settings(mock_settings)
+        send_daily_reminders(_SessionLocal, send_hour=8)
 
     mock_send.assert_called_once()
     call_kwargs = mock_send.call_args.kwargs
-    assert call_kwargs["is_overdue"] is True
+    assert call_kwargs["kind"] == "1_day_after"
 
     db = _SessionLocal()
     refreshed = db.get(PaymentInstance, inst_id)
@@ -146,10 +157,60 @@ def test_overdue_instance_sends_and_flips_flag(mock_send):
 
 
 @patch("app.services.reminder_job.send_reminder_email")
+def test_2_days_before_instance_sends_and_flips_flag(mock_send):
+    today = date.today()
+    db = _SessionLocal()
+    user = _make_user(db, notify_1_day_before=False, notify_2_days_before=True)
+    bill = _make_bill(db, user.id)
+    inst = _make_instance(db, bill.id, due_date=today + timedelta(days=2))
+    inst_id = inst.id
+    db.commit()
+    db.close()
+
+    with patch("app.services.reminder_job.settings") as mock_settings:
+        _smtp_settings(mock_settings)
+        send_daily_reminders(_SessionLocal, send_hour=8)
+
+    mock_send.assert_called_once()
+    call_kwargs = mock_send.call_args.kwargs
+    assert call_kwargs["kind"] == "2_days_before"
+
+    db = _SessionLocal()
+    refreshed = db.get(PaymentInstance, inst_id)
+    assert refreshed.reminder_sent_2_days_before is True
+    db.close()
+
+
+@patch("app.services.reminder_job.send_reminder_email")
+def test_on_day_instance_sends_and_flips_flag(mock_send):
+    today = date.today()
+    db = _SessionLocal()
+    user = _make_user(db, notify_1_day_before=False, notify_on_day=True)
+    bill = _make_bill(db, user.id)
+    inst = _make_instance(db, bill.id, due_date=today)
+    inst_id = inst.id
+    db.commit()
+    db.close()
+
+    with patch("app.services.reminder_job.settings") as mock_settings:
+        _smtp_settings(mock_settings)
+        send_daily_reminders(_SessionLocal, send_hour=8)
+
+    mock_send.assert_called_once()
+    call_kwargs = mock_send.call_args.kwargs
+    assert call_kwargs["kind"] == "on_day"
+
+    db = _SessionLocal()
+    refreshed = db.get(PaymentInstance, inst_id)
+    assert refreshed.reminder_sent_on_day is True
+    db.close()
+
+
+@patch("app.services.reminder_job.send_reminder_email")
 def test_already_sent_flag_skips_email(mock_send):
     today = date.today()
     db = _SessionLocal()
-    user = _make_user(db)
+    user = _make_user(db, notify_1_day_before=True)
     bill = _make_bill(db, user.id)
     _make_instance(
         db,
@@ -161,13 +222,8 @@ def test_already_sent_flag_skips_email(mock_send):
     db.close()
 
     with patch("app.services.reminder_job.settings") as mock_settings:
-        mock_settings.smtp_host = "smtp.test"
-        mock_settings.smtp_port = 587
-        mock_settings.smtp_user = None
-        mock_settings.smtp_password = None
-        mock_settings.reminder_from = "r@test.com"
-
-        send_daily_reminders(_SessionLocal)
+        _smtp_settings(mock_settings)
+        send_daily_reminders(_SessionLocal, send_hour=8)
 
     mock_send.assert_not_called()
 
@@ -176,20 +232,22 @@ def test_already_sent_flag_skips_email(mock_send):
 def test_opt_out_user_skips_email(mock_send):
     today = date.today()
     db = _SessionLocal()
-    user = _make_user(db, reminders=False)
+    # User with all notify flags False is excluded from the query
+    user = _make_user(
+        db,
+        notify_2_days_before=False,
+        notify_1_day_before=False,
+        notify_on_day=False,
+        notify_1_day_after=False,
+    )
     bill = _make_bill(db, user.id)
     _make_instance(db, bill.id, due_date=today + timedelta(days=1))
     db.commit()
     db.close()
 
     with patch("app.services.reminder_job.settings") as mock_settings:
-        mock_settings.smtp_host = "smtp.test"
-        mock_settings.smtp_port = 587
-        mock_settings.smtp_user = None
-        mock_settings.smtp_password = None
-        mock_settings.reminder_from = "r@test.com"
-
-        send_daily_reminders(_SessionLocal)
+        _smtp_settings(mock_settings)
+        send_daily_reminders(_SessionLocal, send_hour=8)
 
     mock_send.assert_not_called()
 
@@ -202,7 +260,7 @@ def test_smtp_exception_does_not_flip_flag(mock_send):
 
     today = date.today()
     db = _SessionLocal()
-    user = _make_user(db)
+    user = _make_user(db, notify_1_day_before=True)
     bill = _make_bill(db, user.id)
     inst = _make_instance(db, bill.id, due_date=today + timedelta(days=1))
     inst_id = inst.id
@@ -210,13 +268,8 @@ def test_smtp_exception_does_not_flip_flag(mock_send):
     db.close()
 
     with patch("app.services.reminder_job.settings") as mock_settings:
-        mock_settings.smtp_host = "smtp.test"
-        mock_settings.smtp_port = 587
-        mock_settings.smtp_user = None
-        mock_settings.smtp_password = None
-        mock_settings.reminder_from = "r@test.com"
-
-        send_daily_reminders(_SessionLocal)
+        _smtp_settings(mock_settings)
+        send_daily_reminders(_SessionLocal, send_hour=8)
 
     mock_send.assert_called_once()
 

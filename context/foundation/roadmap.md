@@ -51,6 +51,7 @@ slice only matters if this loop works.
 | S-10 | email-reminders              | receive an email reminder before bills become overdue                             | S-03          | FR-012                                    | done     |
 | S-11 | per-user-data-scoping        | only see own bills and payments; User A cannot access User B's data               | F-01, S-01    | FR-020 (new — security, blocking)         | done     |
 | S-12 | browser-notification         | get a browser notification for each unpaid bill due today when opening the dashboard | S-05       | FR-013 (extension)                        | done     |
+| S-13 | settings-page                | manage user profile, email/browser notification preferences, and backup/restore from a dedicated Settings page | S-10, S-12 | FR-001, FR-011, FR-012, FR-013, FR-018    | planned  |
 
 ## Streams
 
@@ -256,6 +257,20 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ---
 
+### S-13: Settings page
+
+- **Outcome:** user can manage their account (email, password), configure email reminder timing (2 days before / 1 day before / on day / 1 day after), enable/disable browser notifications, and trigger backup and restore — all from a single dedicated Settings page accessible via a gear icon in the nav header. The crowded header icon buttons are removed.
+- **Change ID:** settings-page
+- **PRD refs:** FR-001 (profile), FR-011 (backup), FR-012 (email reminders), FR-013 (browser notifications), FR-018 (restore)
+- **Prerequisites:** S-10 (email reminder infrastructure), S-12 (browser notification hook)
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Email reminder timing adds 4 new User model columns and tightens the `reminder_sent_overdue` semantics from "any overdue" to "exactly 1 day after due" — a behavioral change for existing users. Migration defaults `notify_1_day_before = True` to preserve prior behavior. Plan at `context/changes/settings-page/plan.md`.
+- **Status:** planned
+
+---
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                  | Suggested issue title                                        | Ready for `/10x-plan` | Notes                                          |
@@ -272,6 +287,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-10       | email-reminders            | Backend scheduler + email: overdue reminders via SMTP        | no                    | Needs S-03 done; SMTP provider and lead-time must be decided first |
 | S-12       | browser-notification       | Bell icon + browser notification for bills due today         | yes                   | Plan ready; run `/10x-implement browser-notification phase 1` |
 | S-11       | per-user-data-scoping      | Add user_id FK to bill_templates; scope all queries to current_user | yes             | **Security/blocking.** Decide migration strategy for existing rows first. |
+| S-13       | settings-page              | Settings page: profile, email notification timing, browser notifications, backup/restore | yes | Plan ready; run `/10x-implement settings-page phase 1` |
 
 ## Open Roadmap Questions
 

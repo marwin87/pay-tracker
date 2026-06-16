@@ -6,6 +6,8 @@ from app.core.deps import current_user
 from app.core.security import create_access_token, hash_password, verify_password
 from app.models.user import User
 from app.schemas.auth import (
+    ChangeEmailRequest,
+    ChangePasswordRequest,
     LoginRequest,
     RegisterRequest,
     TokenResponse,
@@ -51,6 +53,40 @@ def update_me(
     # UserProfileUpdate is the security boundary — only fields declared there are patchable.
     for field, value in body.model_dump(exclude_unset=True).items():
         setattr(user, field, value)
+    db.commit()
+    db.refresh(user)
+    return user
+
+
+@router.patch("/change-password", status_code=status.HTTP_200_OK)
+def change_password(
+    body: ChangePasswordRequest,
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+):
+    if not verify_password(body.current_password, user.password_hash):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    if len(body.new_password) < 8:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail="New password must be at least 8 characters",
+        )
+    user.password_hash = hash_password(body.new_password)
+    db.commit()
+
+
+@router.patch("/change-email", response_model=UserProfileOut)
+def change_email(
+    body: ChangeEmailRequest,
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+):
+    if not verify_password(body.current_password, user.password_hash):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    existing = db.query(User).filter(User.email == body.new_email).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    user.email = body.new_email
     db.commit()
     db.refresh(user)
     return user

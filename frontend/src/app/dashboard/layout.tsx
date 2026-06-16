@@ -3,15 +3,11 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Wallet, Receipt, CreditCard, LogOut, Menu, X } from "lucide-react";
+import { Wallet, Receipt, CreditCard, LogOut, Menu, X, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
-import BackupButton from "@/components/BackupButton";
-import RestoreButton from "@/components/RestoreButton";
-import NotificationToggle from "@/components/NotificationToggle";
-import EmailRemindersToggle from "@/components/EmailRemindersToggle";
 
 const NAV_ITEMS = [
   { href: "/dashboard/payments", labelKey: "payments" as const, icon: CreditCard },
@@ -85,11 +81,18 @@ export default function DashboardLayout({
           {/* Desktop right side */}
           <div className="hidden md:flex items-center gap-1 ml-auto">
             <LanguageToggle />
-            <EmailRemindersToggle />
-            <NotificationToggle />
-            <BackupButton />
-            <RestoreButton />
             <ThemeToggle />
+            <Link
+              href="/dashboard/settings"
+              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                pathname === "/dashboard/settings"
+                  ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-900/40 dark:text-indigo-300"
+                  : "text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+              }`}
+            >
+              <Settings size={15} />
+              <span>{t("settings")}</span>
+            </Link>
             <button
               onClick={logout}
               aria-label={t("logOut")}
@@ -103,8 +106,6 @@ export default function DashboardLayout({
           {/* Mobile: utility icons + hamburger */}
           <div className="flex md:hidden items-center gap-1 ml-auto">
             <LanguageToggle />
-            <EmailRemindersToggle />
-            <NotificationToggle />
             <button
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Toggle menu"
@@ -118,7 +119,7 @@ export default function DashboardLayout({
             {menuOpen && (
               <div className="absolute top-full inset-x-0 border-b border-slate-200 bg-white shadow-md dark:border-slate-700 dark:bg-slate-800">
                 <div className="mx-auto max-w-4xl px-4 py-3 flex flex-col gap-1">
-                  {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
+                  {[...NAV_ITEMS, { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings }].map(({ href, labelKey, icon: Icon }) => {
                     const active = pathname === href || pathname.startsWith(href + "/");
                     return (
                       <Link
@@ -138,8 +139,6 @@ export default function DashboardLayout({
                   })}
 
                   <div className="flex items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-700 mt-1">
-                    <BackupButton />
-                    <RestoreButton />
                     <ThemeToggle />
                     <button
                       onClick={() => { setMenuOpen(false); logout(); }}

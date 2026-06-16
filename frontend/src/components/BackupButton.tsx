@@ -8,7 +8,7 @@ import { downloadBackup } from "@/lib/export-api";
 
 type State = "idle" | "confirming" | "downloading" | "error";
 
-export default function BackupButton() {
+export default function BackupButton({ label }: { label?: string } = {}) {
   const t = useTranslations("BackupButton");
   const [state, setState] = useState<State>("idle");
 
@@ -27,9 +27,14 @@ export default function BackupButton() {
       <button
         onClick={() => setState("confirming")}
         aria-label={t("ariaLabel")}
-        className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
+        className={
+          label
+            ? "flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 dark:hover:text-slate-100 transition-colors"
+            : "rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
+        }
       >
         <HardDriveDownload size={18} />
+        {label && <span>{label}</span>}
       </button>
 
       {(state === "confirming" || state === "downloading" || state === "error") &&

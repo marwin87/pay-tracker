@@ -18,12 +18,11 @@ async def lifespan(app: FastAPI):
     scheduler.add_job(
         send_daily_reminders,
         "cron",
-        hour=8,
         minute=0,
         args=[SessionLocal],
     )
     scheduler.start()
-    # Run once on startup so a restart doesn't miss the day's reminders
+    # Run once on startup so the current hour's reminders aren't missed after a restart
     send_daily_reminders(SessionLocal)
     yield
     scheduler.shutdown(wait=False)
