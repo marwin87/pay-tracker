@@ -59,7 +59,7 @@ export default function BillTemplateForm({
   );
   const [customCurrency, setCustomCurrency] = useState(isPreset ? "" : initialCurrency);
   const [dueDay, setDueDay] = useState(
-    initial?.due_day != null ? String(initial.due_day) : "",
+    initial?.due_day != null ? String(initial.due_day) : String(new Date().getDate()),
   );
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [isPaused, setIsPaused] = useState(initial?.is_paused ?? false);

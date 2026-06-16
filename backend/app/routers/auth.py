@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
@@ -87,6 +89,11 @@ def send_notification_now(
         raise HTTPException(status_code=400, detail="SMTP not configured")
     sent = send_reminders_for_user(db, user)
     return SendNotificationNowOut(sent=sent)
+
+
+@router.get("/server-time")
+def server_time(_: User = Depends(current_user)):
+    return {"server_time": datetime.now(timezone.utc).isoformat()}
 
 
 @router.patch("/change-email", response_model=UserProfileOut)

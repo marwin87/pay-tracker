@@ -21,6 +21,7 @@ import {
   changePassword,
   changeEmail,
   sendNotificationNow,
+  fetchServerTime,
   UserProfile,
 } from "@/lib/user-api";
 import { useNotifications } from "@/hooks/useNotifications";
@@ -313,9 +314,11 @@ function ProfileTile({
 // Email notifications tile
 // ---------------------------------------------------------------------------
 
-const HOURS = Array.from({ length: 24 }, (_, i) => i);
-function fmtHour(h: number) {
-  return `${String(h).padStart(2, "0")}:00`;
+const SLOTS = Array.from({ length: 48 }, (_, i) => i * 30);
+function fmtSlot(minutes: number) {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
 }
 
 function EmailNotificationsTile({
@@ -336,13 +339,29 @@ function EmailNotificationsTile({
   const [notify1, setNotify1] = useState(profile.notify_1_day_before);
   const [notifyOn, setNotifyOn] = useState(profile.notify_on_day);
   const [notify1After, setNotify1After] = useState(profile.notify_1_day_after);
-  const [sendHour, setSendHour] = useState(profile.reminder_send_hour);
+  const [sendMinute, setSendMinute] = useState(profile.reminder_send_minute);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [isSendingNow, setIsSendingNow] = useState(false);
   const [sendNowResult, setSendNowResult] = useState<
     { sent: number } | { error: string } | null
   >(null);
+  const [serverTime, setServerTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchServerTime().then(({ server_time }) => {
+      const formatted = new Intl.DateTimeFormat("en-GB", {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "UTC",
+        timeZoneName: "short",
+      }).format(new Date(server_time));
+      setServerTime(formatted);
+    }).catch(() => {});
+  }, []);
 
   const isDirty =
     emailEnabled !== profile.email_reminders_enabled ||
@@ -350,7 +369,7 @@ function EmailNotificationsTile({
     notify1 !== profile.notify_1_day_before ||
     notifyOn !== profile.notify_on_day ||
     notify1After !== profile.notify_1_day_after ||
-    sendHour !== profile.reminder_send_hour;
+    sendMinute !== profile.reminder_send_minute;
 
   const noneSelected = !notify2 && !notify1 && !notifyOn && !notify1After;
 
@@ -364,7 +383,7 @@ function EmailNotificationsTile({
     setNotify1(profile.notify_1_day_before);
     setNotifyOn(profile.notify_on_day);
     setNotify1After(profile.notify_1_day_after);
-    setSendHour(profile.reminder_send_hour);
+    setSendMinute(profile.reminder_send_minute);
     setSaveError(null);
   }
 
@@ -378,7 +397,7 @@ function EmailNotificationsTile({
         notify_1_day_before: notify1,
         notify_on_day: notifyOn,
         notify_1_day_after: notify1After,
-        reminder_send_hour: sendHour,
+        reminder_send_minute: sendMinute,
       });
       onProfileUpdate(updated);
     } catch {
@@ -466,13 +485,13 @@ function EmailNotificationsTile({
             {tp("emailNotifications.sendTimeLabel")}
           </label>
           <select
-            value={sendHour}
-            onChange={(e) => setSendHour(Number(e.target.value))}
+            value={sendMinute}
+            onChange={(e) => setSendMinute(Number(e.target.value))}
             className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
-            {HOURS.map((h) => (
+            {SLOTS.map((h) => (
               <option key={h} value={h}>
-                {fmtHour(h)}
+                {fmtSlot(h)}
               </option>
             ))}
           </select>
@@ -512,6 +531,11 @@ function EmailNotificationsTile({
         )}
         </div>
       </div>
+      {serverTime && (
+        <p className="mt-3 text-xs text-slate-400 dark:text-slate-500">
+          {tp("emailNotifications.serverTimeHint", { time: serverTime })}
+        </p>
+      )}
     </Tile>
   );
 }

@@ -76,9 +76,11 @@ def send_daily_reminders(
         return
 
     now_utc = datetime.now(timezone.utc)
-    current_hour = send_hour if send_hour is not None else now_utc.hour
+    current_minute = (
+        send_hour if send_hour is not None else now_utc.hour * 60 + now_utc.minute
+    )
     today = now_utc.date()
-    logger.info("Reminder job started (today=%s UTC, hour=%d)", today, current_hour)
+    logger.info("Reminder job started (today=%s UTC, minute=%d)", today, current_minute)
 
     db: Session = SessionLocal()
     sent = 0
@@ -88,7 +90,7 @@ def send_daily_reminders(
             .filter(
                 User.is_active.is_(True),
                 User.email_reminders_enabled.is_(True),
-                User.reminder_send_hour == current_hour,
+                User.reminder_send_minute == current_minute,
                 (
                     User.notify_1_day_before.is_(True)
                     | User.notify_2_days_before.is_(True)
@@ -138,6 +140,7 @@ def _send_and_flag(
             language=language,
         )
         setattr(instance, flag_attr, True)
+        instance.email_sent_at = datetime.now(timezone.utc)
         try:
             db.commit()
         except Exception as commit_exc:

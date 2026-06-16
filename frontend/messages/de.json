@@ -1,7 +1,7 @@
 {
   "Auth": {
-    "loginSubtitle": "Melden Sie sich bei Ihrem Haushaltskonto an",
-    "registerSubtitle": "Haushaltskonto erstellen",
+    "loginSubtitle": "Melden Sie sich bei Ihrem Konto an",
+    "registerSubtitle": "Konto erstellen",
     "emailLabel": "E-Mail",
     "passwordLabel": "Passwort",
     "passwordHint": "Mindestens 8 Zeichen",
@@ -142,7 +142,9 @@
     "revert": "Zahlung rückgängig machen",
     "paidOn": "Bezahlt am",
     "delete": "Zahlung löschen",
-    "paymentNote": "Zahlungsnotiz"
+    "paymentNote": "Zahlungsnotiz",
+    "emailNotification": "E-Mail-Benachrichtigung",
+    "emailSentOn": "E-Mail gesendet"
   },
   "DeletePaymentDialog": {
     "title": "Zahlung löschen?",
@@ -238,7 +240,8 @@
       "sendNowButton": "Benachrichtigung jetzt senden",
       "sendNowSending": "Wird gesendet...",
       "sendNowSent": "{count} Erinnerung(en) gesendet",
-      "sendNowNoReminders": "Keine bevorstehenden Erinnerungen zum Senden"
+      "sendNowNoReminders": "Keine bevorstehenden Erinnerungen zum Senden",
+      "serverTimeHint": "Erinnerungen werden nach Serverzeit (UTC) gesendet. Aktuelle Serverzeit: {time}."
     },
     "browserNotifications": {
       "title": "Browser-Benachrichtigungen",

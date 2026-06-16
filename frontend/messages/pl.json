@@ -1,7 +1,7 @@
 {
   "Auth": {
-    "loginSubtitle": "Zaloguj się na swoje konto domowe",
-    "registerSubtitle": "Utwórz konto domowe",
+    "loginSubtitle": "Zaloguj się na swoje konto",
+    "registerSubtitle": "Utwórz konto",
     "emailLabel": "E-mail",
     "passwordLabel": "Hasło",
     "passwordHint": "Minimum 8 znaków",
@@ -142,7 +142,9 @@
     "revert": "Cofnij płatność",
     "paidOn": "Opłacono",
     "delete": "Usuń płatność",
-    "paymentNote": "Notatka do płatności"
+    "paymentNote": "Notatka do płatności",
+    "emailNotification": "Powiadomienie email",
+    "emailSentOn": "Email wysłany"
   },
   "DeletePaymentDialog": {
     "title": "Usunąć tę płatność?",
@@ -238,7 +240,8 @@
       "sendNowButton": "Wyślij powiadomienie teraz",
       "sendNowSending": "Wysyłanie...",
       "sendNowSent": "Wysłano {count} przypomnienie(ń)",
-      "sendNowNoReminders": "Brak nadchodzących przypomnień do wysłania"
+      "sendNowNoReminders": "Brak nadchodzących przypomnień do wysłania",
+      "serverTimeHint": "Przypomnienia są wysyłane według czasu serwera (UTC). Aktualny czas serwera: {time}."
     },
     "browserNotifications": {
       "title": "Powiadomienia przeglądarki",

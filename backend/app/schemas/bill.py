@@ -57,6 +57,7 @@ class PaymentInstanceOut(BaseModel):
     bill_name: str
     currency: str
     frequency: BillFrequency
+    email_sent_at: datetime | None
 
 
 class MarkPaidRequest(BaseModel):

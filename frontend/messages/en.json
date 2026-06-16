@@ -1,7 +1,7 @@
 {
   "Auth": {
-    "loginSubtitle": "Sign in to your household account",
-    "registerSubtitle": "Create your household account",
+    "loginSubtitle": "Sign in to your account",
+    "registerSubtitle": "Create your account",
     "emailLabel": "Email",
     "passwordLabel": "Password",
     "passwordHint": "Minimum 8 characters",
@@ -142,7 +142,9 @@
     "revert": "Revert payment",
     "paidOn": "Paid on",
     "delete": "Delete payment",
-    "paymentNote": "Payment note"
+    "paymentNote": "Payment note",
+    "emailNotification": "Email notification",
+    "emailSentOn": "Email sent"
   },
   "DeletePaymentDialog": {
     "title": "Delete this payment?",
@@ -238,7 +240,8 @@
       "sendNowButton": "Send notification now",
       "sendNowSending": "Sending...",
       "sendNowSent": "Sent {count} reminder(s)",
-      "sendNowNoReminders": "No upcoming reminders to send"
+      "sendNowNoReminders": "No upcoming reminders to send",
+      "serverTimeHint": "Reminders are sent based on server time (UTC). Current server time: {time}."
     },
     "browserNotifications": {
       "title": "Browser Notifications",

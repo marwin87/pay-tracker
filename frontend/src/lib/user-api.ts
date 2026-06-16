@@ -8,7 +8,7 @@ export interface UserProfile {
   notify_1_day_before: boolean;
   notify_on_day: boolean;
   notify_1_day_after: boolean;
-  reminder_send_hour: number;
+  reminder_send_minute: number;
 }
 
 export function fetchMe(): Promise<UserProfile> {
@@ -25,7 +25,7 @@ export function updateMe(
       | "notify_1_day_before"
       | "notify_on_day"
       | "notify_1_day_after"
-      | "reminder_send_hour"
+      | "reminder_send_minute"
     >
   >,
 ): Promise<UserProfile> {
@@ -52,6 +52,10 @@ export function sendNotificationNow(): Promise<{ sent: number }> {
   return apiFetch<{ sent: number }>("/auth/send-notification-now", {
     method: "POST",
   });
+}
+
+export function fetchServerTime(): Promise<{ server_time: string }> {
+  return apiFetch<{ server_time: string }>("/auth/server-time");
 }
 
 export function changeEmail(

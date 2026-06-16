@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { CheckCircle, Loader2, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
+import { AtSign, CheckCircle, Loader2, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import type { PaymentInstanceOut } from "@/lib/payments-api";
 import { revertPay } from "@/lib/payments-api";
@@ -29,6 +29,8 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
   const [reverting, setReverting] = useState(false);
   const [noteOpen, setNoteOpen] = useState(false);
   const noteRef = useRef<HTMLDivElement>(null);
+  const [emailOpen, setEmailOpen] = useState(false);
+  const emailRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!noteOpen) return;
@@ -40,6 +42,17 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [noteOpen]);
+
+  useEffect(() => {
+    if (!emailOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (emailRef.current && !emailRef.current.contains(e.target as Node)) {
+        setEmailOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [emailOpen]);
 
   async function handleRevert() {
     setReverting(true);
@@ -64,6 +77,17 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
 
   const paidAt = instance.paid_at ? new Date(instance.paid_at) : null;
   const paidAtFormatted = paidAt ? formatDate(paidAt) : null;
+
+  const emailSentAt = instance.email_sent_at ? new Date(instance.email_sent_at) : null;
+  const emailSentAtFormatted = emailSentAt
+    ? new Intl.DateTimeFormat(locale, {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      }).format(emailSentAt)
+    : null;
 
   return (
     <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:bg-slate-800 dark:border-slate-700">
@@ -141,6 +165,30 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
               {reverting ? <Loader2 size={15} className="animate-spin" /> : <RotateCcw size={15} />}
             </button>
           )}
+          <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
+          {/* Email notification indicator */}
+          <div className="relative" ref={emailRef}>
+            <button
+              aria-label={t("emailNotification")}
+              aria-expanded={emailOpen}
+              onClick={() => setEmailOpen((o) => !o)}
+              className={`rounded-lg p-1.5 transition-colors ${
+                emailSentAt
+                  ? "text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20"
+                  : "text-slate-300 hover:bg-slate-100 hover:text-slate-400 dark:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-500"
+              }`}
+            >
+              <AtSign size={15} />
+            </button>
+            {emailOpen && (
+              <div className="absolute bottom-full right-0 mb-2 w-52 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10 whitespace-nowrap">
+                {emailSentAtFormatted
+                  ? `${t("emailSentOn")} ${emailSentAtFormatted}`
+                  : t("emailNotification") + ": —"}
+                <div className="absolute top-full right-3 -mt-px border-4 border-transparent border-t-slate-800 dark:border-t-slate-700" />
+              </div>
+            )}
+          </div>
           <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
           <button
             onClick={() => onDelete(instance)}

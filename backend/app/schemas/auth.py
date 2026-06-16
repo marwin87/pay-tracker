@@ -28,7 +28,7 @@ class UserProfileOut(BaseModel):
     notify_1_day_before: bool
     notify_on_day: bool
     notify_1_day_after: bool
-    reminder_send_hour: int
+    reminder_send_minute: int
 
 
 class UserProfileUpdate(BaseModel):
@@ -38,7 +38,7 @@ class UserProfileUpdate(BaseModel):
     notify_1_day_before: bool | None = None
     notify_on_day: bool | None = None
     notify_1_day_after: bool | None = None
-    reminder_send_hour: Annotated[int, Field(ge=0, le=23)] | None = None
+    reminder_send_minute: Annotated[int, Field(ge=0, le=1410)] | None = None
 
 
 class ChangePasswordRequest(BaseModel):

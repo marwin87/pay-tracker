@@ -19,7 +19,7 @@ async def lifespan(app: FastAPI):
     scheduler.add_job(
         send_daily_reminders,
         "cron",
-        minute=0,
+        minute="0,30",
         args=[SessionLocal],
     )
     scheduler.start()

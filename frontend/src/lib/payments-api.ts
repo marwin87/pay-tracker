@@ -17,6 +17,7 @@ export interface PaymentInstanceOut {
   bill_name: string;
   currency: string;
   frequency: BillFrequency;
+  email_sent_at: string | null;
 }
 
 export function fetchPayments(month: string): Promise<PaymentInstanceOut[]> {
