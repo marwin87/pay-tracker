@@ -17,7 +17,7 @@ function getPermission(): NotificationPermission {
 function getInitialEnabled(): boolean {
   if (!notificationsSupported) return false;
   if (Notification.permission !== "granted") return false;
-  return localStorage.getItem(BROWSER_NOTIF_KEY) !== "0";
+  return localStorage.getItem(BROWSER_NOTIF_KEY) === "1";
 }
 
 export function useNotifications(): {
@@ -65,7 +65,7 @@ export function useNotifications(): {
   }
 
   async function notifyDueToday() {
-    if (!isEnabled) return;
+    if (localStorage.getItem(BROWSER_NOTIF_KEY) !== "1") return;
     if (!notificationsSupported || Notification.permission !== "granted") return;
     if (!("serviceWorker" in navigator)) return;
 

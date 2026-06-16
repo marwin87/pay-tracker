@@ -408,11 +408,11 @@ function EmailNotificationsTile({
   const labelClass =
     "ml-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer";
 
-  const checkboxes: [boolean, (v: boolean) => void, string][] = [
-    [notify2, setNotify2, tp("emailNotifications.twoDaysBefore")],
-    [notify1, setNotify1, tp("emailNotifications.oneDayBefore")],
-    [notifyOn, setNotifyOn, tp("emailNotifications.onDay")],
-    [notify1After, setNotify1After, tp("emailNotifications.oneDayAfter")],
+  const checkboxes: [string, boolean, (v: boolean) => void, string][] = [
+    ["2-before", notify2, setNotify2, tp("emailNotifications.twoDaysBefore")],
+    ["1-before", notify1, setNotify1, tp("emailNotifications.oneDayBefore")],
+    ["on-day", notifyOn, setNotifyOn, tp("emailNotifications.onDay")],
+    ["1-after", notify1After, setNotify1After, tp("emailNotifications.oneDayAfter")],
   ];
 
   return (
@@ -436,8 +436,8 @@ function EmailNotificationsTile({
 
       <div className={!emailEnabled ? "opacity-50 pointer-events-none" : ""}>
         <div className="space-y-2">
-          {checkboxes.map(([checked, setter, label]) => (
-            <label key={label} className="flex items-center">
+          {checkboxes.map(([key, checked, setter, label]) => (
+            <label key={key} className="flex items-center">
               <input
                 type="checkbox"
                 checked={checked}

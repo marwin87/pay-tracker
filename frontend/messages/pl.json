@@ -247,8 +247,7 @@
       "enabled": "Powiadomienia włączone",
       "toggle": "Włącz powiadomienia przeglądarki",
       "osHint": "Nie widzisz powiadomień? Sprawdź ustawienia powiadomień systemu (macOS: Ustawienia systemowe → Powiadomienia).",
-      "blockedWarning": "Powiadomienia przeglądarki są zablokowane. Włącz je w ustawieniach przeglądarki lub systemu operacyjnego.",
-      "requestFailed": "Nie udało się poprosić o uprawnienie do powiadomień."
+      "blockedWarning": "Powiadomienia przeglądarki są zablokowane. Włącz je w ustawieniach przeglądarki lub systemu operacyjnego."
     },
     "backup": {
       "title": "Kopia zapasowa",

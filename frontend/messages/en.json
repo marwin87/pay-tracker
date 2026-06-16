@@ -247,8 +247,7 @@
       "enabled": "Notifications enabled",
       "toggle": "Enable browser notifications",
       "osHint": "Not seeing notifications? Check your OS notification settings (macOS: System Settings → Notifications).",
-      "blockedWarning": "Browser notifications are blocked. Enable them in your browser or operating system settings.",
-      "requestFailed": "Could not request notification permission."
+      "blockedWarning": "Browser notifications are blocked. Enable them in your browser or operating system settings."
     },
     "backup": {
       "title": "Backup Data",

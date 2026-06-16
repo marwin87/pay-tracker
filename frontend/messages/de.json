@@ -247,8 +247,7 @@
       "enabled": "Benachrichtigungen aktiviert",
       "toggle": "Browser-Benachrichtigungen aktivieren",
       "osHint": "Keine Benachrichtigungen sichtbar? Prüfen Sie die Systembenachrichtigungseinstellungen (macOS: Systemeinstellungen → Mitteilungen).",
-      "blockedWarning": "Browser-Benachrichtigungen sind blockiert. Aktivieren Sie sie in den Browser- oder Betriebssystemeinstellungen.",
-      "requestFailed": "Benachrichtigungsberechtigung konnte nicht angefordert werden."
+      "blockedWarning": "Browser-Benachrichtigungen sind blockiert. Aktivieren Sie sie in den Browser- oder Betriebssystemeinstellungen."
     },
     "backup": {
       "title": "Daten sichern",

@@ -33,6 +33,10 @@ Add a master on/off toggle to the Email Notifications tile and a user-preference
 - No changes to the service worker or notification payload.
 - No dirty/save cycle for the browser toggle — it is a client preference stored directly in localStorage.
 
+## Addendum (impl-review 2026-06-16)
+
+During implementation, `void notifyDueToday()` was added to `frontend/src/app/login/page.tsx` immediately after `login()` succeeds. This fires a due-today notification at login time. It was not in the original plan but is safe: the `localStorage` guard in `notifyDueToday` means it is a no-op unless the user has both granted OS permission and enabled the in-app toggle.
+
 ## Implementation Approach
 
 1. Build a reusable `Switch` component using a hidden HTML checkbox + Tailwind `peer-*` classes (standard pill-toggle pattern, no external library).
