@@ -193,5 +193,9 @@
     "enabled": "Benachrichtigungen aktiviert — klicken zum Prüfen",
     "blocked": "Benachrichtigungen blockiert — in Browsereinstellungen erlauben",
     "paymentIncoming": "Zahlung ausstehend"
+  },
+  "EmailRemindersToggle": {
+    "enable": "E-Mail-Erinnerungen aktivieren",
+    "disable": "E-Mail-Erinnerungen deaktivieren"
   }
 }

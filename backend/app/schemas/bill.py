@@ -90,6 +90,8 @@ class BackupInstance(BaseModel):
     paid_amount: float | None
     notes: str | None
     created_at: str
+    reminder_sent_upcoming: bool = False
+    reminder_sent_overdue: bool = False
 
 
 class BackupPayload(BaseModel):

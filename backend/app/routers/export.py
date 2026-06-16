@@ -105,7 +105,7 @@ def export_json(
         else []
     )
     payload = {
-        "schema_version": 2,
+        "schema_version": 3,
         "exported_by": me.email,
         "exported_at": datetime.now(timezone.utc).isoformat(),
         "bill_templates": [
@@ -137,6 +137,8 @@ def export_json(
                 "paid_amount": float(i.paid_amount) if i.paid_amount else None,
                 "notes": i.notes,
                 "created_at": i.created_at.isoformat(),
+                "reminder_sent_upcoming": i.reminder_sent_upcoming,
+                "reminder_sent_overdue": i.reminder_sent_overdue,
             }
             for i in instances
         ],
@@ -168,7 +170,7 @@ async def restore_json(
     except json.JSONDecodeError:
         raise HTTPException(status_code=422, detail="Invalid JSON")
 
-    if raw.get("schema_version") != 2:
+    if raw.get("schema_version") not in {2, 3}:
         raise HTTPException(status_code=422, detail="Unsupported schema version")
 
     try:
@@ -228,6 +230,8 @@ async def restore_json(
                 Decimal(str(bi.paid_amount)) if bi.paid_amount is not None else None
             ),
             notes=bi.notes,
+            reminder_sent_upcoming=bi.reminder_sent_upcoming,
+            reminder_sent_overdue=bi.reminder_sent_overdue,
         )
         db.add(obj)
 

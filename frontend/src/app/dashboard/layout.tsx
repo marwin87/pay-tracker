@@ -11,6 +11,7 @@ import LanguageToggle from "@/components/LanguageToggle";
 import BackupButton from "@/components/BackupButton";
 import RestoreButton from "@/components/RestoreButton";
 import NotificationToggle from "@/components/NotificationToggle";
+import EmailRemindersToggle from "@/components/EmailRemindersToggle";
 
 const NAV_ITEMS = [
   { href: "/dashboard/payments", labelKey: "payments" as const, icon: CreditCard },
@@ -84,9 +85,10 @@ export default function DashboardLayout({
           {/* Desktop right side */}
           <div className="hidden md:flex items-center gap-1 ml-auto">
             <LanguageToggle />
+            <EmailRemindersToggle />
+            <NotificationToggle />
             <BackupButton />
             <RestoreButton />
-            <NotificationToggle />
             <ThemeToggle />
             <button
               onClick={logout}
@@ -101,6 +103,7 @@ export default function DashboardLayout({
           {/* Mobile: utility icons + hamburger */}
           <div className="flex md:hidden items-center gap-1 ml-auto">
             <LanguageToggle />
+            <EmailRemindersToggle />
             <NotificationToggle />
             <button
               onClick={() => setMenuOpen((o) => !o)}

@@ -23,7 +23,9 @@ class UserProfileOut(BaseModel):
 
     email: EmailStr
     language_preference: str | None
+    email_reminders_enabled: bool
 
 
 class UserProfileUpdate(BaseModel):
     language_preference: Literal["en", "pl", "de"] | None = None
+    email_reminders_enabled: bool | None = None
