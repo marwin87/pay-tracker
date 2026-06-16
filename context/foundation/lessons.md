@@ -26,6 +26,14 @@
 
 **Applies to:** Any new data model that touches user-owned resources. Before writing the first migration, answer: "Should User A ever see User B's rows?" If no → add `user_id` FK + NOT NULL constraint in the initial migration. PaymentInstance (and similar child rows) can inherit user scope transitively via their parent FK — no need to denormalize `user_id` onto every table, but the root entity must carry it.
 
+## Soft-delete is the correct tombstone for idempotent instance generation
+
+**Rule:** When a `PaymentInstance` is deleted by the user, set `is_deleted = True` rather than hard-deleting the row. Never use template-level flags (archived, paused, custom columns) to prevent instance regeneration as a side-effect of a payment action.
+
+**Why:** `ensure_current_period_instances` is idempotent — it skips a period if any row already exists for `(bill_id, period)`. A soft-deleted row satisfies this check automatically, making it a zero-cost tombstone. Hard-deleting the row removes the tombstone and the seeder regenerates the entry on the next page load. The alternative (setting `deleted_from_period` on `BillTemplate`) was implemented, shipped, and then reverted: it coupled instance lifecycle to template state, introduced a "reactivate" concept with no natural UX, and made a simple delete action require reasoning about two models simultaneously.
+
+**Applies to:** Any future child entity that is seeded idempotently from a parent template. If the child can be dismissed/deleted by the user, soft-delete on the child is always the right approach — do not reach up to the parent to prevent re-seeding.
+
 ## CLAUDE.md commit protocol overrides skill instructions
 
 **Rule:** Never auto-commit, even when a skill's own procedure instructs it. Always stage, show the proposed commit message, and wait for explicit user approval before running `git commit`.

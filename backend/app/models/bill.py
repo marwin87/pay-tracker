@@ -91,6 +91,9 @@ class PaymentInstance(Base):
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     paid_amount: Mapped[Decimal | None] = mapped_column(Numeric(12, 2))
     notes: Mapped[str | None] = mapped_column(Text)
+    is_deleted: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default="false"
+    )
     reminder_sent_upcoming: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
     )

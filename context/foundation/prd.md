@@ -130,6 +130,17 @@ household finance manager does not need to check the dashboard proactively.
   > Socratic: Pause flag at template level allows stopping recurrence without deleting the
   > template or losing its payment history.
 
+- FR-021: User can delete a payment instance with a confirmation dialog. Deletion is
+  permanent from the user's perspective but implemented as a soft-delete (`is_deleted`
+  flag) so the row acts as a tombstone and the seeder never regenerates the entry.
+  Only the selected instance is affected — the bill template and all other instances
+  are untouched. Priority: must-have
+  > Hard-delete + regeneration-prevention via template-level flags was attempted and
+  > rejected: it coupled instance lifecycle to template state and required a "reactivate"
+  > concept that had no natural UX home. Soft-delete on the instance is the correct
+  > abstraction — the idempotency check in ensure_current_period_instances already
+  > skips periods where any row (including soft-deleted) exists.
+
 - FR-019: User can revert an accidentally marked-as-paid payment instance back to its
   natural unpaid state (upcoming or overdue) without a confirmation dialog. Priority: must-have
   > Reverting clears paid_at and paid_amount; status is recomputed dynamically (overdue if

@@ -145,8 +145,8 @@
   },
   "DeletePaymentDialog": {
     "title": "Usunąć tę płatność?",
-    "descriptionRecurring": "Spowoduje to usunięcie wpisu z bieżącego miesiąca oraz wszystkich przyszłych wpisów dla tego cyklicznego rachunku. Rachunek zostanie zarchiwizowany.",
-    "descriptionOneOff": "Ten jednorazowy wpis płatności zostanie trwale usunięty. Tej operacji nie można cofnąć.",
+    "descriptionRecurring": "Ten wpis płatności zostanie usunięty. Cykliczny rachunek będzie nadal generować przyszłe wpisy.",
+    "descriptionOneOff": "Ten jednorazowy wpis płatności zostanie usunięty. Tej operacji nie można cofnąć.",
     "cancel": "Anuluj",
     "confirm": "Usuń",
     "deleting": "Usuwanie…",

@@ -145,8 +145,8 @@
   },
   "DeletePaymentDialog": {
     "title": "Zahlung löschen?",
-    "descriptionRecurring": "Damit wird der Eintrag des aktuellen Monats sowie alle zukünftigen Einträge dieser wiederkehrenden Rechnung gelöscht. Die Rechnung wird archiviert.",
-    "descriptionOneOff": "Dieser einmalige Zahlungseintrag wird dauerhaft entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "descriptionRecurring": "Dieser Zahlungseintrag wird entfernt. Die wiederkehrende Rechnung generiert weiterhin zukünftige Einträge.",
+    "descriptionOneOff": "Dieser einmalige Zahlungseintrag wird entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
     "cancel": "Abbrechen",
     "confirm": "Löschen",
     "deleting": "Löschen…",

@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
 from app.core.deps import current_user
-from app.models.bill import BillFrequency, BillTemplate, PaymentInstance, PaymentStatus
+from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
 from app.models.user import User
 from app.schemas.bill import (
     BillTemplateCreate,
@@ -74,6 +74,7 @@ def list_payments(
         .filter(
             BillTemplate.user_id == me.id,
             PaymentInstance.period == month,
+            PaymentInstance.is_deleted.is_(False),
         )
         .order_by(PaymentInstance.due_date)
         .all()
@@ -202,18 +203,7 @@ def delete_payment(
     if template.user_id != me.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
-    if template.frequency == BillFrequency.one_off:
-        # One-off: delete just this instance; template stays (no loop to stop)
-        db.delete(instance)
-    else:
-        # Recurring: delete this period and all future instances, then archive the template
-        # so ensure_current_period_instances won't regenerate them
-        db.query(PaymentInstance).filter(
-            PaymentInstance.bill_id == template.id,
-            PaymentInstance.period >= instance.period,
-        ).delete(synchronize_session=False)
-        template.is_archived = True
-
+    instance.is_deleted = True
     db.commit()
 
 

@@ -145,8 +145,8 @@
   },
   "DeletePaymentDialog": {
     "title": "Delete this payment?",
-    "descriptionRecurring": "This will delete this month's entry and all future entries for this recurring bill. The bill will be archived.",
-    "descriptionOneOff": "This one-off payment entry will be permanently removed. This cannot be undone.",
+    "descriptionRecurring": "This payment entry will be removed. The recurring bill will continue generating future entries.",
+    "descriptionOneOff": "This one-off payment entry will be removed. This cannot be undone.",
     "cancel": "Cancel",
     "confirm": "Delete",
     "deleting": "Deleting…",
