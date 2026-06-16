@@ -1,10 +1,10 @@
 ---
 change_id: notification-toggles
 title: Notification toggles
-status: impl_reviewed
+status: archived
 created: 2026-06-16
 updated: 2026-06-16
-archived_at: null
+archived_at: 2026-06-16T16:15:07Z
 ---
 
 ## Notes
