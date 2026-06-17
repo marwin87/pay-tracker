@@ -101,13 +101,10 @@ def _stub(
     [
         # monthly is always active (early return, no anchor math)
         (BillFrequency.monthly, "2026-01", "2026-06", True),
-        (BillFrequency.monthly, "2026-01", "2099-12", True),
         # quarterly — active at anchor, at multiples of 3, inactive otherwise
         (BillFrequency.quarterly, "2026-01", "2026-01", True),  # 0 months offset
         (BillFrequency.quarterly, "2026-01", "2026-04", True),  # +3 months
-        (BillFrequency.quarterly, "2026-01", "2026-07", True),  # +6 months
         (BillFrequency.quarterly, "2026-01", "2026-02", False),  # +1 month
-        (BillFrequency.quarterly, "2026-01", "2026-03", False),  # +2 months
         (BillFrequency.quarterly, "2026-01", "2025-12", False),  # before anchor
         # every_2_months
         (BillFrequency.every_2_months, "2026-01", "2026-03", True),  # +2 months

@@ -221,7 +221,7 @@ Helper functions:
 
 #### Manual
 
-- [ ] 1.4 Test output shows 21 pure test cases clearly; all pass in < 0.5 seconds
+- [x] 1.4 Test output shows 21 pure test cases clearly; all pass in < 0.5 seconds
 
 ### Phase 2: DB-Backed Service Tests
 
@@ -233,6 +233,6 @@ Helper functions:
 
 #### Manual
 
-- [ ] 2.4 All ~25 test names visible in output; no skips; no warnings
-- [ ] 2.5 `test_ensure_respects_soft_delete_tombstone` explicitly confirmed green in test output
-- [ ] 2.6 `test_generate_next_instance_idempotent` explicitly confirmed green in test output
+- [x] 2.4 All ~25 test names visible in output; no skips; no warnings
+- [x] 2.5 `test_ensure_respects_soft_delete_tombstone` explicitly confirmed green in test output
+- [x] 2.6 `test_generate_next_instance_idempotent` explicitly confirmed green in test output
