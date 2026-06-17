@@ -1,7 +1,7 @@
 ---
 change_id: testing-postgresql-integration
 title: PostgreSQL integration baseline — replace SQLite fixture and add IDOR tests
-status: implemented
+status: impl_reviewed
 created: 2026-06-17
 updated: 2026-06-17
 archived_at: null

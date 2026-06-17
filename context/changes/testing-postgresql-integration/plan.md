@@ -2,7 +2,7 @@
 
 ## Overview
 
-Replace the SQLite StaticPool test infrastructure with real PostgreSQL via testcontainers, consolidate three scattered test engines into one shared fixture, and add the one missing IDOR test (`delete_payment`). The goal is that all 43 tests pass against real PostgreSQL, giving CI a meaningful gate for constraint, type-coercion, and date-arithmetic correctness (Risk #4) and full IDOR coverage on per-instance mutations (Risk #3).
+Replace the SQLite StaticPool test infrastructure with real PostgreSQL via testcontainers, consolidate three scattered test engines into one shared fixture, and add the one missing IDOR test (`delete_payment`). The goal is that all 80 tests pass against real PostgreSQL, giving CI a meaningful gate for constraint, type-coercion, and date-arithmetic correctness (Risk #4) and full IDOR coverage on per-instance mutations (Risk #3).
 
 ## Current State Analysis
 
@@ -22,7 +22,7 @@ IDOR ownership checks exist in code for all three per-instance mutations (`pay`,
 
 ## Desired End State
 
-`uv run pytest tests/ -v` in `backend/` runs all 43 tests against a real PostgreSQL 17 container spun up by testcontainers. No SQLite. No StaticPool. One session-scoped container, clean tables per test via `drop_all`/`create_all`. The `delete_payment` endpoint has a cross-user 403 test. CI (`backend-tests` job) exercises real PostgreSQL automatically since testcontainers spins its own Docker container (ubuntu-latest has Docker).
+`uv run pytest tests/ -v` in `backend/` runs all 80 tests against a real PostgreSQL 17 container spun up by testcontainers. No SQLite. No StaticPool. One session-scoped container, clean tables per test via `drop_all`/`create_all`. The `delete_payment` endpoint has a cross-user 403 test. CI (`backend-tests` job) exercises real PostgreSQL automatically since testcontainers spins its own Docker container (ubuntu-latest has Docker).
 
 ### Key Discoveries
 
@@ -277,7 +277,7 @@ No need to assert the instance still exists — agreed to match the existing IDO
 
 #### Automated Verification
 
-- `uv run pytest tests/ -v` — all 43 tests pass (42 existing + 1 new)
+- `uv run pytest tests/ -v` — all 80 tests pass (79 existing + 1 new; 80 reflects parametrized expansion)
 - `uv run pytest tests/test_user_scoping.py -v` — 9 tests pass
 
 #### Manual Verification
