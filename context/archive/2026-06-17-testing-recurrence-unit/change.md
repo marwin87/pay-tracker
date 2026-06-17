@@ -1,10 +1,10 @@
 ---
 change_id: testing-recurrence-unit
 title: Recurrence unit tests — period math and next-instance generation
-status: impl_reviewed
+status: archived
 created: 2026-06-17
 updated: 2026-06-17
-archived_at: null
+archived_at: 2026-06-17T09:10:53Z
 ---
 
 ## Notes
