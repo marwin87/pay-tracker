@@ -52,6 +52,7 @@ slice only matters if this loop works.
 | S-11 | per-user-data-scoping        | only see own bills and payments; User A cannot access User B's data               | F-01, S-01    | FR-020 (new — security, blocking)         | done     |
 | S-12 | browser-notification         | get a browser notification for each unpaid bill due today when opening the dashboard | S-05       | FR-013 (extension)                        | done     |
 | S-13 | settings-page                | manage user profile, email/browser notification preferences, and backup/restore from a dedicated Settings page | S-10, S-12 | FR-001, FR-011, FR-012, FR-013, FR-018    | done     |
+| S-14 | standalone-electron-app      | install Pay Tracker as a native desktop app (macOS, Windows, Linux) — no Docker, no browser, no server setup required | S-13 | NFR deploy                               | new      |
 
 ## Streams
 
@@ -272,6 +273,30 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ---
 
+### S-14: Standalone Electron desktop app
+
+- **Outcome:** user can download a single installer (`.dmg` on macOS, `.exe` on Windows, `.AppImage` on Linux), install Pay Tracker like any native app, and run it with no Docker, no Node.js, no Python, and no manual server setup. Data persists in a SQLite file in the OS standard app-data directory. OS-level notifications replace the browser push setup. SMTP credentials move from `.env` into the Settings page and are stored securely in the OS keychain.
+- **Change ID:** standalone-electron-app
+- **PRD refs:** NFR deploy (self-hosted, no third-party dependency)
+- **Prerequisites:** S-13 (all features must be complete and stable before packaging; Settings page is extended with SMTP config UI)
+- **Parallel with:** —
+- **Blockers:** Apple Developer account required for macOS notarization ($99/yr); unsigned builds are blocked by Gatekeeper on Catalina+.
+- **Unknowns:**
+  - Single-process vs. two-process: collapse Next.js + FastAPI into one process (FastAPI serves static files) or keep them separate and orchestrate from Electron main? Collapsing removes one subprocess; separate processes map cleanly to the existing architecture. — Owner: user. Block: no (planning can proceed with both on the table).
+  - Auto-update: include `electron-updater` (checks GitHub Releases automatically) or ship manual updates only? — Owner: user. Block: no.
+  - macOS-only first or all three platforms (macOS + Windows + Linux) from day one? — Owner: user. Block: no.
+- **Risk:** Electron bundles Chromium — installer will be ~200–350 MB. PyInstaller binary must be tested on a clean machine (no Python installed) to catch missing shared libraries. macOS notarization adds CI complexity. SQLite migration is a prerequisite and is the largest code change in this slice.
+- **Architecture summary:**
+  - PostgreSQL → SQLite (SQLAlchemy supports it; Alembic migration required)
+  - Electron main process spawns PyInstaller backend binary + Next.js `server.js`; opens `BrowserWindow` at `localhost:3010`
+  - Notifications: `new Notification()` in renderer → OS notification center; `node-cron` in main process replaces the browser push/service worker approach
+  - SMTP password: stored via `keytar` in OS keychain; SMTP host/port/username in SQLite `app_config` table
+  - Release artifacts built by `electron-builder` on GitHub Actions matrix (macos-latest universal, windows-latest, ubuntu-latest); published to GitHub Release on `v*.*.*` tag push
+- **Platform support:** macOS ✓ · Windows ✓ · Linux ✓ · Android ✗ · iOS ✗
+- **Status:** new
+
+---
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                  | Suggested issue title                                        | Ready for `/10x-plan` | Notes                                          |
@@ -289,6 +314,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-12       | browser-notification       | Bell icon + browser notification for bills due today         | yes                   | Plan ready; run `/10x-implement browser-notification phase 1` |
 | S-11       | per-user-data-scoping      | Add user_id FK to bill_templates; scope all queries to current_user | yes             | **Security/blocking.** Decide migration strategy for existing rows first. |
 | S-13       | settings-page              | Settings page: profile, email notification timing, browser notifications, backup/restore | yes | Plan ready; run `/10x-implement settings-page phase 1` |
+| S-14       | standalone-electron-app    | Package Pay Tracker as a native Electron desktop app (macOS, Windows, Linux) | no | Needs S-13 done; resolve SQLite migration + open questions before `/10x-plan standalone-electron-app` |
 
 ## Open Roadmap Questions
 

@@ -5,6 +5,17 @@ A self-hosted household bill tracking PWA. Define your recurring bills once, the
 No third-party data sharing. No subscription. Runs locally with Docker Compose or in the cloud. Each user's data is fully isolated.
 
 
+## Preview
+
+| Payments (light) | Payments (dark) |
+|---|---|
+| <img src="demo/public/payments_light.png" width="350"> | <img src="demo/public/payments_dark.png" width="350"> |
+
+| Bills | Settings |
+|---|---|
+| <img src="demo/public/bills.png" width="350"> | <img src="demo/public/settings.png" width="350"> |
+
+
 ## What it does
 
 - **Bill templates** — define a bill once: name, amount, currency, recurrence frequency, due day of month. Pay Tracker generates payment instances automatically each period.
