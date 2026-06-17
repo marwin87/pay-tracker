@@ -94,6 +94,7 @@ export default function PaymentsPage() {
   }
 
   const years = [currentYear, currentYear - 1];
+  const [selectedYear, setSelectedYear] = useState(currentYear);
 
   async function handleExportXlsx(year: number) {
     setXlsxError(null);
@@ -132,54 +133,55 @@ export default function PaymentsPage() {
       </h1>
 
       {/* Year-month selector + export */}
-      <div className="mb-6 space-y-3">
-        {years.map((year) => {
-          const isLoadingThisYear = xlsxLoadingYear === year;
-          return (
-            <div key={year}>
-              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-                {year}
-              </p>
-              <div className="flex flex-wrap items-center gap-1.5">
-                {Array.from({ length: 12 }, (_, i) => {
-                  const key = monthKey(year, i);
-                  const isSelected = key === selectedMonth;
-                  return (
-                    <button
-                      key={key}
-                      onClick={() => setSelectedMonth(key)}
-                      className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                        isSelected
-                          ? "bg-green-700 text-white shadow-sm"
-                          : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
-                      }`}
-                    >
-                      {getMonthLabel(year, i, locale)}
-                    </button>
-                  );
-                })}
-                <div className="w-px h-5 bg-slate-300 dark:bg-slate-600 mx-1" />
-                <button
-                  onClick={() => handleExportXlsx(year)}
-                  disabled={xlsxLoadingYear !== null}
-                  className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-white bg-green-700 hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  {isLoadingThisYear ? (
-                    <Loader2 size={15} className="animate-spin" />
-                  ) : (
-                    <Download size={15} />
-                  )}
-                  {isLoadingThisYear ? t("exportXlsxLoading") : t("exportXlsx")}
-                </button>
-              </div>
-              {isLoadingThisYear && xlsxError && (
-                <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
-              )}
-            </div>
-          );
-        })}
-        {!xlsxLoadingYear && xlsxError && (
-          <p className="text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
+      <div className="mb-6">
+        {/* Year dropdown */}
+        <div className="mb-2">
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(Number(e.target.value))}
+            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+          >
+            {years.map((y) => (
+              <option key={y} value={y}>{y}</option>
+            ))}
+          </select>
+        </div>
+        {/* Month buttons */}
+        <div className="flex flex-wrap gap-1.5">
+          {Array.from({ length: 12 }, (_, i) => {
+            const key = monthKey(selectedYear, i);
+            const isSelected = key === selectedMonth;
+            return (
+              <button
+                key={key}
+                onClick={() => setSelectedMonth(key)}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                  isSelected
+                    ? "bg-green-700 text-white shadow-sm"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
+                }`}
+              >
+                {getMonthLabel(selectedYear, i, locale)}
+              </button>
+            );
+          })}
+        </div>
+        {/* Separator + export */}
+        <hr className="my-3 border-slate-200 dark:border-slate-700" />
+        <button
+          onClick={() => handleExportXlsx(selectedYear)}
+          disabled={xlsxLoadingYear !== null}
+          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-white bg-green-700 hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        >
+          {xlsxLoadingYear === selectedYear ? (
+            <Loader2 size={15} className="animate-spin" />
+          ) : (
+            <Download size={15} />
+          )}
+          {xlsxLoadingYear === selectedYear ? t("exportXlsxLoading") : t("exportXlsx")}
+        </button>
+        {xlsxError && (
+          <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
         )}
       </div>
 

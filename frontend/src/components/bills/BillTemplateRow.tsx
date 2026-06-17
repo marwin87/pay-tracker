@@ -33,7 +33,7 @@ export default function BillTemplateRow({
           <span className="font-semibold text-base text-slate-800 dark:text-slate-100 truncate">
             {template.name}
           </span>
-          <span className="font-medium text-green-700 dark:text-green-500">
+          <span className="font-medium text-slate-700 dark:text-slate-300">
             {template.amount} {template.currency}
           </span>
           <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-700 dark:text-slate-300">

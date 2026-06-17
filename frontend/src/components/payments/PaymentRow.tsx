@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { AtSign, CheckCircle, Loader2, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
+import { AlertCircle, AtSign, CheckCircle, Loader2, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import type { PaymentInstanceOut } from "@/lib/payments-api";
 import { revertPay } from "@/lib/payments-api";
@@ -78,6 +78,12 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
   const paidAt = instance.paid_at ? new Date(instance.paid_at) : null;
   const paidAtFormatted = paidAt ? formatDate(paidAt) : null;
 
+  const amountMismatch =
+    instance.status === "paid" &&
+    instance.paid_amount != null &&
+    parseFloat(instance.amount) > 0 &&
+    parseFloat(instance.paid_amount) !== parseFloat(instance.amount);
+
   const emailSentAt = instance.email_sent_at ? new Date(instance.email_sent_at) : null;
   const emailSentAtFormatted = emailSentAt
     ? new Intl.DateTimeFormat(locale, {
@@ -90,114 +96,130 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
     : null;
 
   return (
-    <div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:bg-slate-800 dark:border-slate-700">
-      <div className="flex items-center gap-3">
-        {/* Main info */}
-        <div className="flex flex-1 flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
-          <span className="font-semibold text-base text-slate-800 dark:text-slate-100 truncate">
-            {instance.bill_name}
+    <div className={`rounded-xl border bg-white px-4 py-3 shadow-sm dark:bg-slate-800 transition-colors ${
+      instance.status === "overdue"
+        ? "border-slate-200 border-l-4 border-l-red-500 pl-3 dark:border-slate-700 dark:border-l-red-500"
+        : "border-slate-200 dark:border-slate-700"
+    }`}>
+      <div className="flex flex-col gap-0.5">
+        {/* Name */}
+        <span className="font-semibold text-base text-slate-800 dark:text-slate-100 truncate">
+          {instance.bill_name}
+        </span>
+        {/* Amount */}
+        {parseFloat(instance.amount) > 0 && (
+          <span className="font-medium text-slate-700 dark:text-slate-300">
+            {instance.amount} {instance.currency}
           </span>
-          {parseFloat(instance.amount) > 0 && (
-            <span className="font-medium text-green-700 dark:text-green-500">
-              {instance.amount} {instance.currency}
+        )}
+        {/* Due date + status (left) — actions (right) */}
+        <div className="flex items-center justify-between gap-2 mt-0.5">
+          <div className="flex items-center gap-1.5 text-sm min-w-0">
+            <span className="text-slate-400 dark:text-slate-500 shrink-0">
+              {t("due")} {dueDateFormatted}
             </span>
-          )}
-          <span className="text-sm text-slate-400 dark:text-slate-500">
-            {dueDateFormatted}
-          </span>
-          <span
-            className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_STYLES[instance.status] ?? ""}`}
-          >
-            {t(`status.${instance.status}` as Parameters<typeof t>[0])}
-          </span>
-          {instance.status === "paid" && paidAtFormatted && (
-            <span className="text-xs text-slate-400 dark:text-slate-500">
-              {t("paidOn")} {paidAtFormatted}
-              {instance.paid_amount != null && parseFloat(instance.paid_amount) > 0 && (
-                <> · {instance.paid_amount} {instance.currency}</>
-              )}
-            </span>
-          )}
-        </div>
-
-        <div className="flex items-center gap-1 shrink-0">
-          {/* Mark as Paid — hidden for past months and already-paid instances */}
-          {!readOnly && instance.status !== "paid" && (
-            <button
-              onClick={() => onMarkPaid(instance)}
-              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:text-emerald-400 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300 transition-colors"
-            >
-              <CheckCircle size={15} />
-              <span className="hidden sm:inline">{t("markAsPaid")}</span>
-            </button>
-          )}
-          {/* Note — visible for paid instances with a note */}
-          {instance.status === "paid" && instance.notes && (
-            <>
-              <div className="relative" ref={noteRef}>
-                <button
-                  aria-label={t("paymentNote")}
-                  aria-expanded={noteOpen}
-                  onClick={() => setNoteOpen((o) => !o)}
-                  className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
-                >
-                  <MessageSquare size={15} />
-                </button>
-                {noteOpen && (
-                  <div className="absolute bottom-full right-0 mb-2 w-56 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10">
-                    {instance.notes}
-                    <div className="absolute top-full right-3 -mt-px border-4 border-transparent border-t-slate-800 dark:border-t-slate-700" />
-                  </div>
+            <span className="text-slate-300 dark:text-slate-600">•</span>
+            {instance.status === "paid" && paidAtFormatted ? (
+              <span className="text-slate-400 dark:text-slate-500 truncate">
+                {t("paidOn")} {paidAtFormatted}
+                {instance.paid_amount != null && parseFloat(instance.paid_amount) > 0 && (
+                  <> · {instance.paid_amount} {instance.currency}</>
                 )}
-              </div>
-              <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
-            </>
-          )}
-          {/* Revert — visible for paid instances */}
-          {instance.status === "paid" && (
-            <button
-              onClick={handleRevert}
-              disabled={reverting}
-              title={t("revert")}
-              aria-label={t("revert")}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
-            >
-              {reverting ? <Loader2 size={15} className="animate-spin" /> : <RotateCcw size={15} />}
-            </button>
-          )}
-          <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
-          {/* Email notification indicator */}
-          <div className="relative" ref={emailRef}>
-            <button
-              aria-label={t("emailNotification")}
-              aria-expanded={emailOpen}
-              onClick={() => setEmailOpen((o) => !o)}
-              className={`rounded-lg p-1.5 transition-colors ${
-                emailSentAt
-                  ? "text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20"
-                  : "text-slate-300 hover:bg-slate-100 hover:text-slate-400 dark:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-500"
-              }`}
-            >
-              <AtSign size={15} />
-            </button>
-            {emailOpen && (
-              <div className="absolute bottom-full right-0 mb-2 w-52 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10 whitespace-nowrap">
-                {emailSentAtFormatted
-                  ? `${t("emailSentOn")} ${emailSentAtFormatted}`
-                  : t("emailNotification") + ": —"}
-                <div className="absolute top-full right-3 -mt-px border-4 border-transparent border-t-slate-800 dark:border-t-slate-700" />
-              </div>
+              </span>
+            ) : (
+              <span className={`rounded-full px-2 py-0.5 text-xs font-medium shrink-0 ${STATUS_STYLES[instance.status] ?? ""}`}>
+                {t(`status.${instance.status}` as Parameters<typeof t>[0])}
+              </span>
             )}
           </div>
-          <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
-          <button
-            onClick={() => onDelete(instance)}
-            aria-label={t("delete")}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-500 dark:text-slate-500 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
-          >
-            <Trash2 size={15} />
-          </button>
+
+          {/* Actions */}
+          <div className="flex items-center gap-1 shrink-0">
+            {/* Primary action */}
+            {!readOnly && instance.status !== "paid" && (
+              <button
+                onClick={() => onMarkPaid(instance)}
+                className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-sm font-medium text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:text-emerald-400 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300 transition-colors"
+              >
+                <CheckCircle size={14} />
+                <span className="hidden sm:inline">{t("markAsPaid")}</span>
+              </button>
+            )}
+            {/* Note — visible for paid instances with a note */}
+            {instance.status === "paid" && instance.notes && (
+              <>
+                <div className="relative" ref={noteRef}>
+                  <button
+                    aria-label={t("paymentNote")}
+                    aria-expanded={noteOpen}
+                    onClick={() => setNoteOpen((o) => !o)}
+                    className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
+                  >
+                    <MessageSquare size={14} />
+                  </button>
+                  {noteOpen && (
+                    <div className="absolute bottom-full right-0 mb-2 w-56 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10">
+                      {instance.notes}
+                      <div className="absolute top-full right-3 -mt-px border-4 border-transparent border-t-slate-800 dark:border-t-slate-700" />
+                    </div>
+                  )}
+                </div>
+                <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
+              </>
+            )}
+            {/* Revert — visible for paid instances */}
+            {instance.status === "paid" && (
+              <button
+                onClick={handleRevert}
+                disabled={reverting}
+                title={t("revert")}
+                aria-label={t("revert")}
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
+              >
+                {reverting ? <Loader2 size={14} className="animate-spin" /> : <RotateCcw size={14} />}
+              </button>
+            )}
+            <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
+            {/* Email notification indicator */}
+            <div className="relative" ref={emailRef}>
+              <button
+                aria-label={t("emailNotification")}
+                aria-expanded={emailOpen}
+                onClick={() => setEmailOpen((o) => !o)}
+                className={`rounded-lg p-1.5 transition-colors ${
+                  emailSentAt
+                    ? "text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20"
+                    : "text-slate-300 hover:bg-slate-100 hover:text-slate-400 dark:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-500"
+                }`}
+              >
+                <AtSign size={14} />
+              </button>
+              {emailOpen && (
+                <div className="absolute bottom-full right-0 mb-2 w-52 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10 whitespace-nowrap">
+                  {emailSentAtFormatted
+                    ? `${t("emailSentOn")} ${emailSentAtFormatted}`
+                    : t("emailNotification") + ": —"}
+                  <div className="absolute top-full right-3 -mt-px border-4 border-transparent border-t-slate-800 dark:border-t-slate-700" />
+                </div>
+              )}
+            </div>
+            <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
+            <button
+              onClick={() => onDelete(instance)}
+              aria-label={t("delete")}
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-500 dark:text-slate-500 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
         </div>
+        {/* Amount mismatch warning */}
+        {amountMismatch && (
+          <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+            <AlertCircle size={12} className="shrink-0 text-amber-500 dark:text-amber-400" />
+            <span>{t("amountMismatch", { expected: `${instance.amount} ${instance.currency}`, paid: `${instance.paid_amount} ${instance.currency}` })}</span>
+          </div>
+        )}
       </div>
     </div>
   );
