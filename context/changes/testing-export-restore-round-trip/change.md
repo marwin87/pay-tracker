@@ -1,7 +1,7 @@
 ---
 change_id: testing-export-restore-round-trip
 title: Testing export restore round trip
-status: implemented
+status: impl_reviewed
 created: 2026-06-17
 updated: 2026-06-17
 archived_at: null

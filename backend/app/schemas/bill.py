@@ -81,6 +81,8 @@ class BackupTemplate(BaseModel):
 
 
 class BackupInstance(BaseModel):
+    # Intentionally excluded from backup: reminder_sent_2_days_before,
+    # reminder_sent_on_day, email_sent_at — transient flags reset to False on restore.
     id: int
     bill_id: int
     period: str

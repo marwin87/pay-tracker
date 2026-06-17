@@ -246,6 +246,7 @@ def test_round_trip_field_level(client):
     backup = client.get("/export/json", headers=auth(tok)).json()
     n_templates = len(backup["bill_templates"])
     n_instances = len(backup["payment_instances"])
+    assert n_instances >= 2  # ensure field-level loop actually exercises rows
 
     r = _upload(client, tok, backup)
     assert r.status_code == 200
@@ -263,10 +264,12 @@ def test_round_trip_field_level(client):
         assert _norm_template(b) == _norm_template(a), f"Template mismatch: {b['name']}"
 
     before_instances = sorted(
-        backup["payment_instances"], key=lambda i: (i["period"], i["amount"])
+        backup["payment_instances"],
+        key=lambda i: (i["period"], i["amount"], i["status"]),
     )
     after_instances = sorted(
-        after["payment_instances"], key=lambda i: (i["period"], i["amount"])
+        after["payment_instances"],
+        key=lambda i: (i["period"], i["amount"], i["status"]),
     )
     for b, a in zip(before_instances, after_instances):
         assert _norm_instance(b) == _norm_instance(
@@ -303,6 +306,7 @@ def test_v2_backup_defaults_reminder_fields(client):
 
     r = _upload(client, tok, payload)
     assert r.status_code == 200
+    assert r.json()["restored_instances"] == 1
 
     after = client.get("/export/json", headers=auth(tok)).json()
     assert len(after["payment_instances"]) == 1
