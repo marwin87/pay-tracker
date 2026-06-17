@@ -45,6 +45,7 @@ def export_xlsx(
         .filter(
             BillTemplate.user_id == me.id,
             PaymentInstance.period.startswith(f"{year}-"),
+            PaymentInstance.is_deleted.is_(False),
         )
         .order_by(PaymentInstance.due_date)
         .all()
@@ -99,7 +100,10 @@ def export_json(
     template_ids = [t.id for t in templates]
     instances = (
         db.query(PaymentInstance)
-        .filter(PaymentInstance.bill_id.in_(template_ids))
+        .filter(
+            PaymentInstance.bill_id.in_(template_ids),
+            PaymentInstance.is_deleted.is_(False),
+        )
         .all()
         if template_ids
         else []

@@ -26,6 +26,28 @@ _BILL2 = {
     "is_paused": False,
 }
 
+_BILL_ALPHA = {
+    "name": "Alpha Bill",
+    "category": "Utilities",
+    "frequency": "monthly",
+    "amount": 50.00,
+    "currency": "PLN",
+    "due_day": 5,
+    "notes": None,
+    "is_paused": False,
+}
+
+_BILL_BETA = {
+    "name": "Beta Bill",
+    "category": "Entertainment",
+    "frequency": "monthly",
+    "amount": 75.00,
+    "currency": "EUR",
+    "due_day": 20,
+    "notes": "template note",
+    "is_paused": False,
+}
+
 
 def _upload(client, token, payload):
     return client.post(
@@ -45,6 +67,49 @@ def _make_backup(templates, instances):
         "bill_templates": templates,
         "payment_instances": instances,
     }
+
+
+# Fields not preserved through restore (created_at uses DB default on insert)
+_EXCLUDE_TEMPLATE = {"id", "created_at"}
+_EXCLUDE_INSTANCE = {"id", "bill_id", "created_at"}
+
+
+def _norm_template(t: dict) -> dict:
+    return {k: v for k, v in t.items() if k not in _EXCLUDE_TEMPLATE}
+
+
+def _norm_instance(i: dict) -> dict:
+    return {k: v for k, v in i.items() if k not in _EXCLUDE_INSTANCE}
+
+
+def _make_instance_dict(
+    template_id: int,
+    period: str,
+    *,
+    include_reminder_fields: bool = True,
+    reminder_sent_upcoming: bool = False,
+    reminder_sent_overdue: bool = False,
+    **overrides,
+) -> dict:
+    """Build a BackupInstance-shaped dict. Pass include_reminder_fields=False for a true v2 payload."""
+    year, month = int(period[:4]), int(period[5:7])
+    base: dict = {
+        "id": 1,
+        "bill_id": template_id,
+        "period": period,
+        "due_date": f"{year}-{month:02d}-15",
+        "amount": 100.0,
+        "status": "upcoming",
+        "paid_at": None,
+        "paid_amount": None,
+        "notes": None,
+        "created_at": "2026-01-01T00:00:00+00:00",
+    }
+    if include_reminder_fields:
+        base["reminder_sent_upcoming"] = reminder_sent_upcoming
+        base["reminder_sent_overdue"] = reminder_sent_overdue
+    base.update(overrides)
+    return base
 
 
 def test_restore_happy_path(client):
@@ -156,3 +221,132 @@ def test_restore_requires_auth(client):
         },
     )
     assert r.status_code == 401
+
+
+def test_round_trip_field_level(client):
+    """Seed → export → restore → re-export: all schema fields (except id/bill_id/created_at) survive unchanged."""
+    tok = register_and_login(client, "rt@test.com")
+
+    r1 = client.post("/bills", json=_BILL_ALPHA, headers=auth(tok))
+    assert r1.status_code == 201
+    r2 = client.post("/bills", json=_BILL_BETA, headers=auth(tok))
+    assert r2.status_code == 201
+
+    payments = client.get("/bills/payments", headers=auth(tok)).json()
+    assert len(payments) >= 2
+
+    alpha_instance = next(p for p in payments if p["bill_name"] == "Alpha Bill")
+    r = client.post(
+        f"/bills/payments/{alpha_instance['id']}/pay",
+        json={"paid_amount": 45.00, "notes": "paid early"},
+        headers=auth(tok),
+    )
+    assert r.status_code == 200
+
+    backup = client.get("/export/json", headers=auth(tok)).json()
+    n_templates = len(backup["bill_templates"])
+    n_instances = len(backup["payment_instances"])
+
+    r = _upload(client, tok, backup)
+    assert r.status_code == 200
+    data = r.json()
+    assert data["restored_templates"] == n_templates
+    assert data["restored_instances"] == n_instances
+
+    after = client.get("/export/json", headers=auth(tok)).json()
+    assert len(after["bill_templates"]) == n_templates
+    assert len(after["payment_instances"]) == n_instances
+
+    before_templates = sorted(backup["bill_templates"], key=lambda t: t["name"])
+    after_templates = sorted(after["bill_templates"], key=lambda t: t["name"])
+    for b, a in zip(before_templates, after_templates):
+        assert _norm_template(b) == _norm_template(a), f"Template mismatch: {b['name']}"
+
+    before_instances = sorted(
+        backup["payment_instances"], key=lambda i: (i["period"], i["amount"])
+    )
+    after_instances = sorted(
+        after["payment_instances"], key=lambda i: (i["period"], i["amount"])
+    )
+    for b, a in zip(before_instances, after_instances):
+        assert _norm_instance(b) == _norm_instance(
+            a
+        ), f"Instance mismatch: period={b['period']}"
+
+
+def test_v2_backup_defaults_reminder_fields(client):
+    """A v2-format backup (no reminder fields in instance dicts) restores with reminder flags = False."""
+    tok = register_and_login(client, "v2@test.com")
+
+    r = client.post("/bills", json=_BILL_ALPHA, headers=auth(tok))
+    assert r.status_code == 201
+    template_id = r.json()["id"]
+
+    template_dict = {
+        "id": template_id,
+        "name": _BILL_ALPHA["name"],
+        "category": _BILL_ALPHA["category"],
+        "frequency": _BILL_ALPHA["frequency"],
+        "amount": _BILL_ALPHA["amount"],
+        "currency": _BILL_ALPHA["currency"],
+        "due_day": _BILL_ALPHA["due_day"],
+        "notes": None,
+        "is_archived": False,
+        "is_paused": False,
+        "start_period": None,
+        "created_at": "2026-01-01T00:00:00+00:00",
+    }
+    instance_dict = _make_instance_dict(
+        template_id, "2026-01", include_reminder_fields=False
+    )
+    payload = _make_backup([template_dict], [instance_dict])  # schema_version: 2
+
+    r = _upload(client, tok, payload)
+    assert r.status_code == 200
+
+    after = client.get("/export/json", headers=auth(tok)).json()
+    assert len(after["payment_instances"]) == 1
+    inst = after["payment_instances"][0]
+    assert inst["reminder_sent_upcoming"] is False
+    assert inst["reminder_sent_overdue"] is False
+
+
+def test_v3_backup_preserves_reminder_flags(client):
+    """A v3 backup with reminder_sent_upcoming=True preserves the flag through restore."""
+    tok = register_and_login(client, "v3@test.com")
+
+    r = client.post("/bills", json=_BILL_ALPHA, headers=auth(tok))
+    assert r.status_code == 201
+    template_id = r.json()["id"]
+
+    template_dict = {
+        "id": template_id,
+        "name": _BILL_ALPHA["name"],
+        "category": _BILL_ALPHA["category"],
+        "frequency": _BILL_ALPHA["frequency"],
+        "amount": _BILL_ALPHA["amount"],
+        "currency": _BILL_ALPHA["currency"],
+        "due_day": _BILL_ALPHA["due_day"],
+        "notes": None,
+        "is_archived": False,
+        "is_paused": False,
+        "start_period": None,
+        "created_at": "2026-01-01T00:00:00+00:00",
+    }
+    instance_dict = _make_instance_dict(
+        template_id,
+        "2026-01",
+        reminder_sent_upcoming=True,
+        reminder_sent_overdue=False,
+    )
+    v3_payload = _make_backup([template_dict], [instance_dict])
+    v3_payload["schema_version"] = 3
+
+    r = _upload(client, tok, v3_payload)
+    assert r.status_code == 200
+
+    after = client.get("/export/json", headers=auth(tok)).json()
+    assert len(after["payment_instances"]) == 1
+    inst = after["payment_instances"][0]
+    assert inst["reminder_sent_upcoming"] is True
+    assert inst["reminder_sent_overdue"] is False
