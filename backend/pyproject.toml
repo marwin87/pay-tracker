@@ -23,6 +23,8 @@ dependencies = [
 dev = [
     "black>=26.5.1",
     "mypy>=2.1.0",
+    "psycopg2-binary>=2.9.12",
     "pytest>=8.0",
     "httpx>=0.28",
+    "testcontainers[postgresql]>=4.0",
 ]

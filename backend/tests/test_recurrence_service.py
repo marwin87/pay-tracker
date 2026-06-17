@@ -1,7 +1,7 @@
 """Tests for app/services/recurrence.py.
 
 Section 1 (below): pure-function parametrized tests — no DB, no fixtures.
-Section 2 (below): SQLite-backed service tests for generate_next_instance
+Section 2 (below): DB-backed service tests for generate_next_instance
   and ensure_current_period_instances.
 
 Research: context/changes/testing-recurrence-unit/research.md
@@ -12,13 +12,9 @@ from datetime import date, datetime, timezone
 from decimal import Decimal
 
 import pytest
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
 
 import app.models.bill  # noqa: F401 — register models with SQLAlchemy's mapper
 import app.models.user  # noqa: F401
-from app.core.database import Base
 from app.models.bill import BillFrequency, BillTemplate, PaymentInstance, PaymentStatus
 from app.models.user import User
 from app.services.recurrence import (
@@ -145,20 +141,6 @@ def test_bill_active_in_period_created_at_fallback() -> None:
 
 # ── Section 2: DB-backed service tests ──────────────────────────────────────
 
-_DB_ENGINE = create_engine(
-    "sqlite:///:memory:",
-    connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
-)
-_DBSession = sessionmaker(bind=_DB_ENGINE, autocommit=False, autoflush=False)
-
-
-@pytest.fixture(autouse=True)
-def fresh_db_s2():
-    Base.metadata.create_all(bind=_DB_ENGINE)
-    yield
-    Base.metadata.drop_all(bind=_DB_ENGINE)
-
 
 def _make_user(db, email: str = "u@test.com") -> User:
     user = User(email=email, password_hash="x")
@@ -218,236 +200,193 @@ def _make_instance(
 # ── generate_next_instance ───────────────────────────────────────────────────
 
 
-def test_generate_next_instance_monthly_creates_next_period() -> None:
-    db = _DBSession()
-    user = _make_user(db)
+def test_generate_next_instance_monthly_creates_next_period(db_session) -> None:
+    user = _make_user(db_session)
     bill = _make_bill(
-        db, user.id, frequency=BillFrequency.monthly, due_day=15, start_period="2026-05"
+        db_session,
+        user.id,
+        frequency=BillFrequency.monthly,
+        due_day=15,
+        start_period="2026-05",
     )
     bill_id = bill.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
-    db = _DBSession()
-    bill = db.get(BillTemplate, bill_id)
-    instance = generate_next_instance(db, bill, "2026-05")
+    bill = db_session.get(BillTemplate, bill_id)
+    instance = generate_next_instance(db_session, bill, "2026-05")
 
     assert instance is not None
     assert instance.period == "2026-06"
     assert instance.status == PaymentStatus.upcoming
     assert instance.due_date == date(2026, 6, 15)
-    db.close()
 
 
-def test_generate_next_instance_one_off_returns_none() -> None:
-    db = _DBSession()
-    user = _make_user(db)
-    bill = _make_bill(db, user.id, frequency=BillFrequency.one_off)
+def test_generate_next_instance_one_off_returns_none(db_session) -> None:
+    user = _make_user(db_session)
+    bill = _make_bill(db_session, user.id, frequency=BillFrequency.one_off)
     bill_id = bill.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
-    db = _DBSession()
-    bill = db.get(BillTemplate, bill_id)
-    result = generate_next_instance(db, bill, "2026-05")
+    bill = db_session.get(BillTemplate, bill_id)
+    result = generate_next_instance(db_session, bill, "2026-05")
 
     assert result is None
-    assert db.query(PaymentInstance).filter_by(bill_id=bill_id).count() == 0
-    db.close()
+    assert db_session.query(PaymentInstance).filter_by(bill_id=bill_id).count() == 0
 
 
-def test_generate_next_instance_idempotent() -> None:
-    db = _DBSession()
-    user = _make_user(db)
-    bill = _make_bill(db, user.id)
+def test_generate_next_instance_idempotent(db_session) -> None:
+    user = _make_user(db_session)
+    bill = _make_bill(db_session, user.id)
     bill_id = bill.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
     # First call creates the instance for "2026-06"
-    db = _DBSession()
-    bill = db.get(BillTemplate, bill_id)
-    first = generate_next_instance(db, bill, "2026-05")
+    bill = db_session.get(BillTemplate, bill_id)
+    first = generate_next_instance(db_session, bill, "2026-05")
     first_id = first.id
-    db.close()
 
     # Second call must return the existing instance — no duplicate
-    db = _DBSession()
-    bill = db.get(BillTemplate, bill_id)
-    second = generate_next_instance(db, bill, "2026-05")
+    bill = db_session.get(BillTemplate, bill_id)
+    second = generate_next_instance(db_session, bill, "2026-05")
 
     assert second.id == first_id
     count = (
-        db.query(PaymentInstance).filter_by(bill_id=bill_id, period="2026-06").count()
+        db_session.query(PaymentInstance)
+        .filter_by(bill_id=bill_id, period="2026-06")
+        .count()
     )
     assert count == 1
-    db.close()
 
 
-def test_generate_next_instance_copies_amount_and_due_date() -> None:
-    db = _DBSession()
-    user = _make_user(db)
+def test_generate_next_instance_copies_amount_and_due_date(db_session) -> None:
+    user = _make_user(db_session)
     # due_day=31 in June clamps to 30
     bill = _make_bill(
-        db,
+        db_session,
         user.id,
         frequency=BillFrequency.monthly,
         due_day=31,
         amount=Decimal("150.00"),
     )
     bill_id = bill.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
-    db = _DBSession()
-    bill = db.get(BillTemplate, bill_id)
-    instance = generate_next_instance(db, bill, "2026-05")
+    bill = db_session.get(BillTemplate, bill_id)
+    instance = generate_next_instance(db_session, bill, "2026-05")
 
     assert instance.amount == Decimal("150.00")
     assert instance.due_date == date(2026, 6, 30)  # June has 30 days
-    db.close()
 
 
 # ── ensure_current_period_instances ──────────────────────────────────────────
 
 
-def test_ensure_creates_instance_for_active_template() -> None:
-    db = _DBSession()
-    user = _make_user(db)
-    _make_bill(db, user.id, frequency=BillFrequency.monthly)
+def test_ensure_creates_instance_for_active_template(db_session) -> None:
+    user = _make_user(db_session)
+    _make_bill(db_session, user.id, frequency=BillFrequency.monthly)
     user_id = user.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
-    db = _DBSession()
-    ensure_current_period_instances(db, "2026-06", user_id)
+    ensure_current_period_instances(db_session, "2026-06", user_id)
 
-    assert db.query(PaymentInstance).filter_by(period="2026-06").count() == 1
-    db.close()
+    assert db_session.query(PaymentInstance).filter_by(period="2026-06").count() == 1
 
 
-def test_ensure_skips_archived_template() -> None:
-    db = _DBSession()
-    user = _make_user(db)
-    _make_bill(db, user.id, frequency=BillFrequency.monthly, is_archived=True)
+def test_ensure_skips_archived_template(db_session) -> None:
+    user = _make_user(db_session)
+    _make_bill(db_session, user.id, frequency=BillFrequency.monthly, is_archived=True)
     user_id = user.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
-    db = _DBSession()
-    ensure_current_period_instances(db, "2026-06", user_id)
+    ensure_current_period_instances(db_session, "2026-06", user_id)
 
-    assert db.query(PaymentInstance).count() == 0
-    db.close()
+    assert db_session.query(PaymentInstance).count() == 0
 
 
-def test_ensure_skips_paused_template() -> None:
-    db = _DBSession()
-    user = _make_user(db)
-    _make_bill(db, user.id, frequency=BillFrequency.monthly, is_paused=True)
+def test_ensure_skips_paused_template(db_session) -> None:
+    user = _make_user(db_session)
+    _make_bill(db_session, user.id, frequency=BillFrequency.monthly, is_paused=True)
     user_id = user.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
-    db = _DBSession()
-    ensure_current_period_instances(db, "2026-06", user_id)
+    ensure_current_period_instances(db_session, "2026-06", user_id)
 
-    assert db.query(PaymentInstance).count() == 0
-    db.close()
+    assert db_session.query(PaymentInstance).count() == 0
 
 
-def test_ensure_skips_one_off_template() -> None:
-    db = _DBSession()
-    user = _make_user(db)
-    _make_bill(db, user.id, frequency=BillFrequency.one_off)
+def test_ensure_skips_one_off_template(db_session) -> None:
+    user = _make_user(db_session)
+    _make_bill(db_session, user.id, frequency=BillFrequency.one_off)
     user_id = user.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
-    db = _DBSession()
-    ensure_current_period_instances(db, "2026-06", user_id)
+    ensure_current_period_instances(db_session, "2026-06", user_id)
 
-    assert db.query(PaymentInstance).count() == 0
-    db.close()
+    assert db_session.query(PaymentInstance).count() == 0
 
 
-def test_ensure_skips_inactive_period() -> None:
-    db = _DBSession()
-    user = _make_user(db)
+def test_ensure_skips_inactive_period(db_session) -> None:
+    user = _make_user(db_session)
     # Quarterly from "2026-01": active in 2026-01, 2026-04, 2026-07 ...
-    _make_bill(db, user.id, frequency=BillFrequency.quarterly, start_period="2026-01")
+    _make_bill(
+        db_session, user.id, frequency=BillFrequency.quarterly, start_period="2026-01"
+    )
     user_id = user.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
     # "2026-02" is 1 month after anchor → not a quarterly cycle
-    db = _DBSession()
-    ensure_current_period_instances(db, "2026-02", user_id)
+    ensure_current_period_instances(db_session, "2026-02", user_id)
 
-    assert db.query(PaymentInstance).count() == 0
-    db.close()
+    assert db_session.query(PaymentInstance).count() == 0
 
 
-def test_ensure_idempotent() -> None:
-    db = _DBSession()
-    user = _make_user(db)
-    _make_bill(db, user.id, frequency=BillFrequency.monthly)
+def test_ensure_idempotent(db_session) -> None:
+    user = _make_user(db_session)
+    _make_bill(db_session, user.id, frequency=BillFrequency.monthly)
     user_id = user.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
-    db = _DBSession()
-    ensure_current_period_instances(db, "2026-06", user_id)
-    db.close()
+    ensure_current_period_instances(db_session, "2026-06", user_id)
 
     # Second call must not produce a duplicate
-    db = _DBSession()
-    ensure_current_period_instances(db, "2026-06", user_id)
+    ensure_current_period_instances(db_session, "2026-06", user_id)
 
-    assert db.query(PaymentInstance).filter_by(period="2026-06").count() == 1
-    db.close()
+    assert db_session.query(PaymentInstance).filter_by(period="2026-06").count() == 1
 
 
-def test_ensure_respects_soft_delete_tombstone() -> None:
+def test_ensure_respects_soft_delete_tombstone(db_session) -> None:
     """A soft-deleted instance (is_deleted=True) acts as a tombstone.
 
     ensure_current_period_instances must NOT re-generate the instance for
     the same (bill_id, period) — the existing-row check at recurrence.py:87
     fires regardless of is_deleted. lessons.md §4.
     """
-    db = _DBSession()
-    user = _make_user(db)
-    bill = _make_bill(db, user.id, frequency=BillFrequency.monthly)
-    _make_instance(db, bill.id, "2026-06", is_deleted=True)
+    user = _make_user(db_session)
+    bill = _make_bill(db_session, user.id, frequency=BillFrequency.monthly)
+    _make_instance(db_session, bill.id, "2026-06", is_deleted=True)
     user_id = user.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
-    db = _DBSession()
-    ensure_current_period_instances(db, "2026-06", user_id)
+    ensure_current_period_instances(db_session, "2026-06", user_id)
 
     # Still exactly 1 row — the tombstone blocked re-creation
-    assert db.query(PaymentInstance).filter_by(period="2026-06").count() == 1
-    db.close()
+    assert db_session.query(PaymentInstance).filter_by(period="2026-06").count() == 1
 
 
-def test_ensure_scoped_to_user() -> None:
-    db = _DBSession()
-    user_a = _make_user(db, "a@test.com")
-    user_b = _make_user(db, "b@test.com")
-    _make_bill(db, user_a.id, frequency=BillFrequency.monthly)
-    _make_bill(db, user_b.id, frequency=BillFrequency.monthly)
+def test_ensure_scoped_to_user(db_session) -> None:
+    user_a = _make_user(db_session, "a@test.com")
+    user_b = _make_user(db_session, "b@test.com")
+    _make_bill(db_session, user_a.id, frequency=BillFrequency.monthly)
+    _make_bill(db_session, user_b.id, frequency=BillFrequency.monthly)
     user_a_id = user_a.id
     user_b_id = user_b.id
-    db.commit()
-    db.close()
+    db_session.commit()
 
     # Seed only for user_a
-    db = _DBSession()
-    ensure_current_period_instances(db, "2026-06", user_a_id)
+    ensure_current_period_instances(db_session, "2026-06", user_a_id)
 
     a_count = (
-        db.query(PaymentInstance)
+        db_session.query(PaymentInstance)
         .join(BillTemplate)
         .filter(
             BillTemplate.user_id == user_a_id,
@@ -456,7 +395,7 @@ def test_ensure_scoped_to_user() -> None:
         .count()
     )
     b_count = (
-        db.query(PaymentInstance)
+        db_session.query(PaymentInstance)
         .join(BillTemplate)
         .filter(
             BillTemplate.user_id == user_b_id,
@@ -466,4 +405,3 @@ def test_ensure_scoped_to_user() -> None:
     )
     assert a_count == 1
     assert b_count == 0
-    db.close()

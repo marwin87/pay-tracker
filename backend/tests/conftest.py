@@ -1,4 +1,4 @@
-"""Test fixtures: SQLite in-memory DB + FastAPI TestClient."""
+"""Test fixtures: PostgreSQL via testcontainers + FastAPI TestClient."""
 
 # Import models before app to (a) register them in Base.metadata for create_all
 # and (b) avoid shadowing the `app` FastAPI instance with the `app` package name.
@@ -9,38 +9,59 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import StaticPool
+from sqlalchemy.pool import NullPool
+from testcontainers.postgres import PostgresContainer
 
 from app.core.database import Base, get_db
 from app.main import app
 
-# StaticPool forces every SQLAlchemy checkout to reuse the same underlying
-# SQLite connection, so tables created by create_all() survive into requests.
-# NOTE: StaticPool singleton — incompatible with pytest-xdist (-n auto).
-_ENGINE = create_engine(
-    "sqlite:///:memory:",
-    connect_args={"check_same_thread": False},
-    poolclass=StaticPool,
-)
-_SessionLocal = sessionmaker(bind=_ENGINE, autocommit=False, autoflush=False)
 
-
-def _override_get_db():
-    db = _SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+@pytest.fixture(scope="session")
+def postgres_engine():
+    with PostgresContainer("postgres:17") as pg:
+        engine = create_engine(pg.get_connection_url(), poolclass=NullPool)
+        yield engine
 
 
 @pytest.fixture()
-def client():
-    Base.metadata.create_all(bind=_ENGINE)
+def db_tables(postgres_engine):
+    Base.metadata.create_all(bind=postgres_engine)
+    yield
+    Base.metadata.drop_all(bind=postgres_engine)
+
+
+@pytest.fixture()
+def db_session(postgres_engine, db_tables):
+    Session = sessionmaker(bind=postgres_engine, autocommit=False, autoflush=False)
+    db = Session()
+    yield db
+    db.close()
+
+
+@pytest.fixture()
+def db_sessionmaker(postgres_engine, db_tables):
+    return sessionmaker(bind=postgres_engine, autocommit=False, autoflush=False)
+
+
+@pytest.fixture()
+def client(postgres_engine):
+    Base.metadata.create_all(bind=postgres_engine)
+    _SessionLocal = sessionmaker(
+        bind=postgres_engine, autocommit=False, autoflush=False
+    )
+
+    def _override_get_db():
+        db = _SessionLocal()
+        try:
+            yield db
+        finally:
+            db.close()
+
     app.dependency_overrides[get_db] = _override_get_db
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()
-    Base.metadata.drop_all(bind=_ENGINE)
+    Base.metadata.drop_all(bind=postgres_engine)
 
 
 def register_and_login(

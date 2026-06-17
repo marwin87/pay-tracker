@@ -128,6 +128,17 @@ def test_archive_bill_other_user_returns_403(client):
     assert r.status_code == 403
 
 
+def test_delete_payment_other_user_returns_403(client):
+    tok_a = register_and_login(client, "a@test.com")
+    tok_b = register_and_login(client, "b@test.com")
+
+    bill_id = _create_bill(client, tok_a)
+    instance_id = _seed_payment(client, tok_a, bill_id)
+
+    r = client.delete(f"/bills/payments/{instance_id}", headers=auth(tok_b))
+    assert r.status_code == 403
+
+
 # ---------------------------------------------------------------------------
 # Export endpoints
 # ---------------------------------------------------------------------------
