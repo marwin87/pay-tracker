@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-17 (Phase 2 complete)
+> Last updated: 2026-06-17 (Phase 3 complete)
 
 ---
 
@@ -76,7 +76,7 @@ orchestrator updates Status as artifacts appear on disk.
 |---|------------|-----------------|---------------|------------|--------|---------------|
 | 1 | Recurrence unit tests | Prove period math and next-instance generation are correct at all boundary cases | #1, #2 | unit | done | context/archive/2026-06-17-testing-recurrence-unit/ |
 | 2 | PostgreSQL integration baseline | Replace SQLite fixture with real PostgreSQL; add per-endpoint IDOR integration tests | #3, #4 | integration | done | context/archive/2026-06-17-testing-postgresql-integration/ |
-| 3 | Export/restore round-trip | Prove backup→restore is lossless and backward-compatible with v2 exports | #5, #6 | integration | not started | — |
+| 3 | Export/restore round-trip | Prove backup→restore is lossless and backward-compatible with v2 exports | #5, #6 | integration | done | context/changes/testing-export-restore-round-trip/ |
 | 4 | Frontend E2E critical paths | Catch regressions in the core payment loop and auth flows from the user's perspective | #7 | e2e | not started | — |
 
 ---
