@@ -99,6 +99,13 @@
       "one_off": "Jednorazowo"
     }
   },
+  "RestoreDeletedDialog": {
+    "title": "Przywrócić usunięte płatności?",
+    "description": "Niektóre przyszłe płatności dla „{name}” zostały wcześniej usunięte. Przywrócić je z aktualnymi wartościami szablonu?",
+    "restore": "Przywróć",
+    "skip": "Pomiń",
+    "restoring": "Przywracanie…"
+  },
   "ArchiveConfirmDialog": {
     "title": "Zarchiwizować „{billName}”?",
     "description": "Ten rachunek zostanie ukryty z aktywnej listy. Historia płatności zostanie zachowana i będzie dostępna w widoku zarchiwizowanych.",

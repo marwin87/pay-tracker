@@ -27,7 +27,9 @@ export interface BillTemplateCreate {
   is_paused?: boolean;
 }
 
-export type BillTemplateUpdate = Partial<BillTemplateCreate>;
+export type BillTemplateUpdate = Partial<BillTemplateCreate> & {
+  recreate_deleted_future?: boolean;
+};
 
 export function fetchBills(includeArchived = false): Promise<BillTemplateOut[]> {
   const qs = includeArchived ? "?include_archived=true" : "";
@@ -53,4 +55,8 @@ export function updateBill(
 
 export function archiveBill(id: number): Promise<void> {
   return apiFetch<void>(`/bills/${id}/archive`, { method: "POST" });
+}
+
+export function hasDeletedFuture(id: number): Promise<{ has_deleted_future: boolean }> {
+  return apiFetch<{ has_deleted_future: boolean }>(`/bills/${id}/has-deleted-future`);
 }

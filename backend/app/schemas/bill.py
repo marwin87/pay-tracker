@@ -24,6 +24,7 @@ class BillTemplateUpdate(BaseModel):
     due_day: int | None = Field(None, ge=1, le=31)
     notes: str | None = None
     is_paused: bool | None = None
+    recreate_deleted_future: bool = False
 
 
 class BillTemplateOut(BaseModel):

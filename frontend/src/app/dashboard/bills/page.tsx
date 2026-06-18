@@ -8,6 +8,7 @@ import {
   createBill,
   updateBill,
   archiveBill,
+  hasDeletedFuture,
   type BillTemplateOut,
   type BillTemplateCreate,
   type BillTemplateUpdate,
@@ -15,6 +16,7 @@ import {
 import BillTemplateForm from "@/components/bills/BillTemplateForm";
 import BillTemplateRow from "@/components/bills/BillTemplateRow";
 import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
+import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 
 export default function BillsPage() {
   const t = useTranslations("BillsPage");
@@ -25,6 +27,9 @@ export default function BillsPage() {
   const [expandedId, setExpandedId] = useState<number | "new" | null>(null);
   const [archiveTarget, setArchiveTarget] = useState<BillTemplateOut | null>(null);
   const [archiving, setArchiving] = useState(false);
+  const [deletedFutureMap, setDeletedFutureMap] = useState<Record<number, boolean>>({});
+  const [restoreTarget, setRestoreTarget] = useState<{ id: number; name: string; data: BillTemplateUpdate } | null>(null);
+  const [restoring, setRestoring] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -57,10 +62,38 @@ export default function BillsPage() {
     setRefreshKey((k) => k + 1);
   }
 
-  async function handleUpdate(id: number, data: BillTemplateUpdate) {
+  async function doUpdate(id: number, data: BillTemplateUpdate) {
     await updateBill(id, data);
     setExpandedId(null);
     setRefreshKey((k) => k + 1);
+    setDeletedFutureMap((m) => { const copy = { ...m }; delete copy[id]; return copy; });
+  }
+
+  async function handleUpdate(id: number, data: BillTemplateUpdate) {
+    if (deletedFutureMap[id]) {
+      const name = templates.find((t) => t.id === id)?.name ?? "";
+      setRestoreTarget({ id, name, data });
+      return;
+    }
+    await doUpdate(id, data);
+  }
+
+  async function handleRestoreConfirm() {
+    if (!restoreTarget || restoring) return;
+    setRestoring(true);
+    try {
+      await doUpdate(restoreTarget.id, { ...restoreTarget.data, recreate_deleted_future: true });
+      setRestoreTarget(null);
+    } finally {
+      setRestoring(false);
+    }
+  }
+
+  async function handleRestoreSkip() {
+    if (!restoreTarget) return;
+    const { id, data } = restoreTarget;
+    setRestoreTarget(null);
+    await doUpdate(id, data);
   }
 
   async function handleArchiveConfirm() {
@@ -76,7 +109,15 @@ export default function BillsPage() {
   }
 
   function toggleExpand(id: number | "new") {
-    setExpandedId((prev) => (prev === id ? null : id));
+    setExpandedId((prev) => {
+      const opening = prev !== id;
+      if (opening && typeof id === "number") {
+        hasDeletedFuture(id)
+          .then((res) => setDeletedFutureMap((m) => ({ ...m, [id]: res.has_deleted_future })))
+          .catch(() => {/* fail silently — no tombstone prompt this session */});
+      }
+      return opening ? id : null;
+    });
   }
 
   if (loading) {
@@ -102,6 +143,15 @@ export default function BillsPage() {
           onConfirm={handleArchiveConfirm}
           onCancel={() => setArchiveTarget(null)}
           archiving={archiving}
+        />
+      )}
+
+      {restoreTarget && (
+        <RestoreDeletedDialog
+          billName={restoreTarget.name}
+          onRestore={handleRestoreConfirm}
+          onSkip={handleRestoreSkip}
+          restoring={restoring}
         />
       )}
 

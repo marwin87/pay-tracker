@@ -221,6 +221,29 @@ def delete_payment(
     db.commit()
 
 
+@router.get("/{bill_id}/has-deleted-future")
+def has_deleted_future(
+    bill_id: int,
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    bill = db.get(BillTemplate, bill_id)
+    if not bill or bill.user_id != me.id:
+        raise HTTPException(status_code=404, detail="Bill not found")
+    current_period = date.today().strftime("%Y-%m")
+    exists = (
+        db.query(PaymentInstance)
+        .filter(
+            PaymentInstance.bill_id == bill_id,
+            PaymentInstance.is_deleted.is_(True),
+            PaymentInstance.period >= current_period,
+        )
+        .first()
+        is not None
+    )
+    return {"has_deleted_future": exists}
+
+
 @router.patch("/{bill_id}", response_model=BillTemplateOut)
 def update_bill(
     bill_id: int,
@@ -251,6 +274,23 @@ def update_bill(
         )
         for inst in unpaid:
             inst.due_date = _due_date_for_period(inst.period, bill.due_day)
+
+    if body.recreate_deleted_future:
+        current_period = date.today().strftime("%Y-%m")
+        tombstones = (
+            db.query(PaymentInstance)
+            .filter(
+                PaymentInstance.bill_id == bill.id,
+                PaymentInstance.is_deleted.is_(True),
+                PaymentInstance.period >= current_period,
+            )
+            .all()
+        )
+        for inst in tombstones:
+            inst.is_deleted = False
+            inst.amount = bill.amount
+            inst.due_date = _due_date_for_period(inst.period, bill.due_day)
+            inst.status = PaymentStatus.upcoming
 
     db.commit()
     db.refresh(bill)

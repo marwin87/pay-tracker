@@ -1,267 +1,266 @@
 {
-  "Auth": {
-    "loginSubtitle": "Sign in to your account",
-    "registerSubtitle": "Create your account",
-    "emailLabel": "Email",
-    "passwordLabel": "Password",
-    "passwordHint": "Minimum 8 characters",
-    "passwordTooShort": "Password must be at least 8 characters",
-    "signIn": "Sign in",
-    "signingIn": "Signing in…",
-    "loginFailed": "Login failed",
-    "noAccount": "No account?",
-    "register": "Register",
-    "createAccount": "Create account",
-    "creatingAccount": "Creating account…",
-    "registrationFailed": "Registration failed",
-    "alreadyHaveAccount": "Already have an account?"
-  },
-  "DashboardLayout": {
-    "payments": "Payments",
-    "bills": "Bills",
-    "settings": "Settings",
-    "logOut": "Log out"
-  },
-  "Dashboard": {
-    "title": "Welcome to Pay Tracker",
-    "subtitle": "Manage your household bills in one place.",
-    "paymentsTitle": "Payments",
-    "paymentsDesc": "View and mark this month's bills as paid",
-    "manageBillsTitle": "Manage Bills",
-    "manageBillsDesc": "Create, edit, and track your recurring bills",
-    "archivedBillsTitle": "Archived Bills",
-    "archivedBillsDesc": "View past bills and payment history"
-  },
-  "BillsPage": {
-    "title": "Your Bills",
-    "newBill": "New Bill",
-    "cancel": "Cancel",
-    "loadError": "Failed to load bills.",
-    "noBillsYet": "No bills yet",
-    "addFirstBill": "Add your first bill"
-  },
-  "ArchivedBillsPage": {
-    "backToActive": "← Active bills",
-    "title": "Archived Bills",
-    "subtitle": "Payment history is preserved for all archived bills.",
-    "loadError": "Failed to load archived bills.",
-    "noArchivedBills": "No archived bills",
-    "willAppearHere": "Bills you archive will appear here",
-    "archived": "Archived",
-    "frequency": {
-      "monthly": "Monthly",
-      "every_2_months": "Every 2 months",
-      "quarterly": "Quarterly",
-      "annual": "Annual",
-      "one_off": "One-off"
+    "Auth": {
+        "loginSubtitle": "Sign in to your account",
+        "registerSubtitle": "Create your account",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "passwordHint": "Minimum 8 characters",
+        "passwordTooShort": "Password must be at least 8 characters",
+        "signIn": "Sign in",
+        "signingIn": "Signing in…",
+        "loginFailed": "Login failed",
+        "noAccount": "No account?",
+        "register": "Register",
+        "createAccount": "Create account",
+        "creatingAccount": "Creating account…",
+        "registrationFailed": "Registration failed",
+        "alreadyHaveAccount": "Already have an account?"
+    },
+    "DashboardLayout": {
+        "payments": "Payments",
+        "bills": "Bills",
+        "settings": "Settings",
+        "logOut": "Log out"
+    },
+    "Dashboard": {
+        "title": "Welcome to Pay Tracker",
+        "subtitle": "Manage your household bills in one place.",
+        "paymentsTitle": "Payments",
+        "paymentsDesc": "View and mark this month's bills as paid",
+        "manageBillsTitle": "Manage Bills",
+        "manageBillsDesc": "Create, edit, and track your recurring bills",
+        "archivedBillsTitle": "Archived Bills",
+        "archivedBillsDesc": "View past bills and payment history"
+    },
+    "BillsPage": {
+        "title": "Your Bills",
+        "newBill": "New Bill",
+        "cancel": "Cancel",
+        "loadError": "Failed to load bills.",
+        "noBillsYet": "No bills yet",
+        "addFirstBill": "Add your first bill"
+    },
+    "ArchivedBillsPage": {
+        "backToActive": "← Active bills",
+        "title": "Archived Bills",
+        "subtitle": "Payment history is preserved for all archived bills.",
+        "loadError": "Failed to load archived bills.",
+        "noArchivedBills": "No archived bills",
+        "willAppearHere": "Bills you archive will appear here",
+        "archived": "Archived",
+        "frequency": {
+            "monthly": "Monthly",
+            "every_2_months": "Every 2 months",
+            "quarterly": "Quarterly",
+            "annual": "Annual",
+            "one_off": "One-off"
+        }
+    },
+    "BillTemplateForm": {
+        "nameLabel": "Name",
+        "namePlaceholder": "e.g. Electricity",
+        "nameRequired": "Name is required.",
+        "amountLabel": "Amount",
+        "amountPositive": "Enter a positive amount.",
+        "currencyAriaLabel": "Currency",
+        "customOption": "Custom…",
+        "customCurrencyAriaLabel": "Custom currency code",
+        "customCurrencyPlaceholder": "e.g. CHF",
+        "frequencyLabel": "Frequency",
+        "frequency": {
+            "monthly": "Monthly",
+            "every_2_months": "Every 2 months",
+            "quarterly": "Quarterly",
+            "annual": "Annual",
+            "one_off": "One-off"
+        },
+        "dueDayLabel": "Due day of month",
+        "dueDayRange": "Must be between 1 and 31.",
+        "categoryLabel": "Category",
+        "notesLabel": "Notes",
+        "notesPlaceholder": "Optional notes",
+        "pauseRecurrence": "Pause recurrence (no new instances created)",
+        "cancel": "Cancel",
+        "save": "Save",
+        "saving": "Saving…",
+        "saveFailed": "Save failed."
+    },
+    "BillTemplateRow": {
+        "day": "day",
+        "paused": "Paused",
+        "close": "Close",
+        "edit": "Edit",
+        "archive": "Archive",
+        "frequency": {
+            "monthly": "Monthly",
+            "every_2_months": "Every 2 months",
+            "quarterly": "Quarterly",
+            "annual": "Annual",
+            "one_off": "One-off"
+        }
+    },
+    "RestoreDeletedDialog": {
+        "title": "Restore deleted payments?",
+        "description": "Some future payments for “{name}” were previously deleted. Restore them with the updated template values?",
+        "restore": "Restore",
+        "skip": "Skip",
+        "restoring": "Restoring…"
+    },
+    "ArchiveConfirmDialog": {
+        "title": "Archive “{billName}”?",
+        "description": "This bill will be hidden from the active list. Payment history is preserved and accessible from the archived view.",
+        "cancel": "Cancel",
+        "archive": "Archive",
+        "archiving": "Archiving…"
+    },
+    "Frequencies": {
+        "monthly": "Monthly",
+        "every_2_months": "Every 2 months",
+        "quarterly": "Quarterly",
+        "annual": "Annual",
+        "one_off": "One-off"
+    },
+    "DayPicker": {
+        "placeholder": "Select day",
+        "selectedDay": "Day {day}",
+        "heading": "Day of month",
+        "shortMonthWarning": "Some months have fewer days — the bill will fall on the last available day."
+    },
+    "CategoryCombobox": {"placeholder": "e.g. Utilities"},
+    "PaymentsPage": {
+        "title": "Payments",
+        "loadError": "Failed to load payments.",
+        "noPayments": "No bills for this month",
+        "addBills": "Add bills →",
+        "pastMonth": "Past",
+        "exportXlsx": "Excel Export",
+        "exportXlsxLoading": "Exporting…",
+        "exportXlsxError": "Export failed. Please try again."
+    },
+    "PaymentRow": {
+        "status": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
+        "markAsPaid": "Mark as Paid",
+        "revert": "Revert payment",
+        "due": "Due",
+        "paidOn": "Paid on",
+        "amountMismatch": "Expected {expected}, paid {paid}",
+        "delete": "Delete payment",
+        "paymentNote": "Payment note",
+        "emailNotification": "Email notification",
+        "emailSentOn": "Email sent"
+    },
+    "DeletePaymentDialog": {
+        "title": "Delete this payment?",
+        "descriptionRecurring": "This payment entry will be removed. The recurring bill will continue generating future entries.",
+        "descriptionOneOff": "This one-off payment entry will be removed. This cannot be undone.",
+        "deleteFutureLabel": "Also delete all future unpaid entries for this bill",
+        "cancel": "Cancel",
+        "confirm": "Delete",
+        "deleting": "Deleting…",
+        "deleteFailed": "Failed to delete payment."
+    },
+    "MarkPaidDialog": {
+        "title": "Mark as Paid: {billName}",
+        "amountLabel": "Amount paid",
+        "notesLabel": "Notes (optional)",
+        "cancel": "Cancel",
+        "confirm": "Mark as Paid",
+        "confirming": "Marking…",
+        "saveFailed": "Failed to record payment."
+    },
+    "RestoreButton": {
+        "ariaLabel": "Restore from backup",
+        "dialogTitle": "Restore from Backup",
+        "dialogDescription": "This will permanently replace all your current data with the contents of “{filename}”. This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Replace My Data",
+        "restoring": "Restoring…",
+        "error": "Restore failed. Please check the file and try again.",
+        "fileTooLarge": "File too large. Backup files must be under 10 MB."
+    },
+    "BackupButton": {
+        "ariaLabel": "Download backup",
+        "dialogTitle": "Download Backup",
+        "dialogDescription": "This will download a complete copy of all Pay Tracker data — bill templates, payment history, and user accounts. Store the file securely.",
+        "cancel": "Cancel",
+        "confirm": "Download",
+        "downloading": "Downloading…",
+        "error": "Backup failed. Please try again."
+    },
+    "ThemeToggle": {"ariaLabel": "Toggle theme"},
+    "LanguageToggle": {
+        "ariaLabel": "Switch language",
+        "label": "Language:",
+        "name": "English"
+    },
+    "NotificationToggle": {
+        "enable": "Enable notifications",
+        "enabled": "Notifications enabled — click to re-check",
+        "blocked": "Notifications blocked — allow in browser settings",
+        "paymentIncoming": "Payment incoming"
+    },
+    "EmailRemindersToggle": {
+        "enable": "Enable email reminders",
+        "disable": "Disable email reminders"
+    },
+    "SettingsPage": {
+        "navLabel": "Settings",
+        "pageTitle": "Settings",
+        "unsavedTitle": "Unsaved changes",
+        "unsavedDescription": "You have unsaved changes. Leave without saving?",
+        "unsavedLeave": "Leave",
+        "unsavedStay": "Stay",
+        "save": "Save",
+        "saving": "Saving…",
+        "cancel": "Cancel",
+        "saveFailed": "Save failed. Please try again.",
+        "profile": {
+            "title": "User Profile",
+            "description": "Update your login email and password.",
+            "emailLabel": "Email address",
+            "emailPlaceholder": "new@email.com",
+            "currentPasswordLabel": "Current password",
+            "currentPasswordPlaceholder": "Enter current password",
+            "newPasswordLabel": "New password",
+            "newPasswordPlaceholder": "Minimum 8 characters",
+            "passwordTooShort": "Password must be at least 8 characters.",
+            "wrongPassword": "Current password is incorrect.",
+            "emailTaken": "That email is already registered.",
+            "emailAndPasswordRequired": "Please enter both a new email address and your current password."
+        },
+        "emailNotifications": {
+            "title": "Email Notifications",
+            "description": "Choose when to receive email reminders for upcoming and overdue bills.",
+            "twoDaysBefore": "2 days before due date",
+            "oneDayBefore": "1 day before due date",
+            "onDay": "On the payment date",
+            "oneDayAfter": "1 day after due date",
+            "noneWarning": "Select at least one option to receive email reminders.",
+            "sendTimeLabel": "Send time (UTC)",
+            "sendTimePlaceholder": "Select hour",
+            "masterToggle": "Enable email notifications",
+            "sendNowButton": "Send notification now",
+            "sendNowSending": "Sending...",
+            "sendNowSent": "Sent {count} reminder(s)",
+            "sendNowNoReminders": "No upcoming reminders to send",
+            "serverTimeHint": "Reminders are sent based on server time (UTC). Current server time: {time}."
+        },
+        "browserNotifications": {
+            "title": "Browser Notifications",
+            "description": "Get notified when a bill is due today.",
+            "enable": "Enable notifications",
+            "enabled": "Notifications enabled",
+            "toggle": "Enable browser notifications",
+            "osHint": "Not seeing notifications? Check your OS notification settings (macOS: System Settings → Notifications).",
+            "blockedWarning": "Browser notifications are blocked. Enable them in your browser or operating system settings."
+        },
+        "backup": {
+            "title": "Backup Data",
+            "description": "Download a complete copy of all your Pay Tracker data as a JSON file."
+        },
+        "restore": {
+            "title": "Restore Data",
+            "description": "Replace all current data with a previously downloaded backup file."
+        }
     }
-  },
-  "BillTemplateForm": {
-    "nameLabel": "Name",
-    "namePlaceholder": "e.g. Electricity",
-    "nameRequired": "Name is required.",
-    "amountLabel": "Amount",
-    "amountPositive": "Enter a positive amount.",
-    "currencyAriaLabel": "Currency",
-    "customOption": "Custom…",
-    "customCurrencyAriaLabel": "Custom currency code",
-    "customCurrencyPlaceholder": "e.g. CHF",
-    "frequencyLabel": "Frequency",
-    "frequency": {
-      "monthly": "Monthly",
-      "every_2_months": "Every 2 months",
-      "quarterly": "Quarterly",
-      "annual": "Annual",
-      "one_off": "One-off"
-    },
-    "dueDayLabel": "Due day of month",
-    "dueDayRange": "Must be between 1 and 31.",
-    "categoryLabel": "Category",
-    "notesLabel": "Notes",
-    "notesPlaceholder": "Optional notes",
-    "pauseRecurrence": "Pause recurrence (no new instances created)",
-    "cancel": "Cancel",
-    "save": "Save",
-    "saving": "Saving…",
-    "saveFailed": "Save failed."
-  },
-  "BillTemplateRow": {
-    "day": "day",
-    "paused": "Paused",
-    "close": "Close",
-    "edit": "Edit",
-    "archive": "Archive",
-    "frequency": {
-      "monthly": "Monthly",
-      "every_2_months": "Every 2 months",
-      "quarterly": "Quarterly",
-      "annual": "Annual",
-      "one_off": "One-off"
-    }
-  },
-  "ArchiveConfirmDialog": {
-    "title": "Archive “{billName}”?",
-    "description": "This bill will be hidden from the active list. Payment history is preserved and accessible from the archived view.",
-    "cancel": "Cancel",
-    "archive": "Archive",
-    "archiving": "Archiving…"
-  },
-  "Frequencies": {
-    "monthly": "Monthly",
-    "every_2_months": "Every 2 months",
-    "quarterly": "Quarterly",
-    "annual": "Annual",
-    "one_off": "One-off"
-  },
-  "DayPicker": {
-    "placeholder": "Select day",
-    "selectedDay": "Day {day}",
-    "heading": "Day of month",
-    "shortMonthWarning": "Some months have fewer days — the bill will fall on the last available day."
-  },
-  "CategoryCombobox": {
-    "placeholder": "e.g. Utilities"
-  },
-  "PaymentsPage": {
-    "title": "Payments",
-    "loadError": "Failed to load payments.",
-    "noPayments": "No bills for this month",
-    "addBills": "Add bills →",
-    "pastMonth": "Past",
-    "exportXlsx": "Excel Export",
-    "exportXlsxLoading": "Exporting…",
-    "exportXlsxError": "Export failed. Please try again."
-  },
-  "PaymentRow": {
-    "status": {
-      "upcoming": "Upcoming",
-      "overdue": "Overdue",
-      "paid": "Paid"
-    },
-    "markAsPaid": "Mark as Paid",
-    "revert": "Revert payment",
-    "due": "Due",
-    "paidOn": "Paid on",
-    "amountMismatch": "Expected {expected}, paid {paid}",
-    "delete": "Delete payment",
-    "paymentNote": "Payment note",
-    "emailNotification": "Email notification",
-    "emailSentOn": "Email sent"
-  },
-  "DeletePaymentDialog": {
-    "title": "Delete this payment?",
-    "descriptionRecurring": "This payment entry will be removed. The recurring bill will continue generating future entries.",
-    "descriptionOneOff": "This one-off payment entry will be removed. This cannot be undone.",
-    "deleteFutureLabel": "Also delete all future unpaid entries for this bill",
-    "cancel": "Cancel",
-    "confirm": "Delete",
-    "deleting": "Deleting…",
-    "deleteFailed": "Failed to delete payment."
-  },
-  "MarkPaidDialog": {
-    "title": "Mark as Paid: {billName}",
-    "amountLabel": "Amount paid",
-    "notesLabel": "Notes (optional)",
-    "cancel": "Cancel",
-    "confirm": "Mark as Paid",
-    "confirming": "Marking…",
-    "saveFailed": "Failed to record payment."
-  },
-  "RestoreButton": {
-    "ariaLabel": "Restore from backup",
-    "dialogTitle": "Restore from Backup",
-    "dialogDescription": "This will permanently replace all your current data with the contents of \"{filename}\". This action cannot be undone.",
-    "cancel": "Cancel",
-    "confirm": "Replace My Data",
-    "restoring": "Restoring…",
-    "error": "Restore failed. Please check the file and try again.",
-    "fileTooLarge": "File too large. Backup files must be under 10 MB."
-  },
-  "BackupButton": {
-    "ariaLabel": "Download backup",
-    "dialogTitle": "Download Backup",
-    "dialogDescription": "This will download a complete copy of all Pay Tracker data — bill templates, payment history, and user accounts. Store the file securely.",
-    "cancel": "Cancel",
-    "confirm": "Download",
-    "downloading": "Downloading…",
-    "error": "Backup failed. Please try again."
-  },
-  "ThemeToggle": {
-    "ariaLabel": "Toggle theme"
-  },
-  "LanguageToggle": {
-    "ariaLabel": "Switch language",
-    "label": "Language:",
-    "name": "English"
-  },
-  "NotificationToggle": {
-    "enable": "Enable notifications",
-    "enabled": "Notifications enabled — click to re-check",
-    "blocked": "Notifications blocked — allow in browser settings",
-    "paymentIncoming": "Payment incoming"
-  },
-  "EmailRemindersToggle": {
-    "enable": "Enable email reminders",
-    "disable": "Disable email reminders"
-  },
-  "SettingsPage": {
-    "navLabel": "Settings",
-    "pageTitle": "Settings",
-    "unsavedTitle": "Unsaved changes",
-    "unsavedDescription": "You have unsaved changes. Leave without saving?",
-    "unsavedLeave": "Leave",
-    "unsavedStay": "Stay",
-    "save": "Save",
-    "saving": "Saving…",
-    "cancel": "Cancel",
-    "saveFailed": "Save failed. Please try again.",
-    "profile": {
-      "title": "User Profile",
-      "description": "Update your login email and password.",
-      "emailLabel": "Email address",
-      "emailPlaceholder": "new@email.com",
-      "currentPasswordLabel": "Current password",
-      "currentPasswordPlaceholder": "Enter current password",
-      "newPasswordLabel": "New password",
-      "newPasswordPlaceholder": "Minimum 8 characters",
-      "passwordTooShort": "Password must be at least 8 characters.",
-      "wrongPassword": "Current password is incorrect.",
-      "emailTaken": "That email is already registered.",
-      "emailAndPasswordRequired": "Please enter both a new email address and your current password."
-    },
-    "emailNotifications": {
-      "title": "Email Notifications",
-      "description": "Choose when to receive email reminders for upcoming and overdue bills.",
-      "twoDaysBefore": "2 days before due date",
-      "oneDayBefore": "1 day before due date",
-      "onDay": "On the payment date",
-      "oneDayAfter": "1 day after due date",
-      "noneWarning": "Select at least one option to receive email reminders.",
-      "sendTimeLabel": "Send time (UTC)",
-      "sendTimePlaceholder": "Select hour",
-      "masterToggle": "Enable email notifications",
-      "sendNowButton": "Send notification now",
-      "sendNowSending": "Sending...",
-      "sendNowSent": "Sent {count} reminder(s)",
-      "sendNowNoReminders": "No upcoming reminders to send",
-      "serverTimeHint": "Reminders are sent based on server time (UTC). Current server time: {time}."
-    },
-    "browserNotifications": {
-      "title": "Browser Notifications",
-      "description": "Get notified when a bill is due today.",
-      "enable": "Enable notifications",
-      "enabled": "Notifications enabled",
-      "toggle": "Enable browser notifications",
-      "osHint": "Not seeing notifications? Check your OS notification settings (macOS: System Settings → Notifications).",
-      "blockedWarning": "Browser notifications are blocked. Enable them in your browser or operating system settings."
-    },
-    "backup": {
-      "title": "Backup Data",
-      "description": "Download a complete copy of all your Pay Tracker data as a JSON file."
-    },
-    "restore": {
-      "title": "Restore Data",
-      "description": "Replace all current data with a previously downloaded backup file."
-    }
-  }
 }

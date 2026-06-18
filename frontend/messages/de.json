@@ -99,8 +99,15 @@
       "one_off": "Einmalig"
     }
   },
+  "RestoreDeletedDialog": {
+    "title": "Gelöschte Zahlungen wiederherstellen?",
+    "description": "Einige zukünftige Zahlungen für „{name}” wurden zuvor gelöscht. Mit den aktuellen Vorlagenwerten wiederherstellen?",
+    "restore": "Wiederherstellen",
+    "skip": "Überspringen",
+    "restoring": "Wird wiederhergestellt…"
+  },
   "ArchiveConfirmDialog": {
-    "title": "„{billName}“ archivieren?",
+    "title": "„{billName}” archivieren?",
     "description": "Diese Rechnung wird aus der aktiven Liste ausgeblendet. Die Zahlungshistorie bleibt erhalten und ist in der archivierten Ansicht zugänglich.",
     "cancel": "Abbrechen",
     "archive": "Archivieren",
