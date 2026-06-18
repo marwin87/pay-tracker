@@ -1,10 +1,10 @@
 ---
 change_id: restore-deleted-future-instances
 title: Restore deleted future instances on bill template save
-status: impl_reviewed
+status: archived
 created: 2026-06-18
 updated: 2026-06-18
-archived_at: null
+archived_at: 2026-06-18T14:32:08Z
 ---
 
 ## Notes
