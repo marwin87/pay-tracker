@@ -315,6 +315,36 @@ def test_v2_backup_defaults_reminder_fields(client):
     assert inst["reminder_sent_overdue"] is False
 
 
+def test_restore_cross_user_import(client):
+    """User B can upload a backup created by user A; data lands under B's account, A's data untouched."""
+    tok_a = register_and_login(client, "cross_a@test.com")
+    tok_b = register_and_login(client, "cross_b@test.com")
+
+    r = client.post("/bills", json=_BILL, headers=auth(tok_a))
+    assert r.status_code == 201
+    client.get("/bills/payments", headers=auth(tok_a))
+
+    backup_a = client.get("/export/json", headers=auth(tok_a)).json()
+    assert backup_a["exported_by"] == "cross_a@test.com"
+    assert len(backup_a["bill_templates"]) == 1
+
+    r = _upload(client, tok_b, backup_a)
+    assert r.status_code == 200
+    data = r.json()
+    assert data["restored_templates"] == 1
+
+    bills_b = client.get("/bills", headers=auth(tok_b)).json()
+    assert len(bills_b) == 1
+    assert bills_b[0]["name"] == _BILL["name"]
+
+    bills_a = client.get("/bills", headers=auth(tok_a)).json()
+    assert len(bills_a) == 1
+    assert bills_a[0]["name"] == _BILL["name"]
+
+    backup_b_after = client.get("/export/json", headers=auth(tok_b)).json()
+    assert backup_b_after["exported_by"] == "cross_b@test.com"
+
+
 def test_v3_backup_preserves_reminder_flags(client):
     """A v3 backup with reminder_sent_upcoming=True preserves the flag through restore."""
     tok = register_and_login(client, "v3@test.com")
