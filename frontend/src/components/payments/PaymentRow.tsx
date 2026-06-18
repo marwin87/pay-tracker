@@ -79,12 +79,12 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
   today.setHours(0, 0, 0, 0);
   const isDueToday = dueDate.getTime() === today.getTime();
 
-  function leftBorderClass(): string {
-    const base = "border-l-4 pl-3";
-    if (instance.status === "overdue") return `${base} border-l-red-500 dark:border-l-red-500`;
-    if (instance.status === "paid") return `${base} border-l-green-500 dark:border-l-green-500`;
-    if (isDueToday) return `${base} border-l-orange-400 dark:border-l-orange-400`;
-    return `${base} border-l-blue-400 dark:border-l-blue-400`;
+  function tileGradientClass(): string {
+    const base = "bg-gradient-to-r from-0% to-70%";
+    if (instance.status === "overdue") return `${base} from-red-100 to-white dark:from-red-500/10 dark:to-slate-800`;
+    if (instance.status === "paid") return `${base} from-green-100 to-white dark:from-green-500/10 dark:to-slate-800`;
+    if (isDueToday) return `${base} from-orange-100 to-white dark:from-orange-400/10 dark:to-slate-800`;
+    return `${base} from-blue-100 to-white dark:from-blue-400/10 dark:to-slate-800`;
   }
 
   const paidAt = instance.paid_at ? new Date(instance.paid_at) : null;
@@ -108,7 +108,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
     : null;
 
   return (
-    <div className={`rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:bg-slate-800 dark:border-slate-700 transition-colors ${leftBorderClass()}`}>
+    <div className={`rounded-xl border border-slate-200 px-4 py-3 shadow-sm dark:border-slate-700 transition-colors ${tileGradientClass()}`}>
       <div className="flex flex-col gap-0.5">
         {/* Name */}
         <span className="font-semibold text-base text-slate-800 dark:text-slate-100 truncate">
