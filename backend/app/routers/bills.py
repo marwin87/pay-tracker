@@ -258,6 +258,7 @@ def update_bill(
         raise HTTPException(status_code=403, detail="Not authorized")
 
     updates = body.model_dump(exclude_unset=True)
+    updates.pop("recreate_deleted_future", None)
     due_day_changed = "due_day" in updates and updates["due_day"] != bill.due_day
     for field, value in updates.items():
         setattr(bill, field, value)

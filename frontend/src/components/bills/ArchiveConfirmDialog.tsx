@@ -2,6 +2,7 @@
 
 import { Archive } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { createPortal } from "react-dom";
 
 interface Props {
   billName: string;
@@ -12,7 +13,7 @@ interface Props {
 
 export default function ArchiveConfirmDialog({ billName, onConfirm, onCancel, archiving = false }: Props) {
   const t = useTranslations("ArchiveConfirmDialog");
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
       <div
         role="dialog"
@@ -50,6 +51,7 @@ export default function ArchiveConfirmDialog({ billName, onConfirm, onCancel, ar
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

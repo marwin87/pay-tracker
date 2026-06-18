@@ -92,8 +92,12 @@ export default function BillsPage() {
   async function handleRestoreSkip() {
     if (!restoreTarget) return;
     const { id, data } = restoreTarget;
-    setRestoreTarget(null);
-    await doUpdate(id, data);
+    try {
+      await doUpdate(id, data);
+      setRestoreTarget(null);
+    } catch {
+      // leave dialog open so user can retry
+    }
   }
 
   async function handleArchiveConfirm() {

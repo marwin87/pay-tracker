@@ -2,6 +2,7 @@
 
 import { RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { createPortal } from "react-dom";
 
 interface Props {
   billName: string;
@@ -12,7 +13,7 @@ interface Props {
 
 export default function RestoreDeletedDialog({ billName, onRestore, onSkip, restoring = false }: Props) {
   const t = useTranslations("RestoreDeletedDialog");
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
       <div
         role="dialog"
@@ -51,6 +52,7 @@ export default function RestoreDeletedDialog({ billName, onRestore, onSkip, rest
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
