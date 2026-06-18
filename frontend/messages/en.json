@@ -62,6 +62,7 @@
         "nameRequired": "Name is required.",
         "amountLabel": "Amount",
         "amountPositive": "Enter a positive amount.",
+        "amountInvalid": "Enter a valid amount.",
         "currencyAriaLabel": "Currency",
         "customOption": "Custom…",
         "customCurrencyAriaLabel": "Custom currency code",
@@ -75,6 +76,7 @@
             "one_off": "One-off"
         },
         "dueDayLabel": "Due day of month",
+        "dueDateLabel": "Due date",
         "dueDayRange": "Must be between 1 and 31.",
         "categoryLabel": "Category",
         "notesLabel": "Notes",

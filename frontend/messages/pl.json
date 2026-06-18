@@ -62,6 +62,7 @@
     "nameRequired": "Nazwa jest wymagana.",
     "amountLabel": "Kwota",
     "amountPositive": "Podaj kwotę dodatnią.",
+    "amountInvalid": "Podaj prawidłową kwotę.",
     "currencyAriaLabel": "Waluta",
     "customOption": "Inna…",
     "customCurrencyAriaLabel": "Kod waluty niestandardowej",
@@ -75,6 +76,7 @@
       "one_off": "Jednorazowo"
     },
     "dueDayLabel": "Dzień miesiąca płatności",
+    "dueDateLabel": "Termin płatności",
     "dueDayRange": "Musi być między 1 a 31.",
     "categoryLabel": "Kategoria",
     "notesLabel": "Notatki",

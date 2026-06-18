@@ -88,6 +88,7 @@ export default function BillTemplateRow({
               amount: template.amount,
               currency: template.currency,
               due_day: template.due_day,
+              due_month: template.due_month,
               notes: template.notes,
               is_paused: template.is_paused,
             }}

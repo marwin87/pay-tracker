@@ -62,6 +62,7 @@
     "nameRequired": "Name ist erforderlich.",
     "amountLabel": "Betrag",
     "amountPositive": "Bitte einen positiven Betrag eingeben.",
+    "amountInvalid": "Bitte einen gültigen Betrag eingeben.",
     "currencyAriaLabel": "Währung",
     "customOption": "Andere…",
     "customCurrencyAriaLabel": "Benutzerdefinierter Währungscode",
@@ -75,6 +76,7 @@
       "one_off": "Einmalig"
     },
     "dueDayLabel": "Fälligkeitstag im Monat",
+    "dueDateLabel": "Fälligkeitsdatum",
     "dueDayRange": "Muss zwischen 1 und 31 liegen.",
     "categoryLabel": "Kategorie",
     "notesLabel": "Notizen",

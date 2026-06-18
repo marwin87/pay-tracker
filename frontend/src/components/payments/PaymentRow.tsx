@@ -75,6 +75,18 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
 
   const dueDateFormatted = formatDate(dueDate);
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const isDueToday = dueDate.getTime() === today.getTime();
+
+  function leftBorderClass(): string {
+    const base = "border-l-4 pl-3";
+    if (instance.status === "overdue") return `${base} border-l-red-500 dark:border-l-red-500`;
+    if (instance.status === "paid") return `${base} border-l-green-500 dark:border-l-green-500`;
+    if (isDueToday) return `${base} border-l-orange-400 dark:border-l-orange-400`;
+    return `${base} border-l-blue-400 dark:border-l-blue-400`;
+  }
+
   const paidAt = instance.paid_at ? new Date(instance.paid_at) : null;
   const paidAtFormatted = paidAt ? formatDate(paidAt) : null;
 
@@ -96,11 +108,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
     : null;
 
   return (
-    <div className={`rounded-xl border bg-white px-4 py-3 shadow-sm dark:bg-slate-800 transition-colors ${
-      instance.status === "overdue"
-        ? "border-slate-200 border-l-4 border-l-red-500 pl-3 dark:border-slate-700 dark:border-l-red-500"
-        : "border-slate-200 dark:border-slate-700"
-    }`}>
+    <div className={`rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:bg-slate-800 dark:border-slate-700 transition-colors ${leftBorderClass()}`}>
       <div className="flex flex-col gap-0.5">
         {/* Name */}
         <span className="font-semibold text-base text-slate-800 dark:text-slate-100 truncate">

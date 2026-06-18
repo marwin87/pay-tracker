@@ -41,10 +41,16 @@ def create_bill(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
+    from app.models.bill import BillFrequency as BF
+
     now = datetime.now(timezone.utc)
-    bill = BillTemplate(
-        **body.model_dump(), user_id=me.id, start_period=now.strftime("%Y-%m")
-    )
+    if body.due_month and body.frequency in (BF.annual, BF.one_off):
+        year = now.year if body.due_month >= now.month else now.year + 1
+        start_period = f"{year:04d}-{body.due_month:02d}"
+    else:
+        start_period = now.strftime("%Y-%m")
+    data = body.model_dump(exclude={"due_month"})
+    bill = BillTemplate(**data, user_id=me.id, start_period=start_period)
     db.add(bill)
     db.commit()
     db.refresh(bill)
@@ -257,11 +263,21 @@ def update_bill(
     if bill.user_id != me.id:
         raise HTTPException(status_code=403, detail="Not authorized")
 
+    from app.models.bill import BillFrequency as BF
+
     updates = body.model_dump(exclude_unset=True)
     updates.pop("recreate_deleted_future", None)
+    due_month = updates.pop("due_month", None)
     due_day_changed = "due_day" in updates and updates["due_day"] != bill.due_day
     for field, value in updates.items():
         setattr(bill, field, value)
+
+    # Recalculate start_period when due_month changes for annual/one_off
+    effective_frequency = updates.get("frequency", bill.frequency)
+    if due_month is not None and effective_frequency in (BF.annual, BF.one_off):
+        now = datetime.now(timezone.utc)
+        year = now.year if due_month >= now.month else now.year + 1
+        bill.start_period = f"{year:04d}-{due_month:02d}"
 
     if due_day_changed:
         unpaid = (

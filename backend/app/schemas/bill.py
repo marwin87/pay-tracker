@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, computed_field
 from app.models.bill import BillFrequency, PaymentStatus
 
 
@@ -11,6 +11,7 @@ class BillTemplateCreate(BaseModel):
     amount: Decimal = Decimal("0")
     currency: str = "PLN"
     due_day: int | None = Field(None, ge=1, le=31)
+    due_month: int | None = Field(None, ge=1, le=12)  # month for annual/one_off
     notes: str | None = None
     is_paused: bool = False
 
@@ -22,6 +23,7 @@ class BillTemplateUpdate(BaseModel):
     amount: Decimal | None = None
     currency: str | None = None
     due_day: int | None = Field(None, ge=1, le=31)
+    due_month: int | None = Field(None, ge=1, le=12)  # month for annual/one_off
     notes: str | None = None
     is_paused: bool | None = None
     recreate_deleted_future: bool = False  # transient control flag — not persisted
@@ -41,6 +43,14 @@ class BillTemplateOut(BaseModel):
     is_archived: bool
     is_paused: bool
     created_at: datetime
+    start_period: str | None = Field(default=None, exclude=True)
+
+    @computed_field
+    @property
+    def due_month(self) -> int | None:
+        if self.start_period:
+            return int(self.start_period.split("-")[1])
+        return None
 
 
 class PaymentInstanceOut(BaseModel):

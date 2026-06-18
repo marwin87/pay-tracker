@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import CategoryCombobox from "./CategoryCombobox";
 import DayPicker from "./DayPicker";
+import MonthDayCalendar from "./MonthDayCalendar";
 import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
 
 const PRESET_CURRENCIES = ["EUR", "PLN", "USD"] as const;
@@ -11,6 +12,7 @@ const PRESET_CURRENCIES = ["EUR", "PLN", "USD"] as const;
 const FREQUENCY_VALUES: BillFrequency[] = ["monthly", "every_2_months", "quarterly", "annual", "one_off"];
 
 const DUE_DAY_FREQUENCIES: BillFrequency[] = ["monthly", "every_2_months", "quarterly"];
+const FULL_DATE_FREQUENCIES: BillFrequency[] = ["annual", "one_off"];
 
 const LOCALE_DEFAULT_CURRENCY: Record<string, string> = {
   pl: "PLN",
@@ -61,6 +63,9 @@ export default function BillTemplateForm({
   const [dueDay, setDueDay] = useState(
     initial?.due_day != null ? String(initial.due_day) : String(new Date().getDate()),
   );
+  const [dueMonth, setDueMonth] = useState(
+    initial?.due_month != null ? String(initial.due_month) : String(new Date().getMonth() + 1),
+  );
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [isPaused, setIsPaused] = useState(initial?.is_paused ?? false);
   const [errors, setErrors] = useState<Errors>({});
@@ -69,6 +74,7 @@ export default function BillTemplateForm({
   const [apiError, setApiError] = useState<string | null>(null);
 
   const showDueDay = DUE_DAY_FREQUENCIES.includes(frequency);
+  const showFullDate = FULL_DATE_FREQUENCIES.includes(frequency);
 
   function validate(fields: {
     name: string;
@@ -78,6 +84,8 @@ export default function BillTemplateForm({
   }): Errors {
     const e: Errors = {};
     if (!fields.name.trim()) e.name = t("nameRequired");
+    if (fields.amount.trim() && isNaN(Number(fields.amount.trim().replace(",", "."))))
+      e.amount = t("amountInvalid");
     if (fields.showDueDay && fields.dueDay) {
       const day = parseInt(fields.dueDay, 10);
       if (isNaN(day) || day < 1 || day > 31)
@@ -120,7 +128,8 @@ export default function BillTemplateForm({
         frequency,
         amount: amount.trim() || "0",
         currency: resolvedCurrency || "EUR",
-        due_day: showDueDay && dueDay ? parseInt(dueDay, 10) : null,
+        due_day: (showDueDay || showFullDate) && dueDay ? parseInt(dueDay, 10) : null,
+        due_month: showFullDate && dueMonth ? parseInt(dueMonth, 10) : null,
         notes: notes.trim() || null,
         is_paused: isPaused,
       };
@@ -220,7 +229,7 @@ export default function BillTemplateForm({
           </select>
         </div>
 
-        {/* Due day (conditional) */}
+        {/* Due day (conditional — monthly/bi-monthly/quarterly) */}
         {showDueDay && (
           <div>
             <label className={labelClass}>{t("dueDayLabel")}</label>
@@ -228,6 +237,21 @@ export default function BillTemplateForm({
             {errors.due_day && (
               <p className="mt-1 text-xs text-red-500">{errors.due_day}</p>
             )}
+          </div>
+        )}
+
+        {/* Due date: calendar picker (annual / one-off) */}
+        {showFullDate && (
+          <div className="sm:col-span-2">
+            <label className={labelClass}>{t("dueDateLabel")}</label>
+            <MonthDayCalendar
+              month={parseInt(dueMonth, 10) || new Date().getMonth() + 1}
+              day={parseInt(dueDay, 10) || new Date().getDate()}
+              onChange={(m, d) => {
+                setDueMonth(String(m));
+                setDueDay(String(d));
+              }}
+            />
           </div>
         )}
 
