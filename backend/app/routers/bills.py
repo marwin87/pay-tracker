@@ -15,6 +15,7 @@ from app.schemas.bill import (
     PaymentInstanceOut,
 )
 from app.services.recurrence import (
+    _due_date_for_period,
     ensure_current_period_instances,
     generate_next_instance,
 )
@@ -222,8 +223,25 @@ def update_bill(
         raise HTTPException(status_code=404, detail="Bill not found")
     if bill.user_id != me.id:
         raise HTTPException(status_code=403, detail="Not authorized")
-    for field, value in body.model_dump(exclude_unset=True).items():
+
+    updates = body.model_dump(exclude_unset=True)
+    due_day_changed = "due_day" in updates and updates["due_day"] != bill.due_day
+    for field, value in updates.items():
         setattr(bill, field, value)
+
+    if due_day_changed:
+        unpaid = (
+            db.query(PaymentInstance)
+            .filter(
+                PaymentInstance.bill_id == bill.id,
+                PaymentInstance.status != PaymentStatus.paid,
+                PaymentInstance.is_deleted.is_(False),
+            )
+            .all()
+        )
+        for inst in unpaid:
+            inst.due_date = _due_date_for_period(inst.period, bill.due_day)
+
     db.commit()
     db.refresh(bill)
     return bill
