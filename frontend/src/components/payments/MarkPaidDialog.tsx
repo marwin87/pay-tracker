@@ -20,7 +20,7 @@ export default function MarkPaidDialog({
 }: Props) {
   const t = useTranslations("MarkPaidDialog");
 
-  const [paidAmount, setPaidAmount] = useState(instance.amount);
+  const [paidAmount, setPaidAmount] = useState(instance.amount ?? "");
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,12 +30,10 @@ export default function MarkPaidDialog({
   if (!isOpen) return null;
 
   async function handleConfirm() {
-    const amount = parseFloat(paidAmount);
-    if (!paidAmount || isNaN(amount) || amount <= 0) return;
     setIsSubmitting(true);
     setError(null);
     try {
-      const updated = await markPaid(instance.id, paidAmount, notes || undefined);
+      const updated = await markPaid(instance.id, paidAmount || null, notes || undefined);
       onConfirm(updated);
     } catch (err) {
       if (!mounted.current) return;
@@ -76,7 +74,7 @@ export default function MarkPaidDialog({
               id="paid-amount"
               type="number"
               step="0.01"
-              min="0.01"
+              min="0"
               value={paidAmount}
               onChange={(e) => setPaidAmount(e.target.value)}
               className="flex-1 bg-transparent text-sm text-slate-800 outline-none dark:text-slate-100"
@@ -119,7 +117,7 @@ export default function MarkPaidDialog({
           </button>
           <button
             onClick={handleConfirm}
-            disabled={isSubmitting || !paidAmount || parseFloat(paidAmount) <= 0}
+            disabled={isSubmitting}
             className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors"
           >
             {isSubmitting ? t("confirming") : t("confirm")}

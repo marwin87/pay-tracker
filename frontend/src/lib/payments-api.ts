@@ -28,12 +28,13 @@ export function fetchPayments(month: string): Promise<PaymentInstanceOut[]> {
 
 export function markPaid(
   instanceId: number,
-  paidAmount: string,
+  paidAmount: string | null,
   notes?: string,
 ): Promise<PaymentInstanceOut> {
+  const amount = paidAmount ? parseFloat(paidAmount) : null;
   return apiFetch<PaymentInstanceOut>(`/bills/payments/${instanceId}/pay`, {
     method: "POST",
-    body: JSON.stringify({ paid_amount: parseFloat(paidAmount), notes: notes ?? null }),
+    body: JSON.stringify({ paid_amount: amount, notes: notes ?? null }),
   });
 }
 
