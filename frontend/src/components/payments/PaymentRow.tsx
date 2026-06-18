@@ -128,7 +128,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
             </span>
             <span className="text-slate-300 dark:text-slate-600">•</span>
             {instance.status === "paid" && paidAtFormatted ? (
-              <span className="text-slate-400 dark:text-slate-500 truncate">
+              <span className="text-emerald-600 dark:text-emerald-400 truncate">
                 {t("paidOn")} {paidAtFormatted}
                 {instance.paid_amount != null && parseFloat(instance.paid_amount) > 0 && (
                   <> · {instance.paid_amount} {instance.currency}</>
