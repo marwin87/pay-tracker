@@ -50,8 +50,8 @@ export default function LoginPage() {
         {/* Logo */}
         <div className="mb-8 flex flex-col items-center gap-2">
           <Image src="/pt-logo.png" alt="Pay Tracker" width={80} height={80} className="rounded-2xl shadow-md" priority />
-          <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-            Pay Tracker
+          <h1 className="text-2xl tracking-tight text-green-700 dark:text-green-500">
+            <span className="font-normal">Pay</span><span className="font-bold">Tracker</span>
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400">
             {t("loginSubtitle")}
@@ -103,7 +103,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="mt-1 rounded-xl bg-green-700 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-800 active:bg-green-900 disabled:opacity-50 transition-colors"
+              className="mt-1 rounded-xl border border-green-700 bg-green-700 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 active:bg-green-900 disabled:opacity-50"
             >
               {loading ? t("signingIn") : t("signIn")}
             </button>

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Download, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, Download, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import {
   fetchPayments,
@@ -93,7 +93,6 @@ export default function PaymentsPage() {
     );
   }
 
-  const years = [currentYear, currentYear - 1];
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
   async function handleExportXlsx(year: number) {
@@ -128,61 +127,96 @@ export default function PaymentsPage() {
       )}
 
       {/* Page header */}
-      <h1 className="mb-6 text-2xl font-semibold text-slate-800 dark:text-slate-100">
-        {t("title")}
-      </h1>
-
-      {/* Year-month selector + export */}
       <div className="mb-6">
-        {/* Year dropdown */}
-        <div className="mb-2">
-          <select
-            value={selectedYear}
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-sm transition-colors hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-green-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+        <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
+          {t("title")}
+        </h1>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          {t("subtitle")}
+        </p>
+      </div>
+
+      {/* Month selector */}
+      <div className="mb-6">
+        {/* Year navigation */}
+        <div className="flex items-center gap-1 mb-3">
+          <button
+            onClick={() => setSelectedYear((y) => y - 1)}
+            disabled={selectedYear <= currentYear - 2}
+            className="rounded p-1 text-slate-400 hover:text-slate-600 disabled:opacity-30 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
           >
-            {years.map((y) => (
-              <option key={y} value={y}>{y}</option>
-            ))}
-          </select>
+            <ChevronLeft size={18} />
+          </button>
+          <span className="text-lg font-semibold text-slate-700 dark:text-slate-200 w-14 text-center tabular-nums">
+            {selectedYear}
+          </span>
+          <button
+            onClick={() => setSelectedYear((y) => y + 1)}
+            disabled={selectedYear >= currentYear}
+            className="rounded p-1 text-slate-400 hover:text-slate-600 disabled:opacity-30 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
+          >
+            <ChevronRight size={18} />
+          </button>
         </div>
-        {/* Month buttons */}
-        <div className="flex flex-wrap gap-1.5">
-          {Array.from({ length: 12 }, (_, i) => {
-            const key = monthKey(selectedYear, i);
-            const isSelected = key === selectedMonth;
-            return (
-              <button
-                key={key}
-                onClick={() => setSelectedMonth(key)}
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                  isSelected
-                    ? "bg-green-700 text-white shadow-sm"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-300 dark:hover:bg-slate-600"
-                }`}
-              >
-                {getMonthLabel(selectedYear, i, locale)}
-              </button>
-            );
-          })}
+
+        {/* Timeline strip */}
+        <div className="relative">
+          {/* Track */}
+          <div className="absolute bottom-0 left-0 right-0 h-px bg-slate-200 dark:bg-slate-700" />
+          <div className="flex">
+            {Array.from({ length: 12 }, (_, i) => {
+              const key = monthKey(selectedYear, i);
+              const isSelected = key === selectedMonth;
+              const isCurrent = key === currentMonth;
+              const isPast = key < currentMonth;
+              return (
+                <button
+                  key={key}
+                  onClick={() => setSelectedMonth(key)}
+                  className={`relative flex flex-1 flex-col items-center gap-1 pb-2.5 pt-2 text-sm font-medium transition-colors focus:outline-none ${
+                    isSelected
+                      ? "text-green-700 dark:text-emerald-400"
+                      : isPast
+                      ? "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                  }`}
+                >
+                  {isCurrent && (
+                    <span className="absolute top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-green-500 dark:bg-emerald-400" />
+                  )}
+                  {getMonthLabel(selectedYear, i, locale)}
+                  <span
+                    className={`absolute bottom-0 left-1 right-1 h-0.5 rounded-full transition-all ${
+                      isSelected ? "bg-green-600 dark:bg-emerald-500" : "bg-transparent"
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </div>
         </div>
-        {/* Separator + export */}
-        <hr className="my-3 border-slate-200 dark:border-slate-700" />
-        <button
-          onClick={() => handleExportXlsx(selectedYear)}
-          disabled={xlsxLoadingYear !== null}
-          className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-white bg-green-700 hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          {xlsxLoadingYear === selectedYear ? (
-            <Loader2 size={15} className="animate-spin" />
-          ) : (
-            <Download size={15} />
+
+        {/* Export */}
+        <div className="mt-4 flex items-center justify-end gap-3">
+          <button
+            onClick={() => handleExportXlsx(selectedYear)}
+            disabled={xlsxLoadingYear !== null}
+            className="group flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+          >
+            {xlsxLoadingYear === selectedYear ? (
+              <Loader2 size={15} className="animate-spin text-green-600 dark:text-emerald-400" />
+            ) : (
+              <Download size={15} className="transition-transform group-hover:-translate-y-0.5" />
+            )}
+            {xlsxLoadingYear === selectedYear ? t("exportXlsxLoading") : t("exportXlsx")}
+            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:bg-slate-700 dark:text-slate-500">
+              {selectedYear}
+            </span>
+          </button>
+          {xlsxError && (
+            <p className="text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
           )}
-          {xlsxLoadingYear === selectedYear ? t("exportXlsxLoading") : t("exportXlsx")}
-        </button>
-        {xlsxError && (
-          <p className="mt-1.5 text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
-        )}
+        </div>
       </div>
 
       {/* Selected month header */}
@@ -249,7 +283,7 @@ export default function PaymentsPage() {
             <PaymentRow
               key={inst.id}
               instance={inst}
-              readOnly={isReadOnly}
+              readOnly={false}
               onMarkPaid={setDialogTarget}
               onDelete={setDeleteTarget}
               onReverted={handleInstanceReverted}

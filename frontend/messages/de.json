@@ -20,7 +20,10 @@
     "payments": "Zahlungen",
     "bills": "Rechnungen",
     "settings": "Einstellungen",
-    "logOut": "Abmelden"
+    "logOut": "Abmelden",
+    "userMenu": "Benutzermenü",
+    "loggedInAs": "Angemeldet als",
+    "signedInAs": "Angemeldet als"
   },
   "Dashboard": {
     "title": "Willkommen bei Pay Tracker",
@@ -34,14 +37,16 @@
   },
   "BillsPage": {
     "title": "Ihre Rechnungen",
+    "subtitle": "Verwalten Sie Ihre wiederkehrenden und einmaligen Rechnungen. Jede Rechnung generiert automatisch Zahlungserinnerungen.",
     "newBill": "Neue Rechnung",
     "cancel": "Abbrechen",
     "loadError": "Rechnungen konnten nicht geladen werden.",
     "noBillsYet": "Noch keine Rechnungen",
-    "addFirstBill": "Erste Rechnung hinzufügen"
+    "addFirstBill": "Erste Rechnung hinzufügen",
+    "viewArchive": "Archivierte Rechnungen"
   },
   "ArchivedBillsPage": {
-    "backToActive": "← Aktive Rechnungen",
+    "backToActive": "Aktive Rechnungen",
     "title": "Archivierte Rechnungen",
     "subtitle": "Die Zahlungshistorie aller archivierten Rechnungen bleibt erhalten.",
     "loadError": "Archivierte Rechnungen konnten nicht geladen werden.",
@@ -133,6 +138,7 @@
   },
   "PaymentsPage": {
     "title": "Zahlungen",
+    "subtitle": "Verfolgen und markieren Sie Ihre Rechnungen Monat für Monat.",
     "loadError": "Zahlungen konnten nicht geladen werden.",
     "noPayments": "Keine Rechnungen für diesen Monat",
     "addBills": "Rechnungen hinzufügen →",
@@ -155,6 +161,7 @@
     "delete": "Zahlung löschen",
     "paymentNote": "Zahlungsnotiz",
     "emailNotification": "E-Mail-Benachrichtigung",
+    "emailNotSent": "E-Mail-Benachrichtigung nicht gesendet",
     "emailSentOn": "E-Mail gesendet"
   },
   "DeletePaymentDialog": {

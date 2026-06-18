@@ -20,7 +20,10 @@
     "payments": "Płatności",
     "bills": "Rachunki",
     "settings": "Ustawienia",
-    "logOut": "Wyloguj się"
+    "logOut": "Wyloguj się",
+    "userMenu": "Menu użytkownika",
+    "loggedInAs": "Zalogowany jako",
+    "signedInAs": "Zalogowany jako"
   },
   "Dashboard": {
     "title": "Witaj w Pay Tracker",
@@ -34,14 +37,16 @@
   },
   "BillsPage": {
     "title": "Twoje rachunki",
+    "subtitle": "Zarządzaj swoimi cyklicznymi i jednorazowymi rachunkami. Każdy rachunek automatycznie generuje przypomnienia o płatnościach.",
     "newBill": "Nowy rachunek",
     "cancel": "Anuluj",
     "loadError": "Nie udało się załadować rachunków.",
     "noBillsYet": "Brak rachunków",
-    "addFirstBill": "Dodaj pierwszy rachunek"
+    "addFirstBill": "Dodaj pierwszy rachunek",
+    "viewArchive": "Zarchiwizowane rachunki"
   },
   "ArchivedBillsPage": {
-    "backToActive": "← Aktywne rachunki",
+    "backToActive": "Aktywne rachunki",
     "title": "Zarchiwizowane rachunki",
     "subtitle": "Historia płatności jest zachowana dla wszystkich zarchiwizowanych rachunków.",
     "loadError": "Nie udało się załadować zarchiwizowanych rachunków.",
@@ -133,6 +138,7 @@
   },
   "PaymentsPage": {
     "title": "Płatności",
+    "subtitle": "Śledź i oznaczaj swoje rachunki miesiąc po miesiącu.",
     "loadError": "Nie udało się załadować płatności.",
     "noPayments": "Brak rachunków w tym miesiącu",
     "addBills": "Dodaj rachunki →",
@@ -155,6 +161,7 @@
     "delete": "Usuń płatność",
     "paymentNote": "Notatka do płatności",
     "emailNotification": "Powiadomienie email",
+    "emailNotSent": "Powiadomienie email nie zostało wysłane",
     "emailSentOn": "Email wysłany"
   },
   "DeletePaymentDialog": {

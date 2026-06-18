@@ -36,9 +36,9 @@ interface Errors {
 }
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
+  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
 
-const labelClass = "block text-sm font-medium text-slate-600 dark:text-slate-400 mb-1";
+const labelClass = "block text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500 mb-1.5";
 
 export default function BillTemplateForm({
   initial,
@@ -142,18 +142,18 @@ export default function BillTemplateForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       {apiError && (
         <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
           {apiError}
         </div>
       )}
 
+      {/* Row 1: Name + Amount */}
       <div className="grid gap-4 sm:grid-cols-2">
-        {/* Name */}
         <div>
           <label htmlFor="bill-name" className={labelClass}>
-            {t("nameLabel")} <span className="text-red-500">*</span>
+            {t("nameLabel")} <span className="text-red-400">*</span>
           </label>
           <input
             id="bill-name"
@@ -162,16 +162,11 @@ export default function BillTemplateForm({
             placeholder={t("namePlaceholder")}
             className={inputClass}
           />
-          {errors.name && (
-            <p className="mt-1 text-xs text-red-500">{errors.name}</p>
-          )}
+          {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
         </div>
 
-        {/* Amount + Currency */}
         <div>
-          <label htmlFor="bill-amount" className={labelClass}>
-            {t("amountLabel")}
-          </label>
+          <label htmlFor="bill-amount" className={labelClass}>{t("amountLabel")}</label>
           <div className="flex gap-2">
             <input
               id="bill-amount"
@@ -185,7 +180,7 @@ export default function BillTemplateForm({
               aria-label={t("currencyAriaLabel")}
               value={currencyOption}
               onChange={(e) => setCurrencyOption(e.target.value as CurrencyOption)}
-              className="w-28 shrink-0 rounded-xl border border-slate-200 bg-white px-2 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40"
+              className="w-28 shrink-0 rounded-xl border border-slate-200 bg-white px-2 py-2.5 text-sm text-slate-800 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40"
             >
               {PRESET_CURRENCIES.map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -203,59 +198,54 @@ export default function BillTemplateForm({
               className={inputClass + " mt-2"}
             />
           )}
-          {errors.amount && (
-            <p className="mt-1 text-xs text-red-500">{errors.amount}</p>
-          )}
+          {errors.amount && <p className="mt-1 text-xs text-red-500">{errors.amount}</p>}
         </div>
+      </div>
 
-        {/* Frequency */}
+      {/* Row 2: Frequency pills */}
+      <div>
+        <label className={labelClass}>
+          {t("frequencyLabel")} <span className="text-red-400">*</span>
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {FREQUENCY_VALUES.map((v) => (
+            <button
+              key={v}
+              type="button"
+              onClick={() => handleChange(setFrequency)(v)}
+              className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                frequency === v
+                  ? "border-green-600 bg-green-50 text-green-700 shadow-sm dark:border-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                  : "border-slate-200 bg-white text-slate-600 hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:text-emerald-400"
+              }`}
+            >
+              {t(`frequency.${v}` as never)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Row 3: Due day / full date (conditional) */}
+      {showDueDay && (
         <div>
-          <label htmlFor="bill-frequency" className={labelClass}>
-            {t("frequencyLabel")} <span className="text-red-500">*</span>
-          </label>
-          <select
-            id="bill-frequency"
-            value={frequency}
-            onChange={(e) =>
-              handleChange(setFrequency)(e.target.value as BillFrequency)
-            }
-            className={inputClass}
-          >
-            {FREQUENCY_VALUES.map((v) => (
-              <option key={v} value={v}>
-                {t(`frequency.${v}` as never)}
-              </option>
-            ))}
-          </select>
+          <label className={labelClass}>{t("dueDayLabel")}</label>
+          <DayPicker value={dueDay} onChange={handleChange(setDueDay)} />
+          {errors.due_day && <p className="mt-1 text-xs text-red-500">{errors.due_day}</p>}
         </div>
+      )}
+      {showFullDate && (
+        <div>
+          <label className={labelClass}>{t("dueDateLabel")}</label>
+          <MonthDayCalendar
+            month={parseInt(dueMonth, 10) || new Date().getMonth() + 1}
+            day={parseInt(dueDay, 10) || new Date().getDate()}
+            onChange={(m, d) => { setDueMonth(String(m)); setDueDay(String(d)); }}
+          />
+        </div>
+      )}
 
-        {/* Due day (conditional — monthly/bi-monthly/quarterly) */}
-        {showDueDay && (
-          <div>
-            <label className={labelClass}>{t("dueDayLabel")}</label>
-            <DayPicker value={dueDay} onChange={handleChange(setDueDay)} />
-            {errors.due_day && (
-              <p className="mt-1 text-xs text-red-500">{errors.due_day}</p>
-            )}
-          </div>
-        )}
-
-        {/* Due date: calendar picker (annual / one-off) */}
-        {showFullDate && (
-          <div className="sm:col-span-2">
-            <label className={labelClass}>{t("dueDateLabel")}</label>
-            <MonthDayCalendar
-              month={parseInt(dueMonth, 10) || new Date().getMonth() + 1}
-              day={parseInt(dueDay, 10) || new Date().getDate()}
-              onChange={(m, d) => {
-                setDueMonth(String(m));
-                setDueDay(String(d));
-              }}
-            />
-          </div>
-        )}
-
-        {/* Category */}
+      {/* Row 4: Category + Notes */}
+      <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="bill-category" className={labelClass}>{t("categoryLabel")}</label>
           <CategoryCombobox
@@ -265,9 +255,7 @@ export default function BillTemplateForm({
             suggestions={categorySuggestions}
           />
         </div>
-
-        {/* Notes */}
-        <div className="sm:col-span-2">
+        <div>
           <label htmlFor="bill-notes" className={labelClass}>{t("notesLabel")}</label>
           <textarea
             id="bill-notes"
@@ -280,8 +268,8 @@ export default function BillTemplateForm({
         </div>
       </div>
 
-      {/* Paused */}
-      <label className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400 cursor-pointer">
+      {/* Paused toggle */}
+      <label className="flex cursor-pointer items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
         <input
           type="checkbox"
           checked={isPaused}
@@ -291,18 +279,18 @@ export default function BillTemplateForm({
         {t("pauseRecurrence")}
       </label>
 
-      <div className="flex justify-end gap-3 pt-1 border-t border-slate-100 dark:border-slate-700">
+      <div className="flex justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-700">
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-xl border border-slate-200 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
+          className="rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700"
         >
           {t("cancel")}
         </button>
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-green-700 px-5 py-2 text-sm font-medium text-white hover:bg-green-800 disabled:opacity-50 transition-colors"
+          className="rounded-xl border border-green-700 bg-green-700 px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 disabled:opacity-50"
         >
           {saving ? t("saving") : t("save")}
         </button>

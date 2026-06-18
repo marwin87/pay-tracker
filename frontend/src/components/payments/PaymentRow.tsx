@@ -147,7 +147,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
             {!readOnly && instance.status !== "paid" && (
               <button
                 onClick={() => onMarkPaid(instance)}
-                className="flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-sm font-medium text-emerald-600 hover:bg-emerald-50 hover:text-emerald-700 dark:text-emerald-400 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300 transition-colors"
+                className="flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-white px-2.5 py-1 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
               >
                 <CheckCircle size={14} />
                 <span className="hidden sm:inline">{t("markAsPaid")}</span>
@@ -206,7 +206,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
                 <div className="absolute bottom-full right-0 mb-2 w-52 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10 whitespace-nowrap">
                   {emailSentAtFormatted
                     ? `${t("emailSentOn")} ${emailSentAtFormatted}`
-                    : t("emailNotification") + ": —"}
+                    : t("emailNotSent")}
                   <div className="absolute top-full right-3 -mt-px border-4 border-transparent border-t-slate-800 dark:border-t-slate-700" />
                 </div>
               )}

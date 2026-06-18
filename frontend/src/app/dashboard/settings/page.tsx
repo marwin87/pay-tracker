@@ -110,14 +110,14 @@ function Tile({
             <button
               onClick={onSave}
               disabled={isSaving}
-              className="rounded-lg px-4 py-1.5 text-sm font-medium bg-green-700 text-white hover:bg-green-800 disabled:opacity-50 transition-colors"
+              className="rounded-lg border border-green-700 bg-green-700 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 disabled:opacity-50"
             >
               {isSaving ? t("saving") : t("save")}
             </button>
             <button
               onClick={onCancel}
               disabled={isSaving}
-              className="rounded-lg px-4 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors"
+              className="rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
             >
               {t("cancel")}
             </button>
@@ -208,12 +208,12 @@ function ProfileTile({
   }
 
   const inputClass =
-    "w-full rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-2 text-sm text-slate-800 dark:text-slate-100 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500";
+    "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
 
   const btnSave =
-    "rounded-lg px-4 py-1.5 text-sm font-medium bg-green-700 text-white hover:bg-green-800 disabled:opacity-50 transition-colors";
+    "rounded-lg border border-green-700 bg-green-700 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 disabled:opacity-50";
   const btnCancel =
-    "rounded-lg px-4 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors";
+    "rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700";
 
   return (
     <Tile
@@ -423,7 +423,7 @@ function EmailNotificationsTile({
   }
 
   const checkboxClass =
-    "h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 dark:border-slate-600";
+    "h-4 w-4 rounded border-slate-200 accent-green-700 focus:ring-green-500 dark:border-slate-600";
   const labelClass =
     "ml-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer";
 
@@ -487,7 +487,7 @@ function EmailNotificationsTile({
           <select
             value={sendMinute}
             onChange={(e) => setSendMinute(Number(e.target.value))}
-            className="rounded-lg border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 px-3 py-1.5 text-sm text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm outline-none transition-all hover:border-slate-300 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500 dark:focus:border-green-600 dark:focus:ring-green-900/40"
           >
             {SLOTS.map((h) => (
               <option key={h} value={h}>
@@ -503,7 +503,7 @@ function EmailNotificationsTile({
           disabled={
             isSendingNow || !emailEnabled || isDirty
           }
-          className="flex items-center gap-2 self-start rounded-lg px-4 py-1.5 text-sm font-medium border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 disabled:opacity-50 transition-colors"
+          className="flex items-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
         >
           {isSendingNow ? (
             <Loader2 size={14} className="animate-spin" />
@@ -584,7 +584,7 @@ function BrowserNotificationsTile({
       ) : (
         <button
           onClick={requestPermission}
-          className="rounded-lg px-4 py-1.5 text-sm font-medium bg-green-700 text-white hover:bg-green-800 transition-colors"
+          className="rounded-lg border border-green-700 bg-green-700 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800"
         >
           {tp("browserNotifications.enable")}
         </button>
@@ -623,13 +623,13 @@ function UnsavedChangesDialog({
         <div className="flex gap-2 justify-end">
           <button
             onClick={onStay}
-            className="rounded-lg px-4 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors"
+            className="rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
             {t("unsavedStay")}
           </button>
           <button
             onClick={onLeave}
-            className="rounded-lg px-4 py-1.5 text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors"
+            className="rounded-lg border border-red-600 bg-red-600 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-all hover:border-red-700 hover:bg-red-700"
           >
             {t("unsavedLeave")}
           </button>
@@ -706,7 +706,7 @@ export default function SettingsPage() {
 
   if (!profile) {
     return (
-      <div className="mx-auto max-w-2xl px-4 py-8 space-y-4">
+      <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
         {[1, 2, 3, 4, 5].map((i) => (
           <div
             key={i}
@@ -718,7 +718,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 space-y-4">
+    <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
       <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
         {t("pageTitle")}
       </h1>
@@ -740,7 +740,7 @@ export default function SettingsPage() {
       <BrowserNotificationsTile t={t} />
 
       <Tile
-        color="red"
+        color="blue"
         icon={HardDriveDownload}
         title={t("backup.title")}
         description={t("backup.description")}

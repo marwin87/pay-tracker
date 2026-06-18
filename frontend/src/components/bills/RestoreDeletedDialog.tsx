@@ -39,14 +39,14 @@ export default function RestoreDeletedDialog({ billName, onRestore, onSkip, rest
             onClick={onSkip}
             disabled={restoring}
             autoFocus
-            className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors"
+            className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
             {t("skip")}
           </button>
           <button
             onClick={onRestore}
             disabled={restoring}
-            className="flex-1 rounded-xl bg-green-700 py-2.5 text-sm font-medium text-white hover:bg-green-800 disabled:opacity-50 transition-colors"
+            className="flex-1 rounded-xl border border-green-700 bg-green-700 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 disabled:opacity-50"
           >
             {restoring ? t("restoring") : t("restore")}
           </button>

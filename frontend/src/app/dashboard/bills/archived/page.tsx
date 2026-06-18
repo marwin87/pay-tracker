@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Archive } from "lucide-react";
+import { Archive, List } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { fetchBills, type BillTemplateOut } from "@/lib/bills-api";
 
@@ -35,18 +35,21 @@ export default function ArchivedBillsPage() {
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="mb-6">
-        <Link
-          href="/dashboard/bills"
-          className="text-xs text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
-        >
-          {t("backToActive")}
-        </Link>
-        <h1 className="mt-1 text-2xl font-semibold text-slate-800 dark:text-slate-100">
+        <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
           {t("title")}
         </h1>
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {t("subtitle")}
         </p>
+        <div className="mt-3 flex justify-end">
+          <Link
+            href="/dashboard/bills"
+            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+          >
+            <List size={15} />
+            {t("backToActive")}
+          </Link>
+        </div>
       </div>
 
       {loading && (

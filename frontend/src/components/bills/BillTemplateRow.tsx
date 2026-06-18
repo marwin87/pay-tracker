@@ -1,6 +1,6 @@
 "use client";
 
-import { Pencil, Archive as ArchiveIcon, ChevronUp, PauseCircle } from "lucide-react";
+import { Pencil, Archive as ArchiveIcon, ChevronUp, PauseCircle, NotebookPen } from "lucide-react";
 import { useTranslations } from "next-intl";
 import BillTemplateForm from "./BillTemplateForm";
 import type { BillTemplateOut, BillTemplateUpdate } from "@/lib/bills-api";
@@ -29,7 +29,8 @@ export default function BillTemplateRow({
       <div
         className={`flex items-center gap-3 px-4 py-3 ${template.is_paused ? "opacity-60" : ""}`}
       >
-        <div className="flex flex-1 flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
+        <div className="flex flex-1 flex-col min-w-0">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
           <span className="font-semibold text-base text-slate-800 dark:text-slate-100 truncate">
             {template.name}
           </span>
@@ -56,12 +57,19 @@ export default function BillTemplateRow({
             </span>
           )}
         </div>
+        {template.notes && (
+          <div className="flex items-start gap-1.5 mt-1 text-xs text-slate-400 dark:text-slate-500">
+            <NotebookPen size={11} className="mt-0.5 shrink-0" />
+            <span className="line-clamp-1">{template.notes}</span>
+          </div>
+        )}
+        </div>
 
         <div className="flex items-center gap-1 shrink-0">
           <button
             onClick={onEditToggle}
             aria-label={isExpanded ? t("close") : t("edit")}
-            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-500 hover:bg-green-50 hover:text-green-800 dark:hover:bg-green-900/30 dark:hover:text-green-300 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
           >
             {isExpanded ? <ChevronUp size={15} /> : <Pencil size={15} />}
             <span className="hidden sm:inline">{isExpanded ? t("close") : t("edit")}</span>
@@ -69,7 +77,7 @@ export default function BillTemplateRow({
           <button
             onClick={onArchive}
             aria-label={t("archive")}
-            className="flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-sm font-medium text-slate-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
+            className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-400 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-red-800 dark:hover:bg-red-900/20 dark:hover:text-red-400"
           >
             <ArchiveIcon size={15} />
             <span className="hidden sm:inline">{t("archive")}</span>
@@ -79,7 +87,7 @@ export default function BillTemplateRow({
 
       {/* Expanded edit form */}
       {isExpanded && (
-        <div className="border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-4">
+        <div className="border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-5">
           <BillTemplateForm
             initial={{
               name: template.name,

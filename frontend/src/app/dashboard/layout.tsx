@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Receipt, CreditCard, LogOut, Menu, X, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
+import { fetchMe } from "@/lib/user-api";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
 
@@ -26,13 +27,22 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const menuRef = useRef<HTMLElement>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isAuthenticated) router.replace("/login");
   }, [isAuthenticated, router]);
 
-  // Close menu when clicking outside
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchMe().then((p) => setUserEmail(p.email)).catch(() => {});
+    }
+  }, [isAuthenticated]);
+
+  // Close mobile menu on outside click
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -43,7 +53,20 @@ export default function DashboardLayout({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
+  // Close user dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    }
+    if (userMenuOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [userMenuOpen]);
+
   if (!isAuthenticated) return null;
+
+  const initials = userEmail ? userEmail[0].toUpperCase() : "?";
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -53,10 +76,12 @@ export default function DashboardLayout({
           {/* Brand */}
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 font-semibold text-green-700 dark:text-green-500"
+            className="flex items-center gap-2 text-green-700 transition-opacity hover:opacity-80 dark:text-green-500"
           >
-            <Image src="/pt-logo.png" alt="Pay Tracker" width={28} height={28} className="rounded-md" />
-            <span className="text-lg">Pay Tracker</span>
+            <Image src="/pt-logo.png" alt="Pay Tracker" width={32} height={32} className="rounded-xl" />
+            <span className="text-lg tracking-tight">
+              <span className="font-normal">Pay</span><span className="font-bold">Tracker</span>
+            </span>
           </Link>
 
           {/* Desktop nav links */}
@@ -67,10 +92,10 @@ export default function DashboardLayout({
                 <Link
                   key={href}
                   href={href}
-                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
                     active
-                      ? "bg-green-50 text-green-800 dark:bg-green-900/40 dark:text-green-300"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+                      ? "border border-green-200 bg-green-50 text-green-800 shadow-sm dark:border-green-800 dark:bg-green-900/30 dark:text-green-300"
+                      : "border border-transparent text-slate-600 hover:border-green-200 hover:bg-green-50 hover:text-green-700 dark:text-slate-400 dark:hover:border-emerald-800 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
                   }`}
                 >
                   <Icon size={15} />
@@ -84,14 +109,44 @@ export default function DashboardLayout({
           <div className="hidden md:flex items-center gap-1 ml-auto">
             <LanguageToggle />
             <ThemeToggle />
-            <button
-              onClick={logout}
-              aria-label={t("logOut")}
-              className="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
-            >
-              <LogOut size={15} />
-              <span>{t("logOut")}</span>
-            </button>
+
+            {/* Avatar + dropdown */}
+            <div className="relative" ref={userMenuRef}>
+              <button
+                onClick={() => setUserMenuOpen((o) => !o)}
+                aria-label={t("userMenu")}
+                className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white shadow-sm transition-all ${
+                  userMenuOpen
+                    ? "bg-green-800 dark:bg-green-500"
+                    : "bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-500"
+                }`}
+              >
+                {initials}
+              </button>
+
+              {/* Dropdown */}
+              {userMenuOpen && (
+                <div className="absolute right-0 top-full mt-2 z-50 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-800">
+                  <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-700">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                      {t("signedInAs")}
+                    </p>
+                    <p className="mt-0.5 truncate text-sm font-medium text-slate-800 dark:text-slate-100">
+                      {userEmail}
+                    </p>
+                  </div>
+                  <div className="p-2">
+                    <button
+                      onClick={() => { setUserMenuOpen(false); logout(); }}
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+                    >
+                      <LogOut size={14} />
+                      {t("logOut")}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile: utility icons + hamburger */}
@@ -110,6 +165,16 @@ export default function DashboardLayout({
             {menuOpen && (
               <div className="absolute top-full inset-x-0 border-b border-slate-200 bg-white shadow-md dark:border-slate-700 dark:bg-slate-800">
                 <div className="mx-auto max-w-4xl px-4 py-3 flex flex-col gap-1">
+                  {/* Signed-in email header */}
+                  {userEmail && (
+                    <div className="mb-2 flex items-center gap-2.5 rounded-lg bg-slate-50 px-3 py-2 dark:bg-slate-700/50">
+                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-700 text-xs font-bold text-white dark:bg-green-600">
+                        {initials}
+                      </div>
+                      <span className="truncate text-sm text-slate-600 dark:text-slate-300">{userEmail}</span>
+                    </div>
+                  )}
+
                   {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
                     const active = pathname === href || pathname.startsWith(href + "/");
                     return (
@@ -117,10 +182,10 @@ export default function DashboardLayout({
                         key={href}
                         href={href}
                         onClick={() => setMenuOpen(false)}
-                        className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                        className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
                           active
-                            ? "bg-green-50 text-green-800 dark:bg-green-900/40 dark:text-green-300"
-                            : "text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-100"
+                            ? "border border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300"
+                            : "border border-transparent text-slate-600 hover:border-green-200 hover:bg-green-50 hover:text-green-700 dark:text-slate-400 dark:hover:border-emerald-800 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
                         }`}
                       >
                         <Icon size={16} />
@@ -133,7 +198,7 @@ export default function DashboardLayout({
                     <ThemeToggle />
                     <button
                       onClick={() => { setMenuOpen(false); logout(); }}
-                      className="flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200 transition-colors"
+                      className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-red-800 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                     >
                       <LogOut size={15} />
                       {t("logOut")}

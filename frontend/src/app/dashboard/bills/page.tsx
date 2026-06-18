@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus } from "lucide-react";
+import Link from "next/link";
+import { Archive, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   fetchBills,
@@ -160,17 +161,29 @@ export default function BillsPage() {
       )}
 
       {/* Page header */}
-      <div className="mb-6 flex items-center justify-between gap-4">
+      <div className="mb-6">
         <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
           {t("title")}
         </h1>
-        <button
-          onClick={() => toggleExpand("new")}
-          className="flex items-center gap-2 rounded-xl bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-green-800 active:bg-green-900 transition-colors"
-        >
-          <Plus size={16} />
-          {expandedId === "new" ? t("cancel") : t("newBill")}
-        </button>
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+          {t("subtitle")}
+        </p>
+        <div className="mt-3 flex justify-end gap-2">
+          <Link
+            href="/dashboard/bills/archived"
+            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+          >
+            <Archive size={15} />
+            {t("viewArchive")}
+          </Link>
+          <button
+            onClick={() => toggleExpand("new")}
+            className="flex items-center gap-2 rounded-xl border border-green-700 bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 active:bg-green-900"
+          >
+            <Plus size={16} />
+            {expandedId === "new" ? t("cancel") : t("newBill")}
+          </button>
+        </div>
       </div>
 
       {loadError && (
@@ -181,12 +194,17 @@ export default function BillsPage() {
 
       {/* Inline create form */}
       {expandedId === "new" && (
-        <div className="mb-4">
-          <BillTemplateForm
-            categorySuggestions={categorySuggestions}
-            onSave={handleCreate}
-            onCancel={() => setExpandedId(null)}
-          />
+        <div className="mb-4 overflow-hidden rounded-xl border border-green-200 bg-white shadow-sm dark:border-green-900 dark:bg-slate-800">
+          <div className="border-b border-green-100 bg-green-50 px-5 py-3 dark:border-green-900 dark:bg-green-900/20">
+            <h2 className="text-sm font-semibold text-green-800 dark:text-green-300">{t("newBill")}</h2>
+          </div>
+          <div className="p-5">
+            <BillTemplateForm
+              categorySuggestions={categorySuggestions}
+              onSave={handleCreate}
+              onCancel={() => setExpandedId(null)}
+            />
+          </div>
         </div>
       )}
 
@@ -202,7 +220,7 @@ export default function BillsPage() {
           </p>
           <button
             onClick={() => toggleExpand("new")}
-            className="mt-4 rounded-xl bg-green-700 px-5 py-2 text-sm font-medium text-white hover:bg-green-800 transition-colors"
+            className="mt-4 rounded-xl border border-green-700 bg-green-700 px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800"
           >
             {t("addFirstBill")}
           </button>

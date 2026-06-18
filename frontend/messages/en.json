@@ -20,7 +20,10 @@
         "payments": "Payments",
         "bills": "Bills",
         "settings": "Settings",
-        "logOut": "Log out"
+        "logOut": "Log out",
+        "userMenu": "User menu",
+        "loggedInAs": "Logged in as",
+        "signedInAs": "Signed in as"
     },
     "Dashboard": {
         "title": "Welcome to Pay Tracker",
@@ -34,14 +37,16 @@
     },
     "BillsPage": {
         "title": "Your Bills",
+        "subtitle": "Manage your recurring and one-off bills. Each bill generates payment reminders automatically.",
         "newBill": "New Bill",
         "cancel": "Cancel",
         "loadError": "Failed to load bills.",
         "noBillsYet": "No bills yet",
-        "addFirstBill": "Add your first bill"
+        "addFirstBill": "Add your first bill",
+        "viewArchive": "Archived bills"
     },
     "ArchivedBillsPage": {
-        "backToActive": "← Active bills",
+        "backToActive": "Active bills",
         "title": "Archived Bills",
         "subtitle": "Payment history is preserved for all archived bills.",
         "loadError": "Failed to load archived bills.",
@@ -131,6 +136,7 @@
     "CategoryCombobox": {"placeholder": "e.g. Utilities"},
     "PaymentsPage": {
         "title": "Payments",
+        "subtitle": "Track and mark your bills month by month.",
         "loadError": "Failed to load payments.",
         "noPayments": "No bills for this month",
         "addBills": "Add bills →",
@@ -149,6 +155,7 @@
         "delete": "Delete payment",
         "paymentNote": "Payment note",
         "emailNotification": "Email notification",
+        "emailNotSent": "Email notification not sent",
         "emailSentOn": "Email sent"
     },
     "DeletePaymentDialog": {

@@ -111,14 +111,14 @@ export default function MarkPaidDialog({
           <button
             onClick={onClose}
             disabled={isSubmitting}
-            className="flex-1 rounded-xl border border-slate-200 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-700 transition-colors"
+            className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
           >
             {t("cancel")}
           </button>
           <button
             onClick={handleConfirm}
             disabled={isSubmitting}
-            className="flex-1 rounded-xl bg-emerald-600 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50 transition-colors"
+            className="flex-1 rounded-xl border border-emerald-600 bg-emerald-600 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:border-emerald-700 hover:bg-emerald-700 disabled:opacity-50"
           >
             {isSubmitting ? t("confirming") : t("confirm")}
           </button>
