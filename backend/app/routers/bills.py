@@ -1,6 +1,6 @@
 from datetime import date, datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
@@ -196,6 +196,7 @@ def revert_payment(
 @router.delete("/payments/{instance_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_payment(
     instance_id: int,
+    delete_future: bool = Query(False),
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
@@ -208,6 +209,15 @@ def delete_payment(
         raise HTTPException(status_code=403, detail="Not authorized")
 
     instance.is_deleted = True
+
+    if delete_future:
+        db.query(PaymentInstance).filter(
+            PaymentInstance.bill_id == instance.bill_id,
+            PaymentInstance.due_date > instance.due_date,
+            PaymentInstance.status != PaymentStatus.paid,
+            PaymentInstance.is_deleted.is_(False),
+        ).update({"is_deleted": True}, synchronize_session=False)
+
     db.commit()
 
 

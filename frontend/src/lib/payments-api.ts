@@ -37,8 +37,9 @@ export function markPaid(
   });
 }
 
-export function deletePayment(instanceId: number): Promise<void> {
-  return apiFetch<void>(`/bills/payments/${instanceId}`, { method: "DELETE" });
+export function deletePayment(instanceId: number, deleteFuture = false): Promise<void> {
+  const url = `/bills/payments/${instanceId}${deleteFuture ? "?delete_future=true" : ""}`;
+  return apiFetch<void>(url, { method: "DELETE" });
 }
 
 export function revertPay(instanceId: number): Promise<PaymentInstanceOut> {

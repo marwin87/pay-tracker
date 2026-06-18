@@ -152,6 +152,7 @@
     "title": "Usunąć tę płatność?",
     "descriptionRecurring": "Ten wpis płatności zostanie usunięty. Cykliczny rachunek będzie nadal generować przyszłe wpisy.",
     "descriptionOneOff": "Ten jednorazowy wpis płatności zostanie usunięty. Tej operacji nie można cofnąć.",
+    "deleteFutureLabel": "Usuń również wszystkie przyszłe nieopłacone wpisy tego rachunku",
     "cancel": "Anuluj",
     "confirm": "Usuń",
     "deleting": "Usuwanie…",

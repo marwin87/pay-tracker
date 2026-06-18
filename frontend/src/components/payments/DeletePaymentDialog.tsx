@@ -21,6 +21,7 @@ export default function DeletePaymentDialog({
   const t = useTranslations("DeletePaymentDialog");
   const tFreq = useTranslations("Frequencies");
   const [isDeleting, setIsDeleting] = useState(false);
+  const [deleteFuture, setDeleteFuture] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const mounted = useRef(true);
   useEffect(() => () => { mounted.current = false; }, []);
@@ -34,7 +35,7 @@ export default function DeletePaymentDialog({
     setIsDeleting(true);
     setError(null);
     try {
-      await deletePayment(instance.id);
+      await deletePayment(instance.id, deleteFuture);
       if (mounted.current) onDeleted(instance.id);
     } catch (err) {
       if (!mounted.current) return;
@@ -75,6 +76,21 @@ export default function DeletePaymentDialog({
             ? t("descriptionRecurring")
             : t("descriptionOneOff")}
         </p>
+
+        {isRecurring && (
+          <label className="mb-5 flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={deleteFuture}
+              onChange={(e) => setDeleteFuture(e.target.checked)}
+              disabled={isDeleting}
+              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 accent-red-600 disabled:opacity-50"
+            />
+            <span className="text-sm text-slate-600 dark:text-slate-400">
+              {t("deleteFutureLabel")}
+            </span>
+          </label>
+        )}
 
         {error && (
           <p className="mb-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">

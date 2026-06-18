@@ -152,6 +152,7 @@
     "title": "Delete this payment?",
     "descriptionRecurring": "This payment entry will be removed. The recurring bill will continue generating future entries.",
     "descriptionOneOff": "This one-off payment entry will be removed. This cannot be undone.",
+    "deleteFutureLabel": "Also delete all future unpaid entries for this bill",
     "cancel": "Cancel",
     "confirm": "Delete",
     "deleting": "Deleting…",

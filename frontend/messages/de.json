@@ -152,6 +152,7 @@
     "title": "Zahlung löschen?",
     "descriptionRecurring": "Dieser Zahlungseintrag wird entfernt. Die wiederkehrende Rechnung generiert weiterhin zukünftige Einträge.",
     "descriptionOneOff": "Dieser einmalige Zahlungseintrag wird entfernt. Diese Aktion kann nicht rückgängig gemacht werden.",
+    "deleteFutureLabel": "Auch alle zukünftigen unbezahlten Einträge dieser Rechnung löschen",
     "cancel": "Abbrechen",
     "confirm": "Löschen",
     "deleting": "Löschen…",
