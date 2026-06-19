@@ -4,7 +4,7 @@ import { FormEvent, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import CategoryCombobox from "./CategoryCombobox";
 import MonthDayCalendar from "./MonthDayCalendar";
-import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
+import type { BillCategory, BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
 
 const PRESET_CURRENCIES = ["EUR", "PLN", "USD"] as const;
 
@@ -22,7 +22,6 @@ type CurrencyOption = (typeof PRESET_CURRENCIES)[number] | "custom";
 
 interface Props {
   initial?: Partial<BillTemplateCreate>;
-  categorySuggestions: string[];
   onSave: (data: BillTemplateCreate) => Promise<void>;
   onCancel: () => void;
 }
@@ -31,6 +30,7 @@ interface Errors {
   name?: string;
   amount?: string;
   due_day?: string;
+  category?: string;
 }
 
 const inputClass =
@@ -38,16 +38,11 @@ const inputClass =
 
 const labelClass = "block text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500 mb-1.5";
 
-export default function BillTemplateForm({
-  initial,
-  categorySuggestions,
-  onSave,
-  onCancel,
-}: Props) {
+export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
   const t = useTranslations("BillTemplateForm");
   const locale = useLocale();
   const [name, setName] = useState(initial?.name ?? "");
-  const [category, setCategory] = useState(initial?.category ?? "");
+  const [category, setCategory] = useState<BillCategory | "">(initial?.category ?? "");
   const [frequency, setFrequency] = useState<BillFrequency>(
     initial?.frequency ?? "monthly",
   );
@@ -76,11 +71,13 @@ export default function BillTemplateForm({
   function validate(fields: {
     name: string;
     amount: string;
+    category: BillCategory | "";
   }): Errors {
     const e: Errors = {};
     if (!fields.name.trim()) e.name = t("nameRequired");
     if (fields.amount.trim() && isNaN(Number(fields.amount.trim().replace(",", "."))))
       e.amount = t("amountInvalid");
+    if (!fields.category) e.category = t("categoryRequired");
     return e;
   }
 
@@ -92,6 +89,7 @@ export default function BillTemplateForm({
         const next = {
           name: setter === setName ? (v as unknown as string) : name,
           amount: setter === setAmount ? (v as unknown as string) : amount,
+          category: setter === setCategory ? (v as unknown as BillCategory | "") : category,
         };
         setErrors(validate(next));
       }
@@ -101,7 +99,7 @@ export default function BillTemplateForm({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitAttempted(true);
-    const errs = validate({ name, amount });
+    const errs = validate({ name, amount, category });
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
@@ -112,7 +110,7 @@ export default function BillTemplateForm({
         currencyOption === "custom" ? customCurrency.trim().toUpperCase() : currencyOption;
       const payload: BillTemplateCreate = {
         name: name.trim(),
-        category: category.trim() || null,
+        category: category as BillCategory,
         frequency,
         amount: amount.trim() || "0",
         currency: resolvedCurrency || "EUR",
@@ -231,10 +229,10 @@ export default function BillTemplateForm({
           <label htmlFor="bill-category" className={labelClass}>{t("categoryLabel")}</label>
           <CategoryCombobox
             id="bill-category"
-            value={category as string}
-            onChange={setCategory}
-            suggestions={categorySuggestions}
+            value={category}
+            onChange={handleChange(setCategory)}
           />
+          {errors.category && <p className="mt-1 text-xs text-red-500">{errors.category}</p>}
         </div>
         <div>
           <label htmlFor="bill-notes" className={labelClass}>{t("notesLabel")}</label>

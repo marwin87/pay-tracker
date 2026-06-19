@@ -8,7 +8,7 @@ from tests.conftest import auth, register_and_login
 
 _BILL = {
     "name": "Electricity",
-    "category": "Utilities",
+    "category": "utilities",
     "frequency": "monthly",
     "amount": 120.00,
     "currency": "PLN",

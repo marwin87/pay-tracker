@@ -81,6 +81,7 @@
     "dueDateLabel": "Fälligkeitsdatum",
     "startDateLabel": "Startmonat und -tag",
     "categoryLabel": "Kategorie",
+        "categoryRequired": "Kategorie ist erforderlich.",
     "notesLabel": "Notizen",
     "notesPlaceholder": "Optionale Notizen",
     "pauseRecurrence": "Wiederholung pausieren (keine neuen Instanzen)",
@@ -90,7 +91,7 @@
     "saveFailed": "Speichern fehlgeschlagen."
   },
   "BillTemplateRow": {
-    "day": "Tag",
+    "dueOn": "Fällig am",
     "paused": "Pausiert",
     "close": "Schließen",
     "edit": "Bearbeiten",
@@ -150,6 +151,7 @@
       "overdue": "Überfällig",
       "paid": "Bezahlt"
     },
+    "dueToday": "Heute",
     "markAsPaid": "Als bezahlt markieren",
     "revert": "Zahlung rückgängig machen",
     "due": "Fällig",
@@ -269,5 +271,16 @@
       "title": "Daten wiederherstellen",
       "description": "Ersetzen Sie alle aktuellen Daten durch eine zuvor heruntergeladene Sicherungsdatei."
     }
+  },
+  "Categories": {
+    "housing": "Wohnen",
+    "utilities": "Versorgung",
+    "insurance": "Versicherung",
+    "subscriptions": "Abonnements",
+    "entertainment": "Unterhaltung",
+    "transport": "Transport",
+    "healthcare": "Gesundheit",
+    "education": "Bildung",
+    "other": "Sonstiges"
   }
 }

@@ -8,6 +8,7 @@ import {
   fetchPayments,
   type PaymentInstanceOut,
 } from "@/lib/payments-api";
+import { CATEGORY_ORDER } from "@/lib/categories";
 import { downloadXlsx } from "@/lib/export-api";
 import PaymentRow from "@/components/payments/PaymentRow";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
@@ -32,6 +33,7 @@ function monthKey(year: number, monthIndex: number): string {
 export default function PaymentsPage() {
   const t = useTranslations("PaymentsPage");
   const tRow = useTranslations("PaymentRow");
+  const tCategories = useTranslations("Categories");
   const locale = useLocale();
 
   const today = new Date();
@@ -278,17 +280,31 @@ export default function PaymentsPage() {
 
       {/* Payment list */}
       {!loading && !loadError && instances.length > 0 && (
-        <div className="flex flex-col gap-2">
-          {instances.map((inst) => (
-            <PaymentRow
-              key={inst.id}
-              instance={inst}
-              readOnly={false}
-              onMarkPaid={setDialogTarget}
-              onDelete={setDeleteTarget}
-              onReverted={handleInstanceReverted}
-            />
-          ))}
+        <div className="flex flex-col gap-4">
+          {CATEGORY_ORDER.filter((cat) => instances.some((inst) => inst.category === cat)).map((cat) => {
+            const group = instances.filter((inst) => inst.category === cat);
+            return (
+              <div key={cat}>
+                <div className="mb-2 px-1">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                    {tCategories(cat)}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {group.map((inst) => (
+                    <PaymentRow
+                      key={inst.id}
+                      instance={inst}
+                      readOnly={false}
+                      onMarkPaid={setDialogTarget}
+                      onDelete={setDeleteTarget}
+                      onReverted={handleInstanceReverted}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 

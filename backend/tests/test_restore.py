@@ -6,7 +6,7 @@ from tests.conftest import auth, register_and_login
 
 _BILL = {
     "name": "Electricity",
-    "category": "Utilities",
+    "category": "utilities",
     "frequency": "monthly",
     "amount": 120.00,
     "currency": "PLN",
@@ -17,7 +17,7 @@ _BILL = {
 
 _BILL2 = {
     "name": "Internet",
-    "category": "Utilities",
+    "category": "utilities",
     "frequency": "monthly",
     "amount": 50.00,
     "currency": "PLN",
@@ -28,7 +28,7 @@ _BILL2 = {
 
 _BILL_ALPHA = {
     "name": "Alpha Bill",
-    "category": "Utilities",
+    "category": "utilities",
     "frequency": "monthly",
     "amount": 50.00,
     "currency": "PLN",
@@ -39,7 +39,7 @@ _BILL_ALPHA = {
 
 _BILL_BETA = {
     "name": "Beta Bill",
-    "category": "Entertainment",
+    "category": "entertainment",
     "frequency": "monthly",
     "amount": 75.00,
     "currency": "EUR",

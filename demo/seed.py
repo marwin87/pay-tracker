@@ -3,6 +3,7 @@
 
 import json
 import sys
+from datetime import date
 from pathlib import Path
 
 try:
@@ -38,8 +39,59 @@ def login(session: requests.Session) -> str:
     return token
 
 
+def inject_paid_today(data: dict) -> dict:
+    """Replace two instances with ones paid today, using today's actual date."""
+    today = date.today()
+    period = today.strftime("%Y-%m")
+    today_iso = today.isoformat()
+    created_at = f"{today_iso}T09:00:00+00:00"
+
+    # Bill 1 = Rent, Bill 14 = Gym Membership — both monthly, good demo candidates
+    paid_today = [
+        {
+            "id": 9001,
+            "bill_id": 1,
+            "period": period,
+            "due_date": today_iso,
+            "amount": 1200.0,
+            "status": "upcoming",
+            "paid_at": None,
+            "paid_amount": None,
+            "notes": None,
+            "created_at": created_at,
+            "reminder_sent_upcoming": True,
+            "reminder_sent_overdue": False,
+        },
+        {
+            "id": 9002,
+            "bill_id": 14,
+            "period": period,
+            "due_date": today_iso,
+            "amount": 45.0,
+            "status": "upcoming",
+            "paid_at": None,
+            "paid_amount": None,
+            "notes": None,
+            "created_at": created_at,
+            "reminder_sent_upcoming": True,
+            "reminder_sent_overdue": False,
+        },
+    ]
+
+    # Remove any static instance that would collide on (bill_id, period)
+    today_keys = {(inst["bill_id"], period) for inst in paid_today}
+    data["payment_instances"] = [
+        inst for inst in data["payment_instances"]
+        if (inst["bill_id"], inst["period"]) not in today_keys
+    ]
+    data["payment_instances"].extend(paid_today)
+    return data
+
+
 def restore(session: requests.Session, token: str) -> None:
-    payload = DATA_FILE.read_text()
+    data = json.loads(DATA_FILE.read_text())
+    data = inject_paid_today(data)
+    payload = json.dumps(data)
     r = session.post(
         f"{BASE_URL}/export/restore",
         headers={"Authorization": f"Bearer {token}"},

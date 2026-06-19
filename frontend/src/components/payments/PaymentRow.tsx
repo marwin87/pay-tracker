@@ -134,6 +134,10 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
                   <> · {instance.paid_amount} {instance.currency}</>
                 )}
               </span>
+            ) : isDueToday && instance.status === "upcoming" ? (
+              <span className="rounded-full px-2 py-0.5 text-xs font-medium shrink-0 bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400">
+                {t("dueToday")}
+              </span>
             ) : (
               <span className={`rounded-full px-2 py-0.5 text-xs font-medium shrink-0 ${STATUS_STYLES[instance.status] ?? ""}`}>
                 {t(`status.${instance.status}` as Parameters<typeof t>[0])}

@@ -24,6 +24,18 @@ if TYPE_CHECKING:
     from app.models.user import User
 
 
+class BillCategory(str, Enum):
+    housing = "housing"
+    utilities = "utilities"
+    insurance = "insurance"
+    subscriptions = "subscriptions"
+    entertainment = "entertainment"
+    transport = "transport"
+    healthcare = "healthcare"
+    education = "education"
+    other = "other"
+
+
 class BillFrequency(str, Enum):
     monthly = "monthly"
     every_2_months = "every_2_months"
@@ -45,7 +57,7 @@ class BillTemplate(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    category: Mapped[str | None] = mapped_column(String(100))
+    category: Mapped[BillCategory] = mapped_column(String(50), nullable=False)
     frequency: Mapped[BillFrequency] = mapped_column(String(20), nullable=False)
     amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     currency: Mapped[str] = mapped_column(String(10), nullable=False, default="PLN")

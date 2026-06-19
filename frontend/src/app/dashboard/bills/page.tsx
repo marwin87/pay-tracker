@@ -14,6 +14,7 @@ import {
   type BillTemplateCreate,
   type BillTemplateUpdate,
 } from "@/lib/bills-api";
+import { CATEGORY_ORDER } from "@/lib/categories";
 import BillTemplateForm from "@/components/bills/BillTemplateForm";
 import BillTemplateRow from "@/components/bills/BillTemplateRow";
 import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
@@ -21,6 +22,7 @@ import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 
 export default function BillsPage() {
   const t = useTranslations("BillsPage");
+  const tCategories = useTranslations("Categories");
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -52,10 +54,6 @@ export default function BillsPage() {
       cancelled = true;
     };
   }, [refreshKey, t]);
-
-  const categorySuggestions = Array.from(
-    new Set(templates.map((t) => t.category).filter((c): c is string => c !== null)),
-  );
 
   async function handleCreate(data: BillTemplateCreate) {
     await createBill(data);
@@ -200,7 +198,6 @@ export default function BillsPage() {
           </div>
           <div className="p-5">
             <BillTemplateForm
-              categorySuggestions={categorySuggestions}
               onSave={handleCreate}
               onCancel={() => setExpandedId(null)}
             />
@@ -226,18 +223,34 @@ export default function BillsPage() {
           </button>
         </div>
       ) : (
-        <div className="flex flex-col gap-2">
-          {templates.map((t) => (
-            <BillTemplateRow
-              key={t.id}
-              template={t}
-              isExpanded={expandedId === t.id}
-              categorySuggestions={categorySuggestions}
-              onEditToggle={() => toggleExpand(t.id)}
-              onSave={(data) => handleUpdate(t.id, data)}
-              onArchive={() => setArchiveTarget(t)}
-            />
-          ))}
+        <div className="flex flex-col gap-6">
+          {CATEGORY_ORDER.filter((cat) => templates.some((tmpl) => tmpl.category === cat)).map((cat) => {
+            const group = templates
+              .filter((tmpl) => tmpl.category === cat)
+              .sort((a, b) => a.name.localeCompare(b.name));
+            return (
+              <div key={cat}>
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                    {tCategories(cat)}
+                  </span>
+                  <span className="text-xs text-slate-400 dark:text-slate-500">· {group.length}</span>
+                </div>
+                <div className="flex flex-col gap-2">
+                  {group.map((tmpl) => (
+                    <BillTemplateRow
+                      key={tmpl.id}
+                      template={tmpl}
+                      isExpanded={expandedId === tmpl.id}
+                      onEditToggle={() => toggleExpand(tmpl.id)}
+                      onSave={(data) => handleUpdate(tmpl.id, data)}
+                      onArchive={() => setArchiveTarget(tmpl)}
+                    />
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
     </div>

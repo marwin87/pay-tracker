@@ -81,6 +81,7 @@
     "dueDateLabel": "Termin płatności",
     "startDateLabel": "Miesiąc i dzień rozpoczęcia",
     "categoryLabel": "Kategoria",
+        "categoryRequired": "Kategoria jest wymagana.",
     "notesLabel": "Notatki",
     "notesPlaceholder": "Opcjonalne notatki",
     "pauseRecurrence": "Wstrzymaj cykl (brak nowych instancji)",
@@ -90,7 +91,7 @@
     "saveFailed": "Zapis nie powiódł się."
   },
   "BillTemplateRow": {
-    "day": "dzień",
+    "dueOn": "Płatne",
     "paused": "Wstrzymany",
     "close": "Zamknij",
     "edit": "Edytuj",
@@ -150,6 +151,7 @@
       "overdue": "Zaległe",
       "paid": "Opłacone"
     },
+    "dueToday": "Dzisiaj",
     "markAsPaid": "Oznacz jako opłacone",
     "revert": "Cofnij płatność",
     "due": "Termin",
@@ -269,5 +271,16 @@
       "title": "Przywracanie danych",
       "description": "Zastąp wszystkie bieżące dane wcześniej pobraną kopią zapasową."
     }
+  },
+  "Categories": {
+    "housing": "Mieszkanie",
+    "utilities": "Media",
+    "insurance": "Ubezpieczenie",
+    "subscriptions": "Subskrypcje",
+    "entertainment": "Rozrywka",
+    "transport": "Transport",
+    "healthcare": "Zdrowie",
+    "education": "Edukacja",
+    "other": "Inne"
   }
 }

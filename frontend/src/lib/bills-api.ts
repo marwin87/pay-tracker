@@ -2,15 +2,27 @@ import { apiFetch } from "./api";
 
 export type BillFrequency = "monthly" | "every_2_months" | "quarterly" | "annual" | "one_off";
 
+export type BillCategory =
+  | "housing"
+  | "utilities"
+  | "insurance"
+  | "subscriptions"
+  | "entertainment"
+  | "transport"
+  | "healthcare"
+  | "education"
+  | "other";
+
 export interface BillTemplateOut {
   id: number;
   name: string;
-  category: string | null;
+  category: BillCategory;
   frequency: BillFrequency;
   amount: string;
   currency: string;
   due_day: number | null;
   due_month: number | null;
+  start_period: string | null;
   notes: string | null;
   is_archived: boolean;
   is_paused: boolean;
@@ -19,7 +31,7 @@ export interface BillTemplateOut {
 
 export interface BillTemplateCreate {
   name: string;
-  category?: string | null;
+  category: BillCategory;
   frequency: BillFrequency;
   amount: string;
   currency?: string;

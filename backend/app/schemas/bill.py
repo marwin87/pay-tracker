@@ -1,12 +1,12 @@
 from datetime import date, datetime
 from decimal import Decimal
 from pydantic import BaseModel, Field, computed_field
-from app.models.bill import BillFrequency, PaymentStatus
+from app.models.bill import BillCategory, BillFrequency, PaymentStatus
 
 
 class BillTemplateCreate(BaseModel):
     name: str
-    category: str | None = None
+    category: BillCategory
     frequency: BillFrequency
     amount: Decimal = Decimal("0")
     currency: str = "PLN"
@@ -18,7 +18,7 @@ class BillTemplateCreate(BaseModel):
 
 class BillTemplateUpdate(BaseModel):
     name: str | None = None
-    category: str | None = None
+    category: BillCategory | None = None
     frequency: BillFrequency | None = None
     amount: Decimal | None = None
     currency: str | None = None
@@ -34,7 +34,7 @@ class BillTemplateOut(BaseModel):
 
     id: int
     name: str
-    category: str | None
+    category: BillCategory
     frequency: BillFrequency
     amount: Decimal
     currency: str
@@ -43,7 +43,7 @@ class BillTemplateOut(BaseModel):
     is_archived: bool
     is_paused: bool
     created_at: datetime
-    start_period: str | None = Field(default=None, exclude=True)
+    start_period: str | None = None
 
     @computed_field
     @property
@@ -68,6 +68,7 @@ class PaymentInstanceOut(BaseModel):
     bill_name: str
     currency: str
     frequency: BillFrequency
+    category: BillCategory
     email_sent_at: datetime | None
 
 

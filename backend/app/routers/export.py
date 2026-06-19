@@ -12,11 +12,26 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
 from app.core.deps import current_user
-from app.models.bill import BillFrequency, BillTemplate, PaymentInstance, PaymentStatus
+from app.models.bill import (
+    BillCategory,
+    BillFrequency,
+    BillTemplate,
+    PaymentInstance,
+    PaymentStatus,
+)
 from app.models.user import User
 from app.schemas.bill import BackupPayload
 
 router = APIRouter(prefix="/export", tags=["export"])
+
+_VALID_CATEGORIES = {c.value for c in BillCategory}
+
+
+def _coerce_category(raw: str | None) -> BillCategory:
+    if raw in _VALID_CATEGORIES:
+        return BillCategory(raw)
+    return BillCategory.other
+
 
 _COLUMNS = [
     "Bill",
@@ -207,7 +222,7 @@ async def restore_json(
     for bt in backup.bill_templates:
         obj = BillTemplate(
             name=bt.name,
-            category=bt.category,
+            category=_coerce_category(bt.category),
             frequency=BillFrequency(bt.frequency),
             amount=Decimal(str(bt.amount)),
             currency=bt.currency,

@@ -112,6 +112,7 @@ def list_payments(
             "bill_name": inst.template.name,
             "currency": inst.template.currency,
             "frequency": inst.template.frequency,
+            "category": inst.template.category,
             "email_sent_at": inst.email_sent_at,
         }
         # Dynamic overdue: override status in response without writing to DB
@@ -165,6 +166,7 @@ def mark_paid(
         "bill_name": template.name,
         "currency": template.currency,
         "frequency": template.frequency,
+        "category": template.category,
         "email_sent_at": instance.email_sent_at,
     }
 
@@ -205,6 +207,7 @@ def revert_payment(
         "bill_name": template.name,
         "currency": template.currency,
         "frequency": template.frequency,
+        "category": template.category,
         "email_sent_at": instance.email_sent_at,
     }
 

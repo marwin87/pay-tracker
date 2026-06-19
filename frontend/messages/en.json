@@ -81,6 +81,7 @@
         "dueDateLabel": "Due date",
         "startDateLabel": "Starting month & day",
         "categoryLabel": "Category",
+        "categoryRequired": "Category is required.",
         "notesLabel": "Notes",
         "notesPlaceholder": "Optional notes",
         "pauseRecurrence": "Pause recurrence (no new instances created)",
@@ -90,7 +91,7 @@
         "saveFailed": "Save failed."
     },
     "BillTemplateRow": {
-        "day": "day",
+        "dueOn": "Due on",
         "paused": "Paused",
         "close": "Close",
         "edit": "Edit",
@@ -144,6 +145,7 @@
     },
     "PaymentRow": {
         "status": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
+        "dueToday": "Today",
         "markAsPaid": "Mark as Paid",
         "revert": "Revert payment",
         "due": "Due",
@@ -261,5 +263,16 @@
             "title": "Restore Data",
             "description": "Replace all current data with a previously downloaded backup file."
         }
+    },
+    "Categories": {
+        "housing": "Housing",
+        "utilities": "Utilities",
+        "insurance": "Insurance",
+        "subscriptions": "Subscriptions",
+        "entertainment": "Entertainment",
+        "transport": "Transport",
+        "healthcare": "Healthcare",
+        "education": "Education",
+        "other": "Other"
     }
 }

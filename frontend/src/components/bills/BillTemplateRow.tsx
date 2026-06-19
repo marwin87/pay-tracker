@@ -1,28 +1,53 @@
 "use client";
 
 import { Pencil, Archive as ArchiveIcon, ChevronUp, PauseCircle, NotebookPen } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import BillTemplateForm from "./BillTemplateForm";
 import type { BillTemplateOut, BillTemplateUpdate } from "@/lib/bills-api";
 
 interface Props {
   template: BillTemplateOut;
   isExpanded: boolean;
-  categorySuggestions: string[];
   onEditToggle: () => void;
   onSave: (data: BillTemplateUpdate) => Promise<void>;
   onArchive: () => void;
 }
 
+function formatDueLabel(template: BillTemplateOut, locale: string): string | null {
+  const { frequency, due_day, due_month, start_period } = template;
+
+  if (frequency === "one_off") {
+    if (!start_period) return null;
+    const [year, month] = start_period.split("-").map(Number);
+    const monthName = new Intl.DateTimeFormat(locale, { month: "short" }).format(
+      new Date(year, month - 1)
+    );
+    if (due_day != null) return `${monthName} ${due_day}`;
+    return new Intl.DateTimeFormat(locale, { month: "short", year: "numeric" }).format(
+      new Date(year, month - 1)
+    );
+  }
+
+  if (frequency === "annual" && due_day != null && due_month != null) {
+    const monthName = new Intl.DateTimeFormat(locale, { month: "short" }).format(
+      new Date(2000, due_month - 1)
+    );
+    return `${monthName} ${due_day}`;
+  }
+
+  if (due_day != null) return String(due_day);
+  return null;
+}
+
 export default function BillTemplateRow({
   template,
   isExpanded,
-  categorySuggestions,
   onEditToggle,
   onSave,
   onArchive,
 }: Props) {
   const t = useTranslations("BillTemplateRow");
+  const locale = useLocale();
   return (
     <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm dark:bg-slate-800 dark:border-slate-700">
       {/* Collapsed row */}
@@ -40,14 +65,9 @@ export default function BillTemplateRow({
           <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-700 dark:text-slate-300">
             {t(`frequency.${template.frequency}` as never) ?? template.frequency}
           </span>
-          {template.due_day != null && (
+          {formatDueLabel(template, locale) && (
             <span className="text-sm text-slate-400 dark:text-slate-500">
-              {t("day")}&nbsp;{template.due_day}
-            </span>
-          )}
-          {template.category && (
-            <span className="text-sm text-slate-400 dark:text-slate-500">
-              {template.category}
+              {t("dueOn")}&nbsp;{formatDueLabel(template, locale)}
             </span>
           )}
           {template.is_paused && (
@@ -100,7 +120,6 @@ export default function BillTemplateRow({
               notes: template.notes,
               is_paused: template.is_paused,
             }}
-            categorySuggestions={categorySuggestions}
             onSave={onSave}
             onCancel={onEditToggle}
           />
