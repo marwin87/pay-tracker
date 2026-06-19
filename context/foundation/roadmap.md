@@ -53,7 +53,7 @@ slice only matters if this loop works.
 | S-12 | browser-notification         | get a browser notification for each unpaid bill due today when opening the dashboard | S-05       | FR-013 (extension)                        | done     |
 | S-13 | settings-page                | manage user profile, email/browser notification preferences, and backup/restore from a dedicated Settings page | S-10, S-12 | FR-001, FR-011, FR-012, FR-013, FR-018    | done     |
 | S-14 | standalone-electron-app      | install Pay Tracker as a native desktop app (macOS, Windows, Linux) — no Docker, no browser, no server setup required | S-13 | NFR deploy                               | new      |
-| S-15 | category-enum-grouping       | see bills and payments grouped by a predefined category (Housing, Utilities, Subscriptions, etc.); category is required on every bill | S-02, S-07 | FR-003, FR-005                  | planned  |
+| S-15 | category-enum-grouping       | see bills and payments grouped by a predefined category (Housing, Utilities, Subscriptions, etc.); category is required on every bill | S-02, S-07 | FR-003, FR-005                  | done     |
 
 ## Streams
 
@@ -284,7 +284,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Requires a hand-written Alembic migration (per lessons.md — autogenerate is unreliable for column type/nullability changes); the migration promotes `category` from nullable `VARCHAR(100)` to `NOT NULL VARCHAR(50)`. Old backup files with free-text category strings are handled gracefully (coerced to `"other"` on restore). Plan at `context/changes/category-enum-grouping/plan.md`.
-- **Status:** planned
+- **Status:** done
 
 ---
 
@@ -359,3 +359,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-12: user gets one browser notification per unpaid bill due today each time the dashboard is opened; notifications require one-time permission grant via a Bell icon in the dashboard header.** — Archived 2026-06-15 → `context/archive/2026-06-15-browser-notification/`. Lesson: —.
 - **S-10: user receives an email reminder N days before a bill's due date when the instance is still unpaid; the lead time is configurable per template or globally.** — Archived 2026-06-16 → `context/archive/2026-06-16-email-reminders/`. Lesson: —.
 - **S-13: user can manage their account (email, password), configure email reminder timing (2 days before / 1 day before / on day / 1 day after), enable/disable browser notifications, and trigger backup and restore — all from a single dedicated Settings page accessible via a gear icon in the nav header. The crowded header icon buttons are removed.** — Archived 2026-06-16 → `context/archive/2026-06-16-settings-page/`. Lesson: —.
+- **S-15: user sees bills and payments grouped under predefined category headers (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other); category is a required field on every bill template, selected from a fixed `<select>` instead of a free-text input.** — Archived 2026-06-19 → `context/archive/2026-06-19-category-enum-grouping/`. Lesson: —.
