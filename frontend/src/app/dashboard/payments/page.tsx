@@ -152,7 +152,7 @@ export default function PaymentsPage() {
           </span>
           <button
             onClick={() => setSelectedYear((y) => y + 1)}
-            disabled={selectedYear >= currentYear}
+            disabled={selectedYear >= currentYear + 1}
             className="rounded p-1 text-slate-400 hover:text-slate-600 disabled:opacity-30 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
           >
             <ChevronRight size={18} />
