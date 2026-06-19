@@ -82,6 +82,7 @@
     },
     "dueDayLabel": "Dzień miesiąca płatności",
     "dueDateLabel": "Termin płatności",
+    "startDateLabel": "Miesiąc i dzień rozpoczęcia",
     "dueDayRange": "Musi być między 1 a 31.",
     "categoryLabel": "Kategoria",
     "notesLabel": "Notatki",

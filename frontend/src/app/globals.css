@@ -10,3 +10,25 @@ body {
 button:not(:disabled) {
   cursor: pointer;
 }
+
+/* Green scrollbars (Webkit) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #059669;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #047857;
+}
+
+/* Green scrollbars (Firefox) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #059669 transparent;
+}

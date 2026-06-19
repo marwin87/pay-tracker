@@ -82,6 +82,7 @@
     },
     "dueDayLabel": "Fälligkeitstag im Monat",
     "dueDateLabel": "Fälligkeitsdatum",
+    "startDateLabel": "Startmonat und -tag",
     "dueDayRange": "Muss zwischen 1 und 31 liegen.",
     "categoryLabel": "Kategorie",
     "notesLabel": "Notizen",

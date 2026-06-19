@@ -16,6 +16,7 @@ from app.schemas.bill import (
 )
 from app.services.recurrence import (
     _due_date_for_period,
+    backfill_template_instances,
     ensure_current_period_instances,
     generate_next_instance,
 )
@@ -43,10 +44,14 @@ def create_bill(
 ):
     from app.models.bill import BillFrequency as BF
 
+    RECURRING = (BF.monthly, BF.every_2_months, BF.quarterly)
+
     now = datetime.now(timezone.utc)
     if body.due_month and body.frequency in (BF.annual, BF.one_off):
         year = now.year if body.due_month >= now.month else now.year + 1
         start_period = f"{year:04d}-{body.due_month:02d}"
+    elif body.due_month and body.frequency in RECURRING:
+        start_period = f"{now.year:04d}-{body.due_month:02d}"
     else:
         start_period = now.strftime("%Y-%m")
     data = body.model_dump(exclude={"due_month"})
@@ -54,6 +59,11 @@ def create_bill(
     db.add(bill)
     db.commit()
     db.refresh(bill)
+
+    current_period = now.strftime("%Y-%m")
+    if body.frequency in RECURRING and start_period < current_period:
+        backfill_template_instances(db, bill, start_period, current_period)
+
     return bill
 
 

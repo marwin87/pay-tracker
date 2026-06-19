@@ -61,6 +61,41 @@ def _bill_active_in_period(template: BillTemplate, period: str) -> bool:
     return False
 
 
+def backfill_template_instances(
+    db: Session, template: BillTemplate, from_period: str, to_period: str
+) -> None:
+    """Create missing instances for a single template from from_period to to_period inclusive."""
+    year, month = map(int, from_period.split("-"))
+    period = from_period
+    while period <= to_period:
+        if _bill_active_in_period(template, period):
+            existing = (
+                db.query(PaymentInstance)
+                .filter(
+                    PaymentInstance.bill_id == template.id,
+                    PaymentInstance.period == period,
+                )
+                .first()
+            )
+            if not existing:
+                db.add(
+                    PaymentInstance(
+                        bill_id=template.id,
+                        period=period,
+                        due_date=_due_date_for_period(period, template.due_day),
+                        amount=template.amount,
+                        status=PaymentStatus.upcoming,
+                    )
+                )
+        month += 1
+        if month > 12:
+            month = 1
+            year += 1
+        period = f"{year:04d}-{month:02d}"
+    if db.new:
+        db.commit()
+
+
 def ensure_current_period_instances(db: Session, period: str, user_id: int) -> None:
     """Idempotently seed payment instances for eligible templates that are due in period."""
     templates = (

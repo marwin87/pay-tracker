@@ -82,6 +82,7 @@
         },
         "dueDayLabel": "Due day of month",
         "dueDateLabel": "Due date",
+        "startDateLabel": "Starting month & day",
         "dueDayRange": "Must be between 1 and 31.",
         "categoryLabel": "Category",
         "notesLabel": "Notes",

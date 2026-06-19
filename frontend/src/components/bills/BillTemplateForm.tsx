@@ -3,7 +3,6 @@
 import { FormEvent, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import CategoryCombobox from "./CategoryCombobox";
-import DayPicker from "./DayPicker";
 import MonthDayCalendar from "./MonthDayCalendar";
 import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
 
@@ -11,8 +10,7 @@ const PRESET_CURRENCIES = ["EUR", "PLN", "USD"] as const;
 
 const FREQUENCY_VALUES: BillFrequency[] = ["monthly", "every_2_months", "quarterly", "annual", "one_off"];
 
-const DUE_DAY_FREQUENCIES: BillFrequency[] = ["monthly", "every_2_months", "quarterly"];
-const FULL_DATE_FREQUENCIES: BillFrequency[] = ["annual", "one_off"];
+const RECURRING_FREQUENCIES: BillFrequency[] = ["monthly", "every_2_months", "quarterly"];
 
 const LOCALE_DEFAULT_CURRENCY: Record<string, string> = {
   pl: "PLN",
@@ -73,24 +71,16 @@ export default function BillTemplateForm({
   const [saving, setSaving] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  const showDueDay = DUE_DAY_FREQUENCIES.includes(frequency);
-  const showFullDate = FULL_DATE_FREQUENCIES.includes(frequency);
+  const isRecurring = RECURRING_FREQUENCIES.includes(frequency);
 
   function validate(fields: {
     name: string;
     amount: string;
-    dueDay: string;
-    showDueDay: boolean;
   }): Errors {
     const e: Errors = {};
     if (!fields.name.trim()) e.name = t("nameRequired");
     if (fields.amount.trim() && isNaN(Number(fields.amount.trim().replace(",", "."))))
       e.amount = t("amountInvalid");
-    if (fields.showDueDay && fields.dueDay) {
-      const day = parseInt(fields.dueDay, 10);
-      if (isNaN(day) || day < 1 || day > 31)
-        e.due_day = t("dueDayRange");
-    }
     return e;
   }
 
@@ -102,8 +92,6 @@ export default function BillTemplateForm({
         const next = {
           name: setter === setName ? (v as unknown as string) : name,
           amount: setter === setAmount ? (v as unknown as string) : amount,
-          dueDay: setter === setDueDay ? (v as unknown as string) : dueDay,
-          showDueDay,
         };
         setErrors(validate(next));
       }
@@ -113,7 +101,7 @@ export default function BillTemplateForm({
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setSubmitAttempted(true);
-    const errs = validate({ name, amount, dueDay, showDueDay });
+    const errs = validate({ name, amount });
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
@@ -128,8 +116,8 @@ export default function BillTemplateForm({
         frequency,
         amount: amount.trim() || "0",
         currency: resolvedCurrency || "EUR",
-        due_day: (showDueDay || showFullDate) && dueDay ? parseInt(dueDay, 10) : null,
-        due_month: showFullDate && dueMonth ? parseInt(dueMonth, 10) : null,
+        due_day: dueDay ? parseInt(dueDay, 10) : null,
+        due_month: dueMonth ? parseInt(dueMonth, 10) : null,
         notes: notes.trim() || null,
         is_paused: isPaused,
       };
@@ -225,24 +213,17 @@ export default function BillTemplateForm({
         </div>
       </div>
 
-      {/* Row 3: Due day / full date (conditional) */}
-      {showDueDay && (
-        <div>
-          <label className={labelClass}>{t("dueDayLabel")}</label>
-          <DayPicker value={dueDay} onChange={handleChange(setDueDay)} />
-          {errors.due_day && <p className="mt-1 text-xs text-red-500">{errors.due_day}</p>}
-        </div>
-      )}
-      {showFullDate && (
-        <div>
-          <label className={labelClass}>{t("dueDateLabel")}</label>
-          <MonthDayCalendar
-            month={parseInt(dueMonth, 10) || new Date().getMonth() + 1}
-            day={parseInt(dueDay, 10) || new Date().getDate()}
-            onChange={(m, d) => { setDueMonth(String(m)); setDueDay(String(d)); }}
-          />
-        </div>
-      )}
+      {/* Row 3: Date picker (calendar for all frequencies) */}
+      <div>
+        <label className={labelClass}>
+          {isRecurring ? t("startDateLabel") : t("dueDateLabel")}
+        </label>
+        <MonthDayCalendar
+          month={parseInt(dueMonth, 10) || new Date().getMonth() + 1}
+          day={parseInt(dueDay, 10) || new Date().getDate()}
+          onChange={(m, d) => { setDueMonth(String(m)); setDueDay(String(d)); }}
+        />
+      </div>
 
       {/* Row 4: Category + Notes */}
       <div className="grid gap-4 sm:grid-cols-2">

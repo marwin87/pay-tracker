@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale } from "next-intl";
 
@@ -28,11 +29,16 @@ export default function MonthDayCalendar({ month, day, onChange }: Props) {
   const [open, setOpen] = useState(false);
   const [viewMonth, setViewMonth] = useState(month);
   const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
 
   useEffect(() => {
     if (!open) return;
     function onMouseDown(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node))
+      if (
+        containerRef.current && !containerRef.current.contains(e.target as Node) &&
+        triggerRef.current && !triggerRef.current.contains(e.target as Node)
+      )
         setOpen(false);
     }
     function onKeyDown(e: KeyboardEvent) {
@@ -78,11 +84,27 @@ export default function MonthDayCalendar({ month, day, onChange }: Props) {
   const maxDay = daysInMonth(viewMonth);
   const offset = firstDayOffset(viewMonth);
 
+  function handleOpen() {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const popupHeight = 320;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const openUpward = spaceBelow < popupHeight + 8;
+    setPopupStyle(
+      openUpward
+        ? { position: "fixed", bottom: window.innerHeight - rect.top + 6, left: rect.left, width: 288, zIndex: 9999 }
+        : { position: "fixed", top: rect.bottom + 6, left: rect.left, width: 288, zIndex: 9999 }
+    );
+    setViewMonth(month);
+    setOpen((o) => !o);
+  }
+
   return (
-    <div ref={containerRef} className="relative">
+    <div className="relative">
       <button
+        ref={triggerRef}
         type="button"
-        onClick={() => { setViewMonth(month); setOpen((o) => !o); }}
+        onClick={handleOpen}
         aria-haspopup="true"
         aria-expanded={open}
         className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-colors hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:hover:border-green-600 dark:focus:border-green-600 dark:focus:ring-green-900/40"
@@ -91,8 +113,8 @@ export default function MonthDayCalendar({ month, day, onChange }: Props) {
         <span className="capitalize">{triggerLabel}</span>
       </button>
 
-      {open && (
-        <div className="absolute z-20 mt-1.5 w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-800">
+      {open && createPortal(
+        <div ref={containerRef} style={popupStyle} className="rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-800">
           {/* Month navigation */}
           <div className="mb-2 flex items-center justify-between">
             <button
@@ -149,7 +171,8 @@ export default function MonthDayCalendar({ month, day, onChange }: Props) {
               );
             })}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
