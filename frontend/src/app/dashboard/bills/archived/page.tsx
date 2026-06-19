@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { Archive, List } from "lucide-react";
+import { Archive, ChevronRight, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { fetchBills, type BillTemplateOut } from "@/lib/bills-api";
 import { CATEGORY_ORDER } from "@/lib/categories";
+import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 
 export default function ArchivedBillsPage() {
   const t = useTranslations("ArchivedBillsPage");
@@ -13,6 +13,13 @@ export default function ArchivedBillsPage() {
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+
+  const activeCategories = CATEGORY_ORDER.filter((cat) =>
+    templates.some((tmpl) => tmpl.category === cat),
+  );
+
+  const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
+    useCollapsedCategories("archived-bills-collapsed-categories", activeCategories);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,15 +50,17 @@ export default function ArchivedBillsPage() {
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {t("subtitle")}
         </p>
-        <div className="mt-3 flex justify-end">
-          <Link
-            href="/dashboard/bills"
-            className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
-          >
-            <List size={15} />
-            {t("backToActive")}
-          </Link>
-        </div>
+        {activeCategories.length > 1 && (
+          <div className="mt-3 flex justify-end">
+            <button
+              onClick={allCollapsed ? expandAll : collapseAll}
+              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
+            >
+              <ChevronsUpDown size={13} />
+              {allCollapsed ? t("expandAll") : t("collapseAll")}
+            </button>
+          </div>
+        )}
       </div>
 
       {loading && (
@@ -91,7 +100,16 @@ export default function ArchivedBillsPage() {
               .sort((a, b) => a.name.localeCompare(b.name));
             return (
               <div key={cat}>
-                <div className="mb-3 flex items-center gap-2.5">
+                <button
+                  onClick={() => toggle(cat)}
+                  className="mb-3 flex w-full items-center gap-2.5 text-left"
+                >
+                  <ChevronRight
+                    size={12}
+                    className={`shrink-0 text-slate-400 dark:text-slate-500 transition-transform duration-150 ${
+                      collapsed.has(cat) ? "" : "rotate-90"
+                    }`}
+                  />
                   <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 shrink-0">
                     {tCategories(cat)}
                   </span>
@@ -99,8 +117,8 @@ export default function ArchivedBillsPage() {
                     {group.length}
                   </span>
                   <div className="flex-1 h-px bg-slate-100 dark:bg-slate-700/60" />
-                </div>
-                <div className="flex flex-col gap-2">
+                </button>
+                {!collapsed.has(cat) && <div className="flex flex-col gap-2">
                   {group.map((tmpl) => (
                     <div
                       key={tmpl.id}
@@ -124,7 +142,7 @@ export default function ArchivedBillsPage() {
                       </span>
                     </div>
                   ))}
-                </div>
+                </div>}
               </div>
             );
           })}

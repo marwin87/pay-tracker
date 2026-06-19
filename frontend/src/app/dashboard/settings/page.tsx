@@ -7,6 +7,8 @@ import {
   User,
   Bell,
   BellOff,
+  ChevronRight,
+  ChevronsUpDown,
   HardDriveDownload,
   HardDriveUpload,
   Mail,
@@ -25,6 +27,7 @@ import {
   UserProfile,
 } from "@/lib/user-api";
 import { useNotifications } from "@/hooks/useNotifications";
+import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import BackupButton from "@/components/BackupButton";
 import RestoreButton from "@/components/RestoreButton";
 import { Switch } from "@/components/ui/Switch";
@@ -67,6 +70,8 @@ function Tile({
   saveError,
   onSave,
   onCancel,
+  isCollapsed,
+  onToggle,
   t,
 }: {
   color: TileColor;
@@ -79,6 +84,8 @@ function Tile({
   saveError?: string | null;
   onSave?: () => void;
   onCancel?: () => void;
+  isCollapsed?: boolean;
+  onToggle?: () => void;
   t: ReturnType<typeof useTranslations>;
 }) {
   const s = TILE_STYLES[color];
@@ -86,44 +93,59 @@ function Tile({
     <div
       className={`rounded-xl border-l-4 border border-slate-200 dark:border-slate-700 overflow-hidden ${s.border}`}
     >
-      <div className={`px-5 py-4 ${s.header}`}>
+      <button
+        onClick={onToggle}
+        className={`w-full text-left px-5 py-4 ${s.header} ${onToggle ? "cursor-pointer" : "cursor-default"}`}
+      >
         <div className="flex items-center gap-2">
           <Icon size={18} className={s.icon} />
-          <h2 className="font-semibold text-slate-800 dark:text-slate-100">
+          <h2 className="flex-1 font-semibold text-slate-800 dark:text-slate-100">
             {title}
           </h2>
+          {onToggle && (
+            <ChevronRight
+              size={14}
+              className={`shrink-0 text-slate-400 dark:text-slate-500 transition-transform duration-150 ${
+                isCollapsed ? "" : "rotate-90"
+              }`}
+            />
+          )}
         </div>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          {description}
-        </p>
-      </div>
-
-      <div className="px-5 py-4 space-y-4 bg-white dark:bg-slate-800">
-        {children}
-
-        {saveError && (
-          <p className="text-sm text-red-600 dark:text-red-400">{saveError}</p>
+        {!isCollapsed && (
+          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+            {description}
+          </p>
         )}
+      </button>
 
-        {isDirty && onSave && onCancel && (
-          <div className="flex gap-2 pt-1">
-            <button
-              onClick={onSave}
-              disabled={isSaving}
-              className="rounded-lg border border-green-700 bg-green-700 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 disabled:opacity-50"
-            >
-              {isSaving ? t("saving") : t("save")}
-            </button>
-            <button
-              onClick={onCancel}
-              disabled={isSaving}
-              className="rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
-            >
-              {t("cancel")}
-            </button>
-          </div>
-        )}
-      </div>
+      {!isCollapsed && (
+        <div className="px-5 py-4 space-y-4 bg-white dark:bg-slate-800">
+          {children}
+
+          {saveError && (
+            <p className="text-sm text-red-600 dark:text-red-400">{saveError}</p>
+          )}
+
+          {isDirty && onSave && onCancel && (
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={onSave}
+                disabled={isSaving}
+                className="rounded-lg border border-green-700 bg-green-700 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 disabled:opacity-50"
+              >
+                {isSaving ? t("saving") : t("save")}
+              </button>
+              <button
+                onClick={onCancel}
+                disabled={isSaving}
+                className="rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                {t("cancel")}
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -137,11 +159,15 @@ function ProfileTile({
   onProfileUpdate,
   onDirtyChange,
   t,
+  isCollapsed,
+  onToggle,
 }: {
   profile: UserProfile;
   onProfileUpdate: (p: UserProfile) => void;
   onDirtyChange: (dirty: boolean) => void;
   t: ReturnType<typeof useTranslations>;
+  isCollapsed?: boolean;
+  onToggle?: () => void;
 }) {
   const tp = useTranslations("SettingsPage");
 
@@ -222,6 +248,8 @@ function ProfileTile({
       title={tp("profile.title")}
       description={tp("profile.description")}
       t={t}
+      isCollapsed={isCollapsed}
+      onToggle={onToggle}
     >
       <p className="text-sm text-slate-500 dark:text-slate-400">
         {profile.email}
@@ -326,11 +354,15 @@ function EmailNotificationsTile({
   onProfileUpdate,
   onDirtyChange,
   t,
+  isCollapsed,
+  onToggle,
 }: {
   profile: UserProfile;
   onProfileUpdate: (p: UserProfile) => void;
   onDirtyChange: (dirty: boolean) => void;
   t: ReturnType<typeof useTranslations>;
+  isCollapsed?: boolean;
+  onToggle?: () => void;
 }) {
   const tp = useTranslations("SettingsPage");
 
@@ -446,6 +478,8 @@ function EmailNotificationsTile({
       onSave={save}
       onCancel={cancel}
       t={t}
+      isCollapsed={isCollapsed}
+      onToggle={onToggle}
     >
       <Switch
         checked={emailEnabled}
@@ -546,8 +580,12 @@ function EmailNotificationsTile({
 
 function BrowserNotificationsTile({
   t,
+  isCollapsed,
+  onToggle,
 }: {
   t: ReturnType<typeof useTranslations>;
+  isCollapsed?: boolean;
+  onToggle?: () => void;
 }) {
   const tp = useTranslations("SettingsPage");
   const { permission, isEnabled, requestPermission, setEnabled } = useNotifications();
@@ -559,6 +597,8 @@ function BrowserNotificationsTile({
       title={tp("browserNotifications.title")}
       description={tp("browserNotifications.description")}
       t={t}
+      isCollapsed={isCollapsed}
+      onToggle={onToggle}
     >
       {permission === "denied" ? (
         <div className="flex items-start gap-2 rounded-lg bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-700 px-3 py-2">
@@ -653,6 +693,11 @@ export default function SettingsPage() {
   const [emailDirty, setEmailDirty] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
 
+  const TILE_KEYS = ["profile", "email-notifications", "browser-notifications", "backup", "restore"] as const;
+
+  const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
+    useCollapsedCategories("settings-collapsed-tiles", TILE_KEYS);
+
   const isDirtyAny = profileDirty || emailDirty;
   const isDirtyRef = useRef(false);
   useEffect(() => {
@@ -719,15 +764,26 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
-      <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
-        {t("pageTitle")}
-      </h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
+          {t("pageTitle")}
+        </h1>
+        <button
+          onClick={allCollapsed ? expandAll : collapseAll}
+          className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
+        >
+          <ChevronsUpDown size={13} />
+          {allCollapsed ? t("expandAll") : t("collapseAll")}
+        </button>
+      </div>
 
       <ProfileTile
         profile={profile}
         onProfileUpdate={setProfile}
         onDirtyChange={onProfileDirty}
         t={t}
+        isCollapsed={collapsed.has("profile")}
+        onToggle={() => toggle("profile")}
       />
 
       <EmailNotificationsTile
@@ -735,9 +791,15 @@ export default function SettingsPage() {
         onProfileUpdate={setProfile}
         onDirtyChange={onEmailDirty}
         t={t}
+        isCollapsed={collapsed.has("email-notifications")}
+        onToggle={() => toggle("email-notifications")}
       />
 
-      <BrowserNotificationsTile t={t} />
+      <BrowserNotificationsTile
+        t={t}
+        isCollapsed={collapsed.has("browser-notifications")}
+        onToggle={() => toggle("browser-notifications")}
+      />
 
       <Tile
         color="blue"
@@ -745,6 +807,8 @@ export default function SettingsPage() {
         title={t("backup.title")}
         description={t("backup.description")}
         t={t}
+        isCollapsed={collapsed.has("backup")}
+        onToggle={() => toggle("backup")}
       >
         <BackupButton label="Backup" />
       </Tile>
@@ -755,6 +819,8 @@ export default function SettingsPage() {
         title={t("restore.title")}
         description={t("restore.description")}
         t={t}
+        isCollapsed={collapsed.has("restore")}
+        onToggle={() => toggle("restore")}
       >
         <RestoreButton label="Restore" />
       </Tile>

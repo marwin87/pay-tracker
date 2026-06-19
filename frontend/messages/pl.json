@@ -19,6 +19,7 @@
   "DashboardLayout": {
     "payments": "Płatności",
     "bills": "Rachunki",
+    "archived": "Archiwum",
     "settings": "Ustawienia",
     "logOut": "Wyloguj się",
     "userMenu": "Menu użytkownika",
@@ -32,7 +33,9 @@
     "manageBillsTitle": "Zarządzaj rachunkami",
     "manageBillsDesc": "Twórz, edytuj i śledź swoje cykliczne rachunki",
     "archivedBillsTitle": "Zarchiwizowane rachunki",
-    "archivedBillsDesc": "Przeglądaj historię płatności"
+    "archivedBillsDesc": "Przeglądaj historię płatności",
+    "settingsTitle": "Ustawienia",
+    "settingsDesc": "Zarządzaj powiadomieniami, kopią zapasową i preferencjami"
   },
   "BillsPage": {
     "title": "Twoje rachunki",
@@ -42,7 +45,9 @@
     "loadError": "Nie udało się załadować rachunków.",
     "noBillsYet": "Brak rachunków",
     "addFirstBill": "Dodaj pierwszy rachunek",
-    "viewArchive": "Zarchiwizowane rachunki"
+    "viewArchive": "Zarchiwizowane rachunki",
+    "collapseAll": "Zwiń wszystko",
+    "expandAll": "Rozwiń wszystko"
   },
   "ArchivedBillsPage": {
     "backToActive": "Aktywne rachunki",
@@ -58,7 +63,9 @@
       "quarterly": "Kwartalnie",
       "annual": "Rocznie",
       "one_off": "Jednorazowo"
-    }
+    },
+    "collapseAll": "Zwiń wszystko",
+    "expandAll": "Rozwiń wszystko"
   },
   "BillTemplateForm": {
     "nameLabel": "Nazwa",
@@ -143,7 +150,13 @@
     "pastMonth": "Poprzedni",
     "exportXlsx": "Eksport Excel",
     "exportXlsxLoading": "Eksportowanie…",
-    "exportXlsxError": "Eksport nie powiódł się. Spróbuj ponownie."
+    "exportXlsxError": "Eksport nie powiódł się. Spróbuj ponownie.",
+    "collapseAll": "Zwiń wszystko",
+    "expandAll": "Rozwiń wszystko",
+    "summaryUpcoming": "nadchodzące",
+    "summaryOverdueToday": "zaległe dzisiaj",
+    "summaryOverdue": "zaległe",
+    "summaryPaid": "opłacone"
   },
   "PaymentRow": {
     "status": {
@@ -218,6 +231,8 @@
   },
   "SettingsPage": {
     "pageTitle": "Ustawienia",
+    "collapseAll": "Zwiń wszystko",
+    "expandAll": "Rozwiń wszystko",
     "unsavedTitle": "Niezapisane zmiany",
     "unsavedDescription": "Masz niezapisane zmiany. Wyjść bez zapisywania?",
     "unsavedLeave": "Wyjdź",

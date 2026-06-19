@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Receipt, CreditCard, LogOut, Menu, X, Settings } from "lucide-react";
+import { Archive, Receipt, CreditCard, LogOut, Menu, X, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import { fetchMe } from "@/lib/user-api";
@@ -12,9 +12,10 @@ import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
 
 const NAV_ITEMS = [
-  { href: "/dashboard/payments", labelKey: "payments" as const, icon: CreditCard },
-  { href: "/dashboard/bills", labelKey: "bills" as const, icon: Receipt },
-  { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings },
+  { href: "/dashboard/payments", labelKey: "payments" as const, icon: CreditCard, exact: false },
+  { href: "/dashboard/bills", labelKey: "bills" as const, icon: Receipt, exact: true },
+  { href: "/dashboard/bills/archived", labelKey: "archived" as const, icon: Archive, exact: false },
+  { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings, exact: false },
 ];
 
 export default function DashboardLayout({
@@ -86,8 +87,8 @@ export default function DashboardLayout({
 
           {/* Desktop nav links */}
           <nav className="hidden md:flex flex-1 items-center gap-1 ml-4">
-            {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
-              const active = pathname === href || pathname.startsWith(href + "/");
+            {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
+              const active = pathname === href || (!exact && pathname.startsWith(href + "/"));
               return (
                 <Link
                   key={href}
@@ -175,8 +176,8 @@ export default function DashboardLayout({
                     </div>
                   )}
 
-                  {NAV_ITEMS.map(({ href, labelKey, icon: Icon }) => {
-                    const active = pathname === href || pathname.startsWith(href + "/");
+                  {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
+                    const active = pathname === href || (!exact && pathname.startsWith(href + "/"));
                     return (
                       <Link
                         key={href}

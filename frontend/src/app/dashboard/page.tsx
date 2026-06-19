@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Receipt, Archive, CreditCard } from "lucide-react";
+import { Receipt, Archive, CreditCard, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export default function DashboardPage() {
@@ -18,16 +18,16 @@ export default function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2">
         <Link
           href="/dashboard/payments"
-          className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-emerald-300 hover:shadow-md transition-all dark:bg-slate-800 dark:border-slate-700 dark:hover:border-emerald-500"
+          className="group flex items-start gap-4 rounded-xl border border-slate-200 border-l-4 border-l-emerald-400 bg-white p-5 shadow-sm transition-all hover:border-l-emerald-500 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:border-l-emerald-500 dark:hover:bg-slate-700/50"
         >
-          <div className="rounded-xl bg-emerald-100 p-3 text-emerald-600 group-hover:bg-emerald-200 transition-colors dark:bg-emerald-900/40 dark:text-emerald-400">
-            <CreditCard size={24} />
+          <div className="rounded-lg bg-emerald-100 p-2.5 text-emerald-600 transition-colors group-hover:bg-emerald-200 dark:bg-emerald-900/40 dark:text-emerald-400">
+            <CreditCard size={20} />
           </div>
           <div>
             <h2 className="font-semibold text-slate-800 dark:text-slate-100">
               {t("paymentsTitle")}
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
               {t("paymentsDesc")}
             </p>
           </div>
@@ -35,16 +35,16 @@ export default function DashboardPage() {
 
         <Link
           href="/dashboard/bills"
-          className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-blue-300 hover:shadow-md transition-all dark:bg-slate-800 dark:border-slate-700 dark:hover:border-blue-500"
+          className="group flex items-start gap-4 rounded-xl border border-slate-200 border-l-4 border-l-blue-400 bg-white p-5 shadow-sm transition-all hover:border-l-blue-500 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:border-l-blue-500 dark:hover:bg-slate-700/50"
         >
-          <div className="rounded-xl bg-blue-100 p-3 text-blue-600 group-hover:bg-blue-200 transition-colors dark:bg-blue-900/40 dark:text-blue-400">
-            <Receipt size={24} />
+          <div className="rounded-lg bg-blue-100 p-2.5 text-blue-600 transition-colors group-hover:bg-blue-200 dark:bg-blue-900/40 dark:text-blue-400">
+            <Receipt size={20} />
           </div>
           <div>
             <h2 className="font-semibold text-slate-800 dark:text-slate-100">
               {t("manageBillsTitle")}
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
               {t("manageBillsDesc")}
             </p>
           </div>
@@ -52,17 +52,34 @@ export default function DashboardPage() {
 
         <Link
           href="/dashboard/bills/archived"
-          className="group flex items-start gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm hover:border-slate-300 hover:shadow-md transition-all dark:bg-slate-800 dark:border-slate-700"
+          className="group flex items-start gap-4 rounded-xl border border-slate-200 border-l-4 border-l-slate-300 bg-white p-5 shadow-sm transition-all hover:border-l-slate-400 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:border-l-slate-600 dark:hover:bg-slate-700/50"
         >
-          <div className="rounded-xl bg-slate-100 p-3 text-slate-500 group-hover:bg-slate-200 transition-colors dark:bg-slate-700 dark:text-slate-400">
-            <Archive size={24} />
+          <div className="rounded-lg bg-slate-100 p-2.5 text-slate-500 transition-colors group-hover:bg-slate-200 dark:bg-slate-700 dark:text-slate-400">
+            <Archive size={20} />
           </div>
           <div>
             <h2 className="font-semibold text-slate-800 dark:text-slate-100">
               {t("archivedBillsTitle")}
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
               {t("archivedBillsDesc")}
+            </p>
+          </div>
+        </Link>
+
+        <Link
+          href="/dashboard/settings"
+          className="group flex items-start gap-4 rounded-xl border border-slate-200 border-l-4 border-l-violet-300 bg-white p-5 shadow-sm transition-all hover:border-l-violet-400 hover:bg-slate-50 dark:bg-slate-800 dark:border-slate-700 dark:border-l-violet-600 dark:hover:bg-slate-700/50"
+        >
+          <div className="rounded-lg bg-violet-100 p-2.5 text-violet-600 transition-colors group-hover:bg-violet-200 dark:bg-violet-900/40 dark:text-violet-400">
+            <Settings size={20} />
+          </div>
+          <div>
+            <h2 className="font-semibold text-slate-800 dark:text-slate-100">
+              {t("settingsTitle")}
+            </h2>
+            <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
+              {t("settingsDesc")}
             </p>
           </div>
         </Link>

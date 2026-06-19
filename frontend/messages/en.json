@@ -19,6 +19,7 @@
     "DashboardLayout": {
         "payments": "Payments",
         "bills": "Bills",
+        "archived": "Archived",
         "settings": "Settings",
         "logOut": "Log out",
         "userMenu": "User menu",
@@ -32,7 +33,9 @@
         "manageBillsTitle": "Manage Bills",
         "manageBillsDesc": "Create, edit, and track your recurring bills",
         "archivedBillsTitle": "Archived Bills",
-        "archivedBillsDesc": "View past bills and payment history"
+        "archivedBillsDesc": "View past bills and payment history",
+        "settingsTitle": "Settings",
+        "settingsDesc": "Manage notifications, backup, and preferences"
     },
     "BillsPage": {
         "title": "Your Bills",
@@ -42,7 +45,9 @@
         "loadError": "Failed to load bills.",
         "noBillsYet": "No bills yet",
         "addFirstBill": "Add your first bill",
-        "viewArchive": "Archived bills"
+        "viewArchive": "Archived bills",
+        "collapseAll": "Collapse all",
+        "expandAll": "Expand all"
     },
     "ArchivedBillsPage": {
         "backToActive": "Active bills",
@@ -58,7 +63,9 @@
             "quarterly": "Quarterly",
             "annual": "Annual",
             "one_off": "One-off"
-        }
+        },
+        "collapseAll": "Collapse all",
+        "expandAll": "Expand all"
     },
     "BillTemplateForm": {
         "nameLabel": "Name",
@@ -141,7 +148,13 @@
         "pastMonth": "Past",
         "exportXlsx": "Excel Export",
         "exportXlsxLoading": "Exporting…",
-        "exportXlsxError": "Export failed. Please try again."
+        "exportXlsxError": "Export failed. Please try again.",
+        "collapseAll": "Collapse all",
+        "expandAll": "Expand all",
+        "summaryUpcoming": "upcoming",
+        "summaryOverdueToday": "overdue today",
+        "summaryOverdue": "overdue",
+        "summaryPaid": "paid"
     },
     "PaymentRow": {
         "status": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
@@ -210,6 +223,8 @@
     },
     "SettingsPage": {
         "pageTitle": "Settings",
+        "collapseAll": "Collapse all",
+        "expandAll": "Expand all",
         "unsavedTitle": "Unsaved changes",
         "unsavedDescription": "You have unsaved changes. Leave without saving?",
         "unsavedLeave": "Leave",

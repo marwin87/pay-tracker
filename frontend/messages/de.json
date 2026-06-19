@@ -19,6 +19,7 @@
   "DashboardLayout": {
     "payments": "Zahlungen",
     "bills": "Rechnungen",
+    "archived": "Archiv",
     "settings": "Einstellungen",
     "logOut": "Abmelden",
     "userMenu": "Benutzermenü",
@@ -32,7 +33,9 @@
     "manageBillsTitle": "Rechnungen verwalten",
     "manageBillsDesc": "Erstellen, bearbeiten und verfolgen Sie Ihre wiederkehrenden Rechnungen",
     "archivedBillsTitle": "Archivierte Rechnungen",
-    "archivedBillsDesc": "Vergangene Rechnungen und Zahlungshistorie anzeigen"
+    "archivedBillsDesc": "Vergangene Rechnungen und Zahlungshistorie anzeigen",
+    "settingsTitle": "Einstellungen",
+    "settingsDesc": "Benachrichtigungen, Backup und Einstellungen verwalten"
   },
   "BillsPage": {
     "title": "Ihre Rechnungen",
@@ -42,7 +45,9 @@
     "loadError": "Rechnungen konnten nicht geladen werden.",
     "noBillsYet": "Noch keine Rechnungen",
     "addFirstBill": "Erste Rechnung hinzufügen",
-    "viewArchive": "Archivierte Rechnungen"
+    "viewArchive": "Archivierte Rechnungen",
+    "collapseAll": "Alle einklappen",
+    "expandAll": "Alle ausklappen"
   },
   "ArchivedBillsPage": {
     "backToActive": "Aktive Rechnungen",
@@ -58,7 +63,9 @@
       "quarterly": "Vierteljährlich",
       "annual": "Jährlich",
       "one_off": "Einmalig"
-    }
+    },
+    "collapseAll": "Alle einklappen",
+    "expandAll": "Alle ausklappen"
   },
   "BillTemplateForm": {
     "nameLabel": "Name",
@@ -143,7 +150,13 @@
     "pastMonth": "Vergangen",
     "exportXlsx": "Excel-Export",
     "exportXlsxLoading": "Exportiere…",
-    "exportXlsxError": "Export fehlgeschlagen. Bitte erneut versuchen."
+    "exportXlsxError": "Export fehlgeschlagen. Bitte erneut versuchen.",
+    "collapseAll": "Alle einklappen",
+    "expandAll": "Alle ausklappen",
+    "summaryUpcoming": "bevorstehend",
+    "summaryOverdueToday": "heute überfällig",
+    "summaryOverdue": "überfällig",
+    "summaryPaid": "bezahlt"
   },
   "PaymentRow": {
     "status": {
@@ -218,6 +231,8 @@
   },
   "SettingsPage": {
     "pageTitle": "Einstellungen",
+    "collapseAll": "Alle einklappen",
+    "expandAll": "Alle ausklappen",
     "unsavedTitle": "Nicht gespeicherte Änderungen",
     "unsavedDescription": "Sie haben nicht gespeicherte Änderungen. Ohne Speichern verlassen?",
     "unsavedLeave": "Verlassen",

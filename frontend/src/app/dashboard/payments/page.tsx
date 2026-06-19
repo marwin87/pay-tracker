@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Download, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsUpDown, Download, Loader2 } from "lucide-react";
+import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
   fetchPayments,
@@ -13,6 +14,7 @@ import { downloadXlsx } from "@/lib/export-api";
 import PaymentRow from "@/components/payments/PaymentRow";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
+import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 
 function getCurrentMonth(): string {
   const now = new Date();
@@ -28,6 +30,57 @@ function getMonthLabel(year: number, monthIndex: number, locale: string): string
 
 function monthKey(year: number, monthIndex: number): string {
   return `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
+}
+
+function getTodayStr(): string {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function CategorySummary({
+  group,
+  todayStr,
+  labels,
+}: {
+  group: PaymentInstanceOut[];
+  todayStr: string;
+  labels: {
+    upcoming: string;
+    overdueToday: string;
+    overdue: string;
+    paid: string;
+  };
+}) {
+  const upcomingCount = group.filter((i) => i.status === "upcoming").length;
+  const overdueTodayCount = group.filter(
+    (i) => i.status === "overdue" && i.due_date === todayStr,
+  ).length;
+  const overdueOlderCount = group.filter(
+    (i) => i.status === "overdue" && i.due_date < todayStr,
+  ).length;
+  const paidCount = group.filter((i) => i.status === "paid").length;
+
+  const segments: { key: string; text: string; className: string }[] = [];
+  if (upcomingCount > 0)
+    segments.push({ key: "upcoming", text: `${upcomingCount} ${labels.upcoming}`, className: "text-slate-500 dark:text-slate-400" });
+  if (overdueTodayCount > 0)
+    segments.push({ key: "overdueToday", text: `${overdueTodayCount} ${labels.overdueToday}`, className: "text-orange-500 dark:text-orange-400" });
+  if (overdueOlderCount > 0)
+    segments.push({ key: "overdueOlder", text: `${overdueOlderCount} ${labels.overdue}`, className: "text-red-500 dark:text-red-400" });
+  if (paidCount > 0)
+    segments.push({ key: "paid", text: `${paidCount} ${labels.paid}`, className: "text-emerald-600 dark:text-emerald-400" });
+
+  return (
+    <span className="flex items-center gap-1 text-xs font-medium">
+      {segments.map((seg, i) => (
+        <Fragment key={seg.key}>
+          {i > 0 && <span className="text-slate-300 dark:text-slate-600">·</span>}
+          <span className={seg.className}>{seg.text}</span>
+        </Fragment>
+      ))}
+    </span>
+  );
 }
 
 export default function PaymentsPage() {
@@ -96,6 +149,15 @@ export default function PaymentsPage() {
   }
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
+
+  const todayStr = getTodayStr();
+
+  const activeCategories = CATEGORY_ORDER.filter((cat) =>
+    instances.some((inst) => inst.category === cat),
+  );
+
+  const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
+    useCollapsedCategories("payments-collapsed-categories", activeCategories);
 
   async function handleExportXlsx(year: number) {
     setXlsxError(null);
@@ -242,20 +304,31 @@ export default function PaymentsPage() {
           )}
         </div>
         {!loading && !loadError && (
-          <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
-            {instances.length === 0
-              ? t("noPayments")
-              : [
-                  instances.filter((i) => i.status === "upcoming").length > 0 &&
-                    `${instances.filter((i) => i.status === "upcoming").length} ${tRow("status.upcoming").toLowerCase()}`,
-                  instances.filter((i) => i.status === "overdue").length > 0 &&
-                    `${instances.filter((i) => i.status === "overdue").length} ${tRow("status.overdue").toLowerCase()}`,
-                  instances.filter((i) => i.status === "paid").length > 0 &&
-                    `${instances.filter((i) => i.status === "paid").length} ${tRow("status.paid").toLowerCase()}`,
-                ]
-                  .filter(Boolean)
-                  .join(" · ")}
-          </p>
+          <div className="mt-0.5 flex items-center justify-between gap-3">
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              {instances.length === 0
+                ? t("noPayments")
+                : [
+                    instances.filter((i) => i.status === "upcoming").length > 0 &&
+                      `${instances.filter((i) => i.status === "upcoming").length} ${tRow("status.upcoming").toLowerCase()}`,
+                    instances.filter((i) => i.status === "overdue").length > 0 &&
+                      `${instances.filter((i) => i.status === "overdue").length} ${tRow("status.overdue").toLowerCase()}`,
+                    instances.filter((i) => i.status === "paid").length > 0 &&
+                      `${instances.filter((i) => i.status === "paid").length} ${tRow("status.paid").toLowerCase()}`,
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
+            </p>
+            {activeCategories.length > 1 && (
+              <button
+                onClick={allCollapsed ? expandAll : collapseAll}
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
+              >
+                <ChevronsUpDown size={13} />
+                {allCollapsed ? t("expandAll") : t("collapseAll")}
+              </button>
+            )}
+          </div>
         )}
       </div>
 
@@ -285,27 +358,50 @@ export default function PaymentsPage() {
             const group = instances.filter((inst) => inst.category === cat);
             return (
               <div key={cat}>
-                <div className="mb-3 flex items-center gap-2.5">
+                <button
+                  onClick={() => toggle(cat)}
+                  className="mb-3 flex w-full items-center gap-2.5 text-left"
+                >
+                  <ChevronRight
+                    size={12}
+                    className={`shrink-0 text-slate-400 dark:text-slate-500 transition-transform duration-150 ${
+                      collapsed.has(cat) ? "" : "rotate-90"
+                    }`}
+                  />
                   <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 shrink-0">
                     {tCategories(cat)}
                   </span>
                   <span className="rounded-full bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:text-slate-500 shrink-0 tabular-nums">
                     {group.length}
                   </span>
-                  <div className="flex-1 h-px bg-slate-100 dark:bg-slate-700/60" />
-                </div>
-                <div className="flex flex-col gap-2">
-                  {group.map((inst) => (
-                    <PaymentRow
-                      key={inst.id}
-                      instance={inst}
-                      readOnly={false}
-                      onMarkPaid={setDialogTarget}
-                      onDelete={setDeleteTarget}
-                      onReverted={handleInstanceReverted}
+                  {collapsed.has(cat) && (
+                    <CategorySummary
+                      group={group}
+                      todayStr={todayStr}
+                      labels={{
+                        upcoming: t("summaryUpcoming"),
+                        overdueToday: t("summaryOverdueToday"),
+                        overdue: t("summaryOverdue"),
+                        paid: t("summaryPaid"),
+                      }}
                     />
-                  ))}
-                </div>
+                  )}
+                  <div className="flex-1 h-px bg-slate-100 dark:bg-slate-700/60" />
+                </button>
+                {!collapsed.has(cat) && (
+                  <div className="flex flex-col gap-2">
+                    {group.map((inst) => (
+                      <PaymentRow
+                        key={inst.id}
+                        instance={inst}
+                        readOnly={false}
+                        onMarkPaid={setDialogTarget}
+                        onDelete={setDeleteTarget}
+                        onReverted={handleInstanceReverted}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             );
           })}
