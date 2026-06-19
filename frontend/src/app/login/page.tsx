@@ -37,8 +37,8 @@ export default function LoginPage() {
       login(data.access_token);
       void notifyDueToday();
       router.push("/dashboard");
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t("loginFailed"));
+    } catch {
+      setError(t("loginFailed"));
     } finally {
       setLoading(false);
     }
