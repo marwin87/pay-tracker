@@ -1,6 +1,4 @@
-import type { BillCategory } from "./bills-api";
-
-export const CATEGORY_ORDER: BillCategory[] = [
+export const CATEGORY_ORDER = [
   "education",
   "entertainment",
   "healthcare",
@@ -10,4 +8,4 @@ export const CATEGORY_ORDER: BillCategory[] = [
   "transport",
   "utilities",
   "other",
-];
+] as const;

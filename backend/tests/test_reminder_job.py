@@ -6,7 +6,13 @@ from unittest.mock import patch
 
 import app.models.bill  # noqa: F401 — register models
 import app.models.user  # noqa: F401
-from app.models.bill import BillCategory, BillFrequency, BillTemplate, PaymentInstance, PaymentStatus
+from app.models.bill import (
+    BillCategory,
+    BillFrequency,
+    BillTemplate,
+    PaymentInstance,
+    PaymentStatus,
+)
 from app.models.user import User
 from app.services.reminder_job import send_daily_reminders
 

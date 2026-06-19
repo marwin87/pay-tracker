@@ -15,7 +15,13 @@ import pytest
 
 import app.models.bill  # noqa: F401 — register models with SQLAlchemy's mapper
 import app.models.user  # noqa: F401
-from app.models.bill import BillCategory, BillFrequency, BillTemplate, PaymentInstance, PaymentStatus
+from app.models.bill import (
+    BillCategory,
+    BillFrequency,
+    BillTemplate,
+    PaymentInstance,
+    PaymentStatus,
+)
 from app.models.user import User
 from app.services.recurrence import (
     _bill_active_in_period,

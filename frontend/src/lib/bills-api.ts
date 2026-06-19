@@ -1,17 +1,9 @@
 import { apiFetch } from "./api";
+import { CATEGORY_ORDER } from "./categories";
 
 export type BillFrequency = "monthly" | "every_2_months" | "quarterly" | "annual" | "one_off";
 
-export type BillCategory =
-  | "housing"
-  | "utilities"
-  | "insurance"
-  | "subscriptions"
-  | "entertainment"
-  | "transport"
-  | "healthcare"
-  | "education"
-  | "other";
+export type BillCategory = (typeof CATEGORY_ORDER)[number];
 
 export interface BillTemplateOut {
   id: number;

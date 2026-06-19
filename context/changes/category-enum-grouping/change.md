@@ -1,9 +1,10 @@
 ---
 change_id: category-enum-grouping
 title: Promote category to enum, group bills and payments by category
-status: implemented
+status: impl_reviewed
 created: 2026-06-19
 updated: 2026-06-19
+reviewed: 2026-06-19
 archived_at: null
 ---
 
