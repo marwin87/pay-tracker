@@ -18,8 +18,9 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 
 ## What it does
 
-- **Bill templates** — define a bill once: name, amount, currency, recurrence frequency, due day of month. Pay Tracker generates payment instances automatically each period.
-- **Payment tracking** — view upcoming, overdue, and paid bills for any month. Mark as paid with an optional amount override and note. Revert if you made a mistake.
+- **Bill templates** — define a bill once: name, category, amount, currency, recurrence frequency, due day of month. Pay Tracker generates payment instances automatically each period.
+- **Category grouping** — bills and payments are grouped under predefined category headers (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other). Category is required on every bill.
+- **Payment tracking** — view upcoming, overdue, and paid bills for any month, grouped by category. Mark as paid with an optional amount override and note. Revert if you made a mistake.
 - **Email reminders** — optional. Configure SMTP credentials and a send time (30-minute precision) and the app emails you before or after each bill's due date.
 - **Email sent indicator** — each payment row shows an `@` icon: gray if no reminder has been sent, amber if one was sent. Click it to see the exact timestamp.
 - **Export & backup** — download payment history as `.xlsx` (one sheet per month) or a full JSON backup. Restore from backup at any time.
@@ -52,7 +53,7 @@ Open http://localhost:3010 and register. Each account is isolated — register s
 
 ### 4. Add your first bill
 
-Go to **Bills → New Bill**. Fill in the name, amount, frequency, and due day of month. Save it — Pay Tracker will generate this month's payment instance automatically.
+Go to **Bills → New Bill**. Fill in the name, category, amount, frequency, and due day of month. Save it — Pay Tracker will generate this month's payment instance automatically.
 
 ### 5. Track payments
 
