@@ -22,7 +22,6 @@
         "settings": "Settings",
         "logOut": "Log out",
         "userMenu": "User menu",
-        "loggedInAs": "Logged in as",
         "signedInAs": "Signed in as"
     },
     "Dashboard": {
@@ -66,7 +65,6 @@
         "namePlaceholder": "e.g. Electricity",
         "nameRequired": "Name is required.",
         "amountLabel": "Amount",
-        "amountPositive": "Enter a positive amount.",
         "amountInvalid": "Enter a valid amount.",
         "currencyAriaLabel": "Currency",
         "customOption": "Custom…",
@@ -80,10 +78,8 @@
             "annual": "Annual",
             "one_off": "One-off"
         },
-        "dueDayLabel": "Due day of month",
         "dueDateLabel": "Due date",
         "startDateLabel": "Starting month & day",
-        "dueDayRange": "Must be between 1 and 31.",
         "categoryLabel": "Category",
         "notesLabel": "Notes",
         "notesPlaceholder": "Optional notes",
@@ -204,9 +200,6 @@
         "name": "English"
     },
     "NotificationToggle": {
-        "enable": "Enable notifications",
-        "enabled": "Notifications enabled — click to re-check",
-        "blocked": "Notifications blocked — allow in browser settings",
         "paymentIncoming": "Payment incoming"
     },
     "EmailRemindersToggle": {
@@ -214,7 +207,6 @@
         "disable": "Disable email reminders"
     },
     "SettingsPage": {
-        "navLabel": "Settings",
         "pageTitle": "Settings",
         "unsavedTitle": "Unsaved changes",
         "unsavedDescription": "You have unsaved changes. Leave without saving?",
@@ -229,7 +221,6 @@
             "description": "Update your login email and password.",
             "emailLabel": "Email address",
             "emailPlaceholder": "new@email.com",
-            "currentPasswordLabel": "Current password",
             "currentPasswordPlaceholder": "Enter current password",
             "newPasswordLabel": "New password",
             "newPasswordPlaceholder": "Minimum 8 characters",
@@ -247,7 +238,6 @@
             "oneDayAfter": "1 day after due date",
             "noneWarning": "Select at least one option to receive email reminders.",
             "sendTimeLabel": "Send time (UTC)",
-            "sendTimePlaceholder": "Select hour",
             "masterToggle": "Enable email notifications",
             "sendNowButton": "Send notification now",
             "sendNowSending": "Sending...",
@@ -259,7 +249,6 @@
             "title": "Browser Notifications",
             "description": "Get notified when a bill is due today.",
             "enable": "Enable notifications",
-            "enabled": "Notifications enabled",
             "toggle": "Enable browser notifications",
             "osHint": "Not seeing notifications? Check your OS notification settings (macOS: System Settings → Notifications).",
             "blockedWarning": "Browser notifications are blocked. Enable them in your browser or operating system settings."

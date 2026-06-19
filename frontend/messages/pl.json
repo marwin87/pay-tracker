@@ -22,7 +22,6 @@
     "settings": "Ustawienia",
     "logOut": "Wyloguj się",
     "userMenu": "Menu użytkownika",
-    "loggedInAs": "Zalogowany jako",
     "signedInAs": "Zalogowany jako"
   },
   "Dashboard": {
@@ -66,7 +65,6 @@
     "namePlaceholder": "np. Prąd",
     "nameRequired": "Nazwa jest wymagana.",
     "amountLabel": "Kwota",
-    "amountPositive": "Podaj kwotę dodatnią.",
     "amountInvalid": "Podaj prawidłową kwotę.",
     "currencyAriaLabel": "Waluta",
     "customOption": "Inna…",
@@ -80,10 +78,8 @@
       "annual": "Rocznie",
       "one_off": "Jednorazowo"
     },
-    "dueDayLabel": "Dzień miesiąca płatności",
     "dueDateLabel": "Termin płatności",
     "startDateLabel": "Miesiąc i dzień rozpoczęcia",
-    "dueDayRange": "Musi być między 1 a 31.",
     "categoryLabel": "Kategoria",
     "notesLabel": "Notatki",
     "notesPlaceholder": "Opcjonalne notatki",
@@ -212,9 +208,6 @@
     "name": "Polski"
   },
   "NotificationToggle": {
-    "enable": "Włącz powiadomienia",
-    "enabled": "Powiadomienia włączone — kliknij, aby sprawdzić",
-    "blocked": "Powiadomienia zablokowane — zezwól w ustawieniach przeglądarki",
     "paymentIncoming": "Nadchodząca płatność"
   },
   "EmailRemindersToggle": {
@@ -222,7 +215,6 @@
     "disable": "Wyłącz przypomnienia e-mail"
   },
   "SettingsPage": {
-    "navLabel": "Ustawienia",
     "pageTitle": "Ustawienia",
     "unsavedTitle": "Niezapisane zmiany",
     "unsavedDescription": "Masz niezapisane zmiany. Wyjść bez zapisywania?",
@@ -237,7 +229,6 @@
       "description": "Zmień swój adres e-mail i hasło.",
       "emailLabel": "Adres e-mail",
       "emailPlaceholder": "nowy@email.com",
-      "currentPasswordLabel": "Aktualne hasło",
       "currentPasswordPlaceholder": "Wprowadź aktualne hasło",
       "newPasswordLabel": "Nowe hasło",
       "newPasswordPlaceholder": "Minimum 8 znaków",
@@ -255,7 +246,6 @@
       "oneDayAfter": "1 dzień po terminie",
       "noneWarning": "Wybierz co najmniej jedną opcję, aby otrzymywać przypomnienia e-mail.",
       "sendTimeLabel": "Godzina wysyłki (UTC)",
-      "sendTimePlaceholder": "Wybierz godzinę",
       "masterToggle": "Włącz powiadomienia e-mail",
       "sendNowButton": "Wyślij powiadomienie teraz",
       "sendNowSending": "Wysyłanie...",
@@ -267,7 +257,6 @@
       "title": "Powiadomienia przeglądarki",
       "description": "Otrzymuj powiadomienie, gdy rachunek jest płatny dzisiaj.",
       "enable": "Włącz powiadomienia",
-      "enabled": "Powiadomienia włączone",
       "toggle": "Włącz powiadomienia przeglądarki",
       "osHint": "Nie widzisz powiadomień? Sprawdź ustawienia powiadomień systemu (macOS: Ustawienia systemowe → Powiadomienia).",
       "blockedWarning": "Powiadomienia przeglądarki są zablokowane. Włącz je w ustawieniach przeglądarki lub systemu operacyjnego."
