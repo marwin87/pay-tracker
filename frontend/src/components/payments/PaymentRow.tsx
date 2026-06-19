@@ -111,18 +111,18 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
     <div className={`rounded-xl border border-slate-200 px-4 py-3 shadow-sm dark:border-slate-700 transition-colors ${tileGradientClass()}`}>
       <div className="flex flex-col gap-0.5">
         {/* Name */}
-        <span className="font-semibold text-base text-slate-800 dark:text-slate-100 truncate">
+        <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">
           {instance.bill_name}
         </span>
         {/* Amount */}
         {parseFloat(instance.amount) > 0 && (
-          <span className="font-medium text-slate-700 dark:text-slate-300">
+          <span className="text-xs font-medium text-slate-600 dark:text-slate-300">
             {instance.amount} {instance.currency}
           </span>
         )}
         {/* Due date + status (left) — actions (right) */}
         <div className="flex items-center justify-between gap-2 mt-0.5">
-          <div className="flex items-center gap-1.5 text-sm min-w-0">
+          <div className="flex items-center gap-1.5 text-xs min-w-0">
             <span className="text-slate-400 dark:text-slate-500 shrink-0">
               {t("due")} {dueDateFormatted}
             </span>

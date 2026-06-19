@@ -230,11 +230,14 @@ export default function BillsPage() {
               .sort((a, b) => a.name.localeCompare(b.name));
             return (
               <div key={cat}>
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                <div className="mb-3 flex items-center gap-2.5">
+                  <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 shrink-0">
                     {tCategories(cat)}
                   </span>
-                  <span className="text-xs text-slate-400 dark:text-slate-500">· {group.length}</span>
+                  <span className="rounded-full bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:text-slate-500 shrink-0 tabular-nums">
+                    {group.length}
+                  </span>
+                  <div className="flex-1 h-px bg-slate-100 dark:bg-slate-700/60" />
                 </div>
                 <div className="flex flex-col gap-2">
                   {group.map((tmpl) => (

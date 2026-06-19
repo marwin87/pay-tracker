@@ -719,7 +719,7 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
-      <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
+      <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
         {t("pageTitle")}
       </h1>
 

@@ -91,11 +91,14 @@ export default function ArchivedBillsPage() {
               .sort((a, b) => a.name.localeCompare(b.name));
             return (
               <div key={cat}>
-                <div className="mb-2 flex items-center gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+                <div className="mb-3 flex items-center gap-2.5">
+                  <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 shrink-0">
                     {tCategories(cat)}
                   </span>
-                  <span className="text-xs text-slate-400 dark:text-slate-500">· {group.length}</span>
+                  <span className="rounded-full bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:text-slate-500 shrink-0 tabular-nums">
+                    {group.length}
+                  </span>
+                  <div className="flex-1 h-px bg-slate-100 dark:bg-slate-700/60" />
                 </div>
                 <div className="flex flex-col gap-2">
                   {group.map((tmpl) => (
@@ -103,14 +106,18 @@ export default function ArchivedBillsPage() {
                       key={tmpl.id}
                       className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 opacity-70 dark:bg-slate-800 dark:border-slate-700"
                     >
-                      <div className="flex flex-1 flex-wrap items-baseline gap-x-3 gap-y-1 min-w-0">
-                        <span className="font-medium text-slate-700 dark:text-slate-300 truncate">
+                      <div className="flex flex-1 flex-col min-w-0 gap-0.5">
+                        <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">
                           {tmpl.name}
                         </span>
-                        <span className="text-slate-600 dark:text-slate-400">{tmpl.amount} {tmpl.currency}</span>
-                        <span className="text-sm text-slate-400 dark:text-slate-500">
-                          {t(`frequency.${tmpl.frequency}` as never) ?? tmpl.frequency}
-                        </span>
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                          <span className="text-xs font-medium text-slate-600 dark:text-slate-300">
+                            {tmpl.amount} {tmpl.currency}
+                          </span>
+                          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+                            {t(`frequency.${tmpl.frequency}` as never) ?? tmpl.frequency}
+                          </span>
+                        </div>
                       </div>
                       <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
                         {t("archived")}

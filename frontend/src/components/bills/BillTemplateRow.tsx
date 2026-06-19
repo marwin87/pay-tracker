@@ -1,9 +1,18 @@
 "use client";
 
-import { Pencil, Archive as ArchiveIcon, ChevronUp, PauseCircle, NotebookPen } from "lucide-react";
+import { useState } from "react";
+import {
+  Pencil,
+  Archive as ArchiveIcon,
+  ChevronUp,
+  PauseCircle,
+  NotebookPen,
+  MoreHorizontal,
+} from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import BillTemplateForm from "./BillTemplateForm";
 import type { BillTemplateOut, BillTemplateUpdate } from "@/lib/bills-api";
+import { CATEGORY_BORDER } from "@/lib/categories";
 
 interface Props {
   template: BillTemplateOut;
@@ -48,60 +57,96 @@ export default function BillTemplateRow({
 }: Props) {
   const t = useTranslations("BillTemplateRow");
   const locale = useLocale();
+  const [actionsOpen, setActionsOpen] = useState(false);
+
+  const dueLabel = formatDueLabel(template, locale);
+
+  // Paused overrides category color with amber
+  const leftBorder = template.is_paused
+    ? "border-l-amber-400 dark:border-l-amber-500"
+    : CATEGORY_BORDER[template.category];
+
   return (
-    <div className="rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm dark:bg-slate-800 dark:border-slate-700">
+    <div
+      className={`group rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm dark:bg-slate-800 dark:border-slate-700 border-l-4 ${leftBorder}`}
+    >
       {/* Collapsed row */}
       <div
         className={`flex items-center gap-3 px-4 py-3 ${template.is_paused ? "opacity-60" : ""}`}
       >
-        <div className="flex flex-1 flex-col min-w-0">
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 min-w-0">
-          <span className="font-semibold text-base text-slate-800 dark:text-slate-100 truncate">
-            {template.name}
-          </span>
-          <span className="font-medium text-slate-700 dark:text-slate-300">
-            {template.amount} {template.currency}
-          </span>
-          <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600 dark:bg-slate-700 dark:text-slate-300">
-            {t(`frequency.${template.frequency}` as never) ?? template.frequency}
-          </span>
-          {formatDueLabel(template, locale) && (
-            <span className="text-sm text-slate-400 dark:text-slate-500">
-              {t("dueOn")}&nbsp;{formatDueLabel(template, locale)}
+        {/* Two-line content */}
+        <div className="flex flex-1 flex-col min-w-0 gap-0.5">
+          {/* Line 1: name + paused badge */}
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">
+              {template.name}
             </span>
-          )}
-          {template.is_paused && (
-            <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
-              <PauseCircle size={11} />
-              {t("paused")}
-            </span>
-          )}
-        </div>
-        {template.notes && (
-          <div className="flex items-start gap-1.5 mt-1 text-xs text-slate-400 dark:text-slate-500">
-            <NotebookPen size={11} className="mt-0.5 shrink-0" />
-            <span className="line-clamp-1">{template.notes}</span>
+            {template.is_paused && (
+              <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 shrink-0">
+                <PauseCircle size={10} />
+                {t("paused")}
+              </span>
+            )}
           </div>
-        )}
+
+          {/* Line 2: amount · frequency · due */}
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            <span className="text-xs font-medium text-slate-600 dark:text-slate-300">
+              {template.amount} {template.currency}
+            </span>
+            <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+              {t(`frequency.${template.frequency}` as never) ?? template.frequency}
+            </span>
+            {dueLabel && (
+              <span className="text-xs text-slate-400 dark:text-slate-500">
+                {t("dueOn")}&nbsp;{dueLabel}
+              </span>
+            )}
+          </div>
+
+          {/* Notes */}
+          {template.notes && (
+            <div className="flex items-start gap-1 mt-0.5 text-xs text-slate-400 dark:text-slate-500">
+              <NotebookPen size={10} className="mt-0.5 shrink-0" />
+              <span className="line-clamp-1">{template.notes}</span>
+            </div>
+          )}
         </div>
 
+        {/* Actions */}
         <div className="flex items-center gap-1 shrink-0">
+          {/* Mobile: ⋯ toggle */}
           <button
-            onClick={onEditToggle}
-            aria-label={isExpanded ? t("close") : t("edit")}
-            className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+            onClick={() => setActionsOpen((o) => !o)}
+            aria-label="More actions"
+            className="sm:hidden rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300"
           >
-            {isExpanded ? <ChevronUp size={15} /> : <Pencil size={15} />}
-            <span className="hidden sm:inline">{isExpanded ? t("close") : t("edit")}</span>
+            <MoreHorizontal size={16} />
           </button>
-          <button
-            onClick={onArchive}
-            aria-label={t("archive")}
-            className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-400 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-red-800 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+
+          {/* Edit + Archive: hidden on mobile unless actionsOpen; hover-reveal on sm+ */}
+          <div
+            className={`items-center gap-1 ${
+              actionsOpen ? "flex" : "hidden"
+            } sm:flex sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100 sm:transition-opacity sm:duration-150`}
           >
-            <ArchiveIcon size={15} />
-            <span className="hidden sm:inline">{t("archive")}</span>
-          </button>
+            <button
+              onClick={onEditToggle}
+              aria-label={isExpanded ? t("close") : t("edit")}
+              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+            >
+              {isExpanded ? <ChevronUp size={15} /> : <Pencil size={15} />}
+              <span className="hidden sm:inline">{isExpanded ? t("close") : t("edit")}</span>
+            </button>
+            <button
+              onClick={onArchive}
+              aria-label={t("archive")}
+              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-400 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-red-800 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+            >
+              <ArchiveIcon size={15} />
+              <span className="hidden sm:inline">{t("archive")}</span>
+            </button>
+          </div>
         </div>
       </div>
 
