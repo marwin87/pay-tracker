@@ -109,6 +109,51 @@ def send_daily_reminders(
     logger.info("Reminder job finished: %d email(s) sent", sent)
 
 
+def send_catchup_reminders(
+    SessionLocal: sessionmaker, send_minute: int | None = None
+) -> None:
+    """Run on startup: send reminders for all users whose scheduled time has already passed today."""
+    if settings.smtp_host is None:
+        logger.warning("Catch-up reminders: SMTP not configured, skipping")
+        return
+
+    now_utc = datetime.now(timezone.utc)
+    current_minute = (
+        send_minute if send_minute is not None else now_utc.hour * 60 + now_utc.minute
+    )
+    today = now_utc.date()
+    logger.info(
+        "Catch-up reminders started (today=%s UTC, up to minute=%d)",
+        today,
+        current_minute,
+    )
+
+    db: Session = SessionLocal()
+    sent = 0
+    try:
+        users = (
+            db.query(User)
+            .filter(
+                User.is_active.is_(True),
+                User.email_reminders_enabled.is_(True),
+                User.reminder_send_minute <= current_minute,
+                (
+                    User.notify_1_day_before.is_(True)
+                    | User.notify_2_days_before.is_(True)
+                    | User.notify_on_day.is_(True)
+                    | User.notify_1_day_after.is_(True)
+                ),
+            )
+            .all()
+        )
+        for user in users:
+            sent += send_reminders_for_user(db, user)
+    finally:
+        db.close()
+
+    logger.info("Catch-up reminders finished: %d email(s) sent", sent)
+
+
 def _send_and_flag(
     db: Session,
     user: User,

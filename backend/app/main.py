@@ -10,7 +10,7 @@ logging.getLogger("app").setLevel(logging.INFO)
 
 from app.core.database import SessionLocal
 from app.routers import auth, bills, export
-from app.services.reminder_job import send_daily_reminders
+from app.services.reminder_job import send_catchup_reminders, send_daily_reminders
 
 
 @asynccontextmanager
@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI):
     scheduler.start()
     # Run once on startup (non-blocking) so the current hour's reminders aren't missed after a restart
     loop = asyncio.get_event_loop()
-    loop.run_in_executor(None, send_daily_reminders, SessionLocal)
+    loop.run_in_executor(None, send_catchup_reminders, SessionLocal)
     yield
     scheduler.shutdown(wait=False)
 
