@@ -87,6 +87,8 @@ def send_notification_now(
 ):
     if settings.smtp_host is None:
         raise HTTPException(status_code=400, detail="SMTP not configured")
+    if not user.email_reminders_enabled:
+        return SendNotificationNowOut(sent=0)
     sent = send_reminders_for_user(db, user)
     return SendNotificationNowOut(sent=sent)
 
