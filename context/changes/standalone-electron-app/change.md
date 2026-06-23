@@ -1,9 +1,10 @@
 ---
 change_id: standalone-electron-app
-title: Package Pay Tracker as a standalone Electron desktop app (macOS, Windows, Linux)
-status: new
+title: Package Pay Tracker as a standalone Electron desktop app (macOS first)
+status: planned
 created: 2026-06-17
-updated: 2026-06-17
+updated: 2026-06-23
+plan: context/changes/standalone-electron-app/plan.md
 archived_at: null
 ---
 
@@ -84,8 +85,9 @@ The existing Web Push + service worker approach is replaced by Electron's native
 
 ---
 
-### Open questions before planning
+### Decisions (planning complete — see plan-brief.md)
 
-- Do we keep the two-process model (Next.js + FastAPI) or collapse everything into a single FastAPI app serving static files? Collapsing removes one subprocess and simplifies the Electron orchestration.
-- Target macOS-only first (simpler signing story) or all three platforms from day one?
-- Auto-update: include `electron-updater` (checks GitHub Releases for new versions) or ship manual updates only?
+- **Architecture:** Keep two-process model (Next.js standalone server + PyInstaller FastAPI binary)
+- **Platform:** macOS only for v1; Windows + Linux in a follow-up change
+- **Auto-update:** Lightweight GitHub API checker (no code signing required); `electron-updater` deferred until Apple Developer account obtained
+- **Code signing:** Deferred — personal use bypass via right-click → Open or `xattr -dr com.apple.quarantine`
