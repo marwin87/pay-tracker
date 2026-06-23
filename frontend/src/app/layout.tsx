@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "@/context/auth-context";
 import { LocaleProvider } from "@/context/locale-context";
 import PwaRegister from "@/components/pwa-register";
+import AppFooter from "@/components/AppFooter";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -44,6 +45,7 @@ export default function RootLayout({
         <AuthProvider>
           <LocaleProvider>{children}</LocaleProvider>
         </AuthProvider>
+        <AppFooter />
       </body>
     </html>
   );
