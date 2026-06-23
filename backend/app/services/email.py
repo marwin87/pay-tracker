@@ -1,3 +1,4 @@
+import html
 import smtplib
 from datetime import date
 from decimal import Decimal
@@ -230,10 +231,10 @@ def _build_summary_html(
             paid_on = str(paid_on)[:10]
         paid_html += (
             f"<tr>"
-            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{row["name"]}</td>'
-            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{row["due_date"]}</td>'
+            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{html.escape(row["name"])}</td>'
+            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{html.escape(str(row["due_date"]))}</td>'
             f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{paid_cell}</td>'
-            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{paid_on}</td>'
+            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{html.escape(str(paid_on))}</td>'
             f"</tr>"
         )
 
@@ -245,8 +246,8 @@ def _build_summary_html(
     for row in unpaid_rows:
         unpaid_html += (
             f"<tr>"
-            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{row["name"]}</td>'
-            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{row["due_date"]}</td>'
+            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{html.escape(row["name"])}</td>'
+            f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{html.escape(str(row["due_date"]))}</td>'
             f'<td style="padding:6px 12px;border-bottom:1px solid #e2e8f0">{fmt_amount(row["amount"], row["currency"])}</td>'
             f"</tr>"
         )
@@ -281,7 +282,7 @@ def _build_summary_html(
 <html>
 <head><meta charset="utf-8"></head>
 <body style="font-family:Arial,sans-serif;color:#1e293b;max-width:680px;margin:0 auto;padding:20px">
-  <h2 style="color:#0f172a">{h["intro"].format(month_label=month_label)}</h2>
+  <h2 style="color:#0f172a">{h["intro"].format(month_label=html.escape(month_label))}</h2>
 
   <h3 style="color:#15803d;margin-top:24px">✓ {h["paid_header"]}</h3>
   <table style="width:100%;border-collapse:collapse;font-size:14px">

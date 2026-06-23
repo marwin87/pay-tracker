@@ -317,6 +317,17 @@ def test_monthly_summary_splits_paid_and_unpaid(mock_send, db_session):
     assert kwargs["unpaid_rows"][0]["name"] == "Netflix"
 
 
+def test_monthly_summary_returns_false_when_smtp_not_configured(db_session):
+    user = _make_user(db_session)
+    db_session.commit()
+
+    with patch("app.services.reminder_job.settings") as mock_settings:
+        mock_settings.smtp_host = None
+        result = send_monthly_summary_for_user(db_session, user, "2026-06")
+
+    assert result is False
+
+
 @patch("app.services.reminder_job.send_monthly_summary_email")
 def test_monthly_summary_returns_false_on_smtp_error(mock_send, db_session):
     mock_send.side_effect = smtplib.SMTPException("connection refused")

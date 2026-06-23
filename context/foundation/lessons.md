@@ -44,6 +44,14 @@
 
 **Applies to:** Every new migration. After generating with `--autogenerate`, read the file and verify it contains the expected DDL. For renames: write `add_column` + `op.execute("UPDATE … SET new = old")` + `drop_column` explicitly. Never rely on `new_column_name` alone.
 
+## Alembic: omit server_default on nullable columns
+
+**Rule:** For nullable columns with no server-side default, omit `server_default` entirely in the `op.add_column` call. Do not use `server_default=sa.text("null")` — it emits a redundant `DEFAULT null` in the DDL and is non-idiomatic.
+
+**Why:** `sa.text("null")` works on PostgreSQL but is non-standard. The column is already nullable=True, which is sufficient. Omitting `server_default` is the Alembic convention for "this column has no server default."
+
+**Applies to:** Any future migration adding a nullable column. If the column should default to a value server-side, use `server_default="value"` (string literal or `sa.text("expression")`). If it should simply be nullable with no default, omit the argument.
+
 ## CLAUDE.md commit protocol overrides skill instructions
 
 **Rule:** Never auto-commit, even when a skill's own procedure instructs it. Always stage, show the proposed commit message, and wait for explicit user approval before running `git commit`.

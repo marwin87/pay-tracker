@@ -68,6 +68,8 @@ def _month_label(month: str, lang: str) -> str:
 
 def send_monthly_summary_for_user(db: Session, user: User, month: str) -> bool:
     """Send monthly summary email for a single user. Returns True on success."""
+    if not settings.smtp_host:
+        return False
     lang = user.language_preference or "en"
     instances = (
         db.query(PaymentInstance)
@@ -225,6 +227,9 @@ def send_daily_reminders(
 
         # On the last day of the month, send monthly summaries to all eligible
         # users regardless of reminder_send_minute — natural retry every 30 min.
+        # Note: the query-then-flag pattern is not atomic; two concurrent scheduler
+        # runs could both see last_sent=NULL and both send. Acceptable at household
+        # scale given the 30-min cadence makes overlap unlikely.
         is_last_day = today.day == calendar.monthrange(today.year, today.month)[1]
         if is_last_day:
             current_month = today.strftime("%Y-%m")
