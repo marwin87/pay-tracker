@@ -254,6 +254,7 @@ function ProfileTile({
       onToggle={onToggle}
     >
       <p className="text-sm text-slate-500 dark:text-slate-400">
+        <span className="text-slate-400 dark:text-slate-500">{tp("profile.currentEmailLabel")} </span>
         {profile.email}
       </p>
 
@@ -262,6 +263,7 @@ function ProfileTile({
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           {tp("profile.emailLabel")}
         </label>
+        <p className="text-xs text-slate-400 dark:text-slate-500">{tp("profile.emailHint")}</p>
         <input
           type="email"
           value={emailInput}
@@ -302,6 +304,7 @@ function ProfileTile({
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           {tp("profile.newPasswordLabel")}
         </label>
+        <p className="text-xs text-slate-400 dark:text-slate-500">{tp("profile.passwordHint")}</p>
         <input
           type="password"
           value={curPassword}
