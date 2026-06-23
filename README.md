@@ -22,6 +22,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Category grouping** — bills and payments are grouped under predefined category headers (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other). Category is required on every bill.
 - **Payment tracking** — view upcoming, overdue, and paid bills for any month, grouped by category. Mark as paid with an optional amount override and note. Revert if you made a mistake.
 - **Email reminders** — optional. Configure SMTP credentials and a send time (30-minute precision) and the app emails you before or after each bill's due date.
+- **Monthly summary email** — optional. On the last day of each month, receive a full summary of what was paid (amount due vs. paid, date) and what was missed, with totals. Toggle it in Settings → Email Notifications. A "Send monthly summary now" button lets you request the current month's snapshot on demand.
 - **Email sent indicator** — each payment row shows an `@` icon: gray if no reminder has been sent, amber if one was sent. Click it to see the exact timestamp.
 - **Export & backup** — download payment history as `.xlsx` (one sheet per month) or a full JSON backup. Restore from backup at any time.
 - **Multilingual** — English, Polish, German. Language is saved per account.

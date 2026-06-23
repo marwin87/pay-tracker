@@ -54,6 +54,7 @@ slice only matters if this loop works.
 | S-13 | settings-page                | manage user profile, email/browser notification preferences, and backup/restore from a dedicated Settings page | S-10, S-12 | FR-001, FR-011, FR-012, FR-013, FR-018    | done     |
 | S-14 | standalone-electron-app      | install Pay Tracker as a native desktop app (macOS, Windows, Linux) — no Docker, no browser, no server setup required | S-13 | NFR deploy                               | new      |
 | S-15 | category-enum-grouping       | see bills and payments grouped by a predefined category (Housing, Utilities, Subscriptions, etc.); category is required on every bill | S-02, S-07 | FR-003, FR-005                  | done     |
+| S-16 | monthly-summary-email        | receive a full month-end summary email (paid vs. missed, totals); toggle in Settings; on-demand "Send now" button | S-10, S-13 | FR-012 (extension)              | done     |
 
 ## Streams
 
@@ -360,3 +361,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-10: user receives an email reminder N days before a bill's due date when the instance is still unpaid; the lead time is configurable per template or globally.** — Archived 2026-06-16 → `context/archive/2026-06-16-email-reminders/`. Lesson: —.
 - **S-13: user can manage their account (email, password), configure email reminder timing (2 days before / 1 day before / on day / 1 day after), enable/disable browser notifications, and trigger backup and restore — all from a single dedicated Settings page accessible via a gear icon in the nav header. The crowded header icon buttons are removed.** — Archived 2026-06-16 → `context/archive/2026-06-16-settings-page/`. Lesson: —.
 - **S-15: user sees bills and payments grouped under predefined category headers (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other); category is a required field on every bill template, selected from a fixed `<select>` instead of a free-text input.** — Archived 2026-06-19 → `context/archive/2026-06-19-category-enum-grouping/`. Lesson: —.
+- **S-16: user receives a full month-end summary email showing what was paid (amount due vs. paid, date) and what was missed/overdue, with totals; toggle and on-demand send button in Settings → Email Notifications.** — Archived 2026-06-23 → `context/archive/2026-06-23-monthly-summary-email/`. Lesson: —.
