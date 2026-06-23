@@ -10,7 +10,10 @@ services:
       - "8010:8000"
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_APP_VERSION: ${NEXT_PUBLIC_APP_VERSION:-dev}
     container_name: frontend
     restart: unless-stopped
     env_file: .env
