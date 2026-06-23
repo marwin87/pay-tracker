@@ -42,6 +42,12 @@ class User(Base):
     reminder_send_minute: Mapped[int] = mapped_column(
         nullable=False, default=480, server_default="480"
     )
+    monthly_summary_enabled: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=True, server_default="true"
+    )
+    monthly_summary_last_sent: Mapped[str | None] = mapped_column(
+        String(7), nullable=True, default=None, server_default="null"
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )

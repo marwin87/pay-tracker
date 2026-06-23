@@ -29,6 +29,7 @@ class UserProfileOut(BaseModel):
     notify_on_day: bool
     notify_1_day_after: bool
     reminder_send_minute: int
+    monthly_summary_enabled: bool
 
 
 class UserProfileUpdate(BaseModel):
@@ -39,6 +40,7 @@ class UserProfileUpdate(BaseModel):
     notify_on_day: bool | None = None
     notify_1_day_after: bool | None = None
     reminder_send_minute: Annotated[int, Field(ge=0, le=1410)] | None = None
+    monthly_summary_enabled: bool | None = None
 
 
 class ChangePasswordRequest(BaseModel):
@@ -53,3 +55,7 @@ class ChangeEmailRequest(BaseModel):
 
 class SendNotificationNowOut(BaseModel):
     sent: int
+
+
+class SendMonthlySummaryNowOut(BaseModel):
+    sent: bool

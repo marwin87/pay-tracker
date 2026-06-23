@@ -1,3 +1,4 @@
+import calendar
 import logging
 import smtplib
 from datetime import date, datetime, timedelta, timezone
@@ -7,9 +8,127 @@ from sqlalchemy.orm import Session, selectinload, sessionmaker
 from app.core.config import settings
 from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
 from app.models.user import User
-from app.services.email import send_reminder_email
+from app.services.email import send_monthly_summary_email, send_reminder_email
 
 logger = logging.getLogger(__name__)
+
+
+_MONTH_NAMES: dict[str, list[str]] = {
+    "en": [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ],
+    "pl": [
+        "styczeń",
+        "luty",
+        "marzec",
+        "kwiecień",
+        "maj",
+        "czerwiec",
+        "lipiec",
+        "sierpień",
+        "wrzesień",
+        "październik",
+        "listopad",
+        "grudzień",
+    ],
+    "de": [
+        "Januar",
+        "Februar",
+        "März",
+        "April",
+        "Mai",
+        "Juni",
+        "Juli",
+        "August",
+        "September",
+        "Oktober",
+        "November",
+        "Dezember",
+    ],
+}
+
+
+def _month_label(month: str, lang: str) -> str:
+    """Return a human-readable month label, e.g. 'June 2026'."""
+    year, m = month.split("-")
+    names = _MONTH_NAMES.get(lang, _MONTH_NAMES["en"])
+    return f"{names[int(m) - 1]} {year}"
+
+
+def send_monthly_summary_for_user(db: Session, user: User, month: str) -> bool:
+    """Send monthly summary email for a single user. Returns True on success."""
+    lang = user.language_preference or "en"
+    instances = (
+        db.query(PaymentInstance)
+        .options(selectinload(PaymentInstance.template))
+        .join(BillTemplate, PaymentInstance.bill_id == BillTemplate.id)
+        .filter(
+            BillTemplate.user_id == user.id,
+            PaymentInstance.period == month,
+            PaymentInstance.is_deleted.is_(False),
+        )
+        .all()
+    )
+
+    paid_rows = []
+    unpaid_rows = []
+    for inst in instances:
+        name = inst.template.name if inst.template else f"bill#{inst.bill_id}"
+        currency = inst.template.currency if inst.template else "PLN"
+        due_date = inst.due_date.isoformat() if inst.due_date else ""
+        if inst.status == PaymentStatus.paid:
+            paid_rows.append(
+                {
+                    "name": name,
+                    "due_date": due_date,
+                    "amount": inst.amount,
+                    "paid_amount": inst.paid_amount,
+                    "currency": currency,
+                    "paid_at": inst.paid_at,
+                }
+            )
+        else:
+            unpaid_rows.append(
+                {
+                    "name": name,
+                    "due_date": due_date,
+                    "amount": inst.amount,
+                    "currency": currency,
+                }
+            )
+
+    try:
+        send_monthly_summary_email(
+            smtp_host=settings.smtp_host,
+            smtp_port=settings.smtp_port,
+            smtp_user=settings.smtp_user,
+            smtp_password=settings.smtp_password,
+            smtp_use_tls=settings.smtp_use_tls,
+            from_addr=settings.reminder_from or settings.smtp_user or "",
+            to_addr=user.email,
+            month_label=_month_label(month, lang),
+            paid_rows=paid_rows,
+            unpaid_rows=unpaid_rows,
+            language=lang,
+        )
+        logger.info("Sent monthly summary to %s for %s", user.email, month)
+        return True
+    except smtplib.SMTPException as exc:
+        logger.error(
+            "Failed to send monthly summary to %s for %s: %s", user.email, month, exc
+        )
+        return False
 
 
 def send_reminders_for_user(db: Session, user: User) -> int:
@@ -103,6 +222,27 @@ def send_daily_reminders(
 
         for user in users:
             sent += send_reminders_for_user(db, user)
+
+        # On the last day of the month, send monthly summaries to all eligible
+        # users regardless of reminder_send_minute — natural retry every 30 min.
+        is_last_day = today.day == calendar.monthrange(today.year, today.month)[1]
+        if is_last_day:
+            current_month = today.strftime("%Y-%m")
+            summary_users = (
+                db.query(User)
+                .filter(
+                    User.is_active.is_(True),
+                    User.email_reminders_enabled.is_(True),
+                    User.monthly_summary_enabled.is_(True),
+                    (User.monthly_summary_last_sent.is_(None))
+                    | (User.monthly_summary_last_sent != current_month),
+                )
+                .all()
+            )
+            for u in summary_users:
+                if send_monthly_summary_for_user(db, u, current_month):
+                    u.monthly_summary_last_sent = current_month
+                    db.commit()
     finally:
         db.close()
 
@@ -148,6 +288,26 @@ def send_catchup_reminders(
         )
         for user in users:
             sent += send_reminders_for_user(db, user)
+
+        # Also catch up missed monthly summaries on startup if today is last day.
+        is_last_day = today.day == calendar.monthrange(today.year, today.month)[1]
+        if is_last_day:
+            current_month = today.strftime("%Y-%m")
+            summary_users = (
+                db.query(User)
+                .filter(
+                    User.is_active.is_(True),
+                    User.email_reminders_enabled.is_(True),
+                    User.monthly_summary_enabled.is_(True),
+                    (User.monthly_summary_last_sent.is_(None))
+                    | (User.monthly_summary_last_sent != current_month),
+                )
+                .all()
+            )
+            for u in summary_users:
+                if send_monthly_summary_for_user(db, u, current_month):
+                    u.monthly_summary_last_sent = current_month
+                    db.commit()
     finally:
         db.close()
 

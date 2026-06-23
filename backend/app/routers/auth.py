@@ -13,12 +13,16 @@ from app.schemas.auth import (
     ChangePasswordRequest,
     LoginRequest,
     RegisterRequest,
+    SendMonthlySummaryNowOut,
     SendNotificationNowOut,
     TokenResponse,
     UserProfileOut,
     UserProfileUpdate,
 )
-from app.services.reminder_job import send_reminders_for_user
+from app.services.reminder_job import (
+    send_monthly_summary_for_user,
+    send_reminders_for_user,
+)
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 
@@ -91,6 +95,23 @@ def send_notification_now(
         return SendNotificationNowOut(sent=0)
     sent = send_reminders_for_user(db, user)
     return SendNotificationNowOut(sent=sent)
+
+
+@router.post("/send-monthly-summary-now", response_model=SendMonthlySummaryNowOut)
+def send_monthly_summary_now(
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+):
+    if settings.smtp_host is None:
+        raise HTTPException(status_code=400, detail="SMTP not configured")
+    if not user.email_reminders_enabled or not user.monthly_summary_enabled:
+        return SendMonthlySummaryNowOut(sent=False)
+    current_month = datetime.now(timezone.utc).strftime("%Y-%m")
+    sent = send_monthly_summary_for_user(db, user, current_month)
+    if sent:
+        user.monthly_summary_last_sent = current_month
+        db.commit()
+    return SendMonthlySummaryNowOut(sent=sent)
 
 
 @router.get("/server-time")

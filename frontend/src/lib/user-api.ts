@@ -9,6 +9,7 @@ export interface UserProfile {
   notify_on_day: boolean;
   notify_1_day_after: boolean;
   reminder_send_minute: number;
+  monthly_summary_enabled: boolean;
 }
 
 export function fetchMe(): Promise<UserProfile> {
@@ -26,6 +27,7 @@ export function updateMe(
       | "notify_on_day"
       | "notify_1_day_after"
       | "reminder_send_minute"
+      | "monthly_summary_enabled"
     >
   >,
 ): Promise<UserProfile> {
@@ -50,6 +52,12 @@ export function changePassword(
 
 export function sendNotificationNow(): Promise<{ sent: number }> {
   return apiFetch<{ sent: number }>("/auth/send-notification-now", {
+    method: "POST",
+  });
+}
+
+export function sendMonthlySummaryNow(): Promise<{ sent: boolean }> {
+  return apiFetch<{ sent: boolean }>("/auth/send-monthly-summary-now", {
     method: "POST",
   });
 }

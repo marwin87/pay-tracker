@@ -1,301 +1,306 @@
 {
-  "Auth": {
-    "loginSubtitle": "Zaloguj się na swoje konto",
-    "registerSubtitle": "Utwórz konto",
-    "emailLabel": "E-mail",
-    "passwordLabel": "Hasło",
-    "passwordHint": "Minimum 8 znaków",
-    "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków",
-    "signIn": "Zaloguj się",
-    "signingIn": "Logowanie…",
-    "loginFailed": "Logowanie nie powiodło się",
-    "noAccount": "Nie masz konta?",
-    "register": "Zarejestruj się",
-    "createAccount": "Utwórz konto",
-    "creatingAccount": "Tworzenie konta…",
-    "registrationFailed": "Rejestracja nie powiodła się",
-    "alreadyHaveAccount": "Masz już konto?"
-  },
-  "DashboardLayout": {
-    "payments": "Płatności",
-    "bills": "Rachunki",
-    "archived": "Archiwum",
-    "settings": "Ustawienia",
-    "logOut": "Wyloguj się",
-    "userMenu": "Menu użytkownika",
-    "signedInAs": "Zalogowany jako"
-  },
-  "Dashboard": {
-    "title": "Witaj w Pay Tracker",
-    "subtitle": "Zarządzaj rachunkami domowymi w jednym miejscu.",
-    "paymentsTitle": "Płatności",
-    "paymentsDesc": "Przeglądaj i oznaczaj rachunki z tego miesiąca jako opłacone",
-    "manageBillsTitle": "Zarządzaj rachunkami",
-    "manageBillsDesc": "Twórz, edytuj i śledź swoje cykliczne rachunki",
-    "archivedBillsTitle": "Zarchiwizowane rachunki",
-    "archivedBillsDesc": "Przeglądaj historię płatności",
-    "settingsTitle": "Ustawienia",
-    "settingsDesc": "Zarządzaj powiadomieniami, kopią zapasową i preferencjami"
-  },
-  "BillsPage": {
-    "title": "Twoje rachunki",
-    "subtitle": "Zarządzaj swoimi cyklicznymi i jednorazowymi rachunkami. Każdy rachunek automatycznie generuje przypomnienia o płatnościach.",
-    "newBill": "Nowy rachunek",
-    "cancel": "Anuluj",
-    "loadError": "Nie udało się załadować rachunków.",
-    "noBillsYet": "Brak rachunków",
-    "addFirstBill": "Dodaj pierwszy rachunek",
-    "viewArchive": "Zarchiwizowane rachunki",
-    "collapseAll": "Zwiń wszystko",
-    "expandAll": "Rozwiń wszystko"
-  },
-  "ArchivedBillsPage": {
-    "backToActive": "Aktywne rachunki",
-    "title": "Zarchiwizowane rachunki",
-    "subtitle": "Historia płatności jest zachowana dla wszystkich zarchiwizowanych rachunków.",
-    "loadError": "Nie udało się załadować zarchiwizowanych rachunków.",
-    "noArchivedBills": "Brak zarchiwizowanych rachunków",
-    "willAppearHere": "Tutaj pojawią się zarchiwizowane rachunki",
-    "archived": "Zarchiwizowany",
-    "frequency": {
-      "monthly": "Miesięcznie",
-      "every_2_months": "Co 2 miesiące",
-      "quarterly": "Kwartalnie",
-      "annual": "Rocznie",
-      "one_off": "Jednorazowo"
+    "Auth": {
+        "loginSubtitle": "Zaloguj się na swoje konto",
+        "registerSubtitle": "Utwórz konto",
+        "emailLabel": "E-mail",
+        "passwordLabel": "Hasło",
+        "passwordHint": "Minimum 8 znaków",
+        "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków",
+        "signIn": "Zaloguj się",
+        "signingIn": "Logowanie…",
+        "loginFailed": "Logowanie nie powiodło się",
+        "noAccount": "Nie masz konta?",
+        "register": "Zarejestruj się",
+        "createAccount": "Utwórz konto",
+        "creatingAccount": "Tworzenie konta…",
+        "registrationFailed": "Rejestracja nie powiodła się",
+        "alreadyHaveAccount": "Masz już konto?"
     },
-    "collapseAll": "Zwiń wszystko",
-    "expandAll": "Rozwiń wszystko"
-  },
-  "BillTemplateForm": {
-    "nameLabel": "Nazwa",
-    "namePlaceholder": "np. Prąd",
-    "nameRequired": "Nazwa jest wymagana.",
-    "amountLabel": "Kwota",
-    "amountInvalid": "Podaj prawidłową kwotę.",
-    "currencyAriaLabel": "Waluta",
-    "customOption": "Inna…",
-    "customCurrencyAriaLabel": "Kod waluty niestandardowej",
-    "customCurrencyPlaceholder": "np. CHF",
-    "frequencyLabel": "Częstotliwość",
-    "frequency": {
-      "monthly": "Miesięcznie",
-      "every_2_months": "Co 2 miesiące",
-      "quarterly": "Kwartalnie",
-      "annual": "Rocznie",
-      "one_off": "Jednorazowo"
+    "DashboardLayout": {
+        "payments": "Płatności",
+        "bills": "Rachunki",
+        "archived": "Archiwum",
+        "settings": "Ustawienia",
+        "logOut": "Wyloguj się",
+        "userMenu": "Menu użytkownika",
+        "signedInAs": "Zalogowany jako"
     },
-    "dueDateLabel": "Termin płatności",
-    "startDateLabel": "Miesiąc i dzień rozpoczęcia",
-    "categoryLabel": "Kategoria",
+    "Dashboard": {
+        "title": "Witaj w Pay Tracker",
+        "subtitle": "Zarządzaj rachunkami domowymi w jednym miejscu.",
+        "paymentsTitle": "Płatności",
+        "paymentsDesc": "Przeglądaj i oznaczaj rachunki z tego miesiąca jako opłacone",
+        "manageBillsTitle": "Zarządzaj rachunkami",
+        "manageBillsDesc": "Twórz, edytuj i śledź swoje cykliczne rachunki",
+        "archivedBillsTitle": "Zarchiwizowane rachunki",
+        "archivedBillsDesc": "Przeglądaj historię płatności",
+        "settingsTitle": "Ustawienia",
+        "settingsDesc": "Zarządzaj powiadomieniami, kopią zapasową i preferencjami"
+    },
+    "BillsPage": {
+        "title": "Twoje rachunki",
+        "subtitle": "Zarządzaj swoimi cyklicznymi i jednorazowymi rachunkami. Każdy rachunek automatycznie generuje przypomnienia o płatnościach.",
+        "newBill": "Nowy rachunek",
+        "cancel": "Anuluj",
+        "loadError": "Nie udało się załadować rachunków.",
+        "noBillsYet": "Brak rachunków",
+        "addFirstBill": "Dodaj pierwszy rachunek",
+        "viewArchive": "Zarchiwizowane rachunki",
+        "collapseAll": "Zwiń wszystko",
+        "expandAll": "Rozwiń wszystko"
+    },
+    "ArchivedBillsPage": {
+        "backToActive": "Aktywne rachunki",
+        "title": "Zarchiwizowane rachunki",
+        "subtitle": "Historia płatności jest zachowana dla wszystkich zarchiwizowanych rachunków.",
+        "loadError": "Nie udało się załadować zarchiwizowanych rachunków.",
+        "noArchivedBills": "Brak zarchiwizowanych rachunków",
+        "willAppearHere": "Tutaj pojawią się zarchiwizowane rachunki",
+        "archived": "Zarchiwizowany",
+        "frequency": {
+            "monthly": "Miesięcznie",
+            "every_2_months": "Co 2 miesiące",
+            "quarterly": "Kwartalnie",
+            "annual": "Rocznie",
+            "one_off": "Jednorazowo"
+        },
+        "collapseAll": "Zwiń wszystko",
+        "expandAll": "Rozwiń wszystko"
+    },
+    "BillTemplateForm": {
+        "nameLabel": "Nazwa",
+        "namePlaceholder": "np. Prąd",
+        "nameRequired": "Nazwa jest wymagana.",
+        "amountLabel": "Kwota",
+        "amountInvalid": "Podaj prawidłową kwotę.",
+        "currencyAriaLabel": "Waluta",
+        "customOption": "Inna…",
+        "customCurrencyAriaLabel": "Kod waluty niestandardowej",
+        "customCurrencyPlaceholder": "np. CHF",
+        "frequencyLabel": "Częstotliwość",
+        "frequency": {
+            "monthly": "Miesięcznie",
+            "every_2_months": "Co 2 miesiące",
+            "quarterly": "Kwartalnie",
+            "annual": "Rocznie",
+            "one_off": "Jednorazowo"
+        },
+        "dueDateLabel": "Termin płatności",
+        "startDateLabel": "Miesiąc i dzień rozpoczęcia",
+        "categoryLabel": "Kategoria",
         "categoryRequired": "Kategoria jest wymagana.",
-    "notesLabel": "Notatki",
-    "notesPlaceholder": "Opcjonalne notatki",
-    "pauseRecurrence": "Wstrzymaj cykl (brak nowych instancji)",
-    "cancel": "Anuluj",
-    "save": "Zapisz",
-    "saving": "Zapisywanie…",
-    "saveFailed": "Zapis nie powiódł się."
-  },
-  "BillTemplateRow": {
-    "dueOn": "Płatne",
-    "paused": "Wstrzymany",
-    "close": "Zamknij",
-    "edit": "Edytuj",
-    "archive": "Archiwizuj",
-    "frequency": {
-      "monthly": "Miesięcznie",
-      "every_2_months": "Co 2 miesiące",
-      "quarterly": "Kwartalnie",
-      "annual": "Rocznie",
-      "one_off": "Jednorazowo"
+        "notesLabel": "Notatki",
+        "notesPlaceholder": "Opcjonalne notatki",
+        "pauseRecurrence": "Wstrzymaj cykl (brak nowych instancji)",
+        "cancel": "Anuluj",
+        "save": "Zapisz",
+        "saving": "Zapisywanie…",
+        "saveFailed": "Zapis nie powiódł się."
+    },
+    "BillTemplateRow": {
+        "dueOn": "Płatne",
+        "paused": "Wstrzymany",
+        "close": "Zamknij",
+        "edit": "Edytuj",
+        "archive": "Archiwizuj",
+        "frequency": {
+            "monthly": "Miesięcznie",
+            "every_2_months": "Co 2 miesiące",
+            "quarterly": "Kwartalnie",
+            "annual": "Rocznie",
+            "one_off": "Jednorazowo"
+        }
+    },
+    "RestoreDeletedDialog": {
+        "title": "Przywrócić usunięte płatności?",
+        "description": "Niektóre przyszłe płatności dla „{name}” zostały wcześniej usunięte. Przywrócić je z aktualnymi wartościami szablonu?",
+        "restore": "Przywróć",
+        "skip": "Pomiń",
+        "restoring": "Przywracanie…"
+    },
+    "ArchiveConfirmDialog": {
+        "title": "Zarchiwizować „{billName}”?",
+        "description": "Ten rachunek zostanie ukryty z aktywnej listy. Historia płatności zostanie zachowana i będzie dostępna w widoku zarchiwizowanych.",
+        "cancel": "Anuluj",
+        "archive": "Archiwizuj",
+        "archiving": "Archiwizowanie…"
+    },
+    "Frequencies": {
+        "monthly": "Miesięcznie",
+        "every_2_months": "Co 2 miesiące",
+        "quarterly": "Kwartalnie",
+        "annual": "Rocznie",
+        "one_off": "Jednorazowo"
+    },
+    "DayPicker": {
+        "placeholder": "Wybierz dzień",
+        "selectedDay": "Dzień {day}",
+        "heading": "Dzień miesiąca",
+        "shortMonthWarning": "Niektóre miesiące mają mniej dni — rachunek przypadnie na ostatni dostępny dzień."
+    },
+    "CategoryCombobox": {
+        "placeholder": "np. Media"
+    },
+    "PaymentsPage": {
+        "title": "Płatności",
+        "subtitle": "Śledź i oznaczaj swoje rachunki miesiąc po miesiącu.",
+        "loadError": "Nie udało się załadować płatności.",
+        "noPayments": "Brak rachunków w tym miesiącu",
+        "addBills": "Dodaj rachunki →",
+        "pastMonth": "Poprzedni",
+        "exportXlsx": "Eksport Excel",
+        "exportXlsxLoading": "Eksportowanie…",
+        "exportXlsxError": "Eksport nie powiódł się. Spróbuj ponownie.",
+        "collapseAll": "Zwiń wszystko",
+        "expandAll": "Rozwiń wszystko",
+        "summaryUpcoming": "nadchodzące",
+        "summaryOverdueToday": "zaległe dzisiaj",
+        "summaryOverdue": "zaległe",
+        "summaryPaid": "opłacone"
+    },
+    "PaymentRow": {
+        "status": {
+            "upcoming": "Nadchodzące",
+            "overdue": "Zaległe",
+            "paid": "Opłacone"
+        },
+        "dueToday": "Dzisiaj",
+        "markAsPaid": "Oznacz jako opłacone",
+        "revert": "Cofnij płatność",
+        "due": "Termin",
+        "paidOn": "Opłacono",
+        "amountMismatch": "Oczekiwano {expected}, zapłacono {paid}",
+        "delete": "Usuń płatność",
+        "paymentNote": "Notatka do płatności",
+        "emailNotification": "Powiadomienie email",
+        "emailNotSent": "Powiadomienie email nie zostało wysłane",
+        "emailSentOn": "Email wysłany"
+    },
+    "DeletePaymentDialog": {
+        "title": "Usunąć tę płatność?",
+        "descriptionRecurring": "Ten wpis płatności zostanie usunięty. Cykliczny rachunek będzie nadal generować przyszłe wpisy.",
+        "descriptionOneOff": "Ten jednorazowy wpis płatności zostanie usunięty. Tej operacji nie można cofnąć.",
+        "deleteFutureLabel": "Usuń również wszystkie przyszłe nieopłacone wpisy tego rachunku",
+        "cancel": "Anuluj",
+        "confirm": "Usuń",
+        "deleting": "Usuwanie…",
+        "deleteFailed": "Nie udało się usunąć płatności."
+    },
+    "MarkPaidDialog": {
+        "title": "Oznacz jako opłacone: {billName}",
+        "amountLabel": "Zapłacona kwota",
+        "notesLabel": "Notatki (opcjonalnie)",
+        "cancel": "Anuluj",
+        "confirm": "Oznacz jako opłacone",
+        "confirming": "Zapisywanie…",
+        "saveFailed": "Nie udało się zapisać płatności."
+    },
+    "RestoreButton": {
+        "ariaLabel": "Przywróć z kopii zapasowej",
+        "dialogTitle": "Przywróć z kopii zapasowej",
+        "dialogDescription": "Spowoduje to trwałe zastąpienie wszystkich Twoich danych zawartością pliku “{filename}”. Tej operacji nie można cofnąć.",
+        "cancel": "Anuluj",
+        "confirm": "Zastąp moje dane",
+        "restoring": "Przywracanie…",
+        "error": "Przywracanie nie powiodło się. Sprawdź plik i spróbuj ponownie.",
+        "fileTooLarge": "Plik jest za duży. Kopie zapasowe muszą mieć mniej niż 10 MB."
+    },
+    "BackupButton": {
+        "ariaLabel": "Pobierz kopię zapasową",
+        "dialogTitle": "Pobierz kopię zapasową",
+        "dialogDescription": "Zostanie pobrana pełna kopia danych Pay Tracker — szablony rachunków, historia płatności i konta użytkowników. Przechowuj plik w bezpiecznym miejscu.",
+        "cancel": "Anuluj",
+        "confirm": "Pobierz",
+        "downloading": "Pobieranie…",
+        "error": "Tworzenie kopii nie powiodło się. Spróbuj ponownie."
+    },
+    "ThemeToggle": {
+        "ariaLabel": "Przełącz motyw"
+    },
+    "LanguageToggle": {
+        "ariaLabel": "Zmień język",
+        "label": "Język:",
+        "name": "Polski"
+    },
+    "NotificationToggle": {
+        "paymentIncoming": "Nadchodząca płatność"
+    },
+    "EmailRemindersToggle": {
+        "enable": "Włącz przypomnienia e-mail",
+        "disable": "Wyłącz przypomnienia e-mail"
+    },
+    "SettingsPage": {
+        "pageTitle": "Ustawienia",
+        "collapseAll": "Zwiń wszystko",
+        "expandAll": "Rozwiń wszystko",
+        "unsavedTitle": "Niezapisane zmiany",
+        "unsavedDescription": "Masz niezapisane zmiany. Wyjść bez zapisywania?",
+        "unsavedLeave": "Wyjdź",
+        "unsavedStay": "Zostań",
+        "save": "Zapisz",
+        "saving": "Zapisywanie…",
+        "cancel": "Anuluj",
+        "saveFailed": "Zapis nie powiódł się. Spróbuj ponownie.",
+        "profile": {
+            "title": "Profil użytkownika",
+            "description": "Zmień swój adres e-mail i hasło.",
+            "emailLabel": "Adres e-mail",
+            "emailPlaceholder": "nowy@email.com",
+            "currentPasswordPlaceholder": "Wprowadź aktualne hasło",
+            "newPasswordLabel": "Nowe hasło",
+            "newPasswordPlaceholder": "Minimum 8 znaków",
+            "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+            "wrongPassword": "Aktualne hasło jest nieprawidłowe.",
+            "emailTaken": "Ten adres e-mail jest już zarejestrowany.",
+            "emailAndPasswordRequired": "Podaj nowy adres e-mail oraz aktualne hasło."
+        },
+        "emailNotifications": {
+            "title": "Powiadomienia e-mail",
+            "description": "Wybierz, kiedy otrzymywać przypomnienia e-mail o nadchodzących i zaległych rachunkach.",
+            "twoDaysBefore": "2 dni przed terminem",
+            "oneDayBefore": "1 dzień przed terminem",
+            "onDay": "W dniu płatności",
+            "oneDayAfter": "1 dzień po terminie",
+            "noneWarning": "Wybierz co najmniej jedną opcję, aby otrzymywać przypomnienia e-mail.",
+            "sendTimeLabel": "Godzina wysyłki (UTC)",
+            "masterToggle": "Włącz powiadomienia e-mail",
+            "sendNowButton": "Wyślij powiadomienie teraz",
+            "sendNowSending": "Wysyłanie...",
+            "sendNowSent": "Wysłano {count} przypomnienie(ń)",
+            "sendNowNoReminders": "Brak nadchodzących przypomnień do wysłania",
+            "monthlySummaryToggle": "Miesięczne podsumowanie (ostatni dzień miesiąca)",
+            "sendMonthlySummaryButton": "Wyślij miesięczne podsumowanie",
+            "sendMonthlySummarySending": "Wysyłanie...",
+            "sendMonthlySummarySent": "Miesięczne podsumowanie wysłane",
+            "sendMonthlySummaryNoData": "Brak płatności w tym miesiącu",
+            "serverTimeHint": "Przypomnienia są wysyłane według czasu serwera (UTC). Aktualny czas serwera: {time}."
+        },
+        "browserNotifications": {
+            "title": "Powiadomienia przeglądarki",
+            "description": "Otrzymuj powiadomienie, gdy rachunek jest płatny dzisiaj.",
+            "enable": "Włącz powiadomienia",
+            "toggle": "Włącz powiadomienia przeglądarki",
+            "osHint": "Nie widzisz powiadomień? Sprawdź ustawienia powiadomień systemu (macOS: Ustawienia systemowe → Powiadomienia).",
+            "blockedWarning": "Powiadomienia przeglądarki są zablokowane. Włącz je w ustawieniach przeglądarki lub systemu operacyjnego."
+        },
+        "backup": {
+            "title": "Kopia zapasowa",
+            "description": "Pobierz pełną kopię wszystkich danych Pay Tracker jako plik JSON."
+        },
+        "restore": {
+            "title": "Przywracanie danych",
+            "description": "Zastąp wszystkie bieżące dane wcześniej pobraną kopią zapasową."
+        }
+    },
+    "Categories": {
+        "housing": "Mieszkanie",
+        "utilities": "Media",
+        "insurance": "Ubezpieczenie",
+        "subscriptions": "Subskrypcje",
+        "entertainment": "Rozrywka",
+        "transport": "Transport",
+        "healthcare": "Zdrowie",
+        "education": "Edukacja",
+        "other": "Inne"
     }
-  },
-  "RestoreDeletedDialog": {
-    "title": "Przywrócić usunięte płatności?",
-    "description": "Niektóre przyszłe płatności dla „{name}” zostały wcześniej usunięte. Przywrócić je z aktualnymi wartościami szablonu?",
-    "restore": "Przywróć",
-    "skip": "Pomiń",
-    "restoring": "Przywracanie…"
-  },
-  "ArchiveConfirmDialog": {
-    "title": "Zarchiwizować „{billName}”?",
-    "description": "Ten rachunek zostanie ukryty z aktywnej listy. Historia płatności zostanie zachowana i będzie dostępna w widoku zarchiwizowanych.",
-    "cancel": "Anuluj",
-    "archive": "Archiwizuj",
-    "archiving": "Archiwizowanie…"
-  },
-  "Frequencies": {
-    "monthly": "Miesięcznie",
-    "every_2_months": "Co 2 miesiące",
-    "quarterly": "Kwartalnie",
-    "annual": "Rocznie",
-    "one_off": "Jednorazowo"
-  },
-  "DayPicker": {
-    "placeholder": "Wybierz dzień",
-    "selectedDay": "Dzień {day}",
-    "heading": "Dzień miesiąca",
-    "shortMonthWarning": "Niektóre miesiące mają mniej dni — rachunek przypadnie na ostatni dostępny dzień."
-  },
-  "CategoryCombobox": {
-    "placeholder": "np. Media"
-  },
-  "PaymentsPage": {
-    "title": "Płatności",
-    "subtitle": "Śledź i oznaczaj swoje rachunki miesiąc po miesiącu.",
-    "loadError": "Nie udało się załadować płatności.",
-    "noPayments": "Brak rachunków w tym miesiącu",
-    "addBills": "Dodaj rachunki →",
-    "pastMonth": "Poprzedni",
-    "exportXlsx": "Eksport Excel",
-    "exportXlsxLoading": "Eksportowanie…",
-    "exportXlsxError": "Eksport nie powiódł się. Spróbuj ponownie.",
-    "collapseAll": "Zwiń wszystko",
-    "expandAll": "Rozwiń wszystko",
-    "summaryUpcoming": "nadchodzące",
-    "summaryOverdueToday": "zaległe dzisiaj",
-    "summaryOverdue": "zaległe",
-    "summaryPaid": "opłacone"
-  },
-  "PaymentRow": {
-    "status": {
-      "upcoming": "Nadchodzące",
-      "overdue": "Zaległe",
-      "paid": "Opłacone"
-    },
-    "dueToday": "Dzisiaj",
-    "markAsPaid": "Oznacz jako opłacone",
-    "revert": "Cofnij płatność",
-    "due": "Termin",
-    "paidOn": "Opłacono",
-    "amountMismatch": "Oczekiwano {expected}, zapłacono {paid}",
-    "delete": "Usuń płatność",
-    "paymentNote": "Notatka do płatności",
-    "emailNotification": "Powiadomienie email",
-    "emailNotSent": "Powiadomienie email nie zostało wysłane",
-    "emailSentOn": "Email wysłany"
-  },
-  "DeletePaymentDialog": {
-    "title": "Usunąć tę płatność?",
-    "descriptionRecurring": "Ten wpis płatności zostanie usunięty. Cykliczny rachunek będzie nadal generować przyszłe wpisy.",
-    "descriptionOneOff": "Ten jednorazowy wpis płatności zostanie usunięty. Tej operacji nie można cofnąć.",
-    "deleteFutureLabel": "Usuń również wszystkie przyszłe nieopłacone wpisy tego rachunku",
-    "cancel": "Anuluj",
-    "confirm": "Usuń",
-    "deleting": "Usuwanie…",
-    "deleteFailed": "Nie udało się usunąć płatności."
-  },
-  "MarkPaidDialog": {
-    "title": "Oznacz jako opłacone: {billName}",
-    "amountLabel": "Zapłacona kwota",
-    "notesLabel": "Notatki (opcjonalnie)",
-    "cancel": "Anuluj",
-    "confirm": "Oznacz jako opłacone",
-    "confirming": "Zapisywanie…",
-    "saveFailed": "Nie udało się zapisać płatności."
-  },
-  "RestoreButton": {
-    "ariaLabel": "Przywróć z kopii zapasowej",
-    "dialogTitle": "Przywróć z kopii zapasowej",
-    "dialogDescription": "Spowoduje to trwałe zastąpienie wszystkich Twoich danych zawartością pliku \"{filename}\". Tej operacji nie można cofnąć.",
-    "cancel": "Anuluj",
-    "confirm": "Zastąp moje dane",
-    "restoring": "Przywracanie…",
-    "error": "Przywracanie nie powiodło się. Sprawdź plik i spróbuj ponownie.",
-    "fileTooLarge": "Plik jest za duży. Kopie zapasowe muszą mieć mniej niż 10 MB."
-  },
-  "BackupButton": {
-    "ariaLabel": "Pobierz kopię zapasową",
-    "dialogTitle": "Pobierz kopię zapasową",
-    "dialogDescription": "Zostanie pobrana pełna kopia danych Pay Tracker — szablony rachunków, historia płatności i konta użytkowników. Przechowuj plik w bezpiecznym miejscu.",
-    "cancel": "Anuluj",
-    "confirm": "Pobierz",
-    "downloading": "Pobieranie…",
-    "error": "Tworzenie kopii nie powiodło się. Spróbuj ponownie."
-  },
-  "ThemeToggle": {
-    "ariaLabel": "Przełącz motyw"
-  },
-  "LanguageToggle": {
-    "ariaLabel": "Zmień język",
-    "label": "Język:",
-    "name": "Polski"
-  },
-  "NotificationToggle": {
-    "paymentIncoming": "Nadchodząca płatność"
-  },
-  "EmailRemindersToggle": {
-    "enable": "Włącz przypomnienia e-mail",
-    "disable": "Wyłącz przypomnienia e-mail"
-  },
-  "SettingsPage": {
-    "pageTitle": "Ustawienia",
-    "collapseAll": "Zwiń wszystko",
-    "expandAll": "Rozwiń wszystko",
-    "unsavedTitle": "Niezapisane zmiany",
-    "unsavedDescription": "Masz niezapisane zmiany. Wyjść bez zapisywania?",
-    "unsavedLeave": "Wyjdź",
-    "unsavedStay": "Zostań",
-    "save": "Zapisz",
-    "saving": "Zapisywanie…",
-    "cancel": "Anuluj",
-    "saveFailed": "Zapis nie powiódł się. Spróbuj ponownie.",
-    "profile": {
-      "title": "Profil użytkownika",
-      "description": "Zmień swój adres e-mail i hasło.",
-      "emailLabel": "Adres e-mail",
-      "emailPlaceholder": "nowy@email.com",
-      "currentPasswordPlaceholder": "Wprowadź aktualne hasło",
-      "newPasswordLabel": "Nowe hasło",
-      "newPasswordPlaceholder": "Minimum 8 znaków",
-      "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
-      "wrongPassword": "Aktualne hasło jest nieprawidłowe.",
-      "emailTaken": "Ten adres e-mail jest już zarejestrowany.",
-      "emailAndPasswordRequired": "Podaj nowy adres e-mail oraz aktualne hasło."
-    },
-    "emailNotifications": {
-      "title": "Powiadomienia e-mail",
-      "description": "Wybierz, kiedy otrzymywać przypomnienia e-mail o nadchodzących i zaległych rachunkach.",
-      "twoDaysBefore": "2 dni przed terminem",
-      "oneDayBefore": "1 dzień przed terminem",
-      "onDay": "W dniu płatności",
-      "oneDayAfter": "1 dzień po terminie",
-      "noneWarning": "Wybierz co najmniej jedną opcję, aby otrzymywać przypomnienia e-mail.",
-      "sendTimeLabel": "Godzina wysyłki (UTC)",
-      "masterToggle": "Włącz powiadomienia e-mail",
-      "sendNowButton": "Wyślij powiadomienie teraz",
-      "sendNowSending": "Wysyłanie...",
-      "sendNowSent": "Wysłano {count} przypomnienie(ń)",
-      "sendNowNoReminders": "Brak nadchodzących przypomnień do wysłania",
-      "serverTimeHint": "Przypomnienia są wysyłane według czasu serwera (UTC). Aktualny czas serwera: {time}."
-    },
-    "browserNotifications": {
-      "title": "Powiadomienia przeglądarki",
-      "description": "Otrzymuj powiadomienie, gdy rachunek jest płatny dzisiaj.",
-      "enable": "Włącz powiadomienia",
-      "toggle": "Włącz powiadomienia przeglądarki",
-      "osHint": "Nie widzisz powiadomień? Sprawdź ustawienia powiadomień systemu (macOS: Ustawienia systemowe → Powiadomienia).",
-      "blockedWarning": "Powiadomienia przeglądarki są zablokowane. Włącz je w ustawieniach przeglądarki lub systemu operacyjnego."
-    },
-    "backup": {
-      "title": "Kopia zapasowa",
-      "description": "Pobierz pełną kopię wszystkich danych Pay Tracker jako plik JSON."
-    },
-    "restore": {
-      "title": "Przywracanie danych",
-      "description": "Zastąp wszystkie bieżące dane wcześniej pobraną kopią zapasową."
-    }
-  },
-  "Categories": {
-    "housing": "Mieszkanie",
-    "utilities": "Media",
-    "insurance": "Ubezpieczenie",
-    "subscriptions": "Subskrypcje",
-    "entertainment": "Rozrywka",
-    "transport": "Transport",
-    "healthcare": "Zdrowie",
-    "education": "Edukacja",
-    "other": "Inne"
-  }
 }

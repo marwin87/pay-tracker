@@ -7,6 +7,7 @@ import {
   User,
   Bell,
   BellOff,
+  BarChart2,
   ChevronRight,
   ChevronsUpDown,
   HardDriveDownload,
@@ -23,6 +24,7 @@ import {
   changePassword,
   changeEmail,
   sendNotificationNow,
+  sendMonthlySummaryNow,
   fetchServerTime,
   UserProfile,
 } from "@/lib/user-api";
@@ -372,11 +374,18 @@ function EmailNotificationsTile({
   const [notifyOn, setNotifyOn] = useState(profile.notify_on_day);
   const [notify1After, setNotify1After] = useState(profile.notify_1_day_after);
   const [sendMinute, setSendMinute] = useState(profile.reminder_send_minute);
+  const [monthlySummary, setMonthlySummary] = useState(
+    profile.monthly_summary_enabled,
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
   const [isSendingNow, setIsSendingNow] = useState(false);
   const [sendNowResult, setSendNowResult] = useState<
     { sent: number } | { error: string } | null
+  >(null);
+  const [isSendingSummary, setIsSendingSummary] = useState(false);
+  const [sendSummaryResult, setSendSummaryResult] = useState<
+    { sent: boolean } | { error: string } | null
   >(null);
   const [serverTime, setServerTime] = useState<string | null>(null);
 
@@ -401,7 +410,8 @@ function EmailNotificationsTile({
     notify1 !== profile.notify_1_day_before ||
     notifyOn !== profile.notify_on_day ||
     notify1After !== profile.notify_1_day_after ||
-    sendMinute !== profile.reminder_send_minute;
+    sendMinute !== profile.reminder_send_minute ||
+    monthlySummary !== profile.monthly_summary_enabled;
 
   const noneSelected = !notify2 && !notify1 && !notifyOn && !notify1After;
 
@@ -416,6 +426,7 @@ function EmailNotificationsTile({
     setNotifyOn(profile.notify_on_day);
     setNotify1After(profile.notify_1_day_after);
     setSendMinute(profile.reminder_send_minute);
+    setMonthlySummary(profile.monthly_summary_enabled);
     setSaveError(null);
   }
 
@@ -430,6 +441,7 @@ function EmailNotificationsTile({
         notify_on_day: notifyOn,
         notify_1_day_after: notify1After,
         reminder_send_minute: sendMinute,
+        monthly_summary_enabled: monthlySummary,
       });
       onProfileUpdate(updated);
     } catch {
@@ -446,11 +458,24 @@ function EmailNotificationsTile({
       const result = await sendNotificationNow();
       setSendNowResult(result);
     } catch (err) {
-      const msg =
-        err instanceof Error ? err.message : tp("saveFailed");
+      const msg = err instanceof Error ? err.message : tp("saveFailed");
       setSendNowResult({ error: msg });
     } finally {
       setIsSendingNow(false);
+    }
+  }
+
+  async function handleSendSummary() {
+    setIsSendingSummary(true);
+    setSendSummaryResult(null);
+    try {
+      const result = await sendMonthlySummaryNow();
+      setSendSummaryResult(result);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : tp("saveFailed");
+      setSendSummaryResult({ error: msg });
+    } finally {
+      setIsSendingSummary(false);
     }
   }
 
@@ -561,6 +586,44 @@ function EmailNotificationsTile({
               : tp("emailNotifications.sendNowSent", {
                   count: sendNowResult.sent,
                 })}
+          </p>
+        )}
+
+        <div className="pt-1 border-t border-slate-100 dark:border-slate-700">
+          <Switch
+            checked={monthlySummary}
+            onChange={setMonthlySummary}
+            label={tp("emailNotifications.monthlySummaryToggle")}
+          />
+        </div>
+
+        <button
+          onClick={handleSendSummary}
+          disabled={
+            isSendingSummary || !emailEnabled || !monthlySummary || isDirty
+          }
+          className="flex items-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+        >
+          {isSendingSummary ? (
+            <Loader2 size={14} className="animate-spin" />
+          ) : (
+            <BarChart2 size={14} />
+          )}
+          {isSendingSummary
+            ? tp("emailNotifications.sendMonthlySummarySending")
+            : tp("emailNotifications.sendMonthlySummaryButton")}
+        </button>
+
+        {sendSummaryResult && "error" in sendSummaryResult && (
+          <p className="text-sm text-red-600 dark:text-red-400">
+            {sendSummaryResult.error}
+          </p>
+        )}
+        {sendSummaryResult && "sent" in sendSummaryResult && (
+          <p className="text-sm text-green-600 dark:text-green-500">
+            {sendSummaryResult.sent
+              ? tp("emailNotifications.sendMonthlySummarySent")
+              : tp("emailNotifications.sendMonthlySummaryNoData")}
           </p>
         )}
         </div>

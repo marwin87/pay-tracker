@@ -1,0 +1,396 @@
+# Monthly Summary Email Implementation Plan
+
+## Overview
+
+Add a month-end summary email that gives users a full overview of what was paid, what was missed, and what's still pending for a given month. Includes on-demand send from Settings and automatic send on the last day of each month. Configurable independently of the existing daily reminder system.
+
+## Current State Analysis
+
+Pay Tracker has a mature daily reminder system:
+- `backend/app/services/email.py` — plain-text `send_reminder_email()` using `_SUBJECTS`/`_BODIES` dicts keyed by `(kind, lang)`
+- `backend/app/services/reminder_job.py` — `send_reminders_for_user()`, `send_daily_reminders()` (every 30 min via APScheduler), `send_catchup_reminders()` (on startup)
+- `backend/app/models/user.py` — notification prefs as `Mapped[bool]` with `server_default`
+- `backend/app/routers/auth.py` — `POST /auth/send-notification-now` endpoint pattern
+- `backend/app/schemas/auth.py` — `UserProfileOut` / `UserProfileUpdate` with all notification fields
+- `frontend/src/lib/user-api.ts` — `UserProfile` interface, `sendNotificationNow()`
+- `frontend/src/app/dashboard/settings/page.tsx` — email notifications tile with `useTranslations`, `Switch`, dirty tracking, send-now button
+- `frontend/messages/{en,pl,de}.json` — translation keys under `emailNotifications.*`
+
+**Missing**: no monthly summary email type, no idempotency field for it, no HTML email support.
+
+## Desired End State
+
+- A `monthly_summary_enabled` toggle in Settings → Email Notifications
+- A "Send monthly summary now" button that emails the current month's paid/unpaid status on demand
+- On the last day of each month, the existing 30-min scheduler automatically sends the summary to eligible users; retries on every subsequent run if the first attempt failed (idempotency via `monthly_summary_last_sent`)
+- The summary email is HTML with two sections: Paid (with mismatch highlight if `paid_amount ≠ amount`) and Unpaid/Overdue; available in en, pl, de
+
+### Key Discoveries
+
+- `send_daily_reminders()` filters by `User.reminder_send_minute == current_minute` — monthly summary must bypass this filter so retries fire on every 30-min run during the last day
+- `send_catchup_reminders()` uses the same `reminder_send_minute <=` logic — needs a parallel monthly-summary branch
+- `UserProfileUpdate` uses `model_dump(exclude_unset=True)` with `setattr` — adding fields to the schema automatically makes them patchable
+- `monthly_summary_last_sent` (YYYY-MM string) is set only on successful send; on manual "Send now", it's also updated to prevent a duplicate auto-send the same evening
+
+## What We're NOT Doing
+
+- No new APScheduler job — piggybacking on the existing 30-min cron
+- No retry counter — the idempotency flag + 30-min loop provides natural retries
+- No email for months with zero payments (send anyway; unpaid section may be populated)
+- No month-selection UI — "Send now" always covers the current calendar month
+- No changes to the existing daily reminder emails
+
+## Implementation Approach
+
+Three sequential phases:
+1. Data model + HTML email template (backend, no behavior change)
+2. Service logic, scheduler integration, endpoint, tests (backend, activates the feature)
+3. Frontend wiring (settings page toggle + button + translations)
+
+## Critical Implementation Details
+
+- **Idempotency in scheduler**: the monthly summary user query in `send_daily_reminders()` must NOT filter by `reminder_send_minute` — it should query all eligible users (`is_active`, `email_reminders_enabled`, `monthly_summary_enabled`) whose `monthly_summary_last_sent != current_month`. This runs on every 30-min tick on the last day, providing automatic retries.
+- **Manual send updates the flag**: `POST /auth/send-monthly-summary-now` must also set `monthly_summary_last_sent = current_month` on success, so the auto-send later that day is skipped.
+- **HTML email**: `EmailMessage.set_content()` sets the plain-text body; call `msg.add_alternative(html_body, subtype="html")` for the HTML version — this is stdlib, no new dependencies.
+
+---
+
+## Phase 1: Backend — Data Model + HTML Email Template
+
+### Overview
+
+Add the two new User fields (preference toggle + idempotency tracker), run the migration, extend schemas, and implement the HTML summary email function. No scheduler or endpoint changes yet — this phase is purely additive.
+
+### Changes Required
+
+#### 1. User model
+
+**File**: `backend/app/models/user.py`
+
+**Intent**: Add two fields — the user preference toggle and the idempotency tracker.
+
+**Contract**:
+```python
+monthly_summary_enabled: Mapped[bool] = mapped_column(
+    Boolean, nullable=False, default=True, server_default="true"
+)
+monthly_summary_last_sent: Mapped[str | None] = mapped_column(
+    String(7), nullable=True, default=None, server_default="null"
+)
+```
+`String(7)` stores `YYYY-MM`. Both follow the existing `server_default` pattern.
+
+#### 2. Alembic migration
+
+**File**: `backend/alembic/versions/<autogenerated>.py`
+
+**Intent**: Persist the two new columns to the database. Run autogenerate then verify the output adds `monthly_summary_enabled BOOLEAN NOT NULL DEFAULT TRUE` and `monthly_summary_last_sent VARCHAR(7) DEFAULT NULL`.
+
+**Contract**: Run `docker compose exec backend uv run alembic revision --autogenerate -m "add_monthly_summary_fields_to_users"`, then review the generated file before applying.
+
+#### 3. Schemas
+
+**File**: `backend/app/schemas/auth.py`
+
+**Intent**: Expose both new fields in the API so the frontend can read and update them.
+
+**Contract**: Add `monthly_summary_enabled: bool` to `UserProfileOut`. Add `monthly_summary_enabled: bool | None = None` to `UserProfileUpdate`. Do NOT expose `monthly_summary_last_sent` — it is backend-managed only.
+
+#### 4. HTML summary email function
+
+**File**: `backend/app/services/email.py`
+
+**Intent**: Implement `send_monthly_summary_email()` that sends an HTML email with two sections — Paid and Unpaid/Overdue — in en/pl/de. Paid rows show both `amount` and `paid_amount` when they differ.
+
+**Contract**:
+```python
+def send_monthly_summary_email(
+    *,
+    smtp_host: str,
+    smtp_port: int,
+    smtp_user: str | None,
+    smtp_password: str | None,
+    smtp_use_tls: bool = True,
+    from_addr: str = "",
+    to_addr: str,
+    month_label: str,          # e.g. "June 2026" / "czerwiec 2026"
+    paid_rows: list[dict],     # {name, due_date, amount, paid_amount, currency, paid_at}
+    unpaid_rows: list[dict],   # {name, due_date, amount, currency}
+    language: str,
+) -> None
+```
+Use `msg.add_alternative(html_body, subtype="html")` for the HTML part. Subjects and bodies follow the existing `_SUBJECTS` / `_BODIES` dict pattern with key `("monthly_summary", lang)`. Provide en, pl, de strings. For the mismatch case, include both amounts inline: `95.00 PLN (expected: 100.00 PLN)`.
+
+### Success Criteria
+
+#### Automated Verification
+
+- Migration applies cleanly: `docker compose exec backend uv run alembic upgrade head`
+- Type checking passes: `docker compose exec backend uv run mypy app/` (or equivalent)
+- Existing reminder tests still pass: `docker compose exec backend uv run pytest tests/test_email_service.py tests/test_reminder_job.py -v`
+
+#### Manual Verification
+
+- `GET /auth/me` response includes `monthly_summary_enabled: true`
+- `PATCH /auth/me` with `{"monthly_summary_enabled": false}` persists correctly
+
+**Implementation Note**: After this phase passes automated checks, confirm `GET /auth/me` includes the new field before proceeding to Phase 2.
+
+---
+
+## Phase 2: Backend — Service, Scheduler, Endpoint, Tests
+
+### Overview
+
+Wire the email function into the service layer, add last-day-of-month logic to both the regular and startup schedulers, add the new endpoint, and write tests covering the summary function and idempotency behaviour.
+
+### Changes Required
+
+#### 1. Monthly summary service function
+
+**File**: `backend/app/services/reminder_job.py`
+
+**Intent**: Add `send_monthly_summary_for_user(db, user, month)` that queries `PaymentInstance` for the given month, splits into paid vs unpaid, calls `send_monthly_summary_email()`, and returns `True` on success.
+
+**Contract**:
+```python
+def send_monthly_summary_for_user(db: Session, user: User, month: str) -> bool
+```
+Query: `PaymentInstance.period == month`, `is_deleted is False`, join `BillTemplate` via `selectinload`. Split by `status == PaymentStatus.paid`. On success, do NOT commit the `monthly_summary_last_sent` update here — the caller (scheduler or endpoint) owns that write.
+
+#### 2. Last-day scheduler integration
+
+**File**: `backend/app/services/reminder_job.py`
+
+**Intent**: At the bottom of `send_daily_reminders()`, add a last-day-of-month branch that queries ALL eligible users (not filtered by `reminder_send_minute`) and sends/retries their summary.
+
+**Contract**:
+```python
+import calendar
+today = now_utc.date()
+is_last_day = today.day == calendar.monthrange(today.year, today.month)[1]
+current_month = today.strftime("%Y-%m")
+
+if is_last_day:
+    summary_users = db.query(User).filter(
+        User.is_active.is_(True),
+        User.email_reminders_enabled.is_(True),
+        User.monthly_summary_enabled.is_(True),
+        (User.monthly_summary_last_sent.is_(None)) | (User.monthly_summary_last_sent != current_month),
+    ).all()
+    for u in summary_users:
+        if send_monthly_summary_for_user(db, u, current_month):
+            u.monthly_summary_last_sent = current_month
+            db.commit()
+```
+Place this after the per-user reminder loop, still inside the `try/finally` block.
+
+#### 3. Startup catch-up extension
+
+**File**: `backend/app/services/reminder_job.py`
+
+**Intent**: Extend `send_catchup_reminders()` to also handle missed monthly summaries on the last day of month, mirroring the scheduler branch.
+
+**Contract**: After the existing per-user reminder catch-up loop, add the same `is_last_day` + `summary_users` pattern from step 2. The logic is identical.
+
+#### 4. New endpoint
+
+**File**: `backend/app/routers/auth.py`
+
+**Intent**: Expose an on-demand send endpoint that triggers the current month's summary and updates the idempotency flag.
+
+**Contract**:
+```python
+@router.post("/send-monthly-summary-now")
+def send_monthly_summary_now(
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+) -> dict
+```
+Guards: `smtp_host is None` → 400; `not user.email_reminders_enabled` → `{"sent": False}`; `not user.monthly_summary_enabled` → `{"sent": False}`. On success: set `user.monthly_summary_last_sent = current_month`, commit, return `{"sent": True}`.
+
+Add `SendMonthlySummaryNowOut(BaseModel): sent: bool` to `backend/app/schemas/auth.py`.
+
+#### 5. Tests
+
+**File**: `backend/tests/test_email_service.py`
+
+**Intent**: Add tests for `send_monthly_summary_email()` covering: HTML output contains both table sections; mismatch case shows both amounts; empty paid list renders gracefully; multilingual subject strings.
+
+**File**: `backend/tests/test_reminder_job.py`
+
+**Intent**: Add tests for `send_monthly_summary_for_user()` covering: correct paid/unpaid split; idempotency — second call with same month is skipped when flag is set; successful send returns `True`; SMTP failure returns `False` and leaves flag unset.
+
+### Success Criteria
+
+#### Automated Verification
+
+- All new + existing tests pass: `docker compose exec backend uv run pytest tests/ -v`
+- No regressions in reminder tests
+
+#### Manual Verification
+
+- `POST /auth/send-monthly-summary-now` returns `{"sent": true}` and email arrives with correct paid/unpaid data for current month
+- Calling the endpoint again immediately returns `{"sent": false}` (idempotency flag set)
+- Manually set `monthly_summary_last_sent = null` in DB and call again — email resends
+
+**Implementation Note**: Verify idempotency manually by inspecting the `users` table after the endpoint call. Confirm `monthly_summary_last_sent` is set to the current YYYY-MM before proceeding to Phase 3.
+
+---
+
+## Phase 3: Frontend — Settings Page Wiring
+
+### Overview
+
+Extend `UserProfile`, add the new API call, add the toggle and button to the Email Notifications tile, update dirty tracking and cancel logic, and add translation keys in all three languages.
+
+### Changes Required
+
+#### 1. User API interface + send function
+
+**File**: `frontend/src/lib/user-api.ts`
+
+**Intent**: Expose `monthly_summary_enabled` in the type system and provide the API call for the new endpoint.
+
+**Contract**: Add `monthly_summary_enabled: boolean` to `UserProfile`. Add `monthly_summary_enabled` to the `Pick<>` union in `updateMe()`. Add:
+```typescript
+export function sendMonthlySummaryNow(): Promise<{ sent: boolean }> {
+  return apiFetch<{ sent: boolean }>("/auth/send-monthly-summary-now", { method: "POST" });
+}
+```
+
+#### 2. Settings page state + UI
+
+**File**: `frontend/src/app/dashboard/settings/page.tsx`
+
+**Intent**: Add state for `monthly_summary_enabled`, include it in dirty tracking and cancel, render a toggle inside the email notifications tile, and add a "Send monthly summary now" button with loading/result state — all following the existing patterns exactly.
+
+**Contract**:
+- State: `const [monthlySummary, setMonthlySummary] = useState(profile.monthly_summary_enabled)`
+- Dirty check: include `monthlySummary !== profile.monthly_summary_enabled`
+- Cancel: `setMonthlySummary(profile.monthly_summary_enabled)`
+- Save payload: include `monthly_summary_enabled: monthlySummary`
+- Toggle: use the `Switch` component, same pattern as `notify_1_day_before`; disabled when `!emailEnabled`
+- Button: same pattern as the existing "Send notification now" button; use `BarChart2` icon from lucide-react; disabled when `!emailEnabled || !monthlySummary || isDirty || isSendingMonthlySummary`
+- Result state: separate `sendMonthlySummaryResult` and `sendMonthlySummaryError` local state vars (don't share state with the existing send-now button)
+- Import `sendMonthlySummaryNow` from `@/lib/user-api`
+
+Place the new toggle after the existing four timing checkboxes. Place the new button directly below the existing "Send notification now" button.
+
+#### 3. Translation keys
+
+**Files**: `frontend/messages/en.json`, `frontend/messages/pl.json`, `frontend/messages/de.json`
+
+**Intent**: Add keys for the new toggle label and both button states.
+
+**Contract** — add inside the `emailNotifications` object:
+```json
+"monthlySummaryToggle": "Monthly summary (last day of month)",
+"sendMonthlySummaryButton": "Send monthly summary",
+"sendMonthlySummarySending": "Sending...",
+"sendMonthlySummarySent": "Monthly summary sent",
+"sendMonthlySummaryNoData": "No payments found for this month"
+```
+Add equivalent pl and de translations.
+
+### Success Criteria
+
+#### Automated Verification
+
+- TypeScript build passes: `cd frontend && npm run build` (or `npm run lint`)
+- No type errors: `cd frontend && npx tsc --noEmit`
+
+#### Manual Verification
+
+- Toggle appears in Email Notifications tile, is greyed when master toggle is off
+- Toggle state persists after save; Cancel restores previous value
+- Dirty indicator appears when toggle is changed without saving
+- "Send monthly summary" button sends email and shows "Monthly summary sent"
+- Button is disabled when monthly summary toggle is off
+- Button is disabled when there are unsaved changes
+- Works in all three languages (en/pl/de)
+
+**Implementation Note**: Test the golden path: enable toggle → save → click "Send monthly summary" → verify email received with correct content.
+
+---
+
+## Testing Strategy
+
+### Unit Tests
+
+- `test_email_service.py`: HTML output, mismatch display, empty sections, multilingual subjects
+- `test_reminder_job.py`: paid/unpaid split, idempotency flag, SMTP failure leaves flag unset
+
+### Integration Tests
+
+- `POST /auth/send-monthly-summary-now` with and without SMTP configured
+- `PATCH /auth/me` persists `monthly_summary_enabled`
+
+### Manual Testing Steps
+
+1. Enable SMTP in `.env`, start stack with `docker compose up --build`
+2. Go to Settings → Email Notifications; confirm new toggle and button appear
+3. Ensure some payments exist for current month (mix of paid and unpaid)
+4. Click "Send monthly summary" — verify email arrives with correct two-section table
+5. Click again immediately — button should show "No data" or indicate already sent (idempotency)
+6. Disable the toggle, save — verify button is disabled
+7. Test cancel: change toggle without saving, click Cancel — toggle reverts
+8. Simulate last day of month: set `monthly_summary_last_sent = null` in DB, confirm auto-send fires within 30 min
+
+## Migration Notes
+
+The Alembic autogenerate migration must add `monthly_summary_enabled` with `DEFAULT TRUE` so existing users get the feature enabled out of the box. `monthly_summary_last_sent` defaults to `NULL`, meaning no summary has been sent yet.
+
+## References
+
+- Existing email service: `backend/app/services/email.py`
+- Scheduler: `backend/app/services/reminder_job.py`
+- Auth router: `backend/app/routers/auth.py:83`
+- Settings page notifications tile: `frontend/src/app/dashboard/settings/page.tsx:369`
+- Translation files: `frontend/messages/{en,pl,de}.json`
+
+---
+
+## Progress
+
+> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands.
+
+### Phase 1: Backend — Data Model + HTML Email Template
+
+#### Automated
+
+- [x] 1.1 Migration applies cleanly
+- [x] 1.2 Existing reminder tests still pass
+- [x] 1.3 Type checking passes
+
+#### Manual
+
+- [x] 1.4 `GET /auth/me` includes `monthly_summary_enabled: true`
+- [x] 1.5 `PATCH /auth/me` persists `monthly_summary_enabled: false`
+
+### Phase 2: Backend — Service, Scheduler, Endpoint, Tests
+
+#### Automated
+
+- [x] 2.1 All new + existing tests pass (`pytest tests/ -v`)
+
+#### Manual
+
+- [ ] 2.2 `POST /auth/send-monthly-summary-now` sends email and returns `{"sent": true}`
+- [ ] 2.3 Repeated call returns `{"sent": false}` (idempotency)
+- [ ] 2.4 Reset flag in DB; endpoint resends correctly
+
+### Phase 3: Frontend — Settings Page Wiring
+
+#### Automated
+
+- [ ] 3.1 TypeScript build passes (`npm run build`)
+- [ ] 3.2 No type errors (`tsc --noEmit`)
+
+#### Manual
+
+- [ ] 3.3 Toggle appears, disables when master toggle is off
+- [ ] 3.4 Toggle persists after save; Cancel reverts
+- [ ] 3.5 "Send monthly summary" button sends email, shows success
+- [ ] 3.6 Button disabled when toggle is off or unsaved changes exist
+- [ ] 3.7 Works in en, pl, de

@@ -1,12 +1,13 @@
 """Unit tests for app/services/email.py — mocks smtplib.SMTP."""
 
-from datetime import date
+import smtplib
+from datetime import date, datetime, timezone
 from decimal import Decimal
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.services.email import send_reminder_email
+from app.services.email import send_monthly_summary_email, send_reminder_email
 
 _BASE = dict(
     smtp_host="smtp.example.com",
@@ -93,3 +94,142 @@ def test_unknown_language_falls_back_to_english(mock_smtp_cls):
 
     sent_msg = smtp_instance.send_message.call_args[0][0]
     assert sent_msg["Subject"] == "Reminder: Internet due tomorrow (99.99 PLN)"
+
+
+# ---------------------------------------------------------------------------
+# Monthly summary email tests
+# ---------------------------------------------------------------------------
+
+_SUMMARY_BASE = dict(
+    smtp_host="smtp.example.com",
+    smtp_port=587,
+    smtp_user="user@example.com",
+    smtp_password="secret",
+    from_addr="reminders@example.com",
+    to_addr="user@example.com",
+    month_label="June 2026",
+    language="en",
+)
+
+_PAID_ROW = {
+    "name": "Internet",
+    "due_date": "2026-06-10",
+    "amount": Decimal("99.99"),
+    "paid_amount": Decimal("99.99"),
+    "currency": "PLN",
+    "paid_at": datetime(2026, 6, 10, 12, 0, tzinfo=timezone.utc),
+}
+
+_UNPAID_ROW = {
+    "name": "Netflix",
+    "due_date": "2026-06-20",
+    "amount": Decimal("45.00"),
+    "currency": "PLN",
+}
+
+
+@patch("app.services.email.smtplib.SMTP")
+def test_monthly_summary_sends_html_email(mock_smtp_cls):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_monthly_summary_email(
+        **_SUMMARY_BASE,
+        paid_rows=[_PAID_ROW],
+        unpaid_rows=[_UNPAID_ROW],
+    )
+
+    smtp_instance.send_message.assert_called_once()
+    msg = smtp_instance.send_message.call_args[0][0]
+    assert msg["Subject"] == "Monthly summary for June 2026 — Pay Tracker"
+    # EmailMessage with add_alternative is multipart
+    assert msg.is_multipart()
+    html_part = next(
+        (p for p in msg.walk() if p.get_content_type() == "text/html"), None
+    )
+    assert html_part is not None
+    html = html_part.get_payload(decode=True).decode()
+    assert "Internet" in html
+    assert "Netflix" in html
+
+
+@patch("app.services.email.smtplib.SMTP")
+def test_monthly_summary_mismatch_shows_both_amounts(mock_smtp_cls):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    mismatch_row = {**_PAID_ROW, "paid_amount": Decimal("95.00")}
+    send_monthly_summary_email(
+        **_SUMMARY_BASE,
+        paid_rows=[mismatch_row],
+        unpaid_rows=[],
+    )
+
+    msg = smtp_instance.send_message.call_args[0][0]
+    html_part = next(p for p in msg.walk() if p.get_content_type() == "text/html")
+    html = html_part.get_payload(decode=True).decode()
+    assert "95.00" in html
+    assert "99.99" in html  # expected amount also shown
+
+
+@patch("app.services.email.smtplib.SMTP")
+def test_monthly_summary_empty_paid_section(mock_smtp_cls):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_monthly_summary_email(
+        **_SUMMARY_BASE,
+        paid_rows=[],
+        unpaid_rows=[_UNPAID_ROW],
+    )
+
+    msg = smtp_instance.send_message.call_args[0][0]
+    html_part = next(p for p in msg.walk() if p.get_content_type() == "text/html")
+    html = html_part.get_payload(decode=True).decode()
+    assert "No payments were marked as paid this month" in html
+    assert "Netflix" in html
+
+
+@pytest.mark.parametrize(
+    "language,expected_subject",
+    [
+        ("en", "Monthly summary for June 2026 — Pay Tracker"),
+        ("pl", "Miesięczne podsumowanie za June 2026 — Pay Tracker"),
+        ("de", "Monatliche Zusammenfassung für June 2026 — Pay Tracker"),
+    ],
+)
+@patch("app.services.email.smtplib.SMTP")
+def test_monthly_summary_multilingual_subject(
+    mock_smtp_cls, language, expected_subject
+):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_monthly_summary_email(
+        **{**_SUMMARY_BASE, "language": language},
+        paid_rows=[],
+        unpaid_rows=[],
+    )
+
+    msg = smtp_instance.send_message.call_args[0][0]
+    assert msg["Subject"] == expected_subject
+
+
+@patch("app.services.email.smtplib.SMTP")
+def test_monthly_summary_unknown_language_falls_back_to_english(mock_smtp_cls):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_monthly_summary_email(
+        **{**_SUMMARY_BASE, "language": "xx"},
+        paid_rows=[],
+        unpaid_rows=[],
+    )
+
+    msg = smtp_instance.send_message.call_args[0][0]
+    assert msg["Subject"] == "Monthly summary for June 2026 — Pay Tracker"

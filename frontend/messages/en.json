@@ -138,7 +138,9 @@
         "heading": "Day of month",
         "shortMonthWarning": "Some months have fewer days — the bill will fall on the last available day."
     },
-    "CategoryCombobox": {"placeholder": "e.g. Utilities"},
+    "CategoryCombobox": {
+        "placeholder": "e.g. Utilities"
+    },
     "PaymentsPage": {
         "title": "Payments",
         "subtitle": "Track and mark your bills month by month.",
@@ -157,7 +159,11 @@
         "summaryPaid": "paid"
     },
     "PaymentRow": {
-        "status": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
+        "status": {
+            "upcoming": "Upcoming",
+            "overdue": "Overdue",
+            "paid": "Paid"
+        },
         "dueToday": "Today",
         "markAsPaid": "Mark as Paid",
         "revert": "Revert payment",
@@ -208,7 +214,9 @@
         "downloading": "Downloading…",
         "error": "Backup failed. Please try again."
     },
-    "ThemeToggle": {"ariaLabel": "Toggle theme"},
+    "ThemeToggle": {
+        "ariaLabel": "Toggle theme"
+    },
     "LanguageToggle": {
         "ariaLabel": "Switch language",
         "label": "Language:",
@@ -260,6 +268,11 @@
             "sendNowSending": "Sending...",
             "sendNowSent": "Sent {count} reminder(s)",
             "sendNowNoReminders": "No upcoming reminders to send",
+            "monthlySummaryToggle": "Monthly summary (last day of month)",
+            "sendMonthlySummaryButton": "Send monthly summary",
+            "sendMonthlySummarySending": "Sending...",
+            "sendMonthlySummarySent": "Monthly summary sent",
+            "sendMonthlySummaryNoData": "No payments found for this month",
             "serverTimeHint": "Reminders are sent based on server time (UTC). Current server time: {time}."
         },
         "browserNotifications": {
