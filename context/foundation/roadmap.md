@@ -54,7 +54,7 @@ slice only matters if this loop works.
 | S-13 | settings-page                | manage user profile, email/browser notification preferences, and backup/restore from a dedicated Settings page | S-10, S-12 | FR-001, FR-011, FR-012, FR-013, FR-018    | done     |
 | S-15 | category-enum-grouping       | see bills and payments grouped by a predefined category (Housing, Utilities, Subscriptions, etc.); category is required on every bill | S-02, S-07 | FR-003, FR-005                  | done     |
 | S-16 | monthly-summary-email        | receive a full month-end summary email (paid vs. missed, totals); toggle in Settings; on-demand "Send now" button | S-10, S-13 | FR-012 (extension)              | done     |
-| I-01 | postgres-service-extract     | (infra) PostgreSQL runs in its own container; backend image is Python-only; independent restarts, cleaner logs | — | —                                    | done     |
+| I-01 | postgres-service-extract     | (infra) PostgreSQL runs in its own container; backend image is Python-only; independent restarts, cleaner logs | — | —                                    | planned  |
 
 ## Streams
 
@@ -297,7 +297,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** —
 - **Parallel with:** any slice (no app logic changes)
 - **Risk:** Fresh-volume start required (`docker compose down -v`); local dev data is lost. Backend `DATABASE_URL` env override in compose points to the `postgres` service name — must not be confused with the `localhost:5432` default in `.env`.
-- **Status:** done
+- **Status:** planned — plan at `context/changes/postgres-service-extract/plan.md`
 
 ---
 
@@ -350,4 +350,3 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-13: user can manage their account (email, password), configure email reminder timing (2 days before / 1 day before / on day / 1 day after), enable/disable browser notifications, and trigger backup and restore — all from a single dedicated Settings page accessible via a gear icon in the nav header. The crowded header icon buttons are removed.** — Archived 2026-06-16 → `context/archive/2026-06-16-settings-page/`. Lesson: —.
 - **S-15: user sees bills and payments grouped under predefined category headers (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other); category is a required field on every bill template, selected from a fixed `<select>` instead of a free-text input.** — Archived 2026-06-19 → `context/archive/2026-06-19-category-enum-grouping/`. Lesson: —.
 - **S-16: user receives a full month-end summary email showing what was paid (amount due vs. paid, date) and what was missed/overdue, with totals; toggle and on-demand send button in Settings → Email Notifications.** — Archived 2026-06-23 → `context/archive/2026-06-23-monthly-summary-email/`. Lesson: —.
-- **I-01: (infra) PostgreSQL runs in its own container; backend image is Python-only; independent restarts, cleaner logs** — Archived 2026-06-24 → `context/archive/2026-06-24-postgres-service-extract/`. Lesson: —.
