@@ -39,6 +39,22 @@ API docs: `http://localhost:8010/docs`.
 - **Backend:** All request/response types use Pydantic schemas in `backend/app/schemas/`. Never use raw dicts as router return types. Routers in `backend/app/routers/`, business logic in `backend/app/services/`.
 - **Env vars:** copy `.env.example` → `.env`; never commit `.env`.
 
+## Pre-commit Hooks
+
+After cloning, install the hooks once:
+
+```bash
+pip install pre-commit
+pre-commit install          # file-staged secrets scan on git commit
+pre-commit install --hook-type commit-msg   # conventional-commit lint on commit message
+```
+
+Hooks defined in `.pre-commit-config.yaml`:
+- `detect-secrets` — prevents accidental secret commits; baseline in `.secrets.baseline`
+- `conventional-pre-commit` — enforces Conventional Commits message format
+
+To update the secrets baseline after an intentional addition: `detect-secrets scan > .secrets.baseline`.
+
 ## Commit Guidelines
 
 Conventional Commits prefix required: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`. One-line subject under 72 characters. Reference the PRD FR number in the body when implementing a functional requirement (e.g. `Implements FR-009`).
