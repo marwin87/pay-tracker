@@ -59,3 +59,20 @@ class SendNotificationNowOut(BaseModel):
 
 class SendMonthlySummaryNowOut(BaseModel):
     sent: bool
+
+
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
+
+class SmtpStatusResponse(BaseModel):
+    configured: bool
+
+
+class MessageResponse(BaseModel):
+    message: str

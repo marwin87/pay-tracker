@@ -14,7 +14,25 @@
         "createAccount": "Create account",
         "creatingAccount": "Creating account…",
         "registrationFailed": "Registration failed",
-        "alreadyHaveAccount": "Already have an account?"
+        "alreadyHaveAccount": "Already have an account?",
+        "forgotPassword": "Forgot password?",
+        "forgotPasswordTitle": "Reset your password",
+        "forgotPasswordSubtitle": "Enter your email and we'll send you a reset link.",
+        "sendResetLink": "Send reset link",
+        "sendingResetLink": "Sending…",
+        "resetLinkSent": "If that email is registered, you'll receive a reset link shortly.",
+        "resetPasswordTitle": "Set a new password",
+        "resetPasswordSubtitle": "Enter and confirm your new password.",
+        "newPasswordLabel": "New password",
+        "confirmPasswordLabel": "Confirm new password",
+        "passwordsDoNotMatch": "Passwords do not match",
+        "setPassword": "Set new password",
+        "settingPassword": "Updating…",
+        "invalidOrExpiredToken": "This link has expired or is invalid.",
+        "requestNewLink": "Request a new link"
+    },
+    "Common": {
+        "smtpNotConfigured": "E-mail is not configured. Check SMTP configuration."
     },
     "DashboardLayout": {
         "payments": "Payments",

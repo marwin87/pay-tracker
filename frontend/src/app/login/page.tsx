@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -16,8 +16,16 @@ export default function LoginPage() {
   const { login } = useAuth();
   const { notifyDueToday } = useNotifications();
   const t = useTranslations("Auth");
+  const tCommon = useTranslations("Common");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [smtpConfigured, setSmtpConfigured] = useState(false);
+
+  useEffect(() => {
+    apiFetch<{ configured: boolean }>("/auth/smtp-status")
+      .then((data) => setSmtpConfigured(data?.configured ?? false))
+      .catch(() => setSmtpConfigured(false));
+  }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -101,6 +109,26 @@ export default function LoginPage() {
               {loading ? t("signingIn") : t("signIn")}
             </Button>
           </form>
+
+          <div className="mt-4 text-center text-sm">
+            {smtpConfigured ? (
+              <Link
+                href="/forgot-password"
+                className="text-slate-500 hover:text-green-700 dark:text-slate-400 dark:hover:text-green-500"
+              >
+                {t("forgotPassword")}
+              </Link>
+            ) : (
+              <div>
+                <span className="text-slate-400 dark:text-slate-500 cursor-default">
+                  {t("forgotPassword")}
+                </span>
+                <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">
+                  {tCommon("smtpNotConfigured")}
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
         <p className="mt-5 text-center text-sm text-slate-500 dark:text-slate-400">

@@ -7,7 +7,11 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from app.services.email import send_monthly_summary_email, send_reminder_email
+from app.services.email import (
+    send_monthly_summary_email,
+    send_password_reset_email,
+    send_reminder_email,
+)
 
 _BASE = dict(
     smtp_host="smtp.example.com",
@@ -233,3 +237,94 @@ def test_monthly_summary_unknown_language_falls_back_to_english(mock_smtp_cls):
 
     msg = smtp_instance.send_message.call_args[0][0]
     assert msg["Subject"] == "Monthly summary for June 2026 — Pay Tracker"
+
+
+# ---------------------------------------------------------------------------
+# Password reset email tests
+# ---------------------------------------------------------------------------
+
+_RESET_BASE = dict(
+    smtp_host="smtp.example.com",
+    smtp_port=587,
+    smtp_user="user@example.com",
+    smtp_password="secret",
+    smtp_use_tls=True,
+    from_addr="noreply@example.com",
+    to_addr="target@example.com",
+    reset_url="http://localhost:3010/reset-password?token=abc123",
+    language="en",
+)
+
+
+@patch("app.services.email.smtplib.SMTP")
+def test_reset_email_starttls_login_send_sequence(mock_smtp_cls):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_password_reset_email(**_RESET_BASE)
+
+    smtp_instance.starttls.assert_called_once()
+    smtp_instance.login.assert_called_once_with("user@example.com", "secret")
+    smtp_instance.send_message.assert_called_once()
+
+
+@patch("app.services.email.smtplib.SMTP")
+def test_reset_email_no_login_when_smtp_user_is_none(mock_smtp_cls):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_password_reset_email(
+        **{**_RESET_BASE, "smtp_user": None, "smtp_password": None}
+    )
+
+    smtp_instance.starttls.assert_called_once()
+    smtp_instance.login.assert_not_called()
+    smtp_instance.send_message.assert_called_once()
+
+
+@pytest.mark.parametrize(
+    "language,expected_subject",
+    [
+        ("en", "Reset your Pay Tracker password"),
+        ("pl", "Zresetuj hasło Pay Tracker"),
+        ("de", "Pay Tracker Passwort zurücksetzen"),
+    ],
+)
+@patch("app.services.email.smtplib.SMTP")
+def test_reset_email_subject_per_language(mock_smtp_cls, language, expected_subject):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_password_reset_email(**{**_RESET_BASE, "language": language})
+
+    msg = smtp_instance.send_message.call_args[0][0]
+    assert msg["Subject"] == expected_subject
+
+
+@patch("app.services.email.smtplib.SMTP")
+def test_reset_email_body_contains_reset_url(mock_smtp_cls):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    reset_url = "http://localhost:3010/reset-password?token=my-special-token"
+    send_password_reset_email(**{**_RESET_BASE, "reset_url": reset_url})
+
+    msg = smtp_instance.send_message.call_args[0][0]
+    body = msg.get_payload(decode=True).decode()
+    assert reset_url in body
+
+
+@patch("app.services.email.smtplib.SMTP")
+def test_reset_email_unknown_language_falls_back_to_english(mock_smtp_cls):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_password_reset_email(**{**_RESET_BASE, "language": "xx"})
+
+    msg = smtp_instance.send_message.call_args[0][0]
+    assert msg["Subject"] == "Reset your Pay Tracker password"

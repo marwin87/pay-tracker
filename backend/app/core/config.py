@@ -27,6 +27,10 @@ class Settings(BaseSettings):
     smtp_use_tls: bool = True
     reminder_from: str | None = None
 
+    # Password reset
+    app_base_url: str = "http://localhost:3010"
+    password_reset_token_expire_hours: int = 1
+
     @field_validator("jwt_secret")
     @classmethod
     def jwt_secret_must_not_be_default(cls, v: str) -> str:

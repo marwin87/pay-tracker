@@ -14,7 +14,25 @@
         "createAccount": "Utwórz konto",
         "creatingAccount": "Tworzenie konta…",
         "registrationFailed": "Rejestracja nie powiodła się",
-        "alreadyHaveAccount": "Masz już konto?"
+        "alreadyHaveAccount": "Masz już konto?",
+        "forgotPassword": "Nie pamiętasz hasła?",
+        "forgotPasswordTitle": "Zresetuj hasło",
+        "forgotPasswordSubtitle": "Podaj adres e-mail, a my wyślemy Ci link do resetowania hasła.",
+        "sendResetLink": "Wyślij link resetujący",
+        "sendingResetLink": "Wysyłanie…",
+        "resetLinkSent": "Jeśli ten adres e-mail jest zarejestrowany, otrzymasz link do resetowania hasła.",
+        "resetPasswordTitle": "Ustaw nowe hasło",
+        "resetPasswordSubtitle": "Wprowadź i potwierdź nowe hasło.",
+        "newPasswordLabel": "Nowe hasło",
+        "confirmPasswordLabel": "Potwierdź nowe hasło",
+        "passwordsDoNotMatch": "Hasła nie są zgodne",
+        "setPassword": "Ustaw nowe hasło",
+        "settingPassword": "Aktualizowanie…",
+        "invalidOrExpiredToken": "Ten link wygasł lub jest nieprawidłowy.",
+        "requestNewLink": "Poproś o nowy link"
+    },
+    "Common": {
+        "smtpNotConfigured": "E-mail nie jest skonfigurowany. Sprawdź konfigurację SMTP."
     },
     "DashboardLayout": {
         "payments": "Płatności",

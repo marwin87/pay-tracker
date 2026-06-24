@@ -1,4 +1,6 @@
-from datetime import datetime, timezone
+import hashlib
+import secrets
+from datetime import datetime, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
@@ -7,18 +9,24 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
 from app.core.security import create_access_token, hash_password, verify_password
+from app.models.reset_token import PasswordResetToken
 from app.models.user import User
 from app.schemas.auth import (
     ChangeEmailRequest,
     ChangePasswordRequest,
+    ForgotPasswordRequest,
     LoginRequest,
+    MessageResponse,
     RegisterRequest,
+    ResetPasswordRequest,
     SendMonthlySummaryNowOut,
     SendNotificationNowOut,
+    SmtpStatusResponse,
     TokenResponse,
     UserProfileOut,
     UserProfileUpdate,
 )
+from app.services.email import send_password_reset_email
 from app.services.reminder_job import (
     send_monthly_summary_for_user,
     send_reminders_for_user,
@@ -169,3 +177,94 @@ def change_email(
     db.commit()
     db.refresh(user)
     return user
+
+
+@router.get("/smtp-status", response_model=SmtpStatusResponse)
+def smtp_status():
+    return SmtpStatusResponse(configured=settings.smtp_host is not None)
+
+
+_FORGOT_PASSWORD_RESPONSE = MessageResponse(
+    message="If that email is registered, you'll receive a reset link shortly."
+)
+
+
+@router.post("/forgot-password", response_model=MessageResponse)
+def forgot_password(body: ForgotPasswordRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == body.email).first()
+    if not user:
+        return _FORGOT_PASSWORD_RESPONSE
+
+    # Invalidate any existing tokens for this user before issuing a new one.
+    db.query(PasswordResetToken).filter(PasswordResetToken.user_id == user.id).delete()
+
+    raw_token = secrets.token_urlsafe(32)
+    token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
+
+    if settings.password_reset_token_expire_hours > 0:
+        expires_at = datetime.now(timezone.utc) + timedelta(
+            hours=settings.password_reset_token_expire_hours
+        )
+    else:
+        expires_at = None
+
+    db.add(
+        PasswordResetToken(
+            user_id=user.id,
+            token_hash=token_hash,
+            expires_at=expires_at,
+        )
+    )
+    db.commit()
+
+    if settings.smtp_host:
+        reset_url = f"{settings.app_base_url}/reset-password?token={raw_token}"
+        send_password_reset_email(
+            smtp_host=settings.smtp_host,
+            smtp_port=settings.smtp_port,
+            smtp_user=settings.smtp_user,
+            smtp_password=(
+                settings.smtp_password.get_secret_value()
+                if settings.smtp_password
+                else None
+            ),
+            smtp_use_tls=settings.smtp_use_tls,
+            from_addr=settings.reminder_from or "",
+            to_addr=user.email,
+            reset_url=reset_url,
+            language=user.language_preference or "en",
+        )
+
+    return _FORGOT_PASSWORD_RESPONSE
+
+
+@router.post("/reset-password", response_model=MessageResponse)
+def reset_password(body: ResetPasswordRequest, db: Session = Depends(get_db)):
+    token_hash = hashlib.sha256(body.token.encode()).hexdigest()
+    token_row = (
+        db.query(PasswordResetToken)
+        .filter(PasswordResetToken.token_hash == token_hash)
+        .first()
+    )
+    if not token_row:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+
+    if token_row.expires_at and token_row.expires_at < datetime.now(timezone.utc):
+        db.delete(token_row)
+        db.commit()
+        raise HTTPException(status_code=400, detail="Reset token has expired")
+
+    if len(body.new_password) < 8:
+        raise HTTPException(
+            status_code=400, detail="Password must be at least 8 characters"
+        )
+
+    user = db.query(User).filter(User.id == token_row.user_id).first()
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+
+    user.password_hash = hash_password(body.new_password)
+    db.delete(token_row)
+    db.commit()
+
+    return MessageResponse(message="Password updated successfully.")

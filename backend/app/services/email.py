@@ -378,6 +378,62 @@ def _build_summary_plaintext(
     return "\n".join(lines)
 
 
+_RESET_SUBJECTS: dict[str, str] = {
+    "en": "Reset your Pay Tracker password",
+    "pl": "Zresetuj hasło Pay Tracker",
+    "de": "Pay Tracker Passwort zurücksetzen",
+}
+
+_RESET_BODIES: dict[str, str] = {
+    "en": (
+        "You requested a password reset for your Pay Tracker account.\n\n"
+        "Click the link below to set a new password (valid for 1 hour):\n"
+        "{reset_url}\n\n"
+        "If you did not request this, you can ignore this email — your password will not change."
+    ),
+    "pl": (
+        "Zostało złożone żądanie zresetowania hasła do konta Pay Tracker.\n\n"
+        "Kliknij poniższy link, aby ustawić nowe hasło (ważny przez 1 godzinę):\n"
+        "{reset_url}\n\n"
+        "Jeśli nie prosiłeś o reset hasła, zignoruj tę wiadomość — Twoje hasło pozostanie bez zmian."
+    ),
+    "de": (
+        "Sie haben eine Passwortzurücksetzung für Ihr Pay Tracker-Konto angefordert.\n\n"
+        "Klicken Sie auf den folgenden Link, um ein neues Passwort festzulegen (gültig für 1 Stunde):\n"
+        "{reset_url}\n\n"
+        "Falls Sie diese Anforderung nicht gestellt haben, können Sie diese E-Mail ignorieren — Ihr Passwort bleibt unverändert."
+    ),
+}
+
+
+def send_password_reset_email(
+    *,
+    smtp_host: str,
+    smtp_port: int,
+    smtp_user: str | None,
+    smtp_password: str | None,
+    smtp_use_tls: bool = True,
+    from_addr: str = "",
+    to_addr: str,
+    reset_url: str,
+    language: str,
+) -> None:
+    lang = language if language in _RESET_SUBJECTS else "en"
+
+    msg = EmailMessage()
+    msg["From"] = from_addr
+    msg["To"] = to_addr
+    msg["Subject"] = _RESET_SUBJECTS[lang]
+    msg.set_content(_RESET_BODIES[lang].format(reset_url=reset_url))
+
+    with smtplib.SMTP(smtp_host, smtp_port) as smtp:
+        if smtp_use_tls:
+            smtp.starttls()
+        if smtp_user:
+            smtp.login(smtp_user, smtp_password or "")
+        smtp.send_message(msg)
+
+
 def send_monthly_summary_email(
     *,
     smtp_host: str,
