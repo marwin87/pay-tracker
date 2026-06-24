@@ -1,7 +1,7 @@
 ---
 change_id: postgres-service-extract
 title: Extract PostgreSQL into its own Docker Compose service
-status: implemented
+status: impl_reviewed
 created: 2026-06-24
 updated: 2026-06-24
 planned: 2026-06-24
