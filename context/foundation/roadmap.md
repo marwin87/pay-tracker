@@ -54,6 +54,7 @@ slice only matters if this loop works.
 | S-13 | settings-page                | manage user profile, email/browser notification preferences, and backup/restore from a dedicated Settings page | S-10, S-12 | FR-001, FR-011, FR-012, FR-013, FR-018    | done     |
 | S-15 | category-enum-grouping       | see bills and payments grouped by a predefined category (Housing, Utilities, Subscriptions, etc.); category is required on every bill | S-02, S-07 | FR-003, FR-005                  | done     |
 | S-16 | monthly-summary-email        | receive a full month-end summary email (paid vs. missed, totals); toggle in Settings; on-demand "Send now" button | S-10, S-13 | FR-012 (extension)              | done     |
+| S-17 | reset-password               | request a password reset link by email; receive a secure one-time link; set a new password via the link | S-01, S-10 | FR-002 (extension)            | done     |
 | I-01 | postgres-service-extract     | (infra) PostgreSQL runs in its own container; backend image is Python-only; independent restarts, cleaner logs | — | —                                    | done     |
 
 ## Streams
@@ -287,6 +288,20 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** Requires a hand-written Alembic migration (per lessons.md — autogenerate is unreliable for column type/nullability changes); the migration promotes `category` from nullable `VARCHAR(100)` to `NOT NULL VARCHAR(50)`. Old backup files with free-text category strings are handled gracefully (coerced to `"other"` on restore). Plan at `context/changes/category-enum-grouping/plan.md`.
 - **Status:** done
 
+### S-17: Password reset
+
+- **Outcome:** user can request a password reset link by email when they forget their password; receive a secure one-time link; and set a new password via that link, with the token expiring after a configurable number of minutes.
+- **Change ID:** reset-password
+- **PRD refs:** FR-002 (extension — authentication)
+- **Prerequisites:** S-01 (auth infrastructure), S-10 (SMTP infrastructure for sending email)
+- **Parallel with:** —
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Email enumeration prevention required — endpoint must return the same 200 response regardless of whether the email is registered. SMTP failures must not propagate as 500. Token stored as SHA-256 hash; single-use; configurable expiry via `PASSWORD_RESET_TOKEN_EXPIRE_MINUTES`.
+- **Status:** done
+
+---
+
 ## Infrastructure
 
 ### I-01: Extract PostgreSQL into its own Docker Compose service
@@ -351,3 +366,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-15: user sees bills and payments grouped under predefined category headers (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other); category is a required field on every bill template, selected from a fixed `<select>` instead of a free-text input.** — Archived 2026-06-19 → `context/archive/2026-06-19-category-enum-grouping/`. Lesson: —.
 - **S-16: user receives a full month-end summary email showing what was paid (amount due vs. paid, date) and what was missed/overdue, with totals; toggle and on-demand send button in Settings → Email Notifications.** — Archived 2026-06-23 → `context/archive/2026-06-23-monthly-summary-email/`. Lesson: —.
 - **I-01: PostgreSQL 17 runs in its own `postgres` service using the official image; the backend image contains only Python + app code; the two processes can be restarted and observed independently.** — Archived 2026-06-24 → `context/archive/2026-06-24-postgres-service-extract/`. Lesson: —.
+- **S-17: user can request a password reset link by email; receive a secure one-time link; and set a new password via that link.** — Archived 2026-06-24 → `context/archive/2026-06-24-reset-password/`. Lesson: —.

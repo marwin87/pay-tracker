@@ -25,6 +25,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Monthly summary email** — optional. On the last day of each month, receive a full summary of what was paid (amount due vs. paid, date) and what was missed, with totals. Toggle it in Settings → Email Notifications. A "Send monthly summary now" button lets you request the current month's snapshot on demand.
 - **Email sent indicator** — each payment row shows an `@` icon: gray if no reminder has been sent, amber if one was sent. Click it to see the exact timestamp.
 - **Export & backup** — download payment history as `.xlsx` (one sheet per month) or a full JSON backup. Restore from backup at any time.
+- **Password reset** — optional. When SMTP is configured, a "Forgot password?" link appears on the login page. Users receive a secure one-time reset link by email (expires after 60 minutes by default).
 - **Multilingual** — English, Polish, German. Language is saved per account.
 - **Installable as PWA** — works offline-first on mobile and desktop.
 
@@ -79,6 +80,8 @@ The settings page also shows the current server time (UTC) so you can set the se
 | `SMTP_USER` | no | SMTP login |
 | `SMTP_PASSWORD` | no | SMTP password |
 | `REMINDER_FROM` | no | From address for reminder emails |
+| `APP_BASE_URL` | no | Public URL of the frontend — used in password reset links (default: `http://localhost:3010`) |
+| `PASSWORD_RESET_TOKEN_EXPIRE_MINUTES` | no | How long a reset token is valid in minutes (default: 60; set to 0 for no expiry) |
 
 Copy `.env.example` to `.env`. Never commit `.env`.
 

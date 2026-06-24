@@ -1,10 +1,10 @@
 ---
 change_id: reset-password
 title: Reset password
-status: impl_reviewed
+status: archived
 created: 2026-06-24
 updated: 2026-06-24
-archived_at: null
+archived_at: 2026-06-24T13:15:15Z
 ---
 
 ## Notes
