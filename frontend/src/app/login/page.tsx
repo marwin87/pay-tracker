@@ -8,9 +8,8 @@ import { useTranslations } from "next-intl";
 import { apiFetch, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import { useNotifications } from "@/hooks/useNotifications";
-
-const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -30,11 +29,11 @@ export default function LoginPage() {
     const password = form.get("password") as string;
 
     try {
-      const data = await apiFetch<TokenResponse>("/auth/login", {
+      await apiFetch<TokenResponse>("/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-      login(data.access_token);
+      login();
       void notifyDueToday();
       router.push("/dashboard");
     } catch {
@@ -67,13 +66,12 @@ export default function LoginPage() {
               >
                 {t("emailLabel")}
               </label>
-              <input
+              <Input
                 id="email"
                 name="email"
                 type="email"
                 required
                 autoComplete="email"
-                className={inputClass}
               />
             </div>
 
@@ -84,13 +82,12 @@ export default function LoginPage() {
               >
                 {t("passwordLabel")}
               </label>
-              <input
+              <Input
                 id="password"
                 name="password"
                 type="password"
                 required
                 autoComplete="current-password"
-                className={inputClass}
               />
             </div>
 
@@ -100,13 +97,9 @@ export default function LoginPage() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="mt-1 rounded-xl border border-green-700 bg-green-700 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 active:bg-green-900 disabled:opacity-50"
-            >
+            <Button type="submit" loading={loading} className="mt-1 w-full py-2.5">
               {loading ? t("signingIn") : t("signIn")}
-            </button>
+            </Button>
           </form>
         </div>
 

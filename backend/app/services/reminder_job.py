@@ -115,7 +115,11 @@ def send_monthly_summary_for_user(db: Session, user: User, month: str) -> bool:
             smtp_host=settings.smtp_host,
             smtp_port=settings.smtp_port,
             smtp_user=settings.smtp_user,
-            smtp_password=settings.smtp_password,
+            smtp_password=(
+                settings.smtp_password.get_secret_value()
+                if settings.smtp_password
+                else None
+            ),
             smtp_use_tls=settings.smtp_use_tls,
             from_addr=settings.reminder_from or settings.smtp_user or "",
             to_addr=user.email,
@@ -338,7 +342,11 @@ def _send_and_flag(
             smtp_host=settings.smtp_host,
             smtp_port=settings.smtp_port,
             smtp_user=settings.smtp_user,
-            smtp_password=settings.smtp_password,
+            smtp_password=(
+                settings.smtp_password.get_secret_value()
+                if settings.smtp_password
+                else None
+            ),
             smtp_use_tls=settings.smtp_use_tls,
             from_addr=settings.reminder_from or settings.smtp_user or "",
             to_addr=user.email,

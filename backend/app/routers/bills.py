@@ -11,6 +11,7 @@ from app.schemas.bill import (
     BillTemplateCreate,
     BillTemplateOut,
     BillTemplateUpdate,
+    HasDeletedFutureOut,
     MarkPaidRequest,
     PaymentInstanceOut,
 )
@@ -80,9 +81,8 @@ def list_payments(
     if month is None:
         month = current_month
 
-    # Seed current and future months; skip past to avoid retroactive overdue flooding
-    if month >= current_month:
-        ensure_current_period_instances(db, month, me.id)
+    # NOTE: instance seeding was intentionally moved to POST /bills/sync-instances
+    # so that GET list_payments remains side-effect free.
 
     instances = (
         db.query(PaymentInstance)
@@ -240,7 +240,22 @@ def delete_payment(
     db.commit()
 
 
-@router.get("/{bill_id}/has-deleted-future")
+@router.post("/sync-instances", status_code=status.HTTP_204_NO_CONTENT)
+def sync_instances(
+    month: str | None = None,
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    """Explicitly seed payment instances for the given month (or current month).
+    Replaces the previous seed-on-read side effect in list_payments."""
+    today = date.today()
+    current_month = today.strftime("%Y-%m")
+    target = month or current_month
+    if target >= current_month:
+        ensure_current_period_instances(db, target, me.id)
+
+
+@router.get("/{bill_id}/has-deleted-future", response_model=HasDeletedFutureOut)
 def has_deleted_future(
     bill_id: int,
     db: Session = Depends(get_db),
@@ -260,7 +275,7 @@ def has_deleted_future(
         .first()
         is not None
     )
-    return {"has_deleted_future": exists}
+    return HasDeletedFutureOut(has_deleted_future=exists)
 
 
 @router.patch("/{bill_id}", response_model=BillTemplateOut)

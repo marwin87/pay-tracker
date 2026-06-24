@@ -75,7 +75,8 @@ export function useNotifications(): {
     let payments;
     try {
       payments = await fetchPayments(month);
-    } catch {
+    } catch (err) {
+      console.error("[useNotifications] fetchPayments failed:", err);
       return;
     }
 

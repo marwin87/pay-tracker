@@ -1,5 +1,3 @@
-import { getAuthToken } from "./auth";
-
 export interface TokenResponse {
   access_token: string;
   token_type: string;
@@ -11,14 +9,17 @@ export async function apiFetch<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
-  const token = getAuthToken();
   const headers: HeadersInit = {
     "Content-Type": "application/json",
     ...(init?.headers ?? {}),
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
-  const res = await fetch(`${BASE_URL}${path}`, { ...init, headers });
+  // credentials: "include" sends the HttpOnly access_token cookie automatically.
+  const res = await fetch(`${BASE_URL}${path}`, {
+    ...init,
+    headers,
+    credentials: "include",
+  });
 
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));

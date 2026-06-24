@@ -77,12 +77,16 @@ class MarkPaidRequest(BaseModel):
     notes: str | None = None
 
 
+class HasDeletedFutureOut(BaseModel):
+    has_deleted_future: bool
+
+
 class BackupTemplate(BaseModel):
     id: int
     name: str
     category: str | None
     frequency: BillFrequency
-    amount: float
+    amount: Decimal
     currency: str
     due_day: int | None
     notes: str | None
@@ -99,10 +103,10 @@ class BackupInstance(BaseModel):
     bill_id: int
     period: str
     due_date: str
-    amount: float
+    amount: Decimal
     status: PaymentStatus
     paid_at: str | None
-    paid_amount: float | None
+    paid_amount: Decimal | None
     notes: str | None
     created_at: str
     reminder_sent_upcoming: bool = False

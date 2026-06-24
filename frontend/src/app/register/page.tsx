@@ -7,9 +7,8 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { apiFetch, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
-
-const inputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -34,11 +33,11 @@ export default function RegisterPage() {
     }
 
     try {
-      const data = await apiFetch<TokenResponse>("/auth/register", {
+      await apiFetch<TokenResponse>("/auth/register", {
         method: "POST",
         body: JSON.stringify({ email, password }),
       });
-      login(data.access_token);
+      login();
       router.push("/dashboard");
     } catch (err) {
       setError(err instanceof Error ? err.message : t("registrationFailed"));
@@ -70,13 +69,12 @@ export default function RegisterPage() {
               >
                 {t("emailLabel")}
               </label>
-              <input
+              <Input
                 id="email"
                 name="email"
                 type="email"
                 required
                 autoComplete="email"
-                className={inputClass}
               />
             </div>
 
@@ -87,13 +85,12 @@ export default function RegisterPage() {
               >
                 {t("passwordLabel")}
               </label>
-              <input
+              <Input
                 id="password"
                 name="password"
                 type="password"
                 required
                 autoComplete="new-password"
-                className={inputClass}
               />
               <p className="text-xs text-slate-400 dark:text-slate-500">
                 {t("passwordHint")}
@@ -106,13 +103,9 @@ export default function RegisterPage() {
               </div>
             )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="mt-1 rounded-xl border border-green-700 bg-green-700 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 active:bg-green-900 disabled:opacity-50"
-            >
+            <Button type="submit" loading={loading} className="mt-1 w-full py-2.5">
               {loading ? t("creatingAccount") : t("createAccount")}
-            </button>
+            </Button>
           </form>
         </div>
 

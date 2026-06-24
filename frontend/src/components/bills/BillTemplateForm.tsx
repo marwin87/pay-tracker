@@ -81,20 +81,16 @@ export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
     return e;
   }
 
-  // React guarantees setter refs are stable — safe for identity comparison here.
-  function handleChange<T>(setter: (v: T) => void) {
-    return (v: T) => {
-      setter(v);
-      if (submitAttempted) {
-        const next = {
-          name: setter === setName ? (v as unknown as string) : name,
-          amount: setter === setAmount ? (v as unknown as string) : amount,
-          category: setter === setCategory ? (v as unknown as BillCategory | "") : category,
-        };
-        setErrors(validate(next));
-      }
-    };
+  function revalidate(overrides: Partial<{ name: string; amount: string; category: BillCategory | "" }>) {
+    if (submitAttempted) {
+      setErrors(validate({ name, amount, category, ...overrides }));
+    }
   }
+
+  function handleNameChange(v: string) { setName(v); revalidate({ name: v }); }
+  function handleAmountChange(v: string) { setAmount(v); revalidate({ amount: v }); }
+  function handleCategoryChange(v: BillCategory | "") { setCategory(v); revalidate({ category: v }); }
+  function handleFrequencyChange(v: BillFrequency) { setFrequency(v); }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -144,7 +140,7 @@ export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
           <input
             id="bill-name"
             value={name}
-            onChange={(e) => handleChange(setName)(e.target.value)}
+            onChange={(e) => handleNameChange(e.target.value)}
             placeholder={t("namePlaceholder")}
             className={inputClass}
           />
@@ -157,7 +153,7 @@ export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
             <input
               id="bill-amount"
               value={amount}
-              onChange={(e) => handleChange(setAmount)(e.target.value)}
+              onChange={(e) => handleAmountChange(e.target.value)}
               placeholder="0.00"
               inputMode="decimal"
               className={inputClass}
@@ -198,7 +194,7 @@ export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
             <button
               key={v}
               type="button"
-              onClick={() => handleChange(setFrequency)(v)}
+              onClick={() => handleFrequencyChange(v)}
               className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
                 frequency === v
                   ? "border-green-600 bg-green-50 text-green-700 shadow-sm dark:border-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
@@ -230,7 +226,7 @@ export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
           <CategoryCombobox
             id="bill-category"
             value={category}
-            onChange={handleChange(setCategory)}
+            onChange={handleCategoryChange}
           />
           {errors.category && <p className="mt-1 text-xs text-red-500">{errors.category}</p>}
         </div>

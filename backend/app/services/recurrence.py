@@ -1,6 +1,7 @@
 from datetime import date
 from calendar import monthrange
 
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.models.bill import BillFrequency, BillTemplate, PaymentInstance, PaymentStatus
@@ -65,35 +66,48 @@ def backfill_template_instances(
     db: Session, template: BillTemplate, from_period: str, to_period: str
 ) -> None:
     """Create missing instances for a single template from from_period to to_period inclusive."""
+    # Collect all periods in range where this template is active.
+    active_periods: list[str] = []
     year, month = map(int, from_period.split("-"))
     period = from_period
     while period <= to_period:
         if _bill_active_in_period(template, period):
-            existing = (
-                db.query(PaymentInstance)
-                .filter(
-                    PaymentInstance.bill_id == template.id,
-                    PaymentInstance.period == period,
-                )
-                .first()
-            )
-            if not existing:
-                db.add(
-                    PaymentInstance(
-                        bill_id=template.id,
-                        period=period,
-                        due_date=_due_date_for_period(period, template.due_day),
-                        amount=template.amount,
-                        status=PaymentStatus.upcoming,
-                    )
-                )
+            active_periods.append(period)
         month += 1
         if month > 12:
             month = 1
             year += 1
         period = f"{year:04d}-{month:02d}"
+
+    if not active_periods:
+        return
+
+    # Single query for all existing periods — avoids N+1 per period.
+    existing_periods = {
+        row.period
+        for row in db.query(PaymentInstance.period).filter(
+            PaymentInstance.bill_id == template.id,
+            PaymentInstance.period.in_(active_periods),
+        )
+    }
+
+    for p in active_periods:
+        if p not in existing_periods:
+            db.add(
+                PaymentInstance(
+                    bill_id=template.id,
+                    period=p,
+                    due_date=_due_date_for_period(p, template.due_day),
+                    amount=template.amount,
+                    status=PaymentStatus.upcoming,
+                )
+            )
+
     if db.new:
-        db.commit()
+        try:
+            db.commit()
+        except IntegrityError:
+            db.rollback()
 
 
 def ensure_current_period_instances(db: Session, period: str, user_id: int) -> None:
@@ -162,6 +176,17 @@ def generate_next_instance(
         status=PaymentStatus.upcoming,
     )
     db.add(instance)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        return (
+            db.query(PaymentInstance)
+            .filter(
+                PaymentInstance.bill_id == template.id,
+                PaymentInstance.period == next_period,
+            )
+            .first()
+        )
     db.refresh(instance)
     return instance

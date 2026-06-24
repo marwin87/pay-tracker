@@ -7,6 +7,7 @@ import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
   fetchPayments,
+  syncInstances,
   type PaymentInstanceOut,
 } from "@/lib/payments-api";
 import { CATEGORY_ORDER } from "@/lib/categories";
@@ -15,6 +16,10 @@ import PaymentRow from "@/components/payments/PaymentRow";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
+import {
+  PaymentActionProvider,
+  usePaymentActions,
+} from "@/context/payment-context";
 
 function getCurrentMonth(): string {
   const now = new Date();
@@ -84,6 +89,14 @@ function CategorySummary({
 }
 
 export default function PaymentsPage() {
+  return (
+    <PaymentActionProvider>
+      <PaymentsPageInner />
+    </PaymentActionProvider>
+  );
+}
+
+function PaymentsPageInner() {
   const t = useTranslations("PaymentsPage");
   const tRow = useTranslations("PaymentRow");
   const tCategories = useTranslations("Categories");
@@ -94,11 +107,10 @@ export default function PaymentsPage() {
   const currentMonth = getCurrentMonth();
 
   const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth);
+  const { dialogTarget, setDialogTarget, deleteTarget, setDeleteTarget } = usePaymentActions();
   const [instances, setInstances] = useState<PaymentInstanceOut[]>([]);
   const [loadedMonth, setLoadedMonth] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [dialogTarget, setDialogTarget] = useState<PaymentInstanceOut | null>(null);
-  const [deleteTarget, setDeleteTarget] = useState<PaymentInstanceOut | null>(null);
   const [xlsxLoadingYear, setXlsxLoadingYear] = useState<number | null>(null);
   const [xlsxError, setXlsxError] = useState<string | null>(null);
 
@@ -111,7 +123,9 @@ export default function PaymentsPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetchPayments(selectedMonth)
+    const isCurrentOrFuture = selectedMonth >= currentMonth;
+    (isCurrentOrFuture ? syncInstances(selectedMonth).catch(() => {}) : Promise.resolve())
+      .then(() => fetchPayments(selectedMonth))
       .then((data) => {
         if (!cancelled) {
           setInstances(data);
@@ -128,7 +142,7 @@ export default function PaymentsPage() {
     return () => {
       cancelled = true;
     };
-  }, [selectedMonth, t]);
+  }, [selectedMonth, currentMonth, t]);
 
   function handleInstancePaid(updated: PaymentInstanceOut) {
     setInstances((prev) =>

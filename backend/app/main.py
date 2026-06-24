@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 logging.getLogger("app").setLevel(logging.INFO)
 
+from app.core.config import settings
 from app.core.database import SessionLocal
 from app.routers import auth, bills, export
 from app.services.reminder_job import send_catchup_reminders, send_daily_reminders
@@ -34,10 +35,10 @@ app = FastAPI(title="Pay Tracker API", version="0.1.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3010"],
+    allow_origins=settings.allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 app.include_router(auth.router)

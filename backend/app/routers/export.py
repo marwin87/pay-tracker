@@ -172,7 +172,7 @@ def export_json(
 
 
 @router.post("/restore")
-async def restore_json(
+def restore_json(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
@@ -181,7 +181,7 @@ async def restore_json(
     if file.content_type and file.content_type not in _ALLOWED_TYPES:
         raise HTTPException(status_code=415, detail="Unsupported file type")
     _MAX_UPLOAD = 10 * 1024 * 1024  # 10 MB
-    content = await file.read(_MAX_UPLOAD + 1)
+    content = file.file.read(_MAX_UPLOAD + 1)
     if len(content) > _MAX_UPLOAD:
         raise HTTPException(status_code=413, detail="Backup file too large (max 10 MB)")
     try:

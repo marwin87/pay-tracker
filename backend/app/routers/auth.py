@@ -1,6 +1,6 @@
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
@@ -27,25 +27,60 @@ from app.services.reminder_job import (
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
+def _set_auth_cookie(response: Response, token: str) -> None:
+    """Set the JWT as an HttpOnly cookie plus a non-HttpOnly presence flag."""
+    response.set_cookie(
+        key="access_token",
+        value=token,
+        httponly=True,
+        samesite="lax",
+        path="/",
+        max_age=settings.access_token_expire_minutes * 60,
+    )
+    # Non-HttpOnly presence flag so the frontend can detect login state without XSS risk.
+    response.set_cookie(
+        key="auth_logged_in",
+        value="1",
+        httponly=False,
+        samesite="lax",
+        path="/",
+        max_age=settings.access_token_expire_minutes * 60,
+    )
+
+
+def _clear_auth_cookies(response: Response) -> None:
+    response.delete_cookie(key="access_token", path="/")
+    response.delete_cookie(key="auth_logged_in", path="/")
+
+
 @router.post(
     "/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED
 )
-def register(body: RegisterRequest, db: Session = Depends(get_db)):
+def register(body: RegisterRequest, response: Response, db: Session = Depends(get_db)):
     if db.query(User).filter(User.email == body.email).first():
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=409, detail="Email already registered")
     user = User(email=body.email, password_hash=hash_password(body.password))
     db.add(user)
     db.commit()
     db.refresh(user)
-    return TokenResponse(access_token=create_access_token(str(user.id)))
+    token = create_access_token(str(user.id))
+    _set_auth_cookie(response, token)
+    return TokenResponse(access_token=token)
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(body: LoginRequest, db: Session = Depends(get_db)):
+def login(body: LoginRequest, response: Response, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == body.email).first()
     if not user or not verify_password(body.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return TokenResponse(access_token=create_access_token(str(user.id)))
+    token = create_access_token(str(user.id))
+    _set_auth_cookie(response, token)
+    return TokenResponse(access_token=token)
+
+
+@router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
+def logout(response: Response):
+    _clear_auth_cookies(response)
 
 
 @router.get("/me", response_model=UserProfileOut)
@@ -74,7 +109,7 @@ def change_password(
     db: Session = Depends(get_db),
 ):
     if not verify_password(body.current_password, user.password_hash):
-        raise HTTPException(status_code=400, detail="Current password is incorrect")
+        raise HTTPException(status_code=401, detail="Current password is incorrect")
     if len(body.new_password) < 8:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
@@ -126,10 +161,10 @@ def change_email(
     db: Session = Depends(get_db),
 ):
     if not verify_password(body.current_password, user.password_hash):
-        raise HTTPException(status_code=400, detail="Current password is incorrect")
+        raise HTTPException(status_code=401, detail="Current password is incorrect")
     existing = db.query(User).filter(User.email == body.new_email).first()
     if existing:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=409, detail="Email already registered")
     user.email = body.new_email
     db.commit()
     db.refresh(user)

@@ -207,7 +207,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
                 <AtSign size={14} />
               </button>
               {emailOpen && (
-                <div className="absolute bottom-full right-0 mb-2 max-w-xs rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10 whitespace-normal">
+                <div className="absolute bottom-full right-0 mb-2 w-48 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10 whitespace-normal">
                   {emailSentAtFormatted
                     ? `${t("emailSentOn")} ${emailSentAtFormatted}`
                     : t("emailNotSent")}

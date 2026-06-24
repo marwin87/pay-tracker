@@ -1,11 +1,8 @@
-import { getAuthToken } from "./auth";
-
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
 
 export async function downloadBackup(): Promise<void> {
-  const token = getAuthToken();
   const res = await fetch(`${BASE_URL}/export/json`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    credentials: "include",
   });
 
   if (!res.ok) {
@@ -25,12 +22,11 @@ export async function downloadBackup(): Promise<void> {
 export async function restoreFromBackup(
   file: File
 ): Promise<{ restored_templates: number; restored_instances: number }> {
-  const token = getAuthToken();
   const form = new FormData();
   form.append("file", file);
   const res = await fetch(`${BASE_URL}/export/restore`, {
     method: "POST",
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    credentials: "include",
     body: form,
   });
   if (!res.ok) {
@@ -41,9 +37,8 @@ export async function restoreFromBackup(
 }
 
 export async function downloadXlsx(year: number): Promise<void> {
-  const token = getAuthToken();
   const res = await fetch(`${BASE_URL}/export/xlsx?year=${year}`, {
-    headers: token ? { Authorization: `Bearer ${token}` } : {},
+    credentials: "include",
   });
 
   if (!res.ok) {

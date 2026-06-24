@@ -21,6 +21,12 @@ export interface PaymentInstanceOut {
   email_sent_at: string | null;
 }
 
+export function syncInstances(month: string): Promise<void> {
+  return apiFetch<void>(`/bills/sync-instances?month=${encodeURIComponent(month)}`, {
+    method: "POST",
+  });
+}
+
 export function fetchPayments(month: string): Promise<PaymentInstanceOut[]> {
   return apiFetch<PaymentInstanceOut[]>(
     `/bills/payments?month=${encodeURIComponent(month)}`,
