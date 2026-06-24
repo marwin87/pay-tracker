@@ -29,7 +29,8 @@
         "setPassword": "Set new password",
         "settingPassword": "Updating…",
         "invalidOrExpiredToken": "This link has expired or is invalid.",
-        "requestNewLink": "Request a new link"
+        "requestNewLink": "Request a new link",
+        "forgotPasswordFailed": "Something went wrong. Please try again."
     },
     "Common": {
         "smtpNotConfigured": "E-mail is not configured. Check SMTP configuration."

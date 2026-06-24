@@ -1,6 +1,9 @@
 import hashlib
+import logging
 import secrets
 from datetime import datetime, timedelta, timezone
+
+_logger = logging.getLogger(__name__)
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy.orm import Session
@@ -201,9 +204,9 @@ def forgot_password(body: ForgotPasswordRequest, db: Session = Depends(get_db)):
     raw_token = secrets.token_urlsafe(32)
     token_hash = hashlib.sha256(raw_token.encode()).hexdigest()
 
-    if settings.password_reset_token_expire_hours > 0:
+    if settings.password_reset_token_expire_minutes > 0:
         expires_at = datetime.now(timezone.utc) + timedelta(
-            hours=settings.password_reset_token_expire_hours
+            minutes=settings.password_reset_token_expire_minutes
         )
     else:
         expires_at = None
@@ -219,21 +222,25 @@ def forgot_password(body: ForgotPasswordRequest, db: Session = Depends(get_db)):
 
     if settings.smtp_host:
         reset_url = f"{settings.app_base_url}/reset-password?token={raw_token}"
-        send_password_reset_email(
-            smtp_host=settings.smtp_host,
-            smtp_port=settings.smtp_port,
-            smtp_user=settings.smtp_user,
-            smtp_password=(
-                settings.smtp_password.get_secret_value()
-                if settings.smtp_password
-                else None
-            ),
-            smtp_use_tls=settings.smtp_use_tls,
-            from_addr=settings.reminder_from or "",
-            to_addr=user.email,
-            reset_url=reset_url,
-            language=user.language_preference or "en",
-        )
+        try:
+            send_password_reset_email(
+                smtp_host=settings.smtp_host,
+                smtp_port=settings.smtp_port,
+                smtp_user=settings.smtp_user,
+                smtp_password=(
+                    settings.smtp_password.get_secret_value()
+                    if settings.smtp_password
+                    else None
+                ),
+                smtp_use_tls=settings.smtp_use_tls,
+                from_addr=settings.reminder_from or "",
+                to_addr=user.email,
+                reset_url=reset_url,
+                language=user.language_preference or "en",
+                expires_minutes=settings.password_reset_token_expire_minutes,
+            )
+        except Exception:
+            _logger.exception("Failed to send password reset email to %s", user.email)
 
     return _FORGOT_PASSWORD_RESPONSE
 

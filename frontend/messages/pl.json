@@ -29,7 +29,8 @@
         "setPassword": "Ustaw nowe hasło",
         "settingPassword": "Aktualizowanie…",
         "invalidOrExpiredToken": "Ten link wygasł lub jest nieprawidłowy.",
-        "requestNewLink": "Poproś o nowy link"
+        "requestNewLink": "Poproś o nowy link",
+        "forgotPasswordFailed": "Coś poszło nie tak. Spróbuj ponownie."
     },
     "Common": {
         "smtpNotConfigured": "E-mail nie jest skonfigurowany. Sprawdź konfigurację SMTP."

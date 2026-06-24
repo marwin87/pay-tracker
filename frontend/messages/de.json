@@ -29,7 +29,8 @@
         "setPassword": "Neues Passwort festlegen",
         "settingPassword": "Aktualisieren…",
         "invalidOrExpiredToken": "Dieser Link ist abgelaufen oder ungültig.",
-        "requestNewLink": "Neuen Link anfordern"
+        "requestNewLink": "Neuen Link anfordern",
+        "forgotPasswordFailed": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
     },
     "Common": {
         "smtpNotConfigured": "E-Mail ist nicht konfiguriert. Überprüfen Sie die SMTP-Konfiguration."

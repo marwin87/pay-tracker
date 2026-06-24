@@ -28,7 +28,7 @@ export default function ForgotPasswordPage() {
       });
       setSent(true);
     } catch {
-      setError(t("registrationFailed"));
+      setError(t("forgotPasswordFailed"));
     } finally {
       setLoading(false);
     }

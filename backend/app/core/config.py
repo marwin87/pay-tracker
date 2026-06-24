@@ -29,7 +29,18 @@ class Settings(BaseSettings):
 
     # Password reset
     app_base_url: str = "http://localhost:3010"
-    password_reset_token_expire_hours: int = 1
+    password_reset_token_expire_minutes: int = 60
+
+    @field_validator("password_reset_token_expire_minutes")
+    @classmethod
+    def warn_if_no_token_expiry(cls, v: int) -> int:
+        if v == 0:
+            warnings.warn(
+                "PASSWORD_RESET_TOKEN_EXPIRE_MINUTES=0: reset tokens never expire. "
+                "Only use this in development/testing.",
+                stacklevel=2,
+            )
+        return v
 
     @field_validator("jwt_secret")
     @classmethod

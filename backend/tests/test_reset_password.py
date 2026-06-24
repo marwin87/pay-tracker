@@ -1,6 +1,7 @@
 """Integration tests for forgot-password / reset-password / smtp-status endpoints."""
 
 import hashlib
+import smtplib
 from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
@@ -217,3 +218,34 @@ def test_reset_password_token_is_single_use(client_db):
         json={"token": known_raw, "new_password": "anotherpassword1"},
     )
     assert second.status_code == 400
+
+
+def test_forgot_password_smtp_failure_still_returns_200(
+    client_db: tuple[TestClient, Session],
+) -> None:
+    """SMTP exception must not propagate — enumeration guarantee must hold."""
+    client, db = client_db
+    register_and_login(client, "smtpfail@example.com", "password123")
+
+    with (
+        patch("app.routers.auth.settings") as mock_settings,
+        patch(
+            "app.routers.auth.send_password_reset_email",
+            side_effect=smtplib.SMTPException("connection refused"),
+        ),
+    ):
+        mock_settings.smtp_host = "smtp.example.com"
+        mock_settings.smtp_port = 587
+        mock_settings.smtp_user = None
+        mock_settings.smtp_password = None
+        mock_settings.smtp_use_tls = True
+        mock_settings.reminder_from = ""
+        mock_settings.app_base_url = "http://localhost:3010"
+        mock_settings.password_reset_token_expire_minutes = 60
+
+        resp = client.post(
+            "/auth/forgot-password", json={"email": "smtpfail@example.com"}
+        )
+
+    assert resp.status_code == 200
+    assert "reset link" in resp.json()["message"].lower()
