@@ -8,6 +8,12 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   workers: 1,
   reporter: process.env.CI ? 'github' : 'html',
+  webServer: {
+    command: 'docker compose up -d --wait postgres backend frontend demo-data',
+    url: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3010',
+    reuseExistingServer: true,
+    timeout: 120_000,
+  },
   use: {
     baseURL: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3010',
     trace: 'on-first-retry',
