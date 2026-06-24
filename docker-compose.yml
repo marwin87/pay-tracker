@@ -49,5 +49,15 @@ services:
     ports:
       - "3010:3000"
 
+  demo-data:
+    build: ./demo
+    container_name: demo-data
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: "no"
+    environment:
+      SEED_BASE_URL: "http://backend:8000"
+
 volumes:
   postgres_data:

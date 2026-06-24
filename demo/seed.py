@@ -2,6 +2,7 @@
 """Seed the database with demo data via the restore API endpoint."""
 
 import json
+import os
 import sys
 from datetime import date
 from pathlib import Path
@@ -12,7 +13,7 @@ except ImportError:
     print("Missing dependency. Run: pip install requests")
     sys.exit(1)
 
-BASE_URL = "http://localhost:8010"
+BASE_URL = os.environ.get("SEED_BASE_URL", "http://localhost:8010")
 EMAIL = "demo@demo.com"
 PASSWORD = "demo1234"
 DATA_FILE = Path(__file__).parent / "seed_data.json"
@@ -22,7 +23,7 @@ def register(session: requests.Session) -> None:
     r = session.post(f"{BASE_URL}/auth/register", json={"email": EMAIL, "password": PASSWORD})
     if r.status_code == 201:
         print(f"  User created: {EMAIL}")
-    elif r.status_code == 400 and "already" in r.text.lower():
+    elif r.status_code in (400, 409) and "already" in r.text.lower():
         print(f"  User already exists: {EMAIL}")
     else:
         print(f"  Register failed ({r.status_code}): {r.text}")
@@ -88,7 +89,18 @@ def inject_paid_today(data: dict) -> dict:
     return data
 
 
+def has_data(session: requests.Session, token: str) -> bool:
+    r = session.get(
+        f"{BASE_URL}/bills",
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    return r.status_code == 200 and len(r.json()) > 0
+
+
 def restore(session: requests.Session, token: str) -> None:
+    if has_data(session, token):
+        print("  Demo data already present, skipping restore.")
+        return
     data = json.loads(DATA_FILE.read_text())
     data = inject_paid_today(data)
     payload = json.dumps(data)
