@@ -2,7 +2,7 @@
 
 import json
 
-from tests.conftest import auth, register_and_login
+from tests.conftest import auth, register_and_login, sync_payments
 
 _BILL = {
     "name": "Electricity",
@@ -117,6 +117,7 @@ def test_restore_happy_path(client):
 
     r = client.post("/bills", json=_BILL, headers=auth(tok))
     assert r.status_code == 201
+    sync_payments(client, tok)
     client.get("/bills/payments", headers=auth(tok))
 
     backup = client.get("/export/json", headers=auth(tok)).json()
@@ -148,6 +149,7 @@ def test_restore_orphaned_instance(client):
 
     r = client.post("/bills", json=_BILL, headers=auth(tok))
     assert r.status_code == 201
+    sync_payments(client, tok)
     client.get("/bills/payments", headers=auth(tok))
 
     backup = client.get("/export/json", headers=auth(tok)).json()
@@ -232,6 +234,7 @@ def test_round_trip_field_level(client):
     r2 = client.post("/bills", json=_BILL_BETA, headers=auth(tok))
     assert r2.status_code == 201
 
+    sync_payments(client, tok)
     payments = client.get("/bills/payments", headers=auth(tok)).json()
     assert len(payments) >= 2
 
@@ -322,6 +325,7 @@ def test_restore_cross_user_import(client):
 
     r = client.post("/bills", json=_BILL, headers=auth(tok_a))
     assert r.status_code == 201
+    sync_payments(client, tok_a)
     client.get("/bills/payments", headers=auth(tok_a))
 
     backup_a = client.get("/export/json", headers=auth(tok_a)).json()

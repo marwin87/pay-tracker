@@ -75,3 +75,12 @@ def register_and_login(
 
 def auth(token: str) -> dict:
     return {"Authorization": f"Bearer {token}"}
+
+
+def sync_payments(client: TestClient, token: str, month: str | None = None) -> None:
+    """Seed payment instances for the current month (or a given month), then return."""
+    from datetime import date as _date
+
+    target = month or _date.today().strftime("%Y-%m")
+    r = client.post(f"/bills/sync-instances?month={target}", headers=auth(token))
+    assert r.status_code == 204, r.text

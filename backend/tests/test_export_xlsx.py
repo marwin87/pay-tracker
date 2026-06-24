@@ -4,7 +4,7 @@ import io
 
 import openpyxl
 
-from tests.conftest import auth, register_and_login
+from tests.conftest import auth, register_and_login, sync_payments
 
 _BILL_A = {
     "name": "Electric",
@@ -44,7 +44,7 @@ def test_xlsx_row_count_matches_live_instances(client):
     r2 = client.post("/bills", json=_BILL_B, headers=auth(tok))
     assert r2.status_code == 201
 
-    # Trigger instance generation for the current period
+    sync_payments(client, tok)
     payments = client.get("/bills/payments", headers=auth(tok)).json()
     live_count = len(payments)
     assert live_count >= 2
@@ -63,6 +63,7 @@ def test_xlsx_excludes_deleted_instances(client):
     r = client.post("/bills", json=_BILL_A, headers=auth(tok))
     assert r.status_code == 201
 
+    sync_payments(client, tok)
     payments = client.get("/bills/payments", headers=auth(tok)).json()
     assert len(payments) == 1
     instance_id = payments[0]["id"]
@@ -85,6 +86,7 @@ def test_xlsx_partial_deletion(client):
     r2 = client.post("/bills", json=_BILL_B, headers=auth(tok))
     assert r2.status_code == 201
 
+    sync_payments(client, tok)
     payments = client.get("/bills/payments", headers=auth(tok)).json()
     assert len(payments) == 2
 

@@ -4,7 +4,7 @@ Each test registers two users (A and B), creates data as A, then asserts
 B cannot see or mutate it.
 """
 
-from tests.conftest import auth, register_and_login
+from tests.conftest import auth, register_and_login, sync_payments
 
 _BILL = {
     "name": "Electricity",
@@ -25,7 +25,8 @@ def _create_bill(client, token: str) -> int:
 
 
 def _seed_payment(client, token: str, bill_id: int) -> int:
-    """Trigger instance seeding by fetching the payment list, return the instance id for bill_id."""
+    """Sync instances then return the instance id for bill_id."""
+    sync_payments(client, token)
     r = client.get("/bills/payments", headers=auth(token))
     assert r.status_code == 200, r.text
     instances = [i for i in r.json() if i["bill_id"] == bill_id]
@@ -55,7 +56,7 @@ def test_list_payments_scoped(client):
     tok_b = register_and_login(client, "b@test.com")
 
     _create_bill(client, tok_a)
-    # Seed A's instances
+    sync_payments(client, tok_a)
     client.get("/bills/payments", headers=auth(tok_a))
 
     r = client.get("/bills/payments", headers=auth(tok_b))
