@@ -10,8 +10,10 @@ Research: context/changes/testing-recurrence-unit/research.md
 import types
 from datetime import date, datetime, timezone
 from decimal import Decimal
+from unittest.mock import MagicMock, patch
 
 import pytest
+from sqlalchemy.exc import IntegrityError as SAIntegrityError
 
 import app.models.bill  # noqa: F401 — register models with SQLAlchemy's mapper
 import app.models.user  # noqa: F401
@@ -27,6 +29,7 @@ from app.services.recurrence import (
     _bill_active_in_period,
     _due_date_for_period,
     _next_period,
+    backfill_template_instances,
     ensure_current_period_instances,
     generate_next_instance,
 )
@@ -285,6 +288,67 @@ def test_generate_next_instance_copies_amount_and_due_date(db_session) -> None:
     assert instance.due_date == date(2026, 6, 30)  # June has 30 days
 
 
+def test_generate_next_instance_integrity_error_fallback(
+    db_session, db_sessionmaker
+) -> None:
+    """Race-condition path: concurrent insert causes IntegrityError → rollback → return winner.
+
+    Simulated by: (1) mocking the pre-check query to return None (race window where
+    our session checked before the winner committed), (2) mocking commit to raise
+    IntegrityError, and (3) pre-committing the winner via a separate session so the
+    fallback re-query finds it.
+    """
+    user = _make_user(db_session)
+    bill = _make_bill(db_session, user.id, start_period="2026-05")
+    bill_id = bill.id
+    db_session.commit()
+
+    # "Winner" session commits the next-period row first
+    winner_session = db_sessionmaker()
+    winner = PaymentInstance(
+        bill_id=bill_id,
+        period="2026-06",
+        due_date=date(2026, 6, 15),
+        amount=Decimal("100.00"),
+        status=PaymentStatus.upcoming,
+    )
+    winner_session.add(winner)
+    winner_session.commit()
+    winner_id = winner.id
+    winner_session.close()
+
+    bill = db_session.get(BillTemplate, bill_id)
+
+    # Simulate race window: pre-check sees nothing, commit then fails
+    real_query = db_session.query
+    pre_check_intercepted = [False]
+
+    def mock_query(model):
+        if model is PaymentInstance and not pre_check_intercepted[0]:
+            pre_check_intercepted[0] = True
+            stub = MagicMock()
+            stub.filter.return_value = stub
+            stub.first.return_value = None
+            return stub
+        return real_query(model)
+
+    commit_raised = [False]
+
+    def mock_commit():
+        if not commit_raised[0]:
+            commit_raised[0] = True
+            raise SAIntegrityError("insert", {}, Exception("unique violation"))
+
+    with (
+        patch.object(db_session, "query", side_effect=mock_query),
+        patch.object(db_session, "commit", side_effect=mock_commit),
+    ):
+        result = generate_next_instance(db_session, bill, "2026-05")
+
+    assert result is not None
+    assert result.id == winner_id
+
+
 # ── ensure_current_period_instances ──────────────────────────────────────────
 
 
@@ -412,3 +476,67 @@ def test_ensure_scoped_to_user(db_session) -> None:
     )
     assert a_count == 1
     assert b_count == 0
+
+
+# ── backfill_template_instances ──────────────────────────────────────────────
+
+
+def test_backfill_creates_instance_for_each_active_period(db_session) -> None:
+    """Monthly bill with start_period 3 months back → 3 instances seeded."""
+    user = _make_user(db_session)
+    bill = _make_bill(
+        db_session,
+        user.id,
+        frequency=BillFrequency.monthly,
+        due_day=10,
+        start_period="2026-01",
+    )
+    db_session.commit()
+
+    backfill_template_instances(db_session, bill, "2026-01", "2026-03")
+
+    count = db_session.query(PaymentInstance).filter_by(bill_id=bill.id).count()
+    assert count == 3
+
+    periods = {
+        row.period
+        for row in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
+    }
+    assert periods == {"2026-01", "2026-02", "2026-03"}
+
+
+def test_backfill_is_idempotent(db_session) -> None:
+    """Running backfill twice over the same range must not create duplicates."""
+    user = _make_user(db_session)
+    bill = _make_bill(
+        db_session,
+        user.id,
+        frequency=BillFrequency.monthly,
+        start_period="2026-01",
+    )
+    db_session.commit()
+
+    backfill_template_instances(db_session, bill, "2026-01", "2026-03")
+    backfill_template_instances(db_session, bill, "2026-01", "2026-03")
+
+    assert db_session.query(PaymentInstance).filter_by(bill_id=bill.id).count() == 3
+
+
+def test_backfill_skips_inactive_periods_for_quarterly(db_session) -> None:
+    """Quarterly bill anchored at 2026-01 with range 2026-01..2026-06 → 2 instances."""
+    user = _make_user(db_session)
+    bill = _make_bill(
+        db_session,
+        user.id,
+        frequency=BillFrequency.quarterly,
+        start_period="2026-01",
+    )
+    db_session.commit()
+
+    backfill_template_instances(db_session, bill, "2026-01", "2026-06")
+
+    periods = {
+        row.period
+        for row in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
+    }
+    assert periods == {"2026-01", "2026-04"}

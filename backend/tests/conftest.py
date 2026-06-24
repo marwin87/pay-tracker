@@ -65,6 +65,28 @@ def client(postgres_engine):
     Base.metadata.drop_all(bind=postgres_engine)
 
 
+@pytest.fixture()
+def client_db(postgres_engine):
+    """TestClient + direct DB session sharing the same engine."""
+    Base.metadata.create_all(bind=postgres_engine)
+    SessionLocal = sessionmaker(bind=postgres_engine, autocommit=False, autoflush=False)
+
+    def override_get_db():
+        db = SessionLocal()
+        try:
+            yield db
+        finally:
+            db.close()
+
+    app.dependency_overrides[get_db] = override_get_db
+    with TestClient(app) as c:
+        db = SessionLocal()
+        yield c, db
+        db.close()
+    app.dependency_overrides.clear()
+    Base.metadata.drop_all(bind=postgres_engine)
+
+
 def register_and_login(
     client: TestClient, email: str, password: str = "pw123456"
 ) -> str:

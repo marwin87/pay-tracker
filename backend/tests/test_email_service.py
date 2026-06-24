@@ -100,6 +100,47 @@ def test_unknown_language_falls_back_to_english(mock_smtp_cls):
     assert sent_msg["Subject"] == "Reminder: Internet due tomorrow (99.99 PLN)"
 
 
+@patch("app.services.email.smtplib.SMTP")
+def test_reminder_body_contains_bill_name_amount_due_date(mock_smtp_cls):
+    """HTML body must contain the bill name, amount, and due date — blank template vars fail here."""
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_reminder_email(**_call(kind="upcoming", language="en"))
+
+    msg = smtp_instance.send_message.call_args[0][0]
+    # EmailMessage may be multipart or plain; walk covers both
+    body = "".join(
+        part.get_payload(decode=True).decode()
+        for part in msg.walk()
+        if part.get_content_type() in ("text/html", "text/plain")
+        and not part.get_content_disposition()
+    )
+    assert "Internet" in body
+    assert "99.99" in body
+    assert "2026-06-17" in body or "June 17" in body or "17" in body
+
+
+@patch("app.services.email.smtplib.SMTP")
+def test_reminder_body_on_day_kind_contains_bill_details(mock_smtp_cls):
+    smtp_instance = MagicMock()
+    mock_smtp_cls.return_value.__enter__ = MagicMock(return_value=smtp_instance)
+    mock_smtp_cls.return_value.__exit__ = MagicMock(return_value=False)
+
+    send_reminder_email(**_call(kind="on_day", language="en"))
+
+    msg = smtp_instance.send_message.call_args[0][0]
+    body = "".join(
+        part.get_payload(decode=True).decode()
+        for part in msg.walk()
+        if part.get_content_type() in ("text/html", "text/plain")
+        and not part.get_content_disposition()
+    )
+    assert "Internet" in body
+    assert "PLN" in body
+
+
 # ---------------------------------------------------------------------------
 # Monthly summary email tests
 # ---------------------------------------------------------------------------

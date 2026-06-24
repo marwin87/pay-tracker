@@ -59,9 +59,9 @@ def _upload(client, token, payload):
     )
 
 
-def _make_backup(templates, instances):
+def _make_backup(templates, instances, schema_version: int = 3):
     return {
-        "schema_version": 2,
+        "schema_version": schema_version,
         "exported_by": "test@example.com",
         "exported_at": "2026-01-01T00:00:00+00:00",
         "bill_templates": templates,
@@ -305,7 +305,7 @@ def test_v2_backup_defaults_reminder_fields(client):
     instance_dict = _make_instance_dict(
         template_id, "2026-01", include_reminder_fields=False
     )
-    payload = _make_backup([template_dict], [instance_dict])  # schema_version: 2
+    payload = _make_backup([template_dict], [instance_dict], schema_version=2)
 
     r = _upload(client, tok, payload)
     assert r.status_code == 200
@@ -388,3 +388,68 @@ def test_v3_backup_preserves_reminder_flags(client):
     inst = after["payment_instances"][0]
     assert inst["reminder_sent_upcoming"] is True
     assert inst["reminder_sent_overdue"] is False
+
+
+# ---------------------------------------------------------------------------
+# POST /export/restore — error paths (lines 182–198 of export.py)
+# ---------------------------------------------------------------------------
+
+
+def test_restore_invalid_json_returns_422(client):
+    """Malformed JSON body → 422 with 'Invalid JSON' detail."""
+    tok = register_and_login(client, "inv_json@test.com")
+    r = client.post(
+        "/export/restore",
+        files={"file": ("backup.json", b"not { valid json }", "application/json")},
+        headers=auth(tok),
+    )
+    assert r.status_code == 422
+    assert "json" in r.json()["detail"].lower()
+
+
+def test_restore_unsupported_content_type_returns_415(client):
+    """Non-JSON, non-plain content type → 415."""
+    tok = register_and_login(client, "inv_ct@test.com")
+    r = client.post(
+        "/export/restore",
+        files={"file": ("backup.json", b"{}", "application/pdf")},
+        headers=auth(tok),
+    )
+    assert r.status_code == 415
+
+
+def test_restore_file_too_large_returns_413(client):
+    """File exceeding 10 MB → 413."""
+    tok = register_and_login(client, "too_large@test.com")
+    big_content = b"x" * (10 * 1024 * 1024 + 1)
+    r = client.post(
+        "/export/restore",
+        files={"file": ("backup.json", big_content, "application/json")},
+        headers=auth(tok),
+    )
+    assert r.status_code == 413
+
+
+def test_restore_pydantic_validation_error_returns_422(client):
+    """Valid schema_version but structurally invalid payload → 422 from Pydantic."""
+    tok = register_and_login(client, "pydantic_err@test.com")
+    # schema_version is valid (3) but bill_templates contains invalid data
+    payload = {
+        "schema_version": 3,
+        "exported_by": "x@x.com",
+        "exported_at": "2026-01-01T00:00:00+00:00",
+        "bill_templates": [{"id": "not-an-int", "name": 123}],
+        "payment_instances": [],
+    }
+    r = client.post(
+        "/export/restore",
+        files={
+            "file": (
+                "backup.json",
+                __import__("json").dumps(payload).encode(),
+                "application/json",
+            )
+        },
+        headers=auth(tok),
+    )
+    assert r.status_code == 422
