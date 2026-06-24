@@ -3,7 +3,7 @@ project: pay-tracker
 version: 1
 status: draft
 created: 2026-06-11
-updated: 2026-06-19
+updated: 2026-06-24
 prd_version: 1
 main_goal: low-complexity
 top_blocker: none
@@ -54,6 +54,7 @@ slice only matters if this loop works.
 | S-13 | settings-page                | manage user profile, email/browser notification preferences, and backup/restore from a dedicated Settings page | S-10, S-12 | FR-001, FR-011, FR-012, FR-013, FR-018    | done     |
 | S-15 | category-enum-grouping       | see bills and payments grouped by a predefined category (Housing, Utilities, Subscriptions, etc.); category is required on every bill | S-02, S-07 | FR-003, FR-005                  | done     |
 | S-16 | monthly-summary-email        | receive a full month-end summary email (paid vs. missed, totals); toggle in Settings; on-demand "Send now" button | S-10, S-13 | FR-012 (extension)              | done     |
+| I-01 | postgres-service-extract     | (infra) PostgreSQL runs in its own container; backend image is Python-only; independent restarts, cleaner logs | — | —                                    | planned  |
 
 ## Streams
 
@@ -286,6 +287,20 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** Requires a hand-written Alembic migration (per lessons.md — autogenerate is unreliable for column type/nullability changes); the migration promotes `category` from nullable `VARCHAR(100)` to `NOT NULL VARCHAR(50)`. Old backup files with free-text category strings are handled gracefully (coerced to `"other"` on restore). Plan at `context/changes/category-enum-grouping/plan.md`.
 - **Status:** done
 
+## Infrastructure
+
+### I-01: Extract PostgreSQL into its own Docker Compose service
+
+- **Outcome:** PostgreSQL 17 runs in its own `postgres` service using the official image; the backend image contains only Python + app code; the two processes can be restarted and observed independently.
+- **Change ID:** postgres-service-extract
+- **PRD refs:** — (not a functional requirement; DevOps hygiene)
+- **Prerequisites:** —
+- **Parallel with:** any slice (no app logic changes)
+- **Risk:** Fresh-volume start required (`docker compose down -v`); local dev data is lost. Backend `DATABASE_URL` env override in compose points to the `postgres` service name — must not be confused with the `localhost:5432` default in `.env`.
+- **Status:** planned — plan at `context/changes/postgres-service-extract/plan.md`
+
+---
+
 ## Backlog Handoff
 
 | Roadmap ID | Change ID                  | Suggested issue title                                        | Ready for `/10x-plan` | Notes                                          |
@@ -304,6 +319,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-11       | per-user-data-scoping      | Add user_id FK to bill_templates; scope all queries to current_user | yes             | **Security/blocking.** Decide migration strategy for existing rows first. |
 | S-13       | settings-page              | Settings page: profile, email notification timing, browser notifications, backup/restore | yes | Plan ready; run `/10x-implement settings-page phase 1` |
 | S-15       | category-enum-grouping     | Promote category to enum, group bills and payments by category               | yes | Plan written; run `/10x-implement category-enum-grouping phase 1` |
+| I-01       | postgres-service-extract   | Extract PostgreSQL into its own Docker Compose service                       | yes | Plan written; run `/10x-implement postgres-service-extract phase 1` |
 
 ## Open Roadmap Questions
 

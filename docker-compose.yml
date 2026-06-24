@@ -1,11 +1,27 @@
 services:
+  postgres:
+    image: postgres:17
+    container_name: postgres
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-paytracker}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
   backend:
     build: ./backend
     container_name: backend
     restart: unless-stopped
     env_file: .env
-    volumes:
-      - postgres_data:/var/lib/postgresql/17/main
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER:-paytracker}:${POSTGRES_PASSWORD:-changeme}@postgres:5432/${POSTGRES_DB:-paytracker}"
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "8010:8000"
 
