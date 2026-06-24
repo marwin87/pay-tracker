@@ -1,0 +1,10 @@
+FROM node:22-bookworm
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci && npx playwright install --with-deps chromium
+
+COPY playwright.config.ts ./
+COPY tests/ ./tests/
+
+CMD ["npx", "playwright", "test", "--reporter=line"]
