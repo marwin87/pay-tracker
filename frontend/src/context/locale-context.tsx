@@ -49,12 +49,15 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     let cancelled = false;
     fetchMe()
       .then((profile) => {
+        if (cancelled) return;
         if (
-          !cancelled &&
           profile.language_preference &&
           VALID_LOCALES.includes(profile.language_preference as Locale)
         ) {
           setLocaleState(profile.language_preference as Locale);
+        } else if (!profile.language_preference) {
+          // Persist the browser-detected locale so backend emails use the right language
+          updateMe({ language_preference: detectBrowserLocale() }).catch(() => {});
         }
       })
       .catch(() => {});
