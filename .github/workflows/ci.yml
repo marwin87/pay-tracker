@@ -114,6 +114,8 @@ jobs:
         working-directory: frontend
         run: npx playwright test --reporter=line
         env:
+          DOCKER_BUILD_SUMMARY: false
+          DOCKER_BUILD_RECORD_UPLOAD: false
           PLAYWRIGHT_BASE_URL: http://localhost:3010
           E2E_API_URL: http://localhost:8010
       - name: Tear down
