@@ -3,7 +3,16 @@ export interface TokenResponse {
   token_type: string;
 }
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+export const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+
+export async function extractApiError(res: Response): Promise<Error> {
+  const body = await res.json().catch(() => ({}));
+  const detail = (body as { detail?: unknown }).detail;
+  const message = Array.isArray(detail)
+    ? detail.map((e: { msg?: string }) => e.msg ?? String(e)).join("; ")
+    : (detail ?? `Request failed with status ${res.status}`);
+  return new Error(String(message));
+}
 
 export async function apiFetch<T>(
   path: string,
@@ -22,12 +31,7 @@ export async function apiFetch<T>(
   });
 
   if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    const detail = body.detail;
-    const message = Array.isArray(detail)
-      ? detail.map((e: { msg?: string }) => e.msg ?? String(e)).join("; ")
-      : (detail ?? `Request failed with status ${res.status}`);
-    throw new Error(message);
+    throw await extractApiError(res);
   }
 
   const text = await res.text();

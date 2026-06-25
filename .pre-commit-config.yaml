@@ -10,6 +10,8 @@ repos:
           - "^context/"
           - "--exclude-files"
           - "^frontend/messages/(en|pl|de)\\.json$"
+          - "--exclude-files"
+          - "^backend/alembic/versions/"
 
   - repo: https://github.com/compilerla/conventional-pre-commit
     rev: v3.4.0

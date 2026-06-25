@@ -1,13 +1,11 @@
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+import { BASE_URL, extractApiError } from "./api";
 
 export async function downloadBackup(): Promise<void> {
   const res = await fetch(`${BASE_URL}/export/json`, {
     credentials: "include",
   });
 
-  if (!res.ok) {
-    throw new Error(`Backup failed: ${res.status}`);
-  }
+  if (!res.ok) throw await extractApiError(res);
 
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
@@ -29,10 +27,7 @@ export async function restoreFromBackup(
     credentials: "include",
     body: form,
   });
-  if (!res.ok) {
-    const detail = await res.json().catch(() => ({}));
-    throw new Error(detail?.detail ?? `Restore failed: ${res.status}`);
-  }
+  if (!res.ok) throw await extractApiError(res);
   return res.json();
 }
 
@@ -41,9 +36,7 @@ export async function downloadXlsx(year: number): Promise<void> {
     credentials: "include",
   });
 
-  if (!res.ok) {
-    throw new Error("Export failed");
-  }
+  if (!res.ok) throw await extractApiError(res);
 
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
