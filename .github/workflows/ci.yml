@@ -96,6 +96,7 @@ jobs:
           context: ./backend
           load: true
           tags: pay-tracker-backend:latest
+          provenance: false
           cache-from: type=gha,scope=backend
           cache-to: type=gha,scope=backend,mode=max
       - name: Build frontend image
@@ -104,6 +105,7 @@ jobs:
           context: ./frontend
           load: true
           tags: pay-tracker-frontend:latest
+          provenance: false
           cache-from: type=gha,scope=frontend
           cache-to: type=gha,scope=frontend,mode=max
       - name: Start stack
