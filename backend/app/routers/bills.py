@@ -25,6 +25,31 @@ from app.services.recurrence import (
 router = APIRouter(prefix="/bills", tags=["bills"])
 
 
+def _to_out(
+    inst: PaymentInstance,
+    *,
+    override_status: PaymentStatus | None = None,
+) -> PaymentInstanceOut:
+    return PaymentInstanceOut.model_validate(
+        {
+            "id": inst.id,
+            "bill_id": inst.bill_id,
+            "period": inst.period,
+            "due_date": inst.due_date,
+            "amount": inst.amount,
+            "status": override_status if override_status is not None else inst.status,
+            "paid_at": inst.paid_at,
+            "paid_amount": inst.paid_amount,
+            "notes": inst.notes,
+            "bill_name": inst.template.name,
+            "currency": inst.template.currency,
+            "frequency": inst.template.frequency,
+            "category": inst.template.category,
+            "email_sent_at": inst.email_sent_at,
+        }
+    )
+
+
 @router.get("", response_model=list[BillTemplateOut])
 def list_bills(
     include_archived: bool = False,
@@ -99,26 +124,13 @@ def list_payments(
 
     result = []
     for inst in instances:
-        d = {
-            "id": inst.id,
-            "bill_id": inst.bill_id,
-            "period": inst.period,
-            "due_date": inst.due_date,
-            "amount": inst.amount,
-            "status": inst.status,
-            "paid_at": inst.paid_at,
-            "paid_amount": inst.paid_amount,
-            "notes": inst.notes,
-            "bill_name": inst.template.name,
-            "currency": inst.template.currency,
-            "frequency": inst.template.frequency,
-            "category": inst.template.category,
-            "email_sent_at": inst.email_sent_at,
-        }
         # Dynamic overdue: override status in response without writing to DB
-        if inst.status == PaymentStatus.upcoming and inst.due_date < today:
-            d["status"] = PaymentStatus.overdue
-        result.append(d)
+        override = (
+            PaymentStatus.overdue
+            if inst.status == PaymentStatus.upcoming and inst.due_date < today
+            else None
+        )
+        result.append(_to_out(inst, override_status=override))
     return result
 
 
@@ -153,22 +165,7 @@ def mark_paid(
         generate_next_instance(db, template, instance.period)
 
     db.refresh(instance)
-    return {
-        "id": instance.id,
-        "bill_id": instance.bill_id,
-        "period": instance.period,
-        "due_date": instance.due_date,
-        "amount": instance.amount,
-        "status": instance.status,
-        "paid_at": instance.paid_at,
-        "paid_amount": instance.paid_amount,
-        "notes": instance.notes,
-        "bill_name": template.name,
-        "currency": template.currency,
-        "frequency": template.frequency,
-        "category": template.category,
-        "email_sent_at": instance.email_sent_at,
-    }
+    return _to_out(instance)
 
 
 @router.post("/payments/{instance_id}/unpay", response_model=PaymentInstanceOut)
@@ -194,22 +191,7 @@ def revert_payment(
     instance.paid_amount = None
     db.commit()
     db.refresh(instance)
-    return {
-        "id": instance.id,
-        "bill_id": instance.bill_id,
-        "period": instance.period,
-        "due_date": instance.due_date,
-        "amount": instance.amount,
-        "status": instance.status,
-        "paid_at": instance.paid_at,
-        "paid_amount": instance.paid_amount,
-        "notes": instance.notes,
-        "bill_name": template.name,
-        "currency": template.currency,
-        "frequency": template.frequency,
-        "category": template.category,
-        "email_sent_at": instance.email_sent_at,
-    }
+    return _to_out(instance)
 
 
 @router.delete("/payments/{instance_id}", status_code=status.HTTP_204_NO_CONTENT)
