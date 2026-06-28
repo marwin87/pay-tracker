@@ -1,9 +1,14 @@
 """Unit tests for app/services/reminder_job.py."""
 
 import smtplib
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from unittest.mock import patch
+
+
+def _today_utc() -> date:
+    return datetime.now(timezone.utc).date()
+
 
 import app.models.bill  # noqa: F401 — register models
 import app.models.user  # noqa: F401
@@ -16,6 +21,7 @@ from app.models.bill import (
 )
 from app.models.user import User
 from app.services.reminder_job import (
+    send_catchup_reminders,
     send_daily_reminders,
     send_monthly_summary_for_user,
 )
@@ -97,7 +103,7 @@ def test_no_smtp_skips_all(mock_send, mock_settings, db_sessionmaker):
 
 @patch("app.services.reminder_job.send_reminder_email")
 def test_upcoming_instance_sends_and_flips_flag(mock_send, db_session, db_sessionmaker):
-    today = date.today()
+    today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=True)
     bill = _make_bill(db_session, user.id)
     inst = _make_instance(db_session, bill.id, due_date=today + timedelta(days=1))
@@ -122,7 +128,7 @@ def test_upcoming_instance_sends_and_flips_flag(mock_send, db_session, db_sessio
 def test_1_day_after_instance_sends_and_flips_flag(
     mock_send, db_session, db_sessionmaker
 ):
-    today = date.today()
+    today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=False, notify_1_day_after=True)
     bill = _make_bill(db_session, user.id)
     inst = _make_instance(db_session, bill.id, due_date=today - timedelta(days=1))
@@ -147,7 +153,7 @@ def test_1_day_after_instance_sends_and_flips_flag(
 def test_2_days_before_instance_sends_and_flips_flag(
     mock_send, db_session, db_sessionmaker
 ):
-    today = date.today()
+    today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=False, notify_2_days_before=True)
     bill = _make_bill(db_session, user.id)
     inst = _make_instance(db_session, bill.id, due_date=today + timedelta(days=2))
@@ -169,7 +175,7 @@ def test_2_days_before_instance_sends_and_flips_flag(
 
 @patch("app.services.reminder_job.send_reminder_email")
 def test_on_day_instance_sends_and_flips_flag(mock_send, db_session, db_sessionmaker):
-    today = date.today()
+    today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=False, notify_on_day=True)
     bill = _make_bill(db_session, user.id)
     inst = _make_instance(db_session, bill.id, due_date=today)
@@ -191,7 +197,7 @@ def test_on_day_instance_sends_and_flips_flag(mock_send, db_session, db_sessionm
 
 @patch("app.services.reminder_job.send_reminder_email")
 def test_already_sent_flag_skips_email(mock_send, db_session, db_sessionmaker):
-    today = date.today()
+    today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=True)
     bill = _make_bill(db_session, user.id)
     _make_instance(
@@ -211,7 +217,7 @@ def test_already_sent_flag_skips_email(mock_send, db_session, db_sessionmaker):
 
 @patch("app.services.reminder_job.send_reminder_email")
 def test_opt_out_user_skips_email(mock_send, db_session, db_sessionmaker):
-    today = date.today()
+    today = _today_utc()
     user = _make_user(
         db_session,
         notify_2_days_before=False,
@@ -236,7 +242,7 @@ def test_smtp_exception_does_not_flip_flag(mock_send, db_session, db_sessionmake
 
     mock_send.side_effect = smtplib.SMTPException("connection refused")
 
-    today = date.today()
+    today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=True)
     bill = _make_bill(db_session, user.id)
     inst = _make_instance(db_session, bill.id, due_date=today + timedelta(days=1))
@@ -294,7 +300,7 @@ def _make_bill_named(db, user_id: int, name: str) -> BillTemplate:
 
 @patch("app.services.reminder_job.send_monthly_summary_email")
 def test_monthly_summary_splits_paid_and_unpaid(mock_send, db_session):
-    today = date.today()
+    today = _today_utc()
     user = _make_user(db_session)
     paid_bill = _make_bill_named(db_session, user.id, "Internet")
     unpaid_bill = _make_bill_named(db_session, user.id, "Netflix")
@@ -332,7 +338,7 @@ def test_monthly_summary_returns_false_when_smtp_not_configured(db_session):
 def test_monthly_summary_returns_false_on_smtp_error(mock_send, db_session):
     mock_send.side_effect = smtplib.SMTPException("connection refused")
 
-    today = date.today()
+    today = _today_utc()
     user = _make_user(db_session)
     bill = _make_bill(db_session, user.id)
     _make_instance(db_session, bill.id, due_date=today)
@@ -356,7 +362,7 @@ def test_monthly_summary_idempotency_via_last_sent_flag(
     from datetime import datetime, timezone
     from unittest.mock import MagicMock
 
-    today = date.today()
+    today = _today_utc()
     current_month = today.strftime("%Y-%m")
 
     user = _make_user(db_session)
@@ -393,7 +399,7 @@ def test_monthly_summary_sent_and_flag_updated_on_last_day(
     import calendar
     from datetime import datetime, timezone
 
-    today = date.today()
+    today = _today_utc()
     last_day = calendar.monthrange(today.year, today.month)[1]
     fake_today = today.replace(day=last_day)
 
@@ -422,3 +428,81 @@ def test_monthly_summary_sent_and_flag_updated_on_last_day(
     db_session.expire_all()
     refreshed_user = db_session.get(User, user_id)
     assert refreshed_user.monthly_summary_last_sent == fake_today.strftime("%Y-%m")
+
+
+# ---------------------------------------------------------------------------
+# Master toggle: email_reminders_enabled=False must block all sends
+# ---------------------------------------------------------------------------
+
+
+@patch("app.services.reminder_job.send_reminder_email")
+def test_master_toggle_off_skips_daily_reminder(mock_send, db_session, db_sessionmaker):
+    """Scheduler sends nothing when email_reminders_enabled is False."""
+    today = _today_utc()
+    user = _make_user(db_session, notify_1_day_before=True)
+    user.email_reminders_enabled = False
+    bill = _make_bill(db_session, user.id)
+    _make_instance(db_session, bill.id, due_date=today + timedelta(days=1))
+    db_session.commit()
+
+    with patch("app.services.reminder_job.settings") as mock_settings:
+        _smtp_settings(mock_settings)
+        send_daily_reminders(db_sessionmaker, send_minute=480)
+
+    mock_send.assert_not_called()
+
+
+@patch("app.services.reminder_job.send_reminder_email")
+def test_master_toggle_off_skips_catchup_reminder(
+    mock_send, db_session, db_sessionmaker
+):
+    """Catch-up reminders on startup also respect email_reminders_enabled=False."""
+    today = _today_utc()
+    user = _make_user(db_session, notify_1_day_before=True, reminder_send_minute=0)
+    user.email_reminders_enabled = False
+    bill = _make_bill(db_session, user.id)
+    _make_instance(db_session, bill.id, due_date=today + timedelta(days=1))
+    db_session.commit()
+
+    with patch("app.services.reminder_job.settings") as mock_settings:
+        _smtp_settings(mock_settings)
+        # current_minute=480 covers all users whose send_minute <= 480
+        send_catchup_reminders(db_sessionmaker, send_minute=480)
+
+    mock_send.assert_not_called()
+
+
+@patch("app.services.reminder_job.send_monthly_summary_email")
+def test_master_toggle_off_skips_monthly_summary_scheduler(
+    mock_send, db_session, db_sessionmaker
+):
+    """Monthly summary scheduler respects email_reminders_enabled=False."""
+    import calendar
+    from datetime import datetime, timezone
+
+    today = _today_utc()
+    last_day = calendar.monthrange(today.year, today.month)[1]
+    fake_today = today.replace(day=last_day)
+
+    user = _make_user(db_session)
+    user.email_reminders_enabled = False
+    user.monthly_summary_enabled = True
+    user.monthly_summary_last_sent = None
+    bill = _make_bill(db_session, user.id)
+    _make_instance(db_session, bill.id, due_date=fake_today)
+    db_session.commit()
+
+    with (
+        patch("app.services.reminder_job.settings") as mock_settings,
+        patch(
+            "app.services.reminder_job.datetime",
+            wraps=__import__("datetime", fromlist=["datetime"]).datetime,
+        ) as mock_dt,
+    ):
+        _smtp_settings(mock_settings)
+        mock_dt.now.return_value = datetime(
+            fake_today.year, fake_today.month, fake_today.day, 8, 0, tzinfo=timezone.utc
+        )
+        send_daily_reminders(db_sessionmaker, send_minute=480)
+
+    mock_send.assert_not_called()

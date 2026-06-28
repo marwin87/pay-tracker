@@ -84,6 +84,25 @@ def test_patch_me_updates_notification_flags(client):
     assert data["notify_on_day"] is True
 
 
+def test_patch_me_disables_master_toggle_and_persists(client):
+    """Disabling email_reminders_enabled persists to DB and is visible on GET /me."""
+    token = register_and_login(client, "toggle_off@test.com", _PASSWORD)
+
+    # New users default to enabled=True
+    r = client.get("/auth/me", headers=auth(token))
+    assert r.json()["email_reminders_enabled"] is True
+
+    r = client.patch(
+        "/auth/me", json={"email_reminders_enabled": False}, headers=auth(token)
+    )
+    assert r.status_code == 200
+    assert r.json()["email_reminders_enabled"] is False
+
+    # Re-fetch to confirm DB persistence (not just response echo)
+    r = client.get("/auth/me", headers=auth(token))
+    assert r.json()["email_reminders_enabled"] is False
+
+
 def test_patch_me_invalid_language_returns_422(client):
     token = register_and_login(client, "badlang@test.com", _PASSWORD)
     r = client.patch(
@@ -290,6 +309,22 @@ def test_send_monthly_summary_disabled_returns_false(client):
     token = register_and_login(client, "summary_off@test.com", _PASSWORD)
     client.patch(
         "/auth/me", json={"monthly_summary_enabled": False}, headers=auth(token)
+    )
+    with patch("app.routers.auth.settings") as mock_settings:
+        mock_settings.smtp_host = "smtp.test"
+        r = client.post("/auth/send-monthly-summary-now", headers=auth(token))
+    assert r.status_code == 200
+    assert r.json()["sent"] is False
+
+
+def test_send_monthly_summary_master_toggle_off_returns_false(client):
+    """Master toggle (email_reminders_enabled=False) also blocks monthly summary."""
+    from unittest.mock import patch
+
+    token = register_and_login(client, "summary_master_off@test.com", _PASSWORD)
+    # Disable master toggle only — monthly_summary_enabled stays True (default)
+    client.patch(
+        "/auth/me", json={"email_reminders_enabled": False}, headers=auth(token)
     )
     with patch("app.routers.auth.settings") as mock_settings:
         mock_settings.smtp_host = "smtp.test"

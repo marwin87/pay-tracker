@@ -46,6 +46,8 @@ export function EmailNotificationsTile({
   const [monthlySummary, setMonthlySummary] = useState(profile.monthly_summary_enabled);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+  const [isTogglingEnabled, setIsTogglingEnabled] = useState(false);
+  const [isTogglingMonthlySummary, setIsTogglingMonthlySummary] = useState(false);
   const [isSendingNow, setIsSendingNow] = useState(false);
   const [sendNowResult, setSendNowResult] = useState<
     { sent: number } | { error: string } | null
@@ -74,13 +76,11 @@ export function EmailNotificationsTile({
   }, []);
 
   const isDirty =
-    emailEnabled !== profile.email_reminders_enabled ||
     notify2 !== profile.notify_2_days_before ||
     notify1 !== profile.notify_1_day_before ||
     notifyOn !== profile.notify_on_day ||
     notify1After !== profile.notify_1_day_after ||
-    sendMinute !== profile.reminder_send_minute ||
-    monthlySummary !== profile.monthly_summary_enabled;
+    sendMinute !== profile.reminder_send_minute;
 
   const noneSelected = !notify2 && !notify1 && !notifyOn && !notify1After;
 
@@ -88,15 +88,40 @@ export function EmailNotificationsTile({
     onDirtyChange(isDirty);
   }, [isDirty, onDirtyChange]);
 
+  async function handleEmailEnabledChange(value: boolean) {
+    setEmailEnabled(value);
+    setIsTogglingEnabled(true);
+    try {
+      const updated = await updateMe({ email_reminders_enabled: value });
+      onProfileUpdate(updated);
+    } catch {
+      // Revert on failure
+      setEmailEnabled(!value);
+    } finally {
+      setIsTogglingEnabled(false);
+    }
+  }
+
   function cancel() {
-    setEmailEnabled(profile.email_reminders_enabled);
     setNotify2(profile.notify_2_days_before);
     setNotify1(profile.notify_1_day_before);
     setNotifyOn(profile.notify_on_day);
     setNotify1After(profile.notify_1_day_after);
     setSendMinute(profile.reminder_send_minute);
-    setMonthlySummary(profile.monthly_summary_enabled);
     setSaveError(null);
+  }
+
+  async function handleMonthlySummaryChange(value: boolean) {
+    setMonthlySummary(value);
+    setIsTogglingMonthlySummary(true);
+    try {
+      const updated = await updateMe({ monthly_summary_enabled: value });
+      onProfileUpdate(updated);
+    } catch {
+      setMonthlySummary(!value);
+    } finally {
+      setIsTogglingMonthlySummary(false);
+    }
   }
 
   async function save() {
@@ -104,13 +129,11 @@ export function EmailNotificationsTile({
     setSaveError(null);
     try {
       const updated = await updateMe({
-        email_reminders_enabled: emailEnabled,
         notify_2_days_before: notify2,
         notify_1_day_before: notify1,
         notify_on_day: notifyOn,
         notify_1_day_after: notify1After,
         reminder_send_minute: sendMinute,
-        monthly_summary_enabled: monthlySummary,
       });
       onProfileUpdate(updated);
     } catch {
@@ -163,19 +186,15 @@ export function EmailNotificationsTile({
       icon={Mail}
       title={tp("emailNotifications.title")}
       description={tp("emailNotifications.description")}
-      isDirty={isDirty}
-      isSaving={isSaving}
-      saveError={saveError}
-      onSave={save}
-      onCancel={cancel}
       t={t}
       isCollapsed={isCollapsed}
       onToggle={onToggle}
     >
       <Switch
         checked={emailEnabled}
-        onChange={setEmailEnabled}
+        onChange={handleEmailEnabledChange}
         label={tp("emailNotifications.masterToggle")}
+        disabled={isTogglingEnabled}
       />
 
       <div className={!emailEnabled ? "opacity-50 pointer-events-none" : ""}>
@@ -217,6 +236,30 @@ export function EmailNotificationsTile({
           </select>
         </div>
 
+        {isDirty && (
+          <div className="flex flex-col gap-1 pt-1">
+            <div className="flex gap-2">
+              <button
+                onClick={save}
+                disabled={isSaving}
+                className="rounded-lg border border-green-700 bg-green-700 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 disabled:opacity-50"
+              >
+                {isSaving ? t("saving") : t("save")}
+              </button>
+              <button
+                onClick={cancel}
+                disabled={isSaving}
+                className="rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+              >
+                {t("cancel")}
+              </button>
+            </div>
+            {saveError && (
+              <p className="text-sm text-red-600 dark:text-red-400">{saveError}</p>
+            )}
+          </div>
+        )}
+
         <div className="flex flex-col gap-2 pt-1 border-t border-slate-100 dark:border-slate-700">
           <button
             onClick={handleSendNow}
@@ -241,8 +284,9 @@ export function EmailNotificationsTile({
           <div className="pt-1 border-t border-slate-100 dark:border-slate-700">
             <Switch
               checked={monthlySummary}
-              onChange={setMonthlySummary}
+              onChange={handleMonthlySummaryChange}
               label={tp("emailNotifications.monthlySummaryToggle")}
+              disabled={isTogglingMonthlySummary}
             />
           </div>
 
