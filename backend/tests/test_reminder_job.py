@@ -86,6 +86,7 @@ def _smtp_settings(mock_settings):
     mock_settings.smtp_user = None
     mock_settings.smtp_password = None
     mock_settings.reminder_from = "r@test.com"
+    mock_settings.email_blocked_domains = []
 
 
 # ---------------------------------------------------------------------------
@@ -101,8 +102,11 @@ def test_no_smtp_skips_all(mock_send, mock_settings, db_sessionmaker):
     mock_send.assert_not_called()
 
 
+@patch("app.services.reminder_job.send_monthly_summary_email")
 @patch("app.services.reminder_job.send_reminder_email")
-def test_upcoming_instance_sends_and_flips_flag(mock_send, db_session, db_sessionmaker):
+def test_upcoming_instance_sends_and_flips_flag(
+    mock_send, _mock_summary, db_session, db_sessionmaker
+):
     today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=True)
     bill = _make_bill(db_session, user.id)
@@ -124,9 +128,10 @@ def test_upcoming_instance_sends_and_flips_flag(mock_send, db_session, db_sessio
     assert refreshed.reminder_sent_overdue is False
 
 
+@patch("app.services.reminder_job.send_monthly_summary_email")
 @patch("app.services.reminder_job.send_reminder_email")
 def test_1_day_after_instance_sends_and_flips_flag(
-    mock_send, db_session, db_sessionmaker
+    mock_send, _mock_summary, db_session, db_sessionmaker
 ):
     today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=False, notify_1_day_after=True)
@@ -149,9 +154,10 @@ def test_1_day_after_instance_sends_and_flips_flag(
     assert refreshed.reminder_sent_upcoming is False
 
 
+@patch("app.services.reminder_job.send_monthly_summary_email")
 @patch("app.services.reminder_job.send_reminder_email")
 def test_2_days_before_instance_sends_and_flips_flag(
-    mock_send, db_session, db_sessionmaker
+    mock_send, _mock_summary, db_session, db_sessionmaker
 ):
     today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=False, notify_2_days_before=True)
@@ -173,8 +179,11 @@ def test_2_days_before_instance_sends_and_flips_flag(
     assert refreshed.reminder_sent_2_days_before is True
 
 
+@patch("app.services.reminder_job.send_monthly_summary_email")
 @patch("app.services.reminder_job.send_reminder_email")
-def test_on_day_instance_sends_and_flips_flag(mock_send, db_session, db_sessionmaker):
+def test_on_day_instance_sends_and_flips_flag(
+    mock_send, _mock_summary, db_session, db_sessionmaker
+):
     today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=False, notify_on_day=True)
     bill = _make_bill(db_session, user.id)
@@ -195,8 +204,11 @@ def test_on_day_instance_sends_and_flips_flag(mock_send, db_session, db_sessionm
     assert refreshed.reminder_sent_on_day is True
 
 
+@patch("app.services.reminder_job.send_monthly_summary_email")
 @patch("app.services.reminder_job.send_reminder_email")
-def test_already_sent_flag_skips_email(mock_send, db_session, db_sessionmaker):
+def test_already_sent_flag_skips_email(
+    mock_send, _mock_summary, db_session, db_sessionmaker
+):
     today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=True)
     bill = _make_bill(db_session, user.id)
@@ -215,8 +227,11 @@ def test_already_sent_flag_skips_email(mock_send, db_session, db_sessionmaker):
     mock_send.assert_not_called()
 
 
+@patch("app.services.reminder_job.send_monthly_summary_email")
 @patch("app.services.reminder_job.send_reminder_email")
-def test_opt_out_user_skips_email(mock_send, db_session, db_sessionmaker):
+def test_opt_out_user_skips_email(
+    mock_send, _mock_summary, db_session, db_sessionmaker
+):
     today = _today_utc()
     user = _make_user(
         db_session,
@@ -236,8 +251,11 @@ def test_opt_out_user_skips_email(mock_send, db_session, db_sessionmaker):
     mock_send.assert_not_called()
 
 
+@patch("app.services.reminder_job.send_monthly_summary_email")
 @patch("app.services.reminder_job.send_reminder_email")
-def test_smtp_exception_does_not_flip_flag(mock_send, db_session, db_sessionmaker):
+def test_smtp_exception_does_not_flip_flag(
+    mock_send, _mock_summary, db_session, db_sessionmaker
+):
     import smtplib
 
     mock_send.side_effect = smtplib.SMTPException("connection refused")
