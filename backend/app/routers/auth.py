@@ -165,9 +165,6 @@ def send_monthly_summary_now(
         return SendMonthlySummaryNowOut(sent=False)
     current_month = datetime.now(timezone.utc).strftime("%Y-%m")
     sent = send_monthly_summary_for_user(db, user, current_month)
-    if sent:
-        user.monthly_summary_last_sent = current_month
-        db.commit()
     return SendMonthlySummaryNowOut(sent=sent)
 
 

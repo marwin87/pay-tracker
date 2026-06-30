@@ -348,3 +348,28 @@ def test_send_monthly_summary_calls_service(client):
     assert r.status_code == 200
     assert r.json()["sent"] is True
     mock_send.assert_called_once()
+
+
+def test_send_monthly_summary_now_does_not_set_flag(client_db):
+    """Manual send must never touch monthly_summary_last_sent — only the cron does."""
+    from unittest.mock import patch
+
+    from app.models.user import User
+
+    client, db = client_db
+    token = register_and_login(client, "summary_flag@test.com", _PASSWORD)
+    with (
+        patch("app.routers.auth.settings") as mock_settings,
+        patch("app.routers.auth.send_monthly_summary_for_user", return_value=True),
+    ):
+        mock_settings.smtp_host = "smtp.test"
+        r = client.post("/auth/send-monthly-summary-now", headers=auth(token))
+    assert r.status_code == 200
+    assert r.json()["sent"] is True
+
+    from datetime import datetime, timezone
+
+    current_month = datetime.now(timezone.utc).strftime("%Y-%m")
+    db.expire_all()
+    user = db.query(User).filter(User.email == "summary_flag@test.com").first()
+    assert user.monthly_summary_last_sent != current_month
