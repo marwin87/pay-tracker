@@ -13,6 +13,11 @@ from app.services.email import send_monthly_summary_email, send_reminder_email
 logger = logging.getLogger(__name__)
 
 
+def _is_blocked_domain(email: str) -> bool:
+    domain = email.split("@")[-1].lower()
+    return domain in {d.lower() for d in settings.email_blocked_domains}
+
+
 _MONTH_NAMES: dict[str, list[str]] = {
     "en": [
         "January",
@@ -69,6 +74,9 @@ def _month_label(month: str, lang: str) -> str:
 def send_monthly_summary_for_user(db: Session, user: User, month: str) -> bool:
     """Send monthly summary email for a single user. Returns True on success."""
     if not settings.smtp_host:
+        return False
+    if _is_blocked_domain(user.email):
+        logger.debug("Skipping monthly summary for blocked domain: %s", user.email)
         return False
     lang = user.language_preference or "en"
     instances = (
@@ -139,6 +147,9 @@ def send_monthly_summary_for_user(db: Session, user: User, month: str) -> bool:
 
 def send_reminders_for_user(db: Session, user: User) -> int:
     """Send due reminders for a single user. Returns count of emails sent."""
+    if _is_blocked_domain(user.email):
+        logger.debug("Skipping reminders for blocked domain: %s", user.email)
+        return 0
     now_utc = datetime.now(timezone.utc)
     today = now_utc.date()
     tomorrow = today + timedelta(days=1)

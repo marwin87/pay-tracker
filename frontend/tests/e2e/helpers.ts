@@ -1,12 +1,17 @@
+import * as fs from 'fs';
 import type { Page } from '@playwright/test';
 
 const API = process.env.E2E_API_URL ?? 'http://localhost:8010';
+const E2E_USERS_FILE = '/tmp/e2e-users.json';
 
 /**
  * Registers a fresh user via the backend API and returns their credentials.
  * Because page.request shares the browser context's cookie jar, the
  * access_token and auth_logged_in cookies set by the register endpoint are
  * immediately available to the page — no UI login required.
+ *
+ * The token is written to E2E_USERS_FILE so globalTeardown can delete the
+ * user via DELETE /auth/users/me after the suite finishes.
  */
 export async function loginNewUser(page: Page): Promise<{ email: string; password: string }> {
   const email = `e2e-${Date.now()}@test.com`;
@@ -20,6 +25,15 @@ export async function loginNewUser(page: Page): Promise<{ email: string; passwor
   if (!res.ok()) {
     throw new Error(`Registration failed: ${res.status()} — ${await res.text()}`);
   }
+
+  const data = await res.json();
+  const token: string = data.access_token;
+
+  const existing: Array<{ email: string; token: string }> = fs.existsSync(E2E_USERS_FILE)
+    ? (JSON.parse(fs.readFileSync(E2E_USERS_FILE, 'utf-8')) as Array<{ email: string; token: string }>)
+    : [];
+  existing.push({ email, token });
+  fs.writeFileSync(E2E_USERS_FILE, JSON.stringify(existing));
 
   return { email, password };
 }

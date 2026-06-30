@@ -113,6 +113,17 @@ def update_me(
     return user
 
 
+@router.delete("/users/me", status_code=status.HTTP_204_NO_CONTENT)
+def delete_me(
+    response: Response,
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+):
+    db.delete(user)
+    db.commit()
+    _clear_auth_cookies(response)
+
+
 @router.patch("/change-password", status_code=status.HTTP_200_OK)
 def change_password(
     body: ChangePasswordRequest,

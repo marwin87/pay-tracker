@@ -27,6 +27,11 @@ class Settings(BaseSettings):
     smtp_use_tls: bool = True
     reminder_from: str | None = None
 
+    # Email domain blocklist — addresses whose domain matches are silently skipped
+    # by the reminder/summary scheduler. Set via EMAIL_BLOCKED_DOMAINS as a JSON
+    # array, e.g. '["test.com","example.com"]'. Defaults cover E2E test addresses.
+    email_blocked_domains: list[str] = ["test.com", "example.com"]
+
     # Password reset
     app_base_url: str = "http://localhost:3010"
     password_reset_token_expire_minutes: int = 60
