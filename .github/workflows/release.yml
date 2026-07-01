@@ -26,10 +26,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Build and push backend
         uses: docker/build-push-action@v5
         with:
           context: ./backend
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/pay-tracker-backend:${{ steps.version.outputs.value }}
@@ -39,6 +46,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
+          platforms: linux/amd64,linux/arm64
           push: true
           build-args: |
             NEXT_PUBLIC_APP_VERSION=${{ steps.version.outputs.value }}
@@ -50,6 +58,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./demo
+          platforms: linux/amd64,linux/arm64
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/pay-tracker-demo:${{ steps.version.outputs.value }}
