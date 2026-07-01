@@ -30,7 +30,38 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Installable as PWA** — works offline-first on mobile and desktop.
 
 
+## Quick start without cloning
+
+Pull the published images from GitHub Container Registry and run the app with just two files — no repo clone required.
+
+```bash
+mkdir pay-tracker && cd pay-tracker
+curl -O https://raw.githubusercontent.com/marwin87/pay-tracker/main/docker-compose.prod.yml
+curl -O https://raw.githubusercontent.com/marwin87/pay-tracker/main/.env.example
+cp .env.example .env
+```
+
+Edit `.env` and set a strong `JWT_SECRET`, then:
+
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+
+- Frontend: http://localhost:3010
+- API docs: http://localhost:8010/docs
+
+To try it with pre-seeded demo data instead of starting empty:
+
+```bash
+docker compose -f docker-compose.prod.yml --profile demo up -d
+```
+
+Pin a specific released version instead of the latest one by setting `PAY_TRACKER_VERSION` (e.g. `PAY_TRACKER_VERSION=1.1.0 docker compose -f docker-compose.prod.yml up -d`).
+
+
 ## Getting started
+
+The steps below build the images from source — use this if you're developing Pay Tracker or want to run unreleased changes. If you just want to run the app, see [Quick start without cloning](#quick-start-without-cloning) above.
 
 ### 1. Set up environment
 

@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  docker:
+    name: Docker — build & push release images
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Resolve version (strip leading v from tag)
+        id: version
+        run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/pay-tracker-backend:${{ steps.version.outputs.value }}
+            ghcr.io/${{ github.repository_owner }}/pay-tracker-backend:latest
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          build-args: |
+            NEXT_PUBLIC_APP_VERSION=${{ steps.version.outputs.value }}
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/pay-tracker-frontend:${{ steps.version.outputs.value }}
+            ghcr.io/${{ github.repository_owner }}/pay-tracker-frontend:latest
+
+      - name: Build and push demo
+        uses: docker/build-push-action@v5
+        with:
+          context: ./demo
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/pay-tracker-demo:${{ steps.version.outputs.value }}
+            ghcr.io/${{ github.repository_owner }}/pay-tracker-demo:latest
+
+  sync-version:
+    name: Sync version files to released tag
+    runs-on: ubuntu-latest
+    needs: docker
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.release.target_commitish }}
+
+      - name: Resolve version (strip leading v from tag)
+        id: version
+        run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Write version into pyproject.toml / package.json
+        run: |
+          VERSION="${{ steps.version.outputs.value }}"
+          sed -i "s/^version = \".*\"/version = \"$VERSION\"/" pyproject.toml
+          sed -i "s/^version = \".*\"/version = \"$VERSION\"/" backend/pyproject.toml
+          sed -i "s/\"version\": \".*\"/\"version\": \"$VERSION\"/" frontend/package.json
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add pyproject.toml backend/pyproject.toml frontend/package.json
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: sync version to ${{ steps.version.outputs.value }} [skip ci]"
+            git push origin HEAD:${{ github.event.release.target_commitish }}
+          fi
