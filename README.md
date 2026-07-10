@@ -25,6 +25,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Monthly summary email** — optional. On the last day of each month, receive a full summary of what was paid (amount due vs. paid, date) and what was missed, with totals. Toggle it in Settings → Email Notifications. A "Send monthly summary now" button lets you request the current month's snapshot on demand.
 - **Email sent indicator** — each payment row shows an `@` icon: gray if no reminder has been sent, amber if one was sent. Click it to see the exact timestamp.
 - **Export & backup** — download payment history as `.xlsx` (one sheet per month) or a full JSON backup. Restore from backup at any time.
+- **Restore safety net** — before confirming a restore, see a comparison of your current data vs. the backup file (bill/payment counts, backup export date), with a warning if the backup would reduce your data. The server also auto-snapshots your current data immediately before any restore executes, so a mistaken restore can be undone from Settings — even if you proceeded past the warning or called the API directly.
 - **Password reset** — optional. When SMTP is configured, a "Forgot password?" link appears on the login page. Users receive a secure one-time reset link by email (expires after 60 minutes by default).
 - **Multilingual** — English, Polish, German. Language is saved per account.
 - **Installable as PWA** — works offline-first on mobile and desktop.
@@ -113,6 +114,7 @@ The settings page also shows the current server time (UTC) so you can set the se
 | `REMINDER_FROM` | no | From address for reminder emails |
 | `APP_BASE_URL` | no | Public URL of the frontend — used in password reset links (default: `http://localhost:3010`) |
 | `PASSWORD_RESET_TOKEN_EXPIRE_MINUTES` | no | How long a reset token is valid in minutes (default: 60; set to 0 for no expiry) |
+| `RESTORE_SNAPSHOT_RETENTION_DAYS` | no | Days a pre-restore snapshot stays recoverable before the cleanup job deletes it (default: 7) |
 
 Copy `.env.example` to `.env`. Never commit `.env`.
 
@@ -166,4 +168,5 @@ Requires HTTPS in production. Localhost works as an exception in most browsers.
 
 - **XLSX** — Payments page → Export Excel. One sheet per month, all columns.
 - **JSON backup** — Settings → Download Backup. Full data export scoped to your account.
-- **Restore** — Settings → Restore from Backup. Atomically replaces your data. Requires `schema_version: 2`.
+- **Restore** — Settings → Restore from Backup. Shows a comparison of your current data vs. the backup (bill/payment counts, export date) before you confirm, then atomically replaces your data. Requires `schema_version: 2` or newer.
+- **Undo a restore** — every restore automatically snapshots your prior data server-side first (skipped if you had no existing bills). If a restore turns out to be a mistake, Settings → Restore shows a "Restore This Snapshot" option with the snapshot's timestamp, letting you revert. Snapshots are kept for `RESTORE_SNAPSHOT_RETENTION_DAYS` (default 7) and only the single most recent one is retained per account.

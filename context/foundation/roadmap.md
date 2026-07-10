@@ -57,7 +57,7 @@ slice only matters if this loop works.
 | S-17 | reset-password               | request a password reset link by email; receive a secure one-time link; set a new password via the link | S-01, S-10 | FR-002 (extension)            | done     |
 | I-01 | postgres-service-extract     | (infra) PostgreSQL runs in its own container; backend image is Python-only; independent restarts, cleaner logs | — | —                                    | done     |
 | S-18 | restore-safety-comparison    | see a comparison of current vs. backup data (bill/payment counts, backup export date) in the restore confirmation dialog, with a warning if the backup would reduce data | S-09 | FR-018 (extension) | done     |
-| S-19 | restore-auto-backup-safety-net | have the server automatically snapshot current data before a destructive restore executes, so it can be recovered if the restore was a mistake | S-09 | FR-018 (extension) | planned  |
+| S-19 | restore-auto-backup-safety-net | have the server automatically snapshot current data before a destructive restore executes, so it can be recovered if the restore was a mistake | S-09 | FR-018 (extension) | done     |
 
 ## Streams
 
@@ -330,7 +330,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Snapshot storage and retention — where the pre-restore snapshot is kept (e.g. a temporary DB table, an object-storage blob, a downloadable response artifact) and how long it's retained before being discarded. Must be decided during planning. — Owner: user. Block: no (planning can proceed with options on the table).
   - Recovery path — whether the user self-serves recovery (e.g. a "last snapshot" download button) or it's an operator/support-only recovery mechanism. Affects scope significantly. — Owner: user. Block: no.
 - **Risk:** More complex than S-18 — it's a backend-only safety mechanism with its own storage and retention lifecycle, and needs its own test coverage (snapshot taken, snapshot survives restore, snapshot scoped correctly per user). Must not slow down or partially fail the restore transaction itself.
-- **Status:** planned
+- **Status:** done
 
 ---
 
@@ -402,3 +402,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **I-01: PostgreSQL 17 runs in its own `postgres` service using the official image; the backend image contains only Python + app code; the two processes can be restarted and observed independently.** — Archived 2026-06-24 → `context/archive/2026-06-24-postgres-service-extract/`. Lesson: —.
 - **S-17: user can request a password reset link by email; receive a secure one-time link; and set a new password via that link.** — Archived 2026-06-24 → `context/archive/2026-06-24-reset-password/`. Lesson: —.
 - **S-18: before confirming a restore, the user sees a comparison of their current data against the backup file being uploaded — bill count, payment count, and the backup's export date — plus a visual warning if the backup has fewer bills or payments than current data.** — Archived 2026-07-10 → `context/archive/2026-07-10-restore-safety-comparison/`. Lesson: —.
+- **S-19: immediately before a restore executes its destructive delete-and-replace, the server automatically snapshots the user's current data, so that data can be recovered if the restore turns out to have been a mistake — a safety net that holds even if the user proceeds past the S-18 warning, or if the request bypasses the UI entirely (e.g. direct API call).** — Archived 2026-07-10 → `context/archive/2026-07-10-restore-auto-backup-safety-net/`. Lesson: —.

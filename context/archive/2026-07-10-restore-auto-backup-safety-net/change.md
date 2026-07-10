@@ -1,10 +1,10 @@
 ---
 change_id: restore-auto-backup-safety-net
 title: Restore auto backup safety net
-status: impl_reviewed
+status: archived
 created: 2026-07-10
 updated: 2026-07-10
-archived_at: null
+archived_at: 2026-07-10T14:13:37Z
 ---
 
 ## Notes
