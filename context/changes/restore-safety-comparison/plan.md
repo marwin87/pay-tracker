@@ -217,37 +217,37 @@ Not applicable — no schema or model changes.
 
 #### Automated
 
-- [x] 1.1 Backend test suite passes: `cd backend && uv run pytest tests/ -v`
-- [x] 1.2 mypy passes: `cd backend && uv run mypy app`
-- [x] 1.3 black formatting passes: `cd backend && uv run black --check --target-version py313 .`
+- [x] 1.1 Backend test suite passes: `cd backend && uv run pytest tests/ -v` — a4ff5ef
+- [x] 1.2 mypy passes: `cd backend && uv run mypy app` — a4ff5ef
+- [x] 1.3 black formatting passes: `cd backend && uv run black --check --target-version py313 .` — a4ff5ef
 
 #### Manual
 
-- [x] 1.4 `GET /export/summary` returns correct counts matching the dashboard for that user
-- [x] 1.5 Soft-deleted payment instances excluded from `payment_count`
+- [x] 1.4 `GET /export/summary` returns correct counts matching the dashboard for that user — a4ff5ef
+- [x] 1.5 Soft-deleted payment instances excluded from `payment_count` — a4ff5ef
 
 ### Phase 2: Frontend comparison dialog
 
 #### Automated
 
-- [x] 2.1 Frontend lint passes: `cd frontend && npm run lint`
-- [x] 2.2 Frontend build passes: `cd frontend && npm run build` (verified via `docker compose build frontend` — local npm build blocked by a pre-existing, unrelated sandbox environment issue confirmed to also affect unmodified `main`)
-- [x] 2.3 All three locale JSON files parse as valid JSON
+- [x] 2.1 Frontend lint passes: `cd frontend && npm run lint` — a4ff5ef
+- [x] 2.2 Frontend build passes: `cd frontend && npm run build` (verified via `docker compose build frontend` — local npm build blocked by a pre-existing, unrelated sandbox environment issue confirmed to also affect unmodified `main`) — a4ff5ef
+- [x] 2.3 All three locale JSON files parse as valid JSON — a4ff5ef
 
 #### Manual
 
-- [x] 2.4 Valid backup file shows current and backup counts plus export date
-- [x] 2.5 Backup with fewer bills/payments than current shows the warning line
-- [x] 2.6 Non-JSON file shows inline error immediately, dialog never opens
-- [x] 2.7 schema_version 2 backup (no exported_at) shows "export date unknown"
-- [x] 2.8 Verified in both English and Polish
+- [x] 2.4 Valid backup file shows current and backup counts plus export date — a4ff5ef
+- [x] 2.5 Backup with fewer bills/payments than current shows the warning line — a4ff5ef
+- [x] 2.6 Non-JSON file shows inline error immediately, dialog never opens — a4ff5ef
+- [x] 2.7 schema_version 2 backup (no exported_at) shows "export date unknown" — a4ff5ef
+- [x] 2.8 Verified in both English and Polish — a4ff5ef
 
 ### Phase 3: E2E coverage
 
 #### Automated
 
-- [x] 3.1 Full e2e suite passes against the Docker stack
+- [x] 3.1 Full e2e suite passes against the Docker stack — a4ff5ef
 
 #### Manual
 
-- [ ] 3.2 Both new e2e scenarios pass individually when run in isolation
+- [x] 3.2 Both new e2e scenarios pass individually when run in isolation — a4ff5ef

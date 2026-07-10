@@ -1,7 +1,7 @@
 ---
 change_id: restore-safety-comparison
 title: Show current vs. backup comparison before confirming a restore
-status: implementing
+status: implemented
 created: 2026-07-10
 updated: 2026-07-10
 archived_at: null
