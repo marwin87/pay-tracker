@@ -1,7 +1,7 @@
 ---
 change_id: restore-auto-backup-safety-net
 title: Restore auto backup safety net
-status: new
+status: planned
 created: 2026-07-10
 updated: 2026-07-10
 archived_at: null
