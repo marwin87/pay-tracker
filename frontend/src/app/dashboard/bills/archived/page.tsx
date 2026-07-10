@@ -5,6 +5,7 @@ import { Archive, ChevronRight, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { fetchBills, type BillTemplateOut } from "@/lib/bills-api";
 import { CATEGORY_ORDER } from "@/lib/categories";
+import { SessionExpiredError } from "@/lib/api";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 
 export default function ArchivedBillsPage() {
@@ -31,6 +32,7 @@ export default function ArchivedBillsPage() {
         }
       })
       .catch((err: unknown) => {
+        if (err instanceof SessionExpiredError) return;
         if (!cancelled) {
           setLoadError(err instanceof Error ? err.message : t("loadError"));
           setLoading(false);

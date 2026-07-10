@@ -9,6 +9,7 @@
         "signIn": "Anmelden",
         "signingIn": "Anmeldung…",
         "loginFailed": "Anmeldung fehlgeschlagen",
+        "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
         "noAccount": "Noch kein Konto?",
         "register": "Registrieren",
         "createAccount": "Konto erstellen",

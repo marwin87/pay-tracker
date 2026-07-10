@@ -5,6 +5,26 @@ export interface TokenResponse {
 
 export const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
 
+export class SessionExpiredError extends Error {
+  constructor() {
+    super("Session expired");
+    this.name = "SessionExpiredError";
+  }
+}
+
+// A 401 on this path is an expected outcome (bad credentials), not a
+// sign of an expired session, so it must not trigger auto-logout.
+const AUTH_401_EXEMPT_PATHS = ["/auth/login"];
+
+type SessionExpiredHandler = () => void;
+let sessionExpiredHandler: SessionExpiredHandler | null = null;
+
+// AuthProvider registers itself here on mount so this module (which has no
+// access to React context or the router) can notify it of an expired session.
+export function setSessionExpiredHandler(handler: SessionExpiredHandler | null): void {
+  sessionExpiredHandler = handler;
+}
+
 export async function extractApiError(res: Response): Promise<Error> {
   const body = await res.json().catch(() => ({}));
   const detail = (body as { detail?: unknown }).detail;
@@ -31,6 +51,10 @@ export async function apiFetch<T>(
   });
 
   if (!res.ok) {
+    if (res.status === 401 && !AUTH_401_EXEMPT_PATHS.includes(path)) {
+      sessionExpiredHandler?.();
+      throw new SessionExpiredError();
+    }
     throw await extractApiError(res);
   }
 

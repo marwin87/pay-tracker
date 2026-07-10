@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl";
 import { apiFetch, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import { useNotifications } from "@/hooks/useNotifications";
+import { SESSION_EXPIRED_KEY } from "@/lib/auth";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
@@ -17,7 +18,12 @@ export default function LoginPage() {
   const { notifyDueToday } = useNotifications();
   const t = useTranslations("Auth");
   const tCommon = useTranslations("Common");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    if (!sessionStorage.getItem(SESSION_EXPIRED_KEY)) return null;
+    sessionStorage.removeItem(SESSION_EXPIRED_KEY);
+    return t("sessionExpired");
+  });
   const [loading, setLoading] = useState(false);
   const [smtpConfigured, setSmtpConfigured] = useState(false);
 

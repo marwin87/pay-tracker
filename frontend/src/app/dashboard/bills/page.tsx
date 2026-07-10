@@ -13,6 +13,7 @@ import {
   type BillTemplateCreate,
   type BillTemplateUpdate,
 } from "@/lib/bills-api";
+import { SessionExpiredError } from "@/lib/api";
 import { CATEGORY_ORDER } from "@/lib/categories";
 import BillTemplateForm from "@/components/bills/BillTemplateForm";
 import BillTemplateRow from "@/components/bills/BillTemplateRow";
@@ -52,6 +53,7 @@ export default function BillsPage() {
         }
       })
       .catch((err: unknown) => {
+        if (err instanceof SessionExpiredError) return;
         if (!cancelled) {
           setLoadError(err instanceof Error ? err.message : t("loadError"));
           setLoading(false);

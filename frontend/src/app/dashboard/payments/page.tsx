@@ -12,6 +12,7 @@ import {
 } from "@/lib/payments-api";
 import { CATEGORY_ORDER } from "@/lib/categories";
 import { downloadXlsx } from "@/lib/export-api";
+import { SessionExpiredError } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
@@ -134,6 +135,7 @@ function PaymentsPageInner() {
         }
       })
       .catch((err: unknown) => {
+        if (err instanceof SessionExpiredError) return;
         if (!cancelled) {
           setLoadError(err instanceof Error ? err.message : t("loadError"));
           setLoadedMonth(selectedMonth);
