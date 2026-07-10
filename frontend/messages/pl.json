@@ -223,7 +223,14 @@
         "confirm": "Zastąp moje dane",
         "restoring": "Przywracanie…",
         "error": "Przywracanie nie powiodło się. Sprawdź plik i spróbuj ponownie.",
-        "fileTooLarge": "Plik jest za duży. Kopie zapasowe muszą mieć mniej niż 10 MB."
+        "fileTooLarge": "Plik jest za duży. Kopie zapasowe muszą mieć mniej niż 10 MB.",
+        "invalidFile": "Ten plik nie wygląda na prawidłową kopię zapasową.",
+        "currentLabel": "Obecnie",
+        "backupLabel": "Kopia zapasowa",
+        "countsSummary": "{bills} rachunków, {payments} płatności",
+        "countsUnavailable": "niedostępne",
+        "exportDateUnknown": "data eksportu nieznana (starszy format kopii zapasowej)",
+        "staleDataWarning": "Ta kopia zapasowa zawiera mniej rachunków i płatności niż Twoje obecne dane. Przywrócenie trwale usunie różnicę."
     },
     "BackupButton": {
         "ariaLabel": "Pobierz kopię zapasową",

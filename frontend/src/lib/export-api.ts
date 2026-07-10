@@ -1,4 +1,4 @@
-import { BASE_URL, extractApiError } from "./api";
+import { apiFetch, BASE_URL, extractApiError } from "./api";
 
 export async function downloadBackup(): Promise<void> {
   const res = await fetch(`${BASE_URL}/export/json`, {
@@ -29,6 +29,13 @@ export async function restoreFromBackup(
   });
   if (!res.ok) throw await extractApiError(res);
   return res.json();
+}
+
+export async function getExportSummary(): Promise<{
+  bill_count: number;
+  payment_count: number;
+}> {
+  return apiFetch("/export/summary");
 }
 
 export async function downloadXlsx(year: number): Promise<void> {

@@ -20,7 +20,7 @@ from app.models.bill import (
     PaymentStatus,
 )
 from app.models.user import User
-from app.schemas.bill import BackupPayload
+from app.schemas.bill import BackupPayload, ExportSummaryOut
 
 router = APIRouter(prefix="/export", tags=["export"])
 
@@ -169,6 +169,29 @@ def export_json(
             "Content-Disposition": f'attachment; filename="pay-tracker-backup-{datetime.now(timezone.utc).date()}.json"'
         },
     )
+
+
+@router.get("/summary", response_model=ExportSummaryOut)
+def export_summary(
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    template_ids = [
+        t.id
+        for t in db.query(BillTemplate.id).filter(BillTemplate.user_id == me.id).all()
+    ]
+    bill_count = len(template_ids)
+    payment_count = (
+        db.query(PaymentInstance)
+        .filter(
+            PaymentInstance.bill_id.in_(template_ids),
+            PaymentInstance.is_deleted.is_(False),
+        )
+        .count()
+        if template_ids
+        else 0
+    )
+    return ExportSummaryOut(bill_count=bill_count, payment_count=payment_count)
 
 
 @router.post("/restore")

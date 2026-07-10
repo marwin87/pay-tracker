@@ -117,3 +117,8 @@ class BackupPayload(BaseModel):
     schema_version: int
     bill_templates: list[BackupTemplate]
     payment_instances: list[BackupInstance]
+
+
+class ExportSummaryOut(BaseModel):
+    bill_count: int
+    payment_count: int

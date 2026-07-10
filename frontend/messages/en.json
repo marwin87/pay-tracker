@@ -223,7 +223,14 @@
         "confirm": "Replace My Data",
         "restoring": "Restoring…",
         "error": "Restore failed. Please check the file and try again.",
-        "fileTooLarge": "File too large. Backup files must be under 10 MB."
+        "fileTooLarge": "File too large. Backup files must be under 10 MB.",
+        "invalidFile": "This file doesn't look like a valid backup.",
+        "currentLabel": "Current",
+        "backupLabel": "Backup",
+        "countsSummary": "{bills} bills, {payments} payments",
+        "countsUnavailable": "unavailable",
+        "exportDateUnknown": "export date unknown (older backup format)",
+        "staleDataWarning": "This backup has fewer bills and payments than your current data. Restoring will permanently delete the difference."
     },
     "BackupButton": {
         "ariaLabel": "Download backup",

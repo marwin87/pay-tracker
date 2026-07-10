@@ -6,7 +6,7 @@
  * the RestoreButton UI to test the real upload-confirm flow.
  */
 import { test, expect } from '@playwright/test';
-import { loginNewUser, createBillViaApi } from './helpers';
+import { loginNewUser, createBillViaApi, syncPaymentsViaApi } from './helpers';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
@@ -65,5 +65,77 @@ test('restore from backup preserves bill count', async ({ page }) => {
   expect(names).toContain(billName);
 
   // Cleanup temp file
+  fs.unlinkSync(tmpFile);
+});
+
+test('restoring a backup with fewer bills/payments than current shows the stale-data warning', async ({
+  page,
+}) => {
+  const apiUrl = process.env.E2E_API_URL ?? 'http://localhost:8010';
+
+  // Setup: one bill, synced payment, then export — this is the "stale" backup.
+  await loginNewUser(page);
+  await createBillViaApi(page, `E2E Stale ${Date.now()}`);
+  await syncPaymentsViaApi(page);
+
+  const staleExportRes = await page.request.get(`${apiUrl}/export/json`);
+  expect(staleExportRes.ok()).toBeTruthy();
+  const staleBackup = await staleExportRes.json();
+  expect(staleBackup.bill_templates.length).toBe(1);
+
+  const tmpFile = path.join(os.tmpdir(), `pay-tracker-backup-stale-${Date.now()}.json`);
+  fs.writeFileSync(tmpFile, JSON.stringify(staleBackup));
+
+  // Add more data after the backup was taken, so current data now exceeds the backup.
+  await createBillViaApi(page, `E2E Newer ${Date.now()}`);
+  await syncPaymentsViaApi(page);
+
+  await page.goto('/dashboard/settings');
+  const [fileChooser] = await Promise.all([
+    page.waitForEvent('filechooser'),
+    page.getByRole('button', { name: 'Restore from backup' }).click(),
+  ]);
+  await fileChooser.setFiles(tmpFile);
+
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(
+    dialog.getByText(
+      'This backup has fewer bills and payments than your current data. Restoring will permanently delete the difference.'
+    )
+  ).toBeVisible();
+
+  // Don't actually restore — cancel, since this test only verifies the warning.
+  await dialog.getByRole('button', { name: 'Cancel' }).click();
+  await expect(dialog).not.toBeVisible();
+
+  fs.unlinkSync(tmpFile);
+});
+
+test('picking a malformed backup file shows an inline error, not the comparison/confirm flow', async ({
+  page,
+}) => {
+  await loginNewUser(page);
+
+  const tmpFile = path.join(os.tmpdir(), `pay-tracker-backup-malformed-${Date.now()}.json`);
+  fs.writeFileSync(tmpFile, 'this is not valid JSON {{{');
+
+  await page.goto('/dashboard/settings');
+  const [fileChooser] = await Promise.all([
+    page.waitForEvent('filechooser'),
+    page.getByRole('button', { name: 'Restore from backup' }).click(),
+  ]);
+  await fileChooser.setFiles(tmpFile);
+
+  const dialog = page.getByRole('dialog');
+  await expect(dialog).toBeVisible();
+  await expect(
+    dialog.getByText("This file doesn't look like a valid backup.")
+  ).toBeVisible();
+
+  // No counts/comparison block should render for an invalid file.
+  await expect(dialog.getByText('Current', { exact: true })).not.toBeVisible();
+  await expect(dialog.getByText('Backup', { exact: true })).not.toBeVisible();
+
   fs.unlinkSync(tmpFile);
 });

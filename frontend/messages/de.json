@@ -223,7 +223,14 @@
         "confirm": "Meine Daten ersetzen",
         "restoring": "Wird wiederhergestellt…",
         "error": "Wiederherstellung fehlgeschlagen. Bitte Datei prüfen und erneut versuchen.",
-        "fileTooLarge": "Datei zu groß. Backup-Dateien müssen kleiner als 10 MB sein."
+        "fileTooLarge": "Datei zu groß. Backup-Dateien müssen kleiner als 10 MB sein.",
+        "invalidFile": "Diese Datei sieht nicht wie ein gültiges Backup aus.",
+        "currentLabel": "Aktuell",
+        "backupLabel": "Backup",
+        "countsSummary": "{bills} Rechnungen, {payments} Zahlungen",
+        "countsUnavailable": "nicht verfügbar",
+        "exportDateUnknown": "Exportdatum unbekannt (älteres Backup-Format)",
+        "staleDataWarning": "Dieses Backup enthält weniger Rechnungen und Zahlungen als Ihre aktuellen Daten. Die Wiederherstellung löscht die Differenz dauerhaft."
     },
     "BackupButton": {
         "ariaLabel": "Backup herunterladen",

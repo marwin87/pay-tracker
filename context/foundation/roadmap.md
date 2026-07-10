@@ -3,7 +3,7 @@ project: pay-tracker
 version: 1
 status: draft
 created: 2026-06-11
-updated: 2026-06-24
+updated: 2026-07-10
 prd_version: 1
 main_goal: low-complexity
 top_blocker: none
@@ -56,6 +56,8 @@ slice only matters if this loop works.
 | S-16 | monthly-summary-email        | receive a full month-end summary email (paid vs. missed, totals); toggle in Settings; on-demand "Send now" button | S-10, S-13 | FR-012 (extension)              | done     |
 | S-17 | reset-password               | request a password reset link by email; receive a secure one-time link; set a new password via the link | S-01, S-10 | FR-002 (extension)            | done     |
 | I-01 | postgres-service-extract     | (infra) PostgreSQL runs in its own container; backend image is Python-only; independent restarts, cleaner logs | — | —                                    | done     |
+| S-18 | restore-safety-comparison    | see a comparison of current vs. backup data (bill/payment counts, backup export date) in the restore confirmation dialog, with a warning if the backup would reduce data | S-09 | FR-018 (extension) | planned  |
+| S-19 | restore-auto-backup-safety-net | have the server automatically snapshot current data before a destructive restore executes, so it can be recovered if the restore was a mistake | S-09 | FR-018 (extension) | planned  |
 
 ## Streams
 
@@ -64,7 +66,7 @@ Navigation aid — groups items that share a Prerequisites chain. Canonical orde
 | Stream | Theme                  | Chain                                      | Note                                                                                                               |
 | ------ | ---------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
 | A      | Core tracking loop     | `F-01` → `S-01` → `S-02` → `S-03`         | The must-have path to the north star; every other stream branches off this one.                                    |
-| B      | Data portability       | `S-01` → `S-04` → `S-08` → `S-09`         | S-04 (.xlsx) and S-08 (backup) parallel with S-02; S-09 (import) needs S-08 first.                                |
+| B      | Data portability       | `S-01` → `S-04` → `S-08` → `S-09` → `S-18`, `S-19` | S-04 (.xlsx) and S-08 (backup) parallel with S-02; S-09 (import) needs S-08 first. S-18/S-19 harden S-09's restore path — audit follow-up, run in either order.  |
 | C      | Ship & deploy          | `S-03` → `S-05`                            | Runs after the north star lands.                                                                                   |
 | D      | Localisation           | `S-01` → `S-07`                            | Independent of the core loop; can run in parallel with any other stream after S-01.                               |
 | E      | Notifications          | `S-03` → `S-10` · `S-05` → `S-12`         | S-10: email reminders, needs SMTP config. S-12: browser push on due date, client-side only, needs PWA SW.         |
@@ -302,6 +304,36 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ---
 
+### S-18: Restore safety comparison
+
+- **Outcome:** before confirming a restore, the user sees a comparison of their current data against the backup file being uploaded — bill count, payment count, and the backup's export date — plus a visual warning if the backup has fewer bills or payments than current data (the specific failure mode: restoring a stale backup silently discards newer history).
+- **Change ID:** restore-safety-comparison
+- **PRD refs:** FR-018 (extension — restore)
+- **Prerequisites:** S-09 (restore endpoint and backup schema must exist)
+- **Parallel with:** S-19 (independent enhancement to the same restore flow; can ship in either order or together)
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Additive, frontend-driven change. Adds one new lightweight backend endpoint (`GET /export/summary`, count-only, scoped to `current_user`) plus client-side JSON parsing of the picked file before the existing confirmation dialog. Does not change `POST /export/restore`'s destructive replace semantics — it only helps the user avoid triggering it by mistake. Backups with no `exported_at` (schema_version 2) fall back to an "export date unknown" label rather than blocking.
+- **Status:** planned
+
+---
+
+### S-19: Restore auto-backup safety net
+
+- **Outcome:** immediately before a restore executes its destructive delete-and-replace, the server automatically snapshots the user's current data, so that data can be recovered if the restore turns out to have been a mistake — a safety net that holds even if the user proceeds past the S-18 warning, or if the request bypasses the UI entirely (e.g. direct API call).
+- **Change ID:** restore-auto-backup-safety-net
+- **PRD refs:** FR-018 (extension — restore)
+- **Prerequisites:** S-09 (restore endpoint must exist)
+- **Parallel with:** S-18 (independent enhancement to the same restore flow; can ship in either order or together)
+- **Blockers:** —
+- **Unknowns:**
+  - Snapshot storage and retention — where the pre-restore snapshot is kept (e.g. a temporary DB table, an object-storage blob, a downloadable response artifact) and how long it's retained before being discarded. Must be decided during planning. — Owner: user. Block: no (planning can proceed with options on the table).
+  - Recovery path — whether the user self-serves recovery (e.g. a "last snapshot" download button) or it's an operator/support-only recovery mechanism. Affects scope significantly. — Owner: user. Block: no.
+- **Risk:** More complex than S-18 — it's a backend-only safety mechanism with its own storage and retention lifecycle, and needs its own test coverage (snapshot taken, snapshot survives restore, snapshot scoped correctly per user). Must not slow down or partially fail the restore transaction itself.
+- **Status:** planned
+
+---
+
 ## Infrastructure
 
 ### I-01: Extract PostgreSQL into its own Docker Compose service
@@ -335,6 +367,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-13       | settings-page              | Settings page: profile, email notification timing, browser notifications, backup/restore | yes | Plan ready; run `/10x-implement settings-page phase 1` |
 | S-15       | category-enum-grouping     | Promote category to enum, group bills and payments by category               | yes | Plan written; run `/10x-implement category-enum-grouping phase 1` |
 | I-01       | postgres-service-extract   | Extract PostgreSQL into its own Docker Compose service                       | yes | Plan written; run `/10x-implement postgres-service-extract phase 1` |
+| S-18       | restore-safety-comparison  | Restore dialog: show current vs. backup counts + backup export date, warn on data reduction | yes | Design agreed via brainstorming session, 2026-07-10; run `/10x-plan restore-safety-comparison` |
+| S-19       | restore-auto-backup-safety-net | Auto-snapshot current data server-side before a restore executes       | no  | Storage/retention and recovery-path decisions still open; resolve during `/10x-plan restore-auto-backup-safety-net` |
 
 ## Open Roadmap Questions
 

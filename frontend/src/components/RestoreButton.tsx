@@ -3,23 +3,47 @@
 import { useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { HardDriveUpload, Loader2 } from "lucide-react";
-import { useTranslations } from "next-intl";
-import { restoreFromBackup } from "@/lib/export-api";
+import { useTranslations, useLocale } from "next-intl";
+import { getExportSummary, restoreFromBackup } from "@/lib/export-api";
 
 type State = "idle" | "confirming" | "restoring" | "error";
 
+type Counts = { bills: number; payments: number };
+
 export default function RestoreButton({ label }: { label?: string } = {}) {
   const t = useTranslations("RestoreButton");
+  const locale = useLocale();
   const [state, setState] = useState<State>("idle");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const [backupCounts, setBackupCounts] = useState<Counts | null>(null);
+  const [backupExportedAt, setBackupExportedAt] = useState<string | null>(null);
+  const [currentCounts, setCurrentCounts] = useState<Counts | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const exportDateLabel = (() => {
+    if (!backupExportedAt) return t("exportDateUnknown");
+    const d = new Date(backupExportedAt);
+    return isNaN(d.getTime())
+      ? t("exportDateUnknown")
+      : new Intl.DateTimeFormat(locale, {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }).format(d);
+  })();
+
+  const isStale =
+    currentCounts !== null &&
+    backupCounts !== null &&
+    (backupCounts.bills < currentCounts.bills ||
+      backupCounts.payments < currentCounts.payments);
 
   function handleButtonClick() {
     fileInputRef.current?.click();
   }
 
-  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+  async function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = "";
@@ -28,7 +52,35 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
       setState("error");
       return;
     }
+
+    let parsed: { bill_templates: unknown; payment_instances: unknown; exported_at?: unknown };
+    try {
+      parsed = JSON.parse(await file.text());
+    } catch {
+      setErrorMsg(t("invalidFile"));
+      setState("error");
+      return;
+    }
+    if (!Array.isArray(parsed.bill_templates) || !Array.isArray(parsed.payment_instances)) {
+      setErrorMsg(t("invalidFile"));
+      setState("error");
+      return;
+    }
+
     setSelectedFile(file);
+    setBackupCounts({
+      bills: parsed.bill_templates.length,
+      payments: parsed.payment_instances.length,
+    });
+    setBackupExportedAt(
+      typeof parsed.exported_at === "string" ? parsed.exported_at : null
+    );
+    try {
+      const summary = await getExportSummary();
+      setCurrentCounts({ bills: summary.bill_count, payments: summary.payment_count });
+    } catch {
+      setCurrentCounts(null);
+    }
     setState("confirming");
   }
 
@@ -36,6 +88,9 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
     setState("idle");
     setSelectedFile(null);
     setErrorMsg("");
+    setBackupCounts(null);
+    setBackupExportedAt(null);
+    setCurrentCounts(null);
   }
 
   async function handleConfirm() {
@@ -45,6 +100,9 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
       await restoreFromBackup(selectedFile);
       setState("idle");
       setSelectedFile(null);
+      setBackupCounts(null);
+      setBackupExportedAt(null);
+      setCurrentCounts(null);
       // Reload page so dashboard reflects restored data
       window.location.reload();
     } catch (err) {
@@ -98,6 +156,38 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
               >
                 {t("dialogTitle")}
               </h2>
+              {backupCounts && (
+                <div className="mb-4 space-y-1 rounded-lg bg-slate-50 p-3 text-sm dark:bg-slate-900/40">
+                  <div className="flex justify-between text-slate-600 dark:text-slate-300">
+                    <span>{t("currentLabel")}</span>
+                    <span>
+                      {currentCounts
+                        ? t("countsSummary", {
+                            bills: currentCounts.bills,
+                            payments: currentCounts.payments,
+                          })
+                        : t("countsUnavailable")}
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-slate-600 dark:text-slate-300">
+                    <span>{t("backupLabel")}</span>
+                    <span>
+                      {t("countsSummary", {
+                        bills: backupCounts.bills,
+                        payments: backupCounts.payments,
+                      })}
+                    </span>
+                  </div>
+                  <div className="text-xs text-slate-400 dark:text-slate-500">
+                    {exportDateLabel}
+                  </div>
+                </div>
+              )}
+              {isStale && (
+                <p className="mb-4 rounded-lg bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-900/20 dark:text-amber-400">
+                  {t("staleDataWarning")}
+                </p>
+              )}
               <p className="mb-6 text-sm text-slate-500 dark:text-slate-400">
                 {t("dialogDescription", { filename: selectedFile?.name ?? "" })}
               </p>
