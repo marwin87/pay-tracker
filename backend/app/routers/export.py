@@ -220,7 +220,7 @@ def restore_json(
 
     id_map: dict[int, int] = {}
     for bt in backup.bill_templates:
-        obj = BillTemplate(
+        template_obj = BillTemplate(
             name=bt.name,
             category=_coerce_category(bt.category),
             frequency=BillFrequency(bt.frequency),
@@ -233,12 +233,12 @@ def restore_json(
             start_period=bt.start_period,
             user_id=me.id,
         )
-        db.add(obj)
+        db.add(template_obj)
         db.flush()
-        id_map[bt.id] = obj.id
+        id_map[bt.id] = template_obj.id
 
     for bi in backup.payment_instances:
-        obj = PaymentInstance(
+        instance_obj = PaymentInstance(
             bill_id=id_map[bi.bill_id],
             period=bi.period,
             due_date=date.fromisoformat(bi.due_date),
@@ -252,7 +252,7 @@ def restore_json(
             reminder_sent_upcoming=bi.reminder_sent_upcoming,
             reminder_sent_overdue=bi.reminder_sent_overdue,
         )
-        db.add(obj)
+        db.add(instance_obj)
 
     db.commit()
 

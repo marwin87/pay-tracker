@@ -343,6 +343,8 @@ def _send_and_flag(
     flag_attr: str,
     language: str,
 ) -> bool:
+    assert settings.smtp_host is not None, "caller must guarantee SMTP is configured"
+
     bill_name = (
         instance.template.name if instance.template else f"bill#{instance.bill_id}"
     )

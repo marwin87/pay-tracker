@@ -34,6 +34,7 @@ jobs:
 
       - run: npm run lint
       - run: npm run build
+      - run: npm audit --omit=dev --audit-level=high
 
   backend-format:
     name: Backend — black format check
@@ -77,7 +78,16 @@ jobs:
           cache-dependency-glob: backend/uv.lock
 
       - run: uv sync --group dev
+      - run: uv run mypy app
       - run: uv run pytest tests/ -v
+
+      - name: Dependency vulnerability audit
+        # PYSEC-2026-1325: unfixed ecdsa timing side-channel, pulled in
+        # transitively by python-jose; app only uses HS256 (no ECDSA
+        # signing), and upstream has no patched version available.
+        run: |
+          uv export --no-hashes --group dev -o /tmp/requirements.txt
+          uv tool run pip-audit -r /tmp/requirements.txt --ignore-vuln PYSEC-2026-1325
 
   docker-e2e:
     name: Docker — build, up, e2e, down

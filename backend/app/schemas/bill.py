@@ -45,7 +45,7 @@ class BillTemplateOut(BaseModel):
     created_at: datetime
     start_period: str | None = None
 
-    @computed_field
+    @computed_field  # type: ignore[prop-decorator]
     @property
     def due_month(self) -> int | None:
         if self.start_period:
