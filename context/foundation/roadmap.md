@@ -56,7 +56,7 @@ slice only matters if this loop works.
 | S-16 | monthly-summary-email        | receive a full month-end summary email (paid vs. missed, totals); toggle in Settings; on-demand "Send now" button | S-10, S-13 | FR-012 (extension)              | done     |
 | S-17 | reset-password               | request a password reset link by email; receive a secure one-time link; set a new password via the link | S-01, S-10 | FR-002 (extension)            | done     |
 | I-01 | postgres-service-extract     | (infra) PostgreSQL runs in its own container; backend image is Python-only; independent restarts, cleaner logs | — | —                                    | done     |
-| S-18 | restore-safety-comparison    | see a comparison of current vs. backup data (bill/payment counts, backup export date) in the restore confirmation dialog, with a warning if the backup would reduce data | S-09 | FR-018 (extension) | planned  |
+| S-18 | restore-safety-comparison    | see a comparison of current vs. backup data (bill/payment counts, backup export date) in the restore confirmation dialog, with a warning if the backup would reduce data | S-09 | FR-018 (extension) | done     |
 | S-19 | restore-auto-backup-safety-net | have the server automatically snapshot current data before a destructive restore executes, so it can be recovered if the restore was a mistake | S-09 | FR-018 (extension) | planned  |
 
 ## Streams
@@ -314,7 +314,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Additive, frontend-driven change. Adds one new lightweight backend endpoint (`GET /export/summary`, count-only, scoped to `current_user`) plus client-side JSON parsing of the picked file before the existing confirmation dialog. Does not change `POST /export/restore`'s destructive replace semantics — it only helps the user avoid triggering it by mistake. Backups with no `exported_at` (schema_version 2) fall back to an "export date unknown" label rather than blocking.
-- **Status:** planned
+- **Status:** done
 
 ---
 
@@ -401,3 +401,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-16: user receives a full month-end summary email showing what was paid (amount due vs. paid, date) and what was missed/overdue, with totals; toggle and on-demand send button in Settings → Email Notifications.** — Archived 2026-06-23 → `context/archive/2026-06-23-monthly-summary-email/`. Lesson: —.
 - **I-01: PostgreSQL 17 runs in its own `postgres` service using the official image; the backend image contains only Python + app code; the two processes can be restarted and observed independently.** — Archived 2026-06-24 → `context/archive/2026-06-24-postgres-service-extract/`. Lesson: —.
 - **S-17: user can request a password reset link by email; receive a secure one-time link; and set a new password via that link.** — Archived 2026-06-24 → `context/archive/2026-06-24-reset-password/`. Lesson: —.
+- **S-18: before confirming a restore, the user sees a comparison of their current data against the backup file being uploaded — bill count, payment count, and the backup's export date — plus a visual warning if the backup has fewer bills or payments than current data.** — Archived 2026-07-10 → `context/archive/2026-07-10-restore-safety-comparison/`. Lesson: —.
