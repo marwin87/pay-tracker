@@ -217,6 +217,13 @@ def test_register_invalid_email_returns_422(client):
     assert r.status_code == 422
 
 
+def test_register_password_too_short_returns_422(client):
+    r = client.post(
+        "/auth/register", json={"email": "shortpw@test.com", "password": "short"}
+    )
+    assert r.status_code == 422
+
+
 # ---------------------------------------------------------------------------
 # POST /auth/login — error paths
 # ---------------------------------------------------------------------------
