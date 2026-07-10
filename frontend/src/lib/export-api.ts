@@ -38,6 +38,22 @@ export async function getExportSummary(): Promise<{
   return apiFetch("/export/summary");
 }
 
+export async function getLastSnapshot(): Promise<{ created_at: string } | null> {
+  const res = await fetch(`${BASE_URL}/export/last-snapshot`, {
+    credentials: "include",
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) throw await extractApiError(res);
+  return res.json();
+}
+
+export async function restoreFromSnapshot(): Promise<{
+  restored_templates: number;
+  restored_instances: number;
+}> {
+  return apiFetch("/export/restore-snapshot", { method: "POST" });
+}
+
 export async function downloadXlsx(year: number): Promise<void> {
   const res = await fetch(`${BASE_URL}/export/xlsx?year=${year}`, {
     credentials: "include",

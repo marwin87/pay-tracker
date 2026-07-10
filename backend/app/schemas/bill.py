@@ -122,3 +122,7 @@ class BackupPayload(BaseModel):
 class ExportSummaryOut(BaseModel):
     bill_count: int
     payment_count: int
+
+
+class RestoreSnapshotOut(BaseModel):
+    created_at: datetime

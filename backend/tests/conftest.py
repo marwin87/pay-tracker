@@ -4,6 +4,7 @@
 # and (b) avoid shadowing the `app` FastAPI instance with the `app` package name.
 import app.models.bill  # noqa: F401
 import app.models.reset_token  # noqa: F401
+import app.models.restore_snapshot  # noqa: F401
 import app.models.user  # noqa: F401
 
 import pytest

@@ -336,61 +336,61 @@ New table, no existing-data migration concerns. The unique constraint on `user_i
 
 #### Automated
 
-- [ ] 1.1 Migration applies cleanly: `docker compose exec backend uv run alembic upgrade head`
-- [ ] 1.2 mypy passes: `cd backend && uv run mypy app`
-- [ ] 1.3 black formatting passes: `cd backend && uv run black --check --target-version py313 .`
+- [x] 1.1 Migration applies cleanly: `docker compose exec backend uv run alembic upgrade head`
+- [x] 1.2 mypy passes: `cd backend && uv run mypy app`
+- [x] 1.3 black formatting passes: `cd backend && uv run black --check --target-version py313 .`
 
 #### Manual
 
-- [ ] 1.4 `\d restore_snapshots` shows expected columns, FK, and unique constraint
+- [x] 1.4 `\d restore_snapshots` shows expected columns, FK, and unique constraint
 
 ### Phase 2: Snapshot-on-restore + cleanup job
 
 #### Automated
 
-- [ ] 2.1 Backend test suite passes: `cd backend && uv run pytest tests/ -v`
-- [ ] 2.2 mypy passes: `cd backend && uv run mypy app`
-- [ ] 2.3 black formatting passes: `cd backend && uv run black --check --target-version py313 .`
+- [x] 2.1 Backend test suite passes: `cd backend && uv run pytest tests/ -v`
+- [x] 2.2 mypy passes: `cd backend && uv run mypy app`
+- [x] 2.3 black formatting passes: `cd backend && uv run black --check --target-version py313 .`
 
 #### Manual
 
-- [ ] 2.4 Snapshot row created after restore for a user with existing bills
-- [ ] 2.5 No snapshot row created for a fresh user with zero bills
+- [x] 2.4 Snapshot row created after restore for a user with existing bills
+- [x] 2.5 No snapshot row created for a fresh user with zero bills
 
 ### Phase 3: Recovery API
 
 #### Automated
 
-- [ ] 3.1 Backend test suite passes: `cd backend && uv run pytest tests/ -v`
-- [ ] 3.2 mypy passes: `cd backend && uv run mypy app`
-- [ ] 3.3 black formatting passes: `cd backend && uv run black --check --target-version py313 .`
+- [x] 3.1 Backend test suite passes: `cd backend && uv run pytest tests/ -v`
+- [x] 3.2 mypy passes: `cd backend && uv run mypy app`
+- [x] 3.3 black formatting passes: `cd backend && uv run black --check --target-version py313 .`
 
 #### Manual
 
-- [ ] 3.4 `GET /export/last-snapshot` and `POST /export/restore-snapshot` behave correctly via `/docs`
+- [x] 3.4 `GET /export/last-snapshot` and `POST /export/restore-snapshot` behave correctly via `/docs`
 
 ### Phase 4: Frontend recovery banner
 
 #### Automated
 
-- [ ] 4.1 Frontend lint passes: `cd frontend && npm run lint`
-- [ ] 4.2 Frontend build passes: `cd frontend && npm run build`
-- [ ] 4.3 All three locale JSON files parse as valid JSON
+- [x] 4.1 Frontend lint passes: `cd frontend && npm run lint`
+- [x] 4.2 Frontend build passes: `cd frontend && npm run build`
+- [x] 4.3 All three locale JSON files parse as valid JSON
 
 #### Manual
 
-- [ ] 4.4 Banner appears with correct relative timestamp after a restore
-- [ ] 4.5 Restoring from the banner reverts data and the banner disappears
-- [ ] 4.6 Dismissing hides the banner until a new snapshot is created
-- [ ] 4.7 No banner for a user with no snapshot
-- [ ] 4.8 Verified in both English and Polish
+- [x] 4.4 Banner appears with correct relative timestamp after a restore
+- [x] 4.5 Restoring from the banner reverts data and the banner disappears
+- [ ] 4.6 Dismissing hides the banner until a new snapshot is created — dropped: recovery info moved from a dismissible global banner into a persistent Settings > Restore subsection per user direction, so there is nothing to dismiss
+- [x] 4.7 No banner for a user with no snapshot
+- [x] 4.8 Verified in both English and Polish
 
 ### Phase 5: E2E coverage
 
 #### Automated
 
-- [ ] 5.1 Full e2e suite passes against the Docker stack
+- [x] 5.1 Full e2e suite passes against the Docker stack
 
 #### Manual
 
-- [ ] 5.2 Both new e2e scenarios pass individually when run in isolation
+- [x] 5.2 Both new e2e scenarios pass individually when run in isolation

@@ -12,6 +12,7 @@ import { fetchMe, UserProfile } from "@/lib/user-api";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import BackupButton from "@/components/BackupButton";
 import RestoreButton from "@/components/RestoreButton";
+import SnapshotRecoverySection from "@/components/SnapshotRecoverySection";
 import { Tile } from "@/components/settings/Tile";
 import { ProfileTile } from "@/components/settings/ProfileTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
@@ -151,6 +152,7 @@ export default function SettingsPage() {
         onToggle={() => toggle("restore")}
       >
         <RestoreButton label="Restore" />
+        <SnapshotRecoverySection />
       </Tile>
 
       {pendingHref && (

@@ -12,6 +12,7 @@ from app.core.config import settings
 from app.core.database import SessionLocal
 from app.routers import auth, bills, export
 from app.services.reminder_job import send_catchup_reminders, send_daily_reminders
+from app.services.snapshot_cleanup import cleanup_old_snapshots
 
 
 @asynccontextmanager
@@ -21,6 +22,12 @@ async def lifespan(app: FastAPI):
         send_daily_reminders,
         "cron",
         minute="0,30",
+        args=[SessionLocal],
+    )
+    scheduler.add_job(
+        cleanup_old_snapshots,
+        "cron",
+        hour=3,
         args=[SessionLocal],
     )
     scheduler.start()

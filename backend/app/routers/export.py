@@ -1,7 +1,7 @@
 import calendar
 import io
 import json
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 
 import pandas as pd
@@ -10,6 +10,7 @@ from fastapi.responses import Response, StreamingResponse
 from pydantic import ValidationError
 from sqlalchemy.orm import Session, selectinload
 
+from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
 from app.models.bill import (
@@ -19,8 +20,9 @@ from app.models.bill import (
     PaymentInstance,
     PaymentStatus,
 )
+from app.models.restore_snapshot import RestoreSnapshot
 from app.models.user import User
-from app.schemas.bill import BackupPayload, ExportSummaryOut
+from app.schemas.bill import BackupPayload, ExportSummaryOut, RestoreSnapshotOut
 
 router = APIRouter(prefix="/export", tags=["export"])
 
@@ -106,12 +108,10 @@ def export_xlsx(
     )
 
 
-@router.get("/json")
-def export_json(
-    db: Session = Depends(get_db),
-    me: User = Depends(current_user),
-):
-    templates = db.query(BillTemplate).filter(BillTemplate.user_id == me.id).all()
+def _build_backup_arrays(db: Session, user_id: int) -> dict:
+    """Serialize a user's bill_templates/payment_instances into the backup shape
+    shared by GET /export/json and the pre-restore snapshot."""
+    templates = db.query(BillTemplate).filter(BillTemplate.user_id == user_id).all()
     template_ids = [t.id for t in templates]
     instances = (
         db.query(PaymentInstance)
@@ -123,10 +123,7 @@ def export_json(
         if template_ids
         else []
     )
-    payload = {
-        "schema_version": 3,
-        "exported_by": me.email,
-        "exported_at": datetime.now(timezone.utc).isoformat(),
+    return {
         "bill_templates": [
             {
                 "id": t.id,
@@ -162,6 +159,19 @@ def export_json(
             for i in instances
         ],
     }
+
+
+@router.get("/json")
+def export_json(
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    payload = {
+        "schema_version": 3,
+        "exported_by": me.email,
+        "exported_at": datetime.now(timezone.utc).isoformat(),
+        **_build_backup_arrays(db, me.id),
+    }
     return Response(
         content=json.dumps(payload, indent=2),
         media_type="application/json",
@@ -192,6 +202,60 @@ def export_summary(
         else 0
     )
     return ExportSummaryOut(bill_count=bill_count, payment_count=payment_count)
+
+
+def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int, int]:
+    """Destructively wipe a user's existing bill_templates/payment_instances and
+    re-insert the backup's contents. Shared by /restore and /restore-snapshot."""
+    existing_ids = [
+        t.id
+        for t in db.query(BillTemplate.id).filter(BillTemplate.user_id == user_id).all()
+    ]
+    if existing_ids:
+        db.query(PaymentInstance).filter(
+            PaymentInstance.bill_id.in_(existing_ids)
+        ).delete(synchronize_session=False)
+        db.query(BillTemplate).filter(BillTemplate.user_id == user_id).delete(
+            synchronize_session=False
+        )
+
+    id_map: dict[int, int] = {}
+    for bt in backup.bill_templates:
+        template_obj = BillTemplate(
+            name=bt.name,
+            category=_coerce_category(bt.category),
+            frequency=BillFrequency(bt.frequency),
+            amount=Decimal(str(bt.amount)),
+            currency=bt.currency,
+            due_day=bt.due_day,
+            notes=bt.notes,
+            is_archived=bt.is_archived,
+            is_paused=bt.is_paused,
+            start_period=bt.start_period,
+            user_id=user_id,
+        )
+        db.add(template_obj)
+        db.flush()
+        id_map[bt.id] = template_obj.id
+
+    for bi in backup.payment_instances:
+        instance_obj = PaymentInstance(
+            bill_id=id_map[bi.bill_id],
+            period=bi.period,
+            due_date=date.fromisoformat(bi.due_date),
+            amount=Decimal(str(bi.amount)),
+            status=PaymentStatus(bi.status),
+            paid_at=datetime.fromisoformat(bi.paid_at) if bi.paid_at else None,
+            paid_amount=(
+                Decimal(str(bi.paid_amount)) if bi.paid_amount is not None else None
+            ),
+            notes=bi.notes,
+            reminder_sent_upcoming=bi.reminder_sent_upcoming,
+            reminder_sent_overdue=bi.reminder_sent_overdue,
+        )
+        db.add(instance_obj)
+
+    return len(backup.bill_templates), len(backup.payment_instances)
 
 
 @router.post("/restore")
@@ -229,57 +293,64 @@ def restore_json(
             status_code=422, detail="Backup contains orphaned payment instances"
         )
 
-    existing_ids = [
-        t.id
-        for t in db.query(BillTemplate.id).filter(BillTemplate.user_id == me.id).all()
-    ]
-    if existing_ids:
-        db.query(PaymentInstance).filter(
-            PaymentInstance.bill_id.in_(existing_ids)
-        ).delete(synchronize_session=False)
-        db.query(BillTemplate).filter(BillTemplate.user_id == me.id).delete(
+    has_existing_bills = (
+        db.query(BillTemplate.id).filter(BillTemplate.user_id == me.id).first()
+        is not None
+    )
+    if has_existing_bills:
+        snapshot_payload = {
+            "schema_version": 3,
+            **_build_backup_arrays(db, me.id),
+        }
+        db.query(RestoreSnapshot).filter(RestoreSnapshot.user_id == me.id).delete(
             synchronize_session=False
         )
+        db.add(RestoreSnapshot(user_id=me.id, payload=snapshot_payload))
 
-    id_map: dict[int, int] = {}
-    for bt in backup.bill_templates:
-        template_obj = BillTemplate(
-            name=bt.name,
-            category=_coerce_category(bt.category),
-            frequency=BillFrequency(bt.frequency),
-            amount=Decimal(str(bt.amount)),
-            currency=bt.currency,
-            due_day=bt.due_day,
-            notes=bt.notes,
-            is_archived=bt.is_archived,
-            is_paused=bt.is_paused,
-            start_period=bt.start_period,
-            user_id=me.id,
-        )
-        db.add(template_obj)
-        db.flush()
-        id_map[bt.id] = template_obj.id
-
-    for bi in backup.payment_instances:
-        instance_obj = PaymentInstance(
-            bill_id=id_map[bi.bill_id],
-            period=bi.period,
-            due_date=date.fromisoformat(bi.due_date),
-            amount=Decimal(str(bi.amount)),
-            status=PaymentStatus(bi.status),
-            paid_at=datetime.fromisoformat(bi.paid_at) if bi.paid_at else None,
-            paid_amount=(
-                Decimal(str(bi.paid_amount)) if bi.paid_amount is not None else None
-            ),
-            notes=bi.notes,
-            reminder_sent_upcoming=bi.reminder_sent_upcoming,
-            reminder_sent_overdue=bi.reminder_sent_overdue,
-        )
-        db.add(instance_obj)
-
+    restored_templates, restored_instances = _apply_backup(db, me.id, backup)
     db.commit()
 
     return {
-        "restored_templates": len(backup.bill_templates),
-        "restored_instances": len(backup.payment_instances),
+        "restored_templates": restored_templates,
+        "restored_instances": restored_instances,
+    }
+
+
+@router.get("/last-snapshot", response_model=RestoreSnapshotOut)
+def last_snapshot(
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    cutoff = datetime.now(timezone.utc) - timedelta(
+        days=settings.restore_snapshot_retention_days
+    )
+    snapshot = (
+        db.query(RestoreSnapshot)
+        .filter(RestoreSnapshot.user_id == me.id, RestoreSnapshot.created_at >= cutoff)
+        .first()
+    )
+    if snapshot is None:
+        raise HTTPException(status_code=404, detail="No recoverable snapshot")
+    return RestoreSnapshotOut(created_at=snapshot.created_at)
+
+
+@router.post("/restore-snapshot")
+def restore_from_snapshot(
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    snapshot = (
+        db.query(RestoreSnapshot).filter(RestoreSnapshot.user_id == me.id).first()
+    )
+    if snapshot is None:
+        raise HTTPException(status_code=404, detail="No snapshot to restore")
+
+    backup = BackupPayload.model_validate(snapshot.payload)
+    restored_templates, restored_instances = _apply_backup(db, me.id, backup)
+    db.delete(snapshot)
+    db.commit()
+
+    return {
+        "restored_templates": restored_templates,
+        "restored_instances": restored_instances,
     }

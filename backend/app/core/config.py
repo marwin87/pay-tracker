@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     app_base_url: str = "http://localhost:3010"
     password_reset_token_expire_minutes: int = 60
 
+    # Restore safety net — how long a pre-restore snapshot stays recoverable
+    restore_snapshot_retention_days: int = 7
+
     @field_validator("password_reset_token_expire_minutes")
     @classmethod
     def warn_if_no_token_expiry(cls, v: int) -> int:

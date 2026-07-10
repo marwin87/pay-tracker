@@ -158,9 +158,7 @@
         "heading": "Day of month",
         "shortMonthWarning": "Some months have fewer days — the bill will fall on the last available day."
     },
-    "CategoryCombobox": {
-        "placeholder": "e.g. Utilities"
-    },
+    "CategoryCombobox": {"placeholder": "e.g. Utilities"},
     "PaymentsPage": {
         "title": "Payments",
         "subtitle": "Track and mark your bills month by month.",
@@ -179,11 +177,7 @@
         "summaryPaid": "paid"
     },
     "PaymentRow": {
-        "status": {
-            "upcoming": "Upcoming",
-            "overdue": "Overdue",
-            "paid": "Paid"
-        },
+        "status": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
         "dueToday": "Today",
         "markAsPaid": "Mark as Paid",
         "revert": "Revert payment",
@@ -241,17 +235,23 @@
         "downloading": "Downloading…",
         "error": "Backup failed. Please try again."
     },
-    "ThemeToggle": {
-        "ariaLabel": "Toggle theme"
+    "SnapshotRecoveryBanner": {
+        "message": "A snapshot of your data was saved on {date}, right before your last restore.",
+        "restoreButton": "Restore This Snapshot",
+        "dialogTitle": "Restore This Snapshot",
+        "dialogDescription": "This will permanently replace your current data with the snapshot taken before your last restore. This action cannot be undone.",
+        "cancel": "Cancel",
+        "confirm": "Restore",
+        "restoring": "Restoring…",
+        "error": "Restore failed. Please try again."
     },
+    "ThemeToggle": {"ariaLabel": "Toggle theme"},
     "LanguageToggle": {
         "ariaLabel": "Switch language",
         "label": "Language:",
         "name": "English"
     },
-    "NotificationToggle": {
-        "paymentIncoming": "Payment incoming"
-    },
+    "NotificationToggle": {"paymentIncoming": "Payment incoming"},
     "EmailRemindersToggle": {
         "enable": "Enable email reminders",
         "disable": "Disable email reminders"

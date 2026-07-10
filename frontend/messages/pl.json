@@ -158,9 +158,7 @@
         "heading": "Dzień miesiąca",
         "shortMonthWarning": "Niektóre miesiące mają mniej dni — rachunek przypadnie na ostatni dostępny dzień."
     },
-    "CategoryCombobox": {
-        "placeholder": "np. Media"
-    },
+    "CategoryCombobox": {"placeholder": "np. Media"},
     "PaymentsPage": {
         "title": "Płatności",
         "subtitle": "Śledź i oznaczaj swoje rachunki miesiąc po miesiącu.",
@@ -179,11 +177,7 @@
         "summaryPaid": "opłacone"
     },
     "PaymentRow": {
-        "status": {
-            "upcoming": "Nadchodzące",
-            "overdue": "Zaległe",
-            "paid": "Opłacone"
-        },
+        "status": {"upcoming": "Nadchodzące", "overdue": "Zaległe", "paid": "Opłacone"},
         "dueToday": "Dzisiaj",
         "markAsPaid": "Oznacz jako opłacone",
         "revert": "Cofnij płatność",
@@ -241,17 +235,19 @@
         "downloading": "Pobieranie…",
         "error": "Tworzenie kopii nie powiodło się. Spróbuj ponownie."
     },
-    "ThemeToggle": {
-        "ariaLabel": "Przełącz motyw"
+    "SnapshotRecoveryBanner": {
+        "message": "Migawka Twoich danych została zapisana {date}, tuż przed ostatnim przywróceniem.",
+        "restoreButton": "Przywróć tę migawkę",
+        "dialogTitle": "Przywróć tę migawkę",
+        "dialogDescription": "Spowoduje to trwałe zastąpienie bieżących danych migawką wykonaną przed ostatnim przywracaniem. Tej czynności nie można cofnąć.",
+        "cancel": "Anuluj",
+        "confirm": "Przywróć",
+        "restoring": "Przywracanie…",
+        "error": "Przywracanie nie powiodło się. Spróbuj ponownie."
     },
-    "LanguageToggle": {
-        "ariaLabel": "Zmień język",
-        "label": "Język:",
-        "name": "Polski"
-    },
-    "NotificationToggle": {
-        "paymentIncoming": "Nadchodząca płatność"
-    },
+    "ThemeToggle": {"ariaLabel": "Przełącz motyw"},
+    "LanguageToggle": {"ariaLabel": "Zmień język", "label": "Język:", "name": "Polski"},
+    "NotificationToggle": {"paymentIncoming": "Nadchodząca płatność"},
     "EmailRemindersToggle": {
         "enable": "Włącz przypomnienia e-mail",
         "disable": "Wyłącz przypomnienia e-mail"

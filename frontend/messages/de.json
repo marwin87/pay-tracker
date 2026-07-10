@@ -158,9 +158,7 @@
         "heading": "Tag des Monats",
         "shortMonthWarning": "Manche Monate haben weniger Tage — die Rechnung fällt dann auf den letzten verfügbaren Tag."
     },
-    "CategoryCombobox": {
-        "placeholder": "z. B. Nebenkosten"
-    },
+    "CategoryCombobox": {"placeholder": "z. B. Nebenkosten"},
     "PaymentsPage": {
         "title": "Zahlungen",
         "subtitle": "Verfolgen und markieren Sie Ihre Rechnungen Monat für Monat.",
@@ -241,17 +239,23 @@
         "downloading": "Wird heruntergeladen…",
         "error": "Backup fehlgeschlagen. Bitte erneut versuchen."
     },
-    "ThemeToggle": {
-        "ariaLabel": "Design umschalten"
+    "SnapshotRecoveryBanner": {
+        "message": "Ein Snapshot Ihrer Daten wurde am {date} gespeichert, kurz vor Ihrer letzten Wiederherstellung.",
+        "restoreButton": "Diesen Snapshot wiederherstellen",
+        "dialogTitle": "Diesen Snapshot wiederherstellen",
+        "dialogDescription": "Dadurch werden Ihre aktuellen Daten dauerhaft durch den vor Ihrer letzten Wiederherstellung erstellten Snapshot ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
+        "cancel": "Abbrechen",
+        "confirm": "Wiederherstellen",
+        "restoring": "Wird wiederhergestellt…",
+        "error": "Wiederherstellung fehlgeschlagen. Bitte erneut versuchen."
     },
+    "ThemeToggle": {"ariaLabel": "Design umschalten"},
     "LanguageToggle": {
         "ariaLabel": "Sprache wechseln",
         "label": "Sprache:",
         "name": "Deutsch"
     },
-    "NotificationToggle": {
-        "paymentIncoming": "Zahlung ausstehend"
-    },
+    "NotificationToggle": {"paymentIncoming": "Zahlung ausstehend"},
     "EmailRemindersToggle": {
         "enable": "E-Mail-Erinnerungen aktivieren",
         "disable": "E-Mail-Erinnerungen deaktivieren"
