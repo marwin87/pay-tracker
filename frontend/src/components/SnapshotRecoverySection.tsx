@@ -9,7 +9,7 @@ import { getLastSnapshot, restoreFromSnapshot } from "@/lib/export-api";
 type State = "idle" | "confirming" | "restoring" | "error";
 
 export default function SnapshotRecoverySection() {
-  const t = useTranslations("SnapshotRecoveryBanner");
+  const t = useTranslations("SnapshotRecoverySection");
   const locale = useLocale();
   const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [state, setState] = useState<State>("idle");

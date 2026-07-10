@@ -245,3 +245,21 @@ def test_last_snapshot_404_when_past_retention_window(client, client_db):
 
     r = client.get("/export/last-snapshot", headers=auth(tok))
     assert r.status_code == 404
+
+
+def test_restore_from_snapshot_404_when_past_retention_window(client, client_db):
+    tok = register_and_login(client, "restore_snap_stale@test.com")
+
+    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    assert r.status_code == 201
+    sync_payments(client, tok)
+    r = _upload(client, tok, _make_backup([], []))
+    assert r.status_code == 200
+
+    _, db = client_db
+    snapshot = db.query(RestoreSnapshot).one()
+    snapshot.created_at = datetime.now(timezone.utc) - timedelta(days=8)
+    db.commit()
+
+    r = client.post("/export/restore-snapshot", headers=auth(tok))
+    assert r.status_code == 404

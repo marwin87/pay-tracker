@@ -235,7 +235,7 @@
         "downloading": "Pobieranie…",
         "error": "Tworzenie kopii nie powiodło się. Spróbuj ponownie."
     },
-    "SnapshotRecoveryBanner": {
+    "SnapshotRecoverySection": {
         "message": "Migawka Twoich danych została zapisana {date}, tuż przed ostatnim przywróceniem.",
         "restoreButton": "Przywróć tę migawkę",
         "dialogTitle": "Przywróć tę migawkę",

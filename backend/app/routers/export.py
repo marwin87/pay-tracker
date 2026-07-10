@@ -308,6 +308,9 @@ def restore_json(
         db.add(RestoreSnapshot(user_id=me.id, payload=snapshot_payload))
 
     restored_templates, restored_instances = _apply_backup(db, me.id, backup)
+    # Single commit for snapshot write + destructive delete + re-insert: if any
+    # of it raises, nothing above commits — do not split this into multiple
+    # commits, it would break the "abort restore on snapshot failure" guarantee.
     db.commit()
 
     return {
@@ -316,19 +319,28 @@ def restore_json(
     }
 
 
+def _active_snapshot(db: Session, user_id: int) -> RestoreSnapshot | None:
+    """The user's snapshot if one exists and is still within the retention
+    window. Shared by /last-snapshot and /restore-snapshot so they can't
+    drift on what counts as "expired"."""
+    cutoff = datetime.now(timezone.utc) - timedelta(
+        days=settings.restore_snapshot_retention_days
+    )
+    return (
+        db.query(RestoreSnapshot)
+        .filter(
+            RestoreSnapshot.user_id == user_id, RestoreSnapshot.created_at >= cutoff
+        )
+        .first()
+    )
+
+
 @router.get("/last-snapshot", response_model=RestoreSnapshotOut)
 def last_snapshot(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
-    cutoff = datetime.now(timezone.utc) - timedelta(
-        days=settings.restore_snapshot_retention_days
-    )
-    snapshot = (
-        db.query(RestoreSnapshot)
-        .filter(RestoreSnapshot.user_id == me.id, RestoreSnapshot.created_at >= cutoff)
-        .first()
-    )
+    snapshot = _active_snapshot(db, me.id)
     if snapshot is None:
         raise HTTPException(status_code=404, detail="No recoverable snapshot")
     return RestoreSnapshotOut(created_at=snapshot.created_at)
@@ -339,9 +351,7 @@ def restore_from_snapshot(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
-    snapshot = (
-        db.query(RestoreSnapshot).filter(RestoreSnapshot.user_id == me.id).first()
-    )
+    snapshot = _active_snapshot(db, me.id)
     if snapshot is None:
         raise HTTPException(status_code=404, detail="No snapshot to restore")
 

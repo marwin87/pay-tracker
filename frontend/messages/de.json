@@ -239,7 +239,7 @@
         "downloading": "Wird heruntergeladen…",
         "error": "Backup fehlgeschlagen. Bitte erneut versuchen."
     },
-    "SnapshotRecoveryBanner": {
+    "SnapshotRecoverySection": {
         "message": "Ein Snapshot Ihrer Daten wurde am {date} gespeichert, kurz vor Ihrer letzten Wiederherstellung.",
         "restoreButton": "Diesen Snapshot wiederherstellen",
         "dialogTitle": "Diesen Snapshot wiederherstellen",
