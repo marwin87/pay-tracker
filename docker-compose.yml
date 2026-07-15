@@ -42,6 +42,7 @@ services:
       context: ./frontend
       args:
         NEXT_PUBLIC_APP_VERSION: ${NEXT_PUBLIC_APP_VERSION:-dev}
+        NEXT_PUBLIC_SESSION_HEARTBEAT_SECONDS: ${NEXT_PUBLIC_SESSION_HEARTBEAT_SECONDS:-180}
     container_name: frontend
     restart: unless-stopped
     env_file: .env

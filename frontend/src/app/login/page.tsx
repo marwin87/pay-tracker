@@ -20,7 +20,15 @@ export default function LoginPage() {
   const tCommon = useTranslations("Common");
   const [error, setError] = useState<string | null>(() => {
     if (typeof window === "undefined") return null;
-    if (!sessionStorage.getItem(SESSION_EXPIRED_KEY)) return null;
+    // Two independent triggers for this banner: a client-side 401 caught
+    // mid-session (flagged via sessionStorage, see auth-context.tsx), or
+    // proxy.ts redirecting here server-side because the cookie was already
+    // gone before the page ever loaded (flagged via query param, since
+    // middleware can't touch sessionStorage).
+    const hasQueryFlag =
+      new URLSearchParams(window.location.search).get("session_expired") === "1";
+    const hasStorageFlag = sessionStorage.getItem(SESSION_EXPIRED_KEY) !== null;
+    if (!hasQueryFlag && !hasStorageFlag) return null;
     sessionStorage.removeItem(SESSION_EXPIRED_KEY);
     return t("sessionExpired");
   });
@@ -31,6 +39,13 @@ export default function LoginPage() {
     apiFetch<{ configured: boolean }>("/auth/smtp-status")
       .then((data) => setSmtpConfigured(data?.configured ?? false))
       .catch(() => setSmtpConfigured(false));
+  }, []);
+
+  // Strip ?session_expired so a manual refresh of this URL doesn't re-show the banner.
+  useEffect(() => {
+    if (window.location.search.includes("session_expired")) {
+      window.history.replaceState({}, "", window.location.pathname);
+    }
   }, []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {

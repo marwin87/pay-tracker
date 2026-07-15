@@ -12,7 +12,13 @@ export function proxy(request: NextRequest) {
   );
 
   if (!token && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    // Marks this as a session-expiry redirect (as opposed to a plain
+    // unauthenticated visit) so the login page can show the "session
+    // expired" banner even when no client-side 401 ever fired — this path
+    // runs server-side, before React mounts, so it can't touch sessionStorage.
+    const url = new URL("/login", request.url);
+    url.searchParams.set("session_expired", "1");
+    return NextResponse.redirect(url);
   }
 
   if (token && isPublicRoute) {
