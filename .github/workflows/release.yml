@@ -9,15 +9,22 @@ permissions:
   packages: write
 
 jobs:
-  docker:
-    name: Docker — build & push release images
+  version:
+    name: Resolve version
     runs-on: ubuntu-latest
+    outputs:
+      value: ${{ steps.version.outputs.value }}
     steps:
-      - uses: actions/checkout@v5
-
       - name: Resolve version (strip leading v from tag)
         id: version
         run: echo "value=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+
+  backend-and-demo:
+    name: Docker — build & push backend/demo (QEMU multi-arch)
+    runs-on: ubuntu-latest
+    needs: version
+    steps:
+      - uses: actions/checkout@v5
 
       - name: Log in to GHCR
         uses: docker/login-action@v3
@@ -39,20 +46,8 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/pay-tracker-backend:${{ steps.version.outputs.value }}
+            ghcr.io/${{ github.repository_owner }}/pay-tracker-backend:${{ needs.version.outputs.value }}
             ghcr.io/${{ github.repository_owner }}/pay-tracker-backend:latest
-
-      - name: Build and push frontend
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          platforms: linux/amd64,linux/arm64
-          push: true
-          build-args: |
-            NEXT_PUBLIC_APP_VERSION=${{ steps.version.outputs.value }}
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/pay-tracker-frontend:${{ steps.version.outputs.value }}
-            ghcr.io/${{ github.repository_owner }}/pay-tracker-frontend:latest
 
       - name: Build and push demo
         uses: docker/build-push-action@v5
@@ -61,13 +56,101 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/pay-tracker-demo:${{ steps.version.outputs.value }}
+            ghcr.io/${{ github.repository_owner }}/pay-tracker-demo:${{ needs.version.outputs.value }}
             ghcr.io/${{ github.repository_owner }}/pay-tracker-demo:latest
+
+  frontend-build:
+    name: Docker — build frontend (${{ matrix.platform }}, native)
+    needs: version
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Prepare platform pair
+        run: echo "PLATFORM_PAIR=${PLATFORM//\//-}" >> "$GITHUB_ENV"
+        env:
+          PLATFORM: ${{ matrix.platform }}
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push frontend by digest
+        id: build
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          platforms: ${{ matrix.platform }}
+          build-args: |
+            NEXT_PUBLIC_APP_VERSION=${{ needs.version.outputs.value }}
+          outputs: type=image,name=ghcr.io/${{ github.repository_owner }}/pay-tracker-frontend,push-by-digest=true,name-canonical=true,push=true
+
+      - name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+
+      - name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ env.PLATFORM_PAIR }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  frontend-merge:
+    name: Docker — merge frontend multi-arch manifest
+    needs: [version, frontend-build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create \
+            -t ghcr.io/${{ github.repository_owner }}/pay-tracker-frontend:${{ needs.version.outputs.value }} \
+            -t ghcr.io/${{ github.repository_owner }}/pay-tracker-frontend:latest \
+            $(printf 'ghcr.io/${{ github.repository_owner }}/pay-tracker-frontend@sha256:%s ' *)
+
+      - name: Inspect image
+        run: |
+          docker buildx imagetools inspect ghcr.io/${{ github.repository_owner }}/pay-tracker-frontend:${{ needs.version.outputs.value }}
 
   sync-version:
     name: Sync version files to released tag
     runs-on: ubuntu-latest
-    needs: docker
+    needs: [backend-and-demo, frontend-merge]
     steps:
       - uses: actions/checkout@v5
         with:
