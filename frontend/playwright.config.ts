@@ -10,7 +10,7 @@ export default defineConfig({
   workers: 1,
   reporter: process.env.CI ? 'github' : 'html',
   webServer: {
-    command: 'docker compose up -d --wait postgres backend frontend demo-data',
+    command: 'docker compose up -d --wait backend frontend demo-data',
     url: process.env.PLAYWRIGHT_BASE_URL ?? 'http://localhost:3010',
     reuseExistingServer: true,
     timeout: 120_000,

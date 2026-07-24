@@ -40,7 +40,7 @@
 
 **Why:** Two failures in this project:
 1. Autogenerate produced a migration that only contained FK noise (drop/recreate a foreign key) while completely missing the new `email_sent_at` column and the `reminder_send_hour → reminder_send_minute` rename. The app started, migrations appeared to succeed, but the column was absent at runtime.
-2. `op.alter_column` with `server_default` on PostgreSQL requires `existing_type` — omitting it causes a silent no-op or error depending on Alembic/SQLAlchemy version. The rename appeared in the migration but did not apply, leaving the old column name in the DB and crashing the startup reminder job.
+2. `op.alter_column` with `server_default` on SQLite requires `existing_type` — omitting it causes a silent no-op or error depending on Alembic/SQLAlchemy version. The rename appeared in the migration but did not apply, leaving the old column name in the DB and crashing the startup reminder job.
 
 **Applies to:** Every new migration. After generating with `--autogenerate`, read the file and verify it contains the expected DDL. For renames: write `add_column` + `op.execute("UPDATE … SET new = old")` + `drop_column` explicitly. Never rely on `new_column_name` alone.
 
@@ -48,7 +48,7 @@
 
 **Rule:** For nullable columns with no server-side default, omit `server_default` entirely in the `op.add_column` call. Do not use `server_default=sa.text("null")` — it emits a redundant `DEFAULT null` in the DDL and is non-idiomatic.
 
-**Why:** `sa.text("null")` works on PostgreSQL but is non-standard. The column is already nullable=True, which is sufficient. Omitting `server_default` is the Alembic convention for "this column has no server default."
+**Why:** `sa.text("null")` works on SQLite but is non-standard. The column is already nullable=True, which is sufficient. Omitting `server_default` is the Alembic convention for "this column has no server default."
 
 **Applies to:** Any future migration adding a nullable column. If the column should default to a value server-side, use `server_default="value"` (string literal or `sa.text("expression")`). If it should simply be nullable with no default, omit the argument.
 

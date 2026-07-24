@@ -10,6 +10,7 @@ from sqlalchemy import (
     Date,
     DateTime,
     ForeignKey,
+    Index,
     Integer,
     Numeric,
     String,
@@ -54,6 +55,9 @@ class BillTemplate(Base):
     """Recurring bill definition. Instances are generated from this."""
 
     __tablename__ = "bill_templates"
+    __table_args__ = (
+        Index("ix_bill_templates_user_active", "user_id", "is_archived", "is_paused"),
+    )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -88,6 +92,9 @@ class PaymentInstance(Base):
     __tablename__ = "payment_instances"
     __table_args__ = (
         UniqueConstraint("bill_id", "period", name="uq_payment_instance_bill_period"),
+        Index("ix_payment_instance_user_id_via_join", "bill_id"),
+        Index("ix_payment_instance_due_date", "due_date"),
+        Index("ix_payment_instance_period_active", "period", "is_deleted"),
     )
 
     id: Mapped[int] = mapped_column(primary_key=True)

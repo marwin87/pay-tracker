@@ -103,7 +103,7 @@ jobs:
         run: docker compose build
 
       - name: Start stack
-        run: docker compose up -d --wait --timeout 120 postgres backend frontend demo-data
+        run: docker compose up -d --wait --timeout 120 backend frontend demo-data
 
       - name: Run e2e tests
         working-directory: frontend

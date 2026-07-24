@@ -18,6 +18,10 @@ backend/.ruff_cache/
 backend/.coverage
 backend/htmlcov/
 
+# Local SQLite database (non-Docker dev)
+backend/*.db
+backend/*.db-journal
+
 # Editor
 .idea/
 .vscode/

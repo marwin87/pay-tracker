@@ -264,7 +264,14 @@ def reset_password(body: ResetPasswordRequest, db: Session = Depends(get_db)):
     if not token_row:
         raise HTTPException(status_code=400, detail="Invalid or expired reset token")
 
-    if token_row.expires_at and token_row.expires_at < datetime.now(timezone.utc):
+    expires_at = token_row.expires_at
+    # SQLite doesn't persist tzinfo on DateTime(timezone=True) columns — values
+    # written as UTC come back naive. Values are always written as UTC
+    # (datetime.now(timezone.utc)), so a naive read is safe to re-tag as UTC.
+    if expires_at and expires_at.tzinfo is None:
+        expires_at = expires_at.replace(tzinfo=timezone.utc)
+
+    if expires_at and expires_at < datetime.now(timezone.utc):
         db.delete(token_row)
         db.commit()
         raise HTTPException(status_code=400, detail="Reset token has expired")

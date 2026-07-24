@@ -1,13 +1,13 @@
 # Repository Guidelines
 
-Pay Tracker is a household bill-tracking PWA. Stack: Next.js 16 (App Router, TypeScript, Tailwind) frontend, FastAPI + Python 3.13 backend, PostgreSQL 17 co-located in the backend container.
+Pay Tracker is a household bill-tracking PWA. Stack: Next.js 16 (App Router, TypeScript, Tailwind) frontend, FastAPI + Python 3.13 backend, SQLite database file in a named volume on the backend container.
 
 ## Hard Rules
 
 - **Next.js 16 has breaking changes from training data.** Before writing any frontend code, read `@frontend/AGENTS.md` — its warning is load-bearing.
 - **Recurrence auto-generation is idempotent.** The key is `(bill_id, period)`. Never insert a `PaymentInstance` without checking for an existing row on that pair — see `@backend/app/services/recurrence.py`.
 - **Archive templates, never delete.** Set `is_archived = True` on `BillTemplate`; hard deletes cascade to payment history.
-- **Migrations run automatically on container start.** `alembic upgrade head` fires in the supervisord uvicorn command. New model changes require a new revision: `docker compose exec backend uv run alembic revision --autogenerate -m "<desc>"`.
+- **Migrations run automatically on container start.** `alembic upgrade head` fires before uvicorn starts (see `backend/Dockerfile` CMD). New model changes require a new revision: `docker compose exec backend uv run alembic revision --autogenerate -m "<desc>"`.
 - **Use SQLAlchemy 2.0 `Mapped[T]` / `mapped_column()` style.** The 1.x `Column()` pattern will pass linting but is wrong for this codebase — see `@backend/app/models/bill.py`.
 
 ## Project Structure
@@ -15,7 +15,7 @@ Pay Tracker is a household bill-tracking PWA. Stack: Next.js 16 (App Router, Typ
 ```
 frontend/   Next.js 16 PWA — App Router, src/, Tailwind
 backend/    FastAPI — app/{routers,models,schemas,services,core}/
-            PostgreSQL 17 data at /var/lib/postgresql/17/main (named volume)
+            SQLite database file at /app/data/paytracker.db (named volume)
 infra/      nginx configs, compose overrides (empty — future use)
 context/    10x workflow artifacts (PRD, tech-stack, bootstrap log)
 ```

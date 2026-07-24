@@ -1,4 +1,4 @@
-"""Test fixtures: PostgreSQL via testcontainers + FastAPI TestClient."""
+"""Test fixtures: SQLite (in-memory) + FastAPI TestClient."""
 
 # Import models before app to (a) register them in Base.metadata for create_all
 # and (b) avoid shadowing the `app` FastAPI instance with the `app` package name.
@@ -11,46 +11,48 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.pool import NullPool
-from testcontainers.postgres import PostgresContainer
+from sqlalchemy.pool import StaticPool
 
 from app.core.database import Base, get_db
 from app.main import app
 
 
 @pytest.fixture(scope="session")
-def postgres_engine():
-    with PostgresContainer("postgres:17") as pg:
-        engine = create_engine(pg.get_connection_url(), poolclass=NullPool)
-        yield engine
+def db_engine():
+    # In-memory SQLite; StaticPool keeps the same connection (and thus the
+    # same database) alive across the session-scoped engine's lifetime.
+    engine = create_engine(
+        "sqlite:///:memory:",
+        connect_args={"check_same_thread": False},
+        poolclass=StaticPool,
+    )
+    yield engine
 
 
 @pytest.fixture()
-def db_tables(postgres_engine):
-    Base.metadata.create_all(bind=postgres_engine)
+def db_tables(db_engine):
+    Base.metadata.create_all(bind=db_engine)
     yield
-    Base.metadata.drop_all(bind=postgres_engine)
+    Base.metadata.drop_all(bind=db_engine)
 
 
 @pytest.fixture()
-def db_session(postgres_engine, db_tables):
-    Session = sessionmaker(bind=postgres_engine, autocommit=False, autoflush=False)
+def db_session(db_engine, db_tables):
+    Session = sessionmaker(bind=db_engine, autocommit=False, autoflush=False)
     db = Session()
     yield db
     db.close()
 
 
 @pytest.fixture()
-def db_sessionmaker(postgres_engine, db_tables):
-    return sessionmaker(bind=postgres_engine, autocommit=False, autoflush=False)
+def db_sessionmaker(db_engine, db_tables):
+    return sessionmaker(bind=db_engine, autocommit=False, autoflush=False)
 
 
 @pytest.fixture()
-def client(postgres_engine):
-    Base.metadata.create_all(bind=postgres_engine)
-    _SessionLocal = sessionmaker(
-        bind=postgres_engine, autocommit=False, autoflush=False
-    )
+def client(db_engine):
+    Base.metadata.create_all(bind=db_engine)
+    _SessionLocal = sessionmaker(bind=db_engine, autocommit=False, autoflush=False)
 
     def _override_get_db():
         db = _SessionLocal()
@@ -63,14 +65,14 @@ def client(postgres_engine):
     with TestClient(app) as c:
         yield c
     app.dependency_overrides.clear()
-    Base.metadata.drop_all(bind=postgres_engine)
+    Base.metadata.drop_all(bind=db_engine)
 
 
 @pytest.fixture()
-def client_db(postgres_engine):
+def client_db(db_engine):
     """TestClient + direct DB session sharing the same engine."""
-    Base.metadata.create_all(bind=postgres_engine)
-    SessionLocal = sessionmaker(bind=postgres_engine, autocommit=False, autoflush=False)
+    Base.metadata.create_all(bind=db_engine)
+    SessionLocal = sessionmaker(bind=db_engine, autocommit=False, autoflush=False)
 
     def override_get_db():
         db = SessionLocal()
@@ -85,7 +87,7 @@ def client_db(postgres_engine):
         yield c, db
         db.close()
     app.dependency_overrides.clear()
-    Base.metadata.drop_all(bind=postgres_engine)
+    Base.metadata.drop_all(bind=db_engine)
 
 
 def register_and_login(

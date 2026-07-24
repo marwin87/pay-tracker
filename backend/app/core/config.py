@@ -10,7 +10,7 @@ _DEFAULT_JWT_SECRET = "changeme-use-a-long-random-string"
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file="../.env", extra="ignore")
 
-    database_url: str = "postgresql://paytracker:changeme@localhost:5432/paytracker"
+    database_url: str = "sqlite:////app/data/paytracker.db"
 
     jwt_secret: str = _DEFAULT_JWT_SECRET
     jwt_algorithm: str = "HS256"

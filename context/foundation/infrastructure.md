@@ -8,7 +8,7 @@ tech_stack:
   language: TypeScript + Python
   framework: Next.js 16 + FastAPI
   runtime: Node.js + Python 3.13
-  database: PostgreSQL 17
+  database: SQLite
 ---
 
 ## Recommendation
@@ -24,29 +24,29 @@ Platforms were evaluated against five agent-friendly criteria: CLI-first tooling
 | Platform | CLI-first | Persistent processes | Agent-readable docs | Stable deploy API | MCP / Integration | Cost fit | EU reach | Co-location |
 |---|---|---|---|---|---|---|---|---|
 | **Self-hosted Docker Compose** | Pass (docker CLI) | Pass | n/a | Pass | n/a | ~€4.30/mo ✓✓ | Any region via Hetzner | Self-managed |
-| **Railway** | Pass | Pass | Pass (llms.txt + markdown) | Pass | Fail | ~$10-15/mo ✓ | Amsterdam GA | Pass (managed PG) |
-| **Render** | Partial (no CLI rollback) | Pass | Pass (llms.txt + exp. MCP) | Pass | Partial | ~$20/mo | Frankfurt only | Pass (managed PG) |
-| **Fly.io** | Pass | Pass | Partial (no llms.txt) | Pass | Fail | ~$10-55/mo | 5 EU regions | Managed PG costly |
+| **Railway** | Pass | Pass | Pass (llms.txt + markdown) | Pass | Fail | ~$10-15/mo ✓ | Amsterdam GA | Pass (SQLite volume) |
+| **Render** | Partial (no CLI rollback) | Pass | Pass (llms.txt + exp. MCP) | Pass | Partial | ~$20/mo | Frankfurt only | Pass (SQLite volume) |
+| **Fly.io** | Pass | Pass | Partial (no llms.txt) | Pass | Fail | ~$10-55/mo | 5 EU regions | SQLite volume — cheaper than managed PG |
 
 ### Shortlisted Platforms
 
 #### 1. Self-hosted Docker Compose (Recommended)
 
-The project already has a Docker Compose setup with all services defined. Publishing images to GHCR and providing a `docker-compose.yml` with pinned image tags is zero infrastructure overhead — no platform account, no vendor dependency, no managed service fees. A Hetzner CX22 (2 vCPU, 4 GB RAM, ~€3.79/month) comfortably runs Next.js + FastAPI + PostgreSQL with headroom. Cloudflare's free tier handles SSL termination and global CDN caching, making single-region deployments feel fast globally. The operational overhead (manual pg_dump backups, Nginx config) is real but manageable for a solo dev and mirrors the household's existing self-host comfort level.
+The project already has a Docker Compose setup with all services defined. Publishing images to GHCR and providing a `docker-compose.yml` with pinned image tags is zero infrastructure overhead — no platform account, no vendor dependency, no managed service fees. A Hetzner CX22 (2 vCPU, 4 GB RAM, ~€3.79/month) comfortably runs Next.js + FastAPI + SQLite with headroom. Cloudflare's free tier handles SSL termination and global CDN caching, making single-region deployments feel fast globally. The operational overhead (manual SQLite file backups, Nginx config) is real but manageable for a solo dev and mirrors the household's existing self-host comfort level.
 
 #### 2. Railway
 
-Railway is the best cloud PaaS option if operational overhead becomes a pain point. It has an official Next.js + FastAPI + Postgres starter template, EU Amsterdam GA since February 2025, persistent APScheduler support, co-located managed Postgres, and full LLM-readable docs (`railway.com/llms.txt`). The Hobby plan ($5/month minimum) typically runs $10-15/month for three services. Main migration step: Postgres must be extracted from the backend container into a separate Railway service. Good escape hatch from self-hosting without rewriting anything.
+Railway is the best cloud PaaS option if operational overhead becomes a pain point. It has an official Next.js + FastAPI starter template, EU Amsterdam GA since February 2025, persistent APScheduler support, and full LLM-readable docs (`railway.com/llms.txt`). The Hobby plan ($5/month minimum) typically runs $10-15/month for three services. Main migration step: the SQLite file needs a persistent Railway volume mounted into the backend service (no managed-database extraction needed, since SQLite is embedded, not a separate server). Good escape hatch from self-hosting without rewriting anything.
 
 #### 3. Render
 
-Render offers managed multi-service deployments with a Frankfurt EU region and both `llms.txt` and experimental MCP server support. The Background Worker service type is a clean fit for APScheduler. Main downsides: ~$20/month for a viable setup (two Starter services + Postgres), no CLI rollback (dashboard only), and Frankfurt is the only EU region. A reasonable option if Railway isn't available, but not the first choice.
+Render offers managed multi-service deployments with a Frankfurt EU region and both `llms.txt` and experimental MCP server support. The Background Worker service type is a clean fit for APScheduler. Main downsides: ~$20/month for a viable setup (two Starter services + a persistent disk for the SQLite file), no CLI rollback (dashboard only), and Frankfurt is the only EU region. A reasonable option if Railway isn't available, but not the first choice.
 
 ## Anti-Bias Cross-Check: Self-hosted Docker Compose
 
 ### Devil's Advocate — Weaknesses
 
-1. **No managed database backups.** pg_dump cron must be built, tested, and monitored manually. A broken backup script is silently broken until disaster — the most common failure mode for self-hosted Postgres.
+1. **No managed database backups.** A file-copy cron (`sqlite3 paytracker.db ".backup /backups/..."` or a stopped-container `cp`) must be built, tested, and monitored manually. A broken backup script is silently broken until disaster — the most common failure mode for self-hosted databases.
 
 2. **Zero-downtime deploys don't come free.** `docker compose up -d` causes a brief service restart gap. A blue-green deploy requires additional scripting not included in a basic Docker Compose setup.
 
@@ -58,11 +58,11 @@ Render offers managed multi-service deployments with a Frankfurt EU region and b
 
 ### Pre-Mortem — How This Could Fail
 
-The household self-hosted Pay Tracker on a Hetzner CX22 in 2026. Eight months later, the Postgres volume on the VPS disk filled up — Docker named volumes don't auto-expand, and nobody was monitoring disk usage. The `docker compose up` started failing with cryptic Postgres write errors. The pg_dump backup cron that was set up on day one had been silently failing for two months because the script's `pg_dump` path broke after a Docker image update changed the binary location. Restoring from the last good backup was possible but required manual SQL surgery to replay 6 weeks of missing data. The second failure: Let's Encrypt certificate renewal failed because the Certbot container wasn't in the Compose file — it had been set up separately via SSH and was forgotten when the server was reprovisioned. The PWA install broke for household members because the cert expired. Both failures were entirely preventable with monitoring, but monitoring wasn't included in the MVP scope.
+The household self-hosted Pay Tracker on a Hetzner CX22 in 2026. Eight months later, the SQLite volume on the VPS disk filled up — Docker named volumes don't auto-expand, and nobody was monitoring disk usage. The `docker compose up` started failing with cryptic SQLite "database or disk is full" write errors. The file-copy backup cron that was set up on day one had been silently failing for two months because the script's path to the SQLite file broke after a Docker image update changed the mount layout. Restoring from the last good backup was possible but required manually reconciling 6 weeks of missing data since the last successful copy. The second failure: Let's Encrypt certificate renewal failed because the Certbot container wasn't in the Compose file — it had been set up separately via SSH and was forgotten when the server was reprovisioned. The PWA install broke for household members because the cert expired. Both failures were entirely preventable with monitoring, but monitoring wasn't included in the MVP scope.
 
 ### Unknown Unknowns
 
-1. **Docker named volumes don't auto-expand.** The Postgres data volume grows with usage. The CX22's 40 GB SSD is generous for a household app, but monitoring `df -h` should be part of the ops checklist. A full disk causes Postgres to stop accepting writes with no advance warning.
+1. **Docker named volumes don't auto-expand.** The SQLite file grows with usage. The CX22's 40 GB SSD is generous for a household app, but monitoring `df -h` should be part of the ops checklist. A full disk causes SQLite to stop accepting writes with no advance warning.
 
 2. **APScheduler and DST/UTC mismatch.** The scheduler fires on UTC time. If the VPS system clock drifts or DST handling is incorrect in the server's timezone config, reminders can arrive an hour early or late. Always configure the VPS with `timedatectl set-timezone UTC` and test reminder timing across DST transitions.
 
@@ -84,8 +84,8 @@ The household self-hosted Pay Tracker on a Hetzner CX22 in 2026. Eight months la
 
 | Risk | Source | Likelihood | Impact | Mitigation |
 |---|---|---|---|---|
-| pg_dump cron fails silently | Devil's advocate | M | H | Test the backup script on day 1 with a dry-run restore; add a cron health-check (`healthchecks.io` free tier or similar) that pings on successful backup |
-| Disk fills up (Postgres volume) | Unknown unknowns | L | H | Set up a disk-usage alert: `df -h` cron that emails when >80% full; or use Hetzner's free server monitoring dashboard |
+| SQLite backup cron fails silently | Devil's advocate | M | H | Test the backup script on day 1 with a dry-run restore; add a cron health-check (`healthchecks.io` free tier or similar) that pings on successful backup |
+| Disk fills up (SQLite file volume) | Unknown unknowns | L | H | Set up a disk-usage alert: `df -h` cron that emails when >80% full; or use Hetzner's free server monitoring dashboard |
 | APScheduler stops without crashing | Devil's advocate | L | M | Add a `/healthz` endpoint that returns scheduler job count; monitor via `curl` cron that alerts on missing jobs |
 | Let's Encrypt cert expires | Pre-mortem | M | M | Use Cloudflare as TLS proxy (eliminates cert management entirely); or put Certbot renewal in a Compose service with `restart: always` |
 | Docker doesn't autostart after VPS reboot | Unknown unknowns | L | M | `systemctl enable docker`; add `restart: unless-stopped` to all Compose services; test with `sudo reboot` before going live |
@@ -138,15 +138,16 @@ These steps assume Hetzner CX22 (Ubuntu 24.04) + Cloudflare DNS + GHCR image pub
    docker compose -f docker-compose.prod.yml logs -f
    ```
 
-6. **Set up pg_dump backup cron** (on the VPS):
+6. **Set up SQLite backup cron** (on the VPS):
    ```bash
-   # /etc/cron.daily/pg-backup
+   # /etc/cron.daily/sqlite-backup
    #!/bin/bash
    docker compose -f /app/docker-compose.prod.yml exec -T backend \
-     pg_dump -U "$POSTGRES_USER" "$POSTGRES_DB" \
-     | gzip > /backups/db-$(date +%Y%m%d).sql.gz
+     sqlite3 /app/data/paytracker.db ".backup '/tmp/paytracker-backup.db'"
+   docker compose -f /app/docker-compose.prod.yml cp \
+     backend:/tmp/paytracker-backup.db - | gzip > /backups/db-$(date +%Y%m%d).sql.gz
    find /backups -mtime +7 -delete
-   # Test restore monthly: gunzip -c /backups/db-YYYYMMDD.sql.gz | psql ...
+   # Test restore monthly: copy the .gz back into the sqlite_data volume and restart backend
    ```
 
 ## Out of Scope

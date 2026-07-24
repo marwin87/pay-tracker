@@ -105,7 +105,7 @@ The settings page also shows the current server time (UTC) so you can set the se
 | Variable | Required | Description |
 | --- | --- | --- |
 | `JWT_SECRET` | yes | JWT signing secret — use a long random string |
-| `DATABASE_URL` | yes | PostgreSQL connection string |
+| `DATABASE_URL` | yes | SQLite connection string (file path) |
 | `NEXT_PUBLIC_API_URL` | yes | Backend URL as seen by the browser |
 | `SMTP_HOST` | no | SMTP server for email reminders |
 | `SMTP_PORT` | no | SMTP port (default: 587) |
@@ -123,7 +123,7 @@ Copy `.env.example` to `.env`. Never commit `.env`.
 
 - **Frontend:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, next-intl
 - **Backend:** FastAPI, Python 3.13, SQLAlchemy 2.0, Alembic, Pydantic v2
-- **Database:** PostgreSQL 17 (co-located in the backend container)
+- **Database:** SQLite (file in a named volume on the backend container)
 - **Runtime:** Docker Compose
 
 

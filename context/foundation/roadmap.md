@@ -55,7 +55,7 @@ slice only matters if this loop works.
 | S-15 | category-enum-grouping       | see bills and payments grouped by a predefined category (Housing, Utilities, Subscriptions, etc.); category is required on every bill | S-02, S-07 | FR-003, FR-005                  | done     |
 | S-16 | monthly-summary-email        | receive a full month-end summary email (paid vs. missed, totals); toggle in Settings; on-demand "Send now" button | S-10, S-13 | FR-012 (extension)              | done     |
 | S-17 | reset-password               | request a password reset link by email; receive a secure one-time link; set a new password via the link | S-01, S-10 | FR-002 (extension)            | done     |
-| I-01 | postgres-service-extract     | (infra) PostgreSQL runs in its own container; backend image is Python-only; independent restarts, cleaner logs | — | —                                    | done     |
+| I-01 | postgres-service-extract     | (infra, superseded 2026-07-24) PostgreSQL ran in its own container; backend image is Python-only; independent restarts, cleaner logs. Reverted by the Postgres→SQLite migration — database is now an embedded SQLite file, no separate DB service | — | —                                    | done     |
 | S-18 | restore-safety-comparison    | see a comparison of current vs. backup data (bill/payment counts, backup export date) in the restore confirmation dialog, with a warning if the backup would reduce data | S-09 | FR-018 (extension) | done     |
 | S-19 | restore-auto-backup-safety-net | have the server automatically snapshot current data before a destructive restore executes, so it can be recovered if the restore was a mistake | S-09 | FR-018 (extension) | done     |
 
@@ -88,7 +88,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### F-01: DB schema migration
 
-- **Outcome:** (foundation) Alembic revision generated and applied; tables for `users`, `bill_templates`, and `payment_instances` exist in the containerized PostgreSQL instance.
+- **Outcome:** (foundation) Alembic revision generated and applied; tables for `users`, `bill_templates`, and `payment_instances` exist in the database. Originally the containerized PostgreSQL instance; superseded 2026-07-24 by the Postgres→SQLite migration — tables now live in the SQLite file in the backend's named volume.
 - **Change ID:** db-schema-migration
 - **PRD refs:** NFR data-persistence ("all payment data is written to a durable database")
 - **Unlocks:** S-01 (users table needed for registration), S-02 (bill_templates table needed for template CRUD), S-03 (payment_instances table needed for the tracking loop), S-04 (data must exist to export)
@@ -336,14 +336,14 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Infrastructure
 
-### I-01: Extract PostgreSQL into its own Docker Compose service
+### I-01: Extract PostgreSQL into its own Docker Compose service (superseded 2026-07-24)
 
-- **Outcome:** PostgreSQL 17 runs in its own `postgres` service using the official image; the backend image contains only Python + app code; the two processes can be restarted and observed independently.
+- **Outcome:** PostgreSQL 17 ran in its own `postgres` service using the official image; the backend image contained only Python + app code; the two processes could be restarted and observed independently. **Superseded by the Postgres→SQLite migration**: the `postgres` service, its volume, and connection pooling were removed entirely — the database is now an embedded SQLite file (`paytracker.db`) in a named volume on the backend container, with no separate DB process.
 - **Change ID:** postgres-service-extract
 - **PRD refs:** — (not a functional requirement; DevOps hygiene)
 - **Prerequisites:** —
 - **Parallel with:** any slice (no app logic changes)
-- **Risk:** Fresh-volume start required (`docker compose down -v`); local dev data is lost. Backend `DATABASE_URL` env override in compose points to the `postgres` service name — must not be confused with the `localhost:5432` default in `.env`.
+- **Risk:** Fresh-volume start required (`docker compose down -v`); local dev data is lost. Backend `DATABASE_URL` env override in compose points to the `postgres` service name — must not be confused with the `localhost:5432` default in `.env`. (Historical — no longer applicable post-migration; `DATABASE_URL` now points at the SQLite file path.)
 - **Status:** done
 
 ---
@@ -366,7 +366,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-11       | per-user-data-scoping      | Add user_id FK to bill_templates; scope all queries to current_user | yes             | **Security/blocking.** Decide migration strategy for existing rows first. |
 | S-13       | settings-page              | Settings page: profile, email notification timing, browser notifications, backup/restore | yes | Plan ready; run `/10x-implement settings-page phase 1` |
 | S-15       | category-enum-grouping     | Promote category to enum, group bills and payments by category               | yes | Plan written; run `/10x-implement category-enum-grouping phase 1` |
-| I-01       | postgres-service-extract   | Extract PostgreSQL into its own Docker Compose service                       | yes | Plan written; run `/10x-implement postgres-service-extract phase 1` |
+| I-01       | postgres-service-extract   | Extract PostgreSQL into its own Docker Compose service (superseded 2026-07-24 — reverted by Postgres→SQLite migration) | yes | Plan written; run `/10x-implement postgres-service-extract phase 1` |
 | S-18       | restore-safety-comparison  | Restore dialog: show current vs. backup counts + backup export date, warn on data reduction | yes | Design agreed via brainstorming session, 2026-07-10; run `/10x-plan restore-safety-comparison` |
 | S-19       | restore-auto-backup-safety-net | Auto-snapshot current data server-side before a restore executes       | no  | Storage/retention and recovery-path decisions still open; resolve during `/10x-plan restore-auto-backup-safety-net` |
 
@@ -399,7 +399,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-13: user can manage their account (email, password), configure email reminder timing (2 days before / 1 day before / on day / 1 day after), enable/disable browser notifications, and trigger backup and restore — all from a single dedicated Settings page accessible via a gear icon in the nav header. The crowded header icon buttons are removed.** — Archived 2026-06-16 → `context/archive/2026-06-16-settings-page/`. Lesson: —.
 - **S-15: user sees bills and payments grouped under predefined category headers (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other); category is a required field on every bill template, selected from a fixed `<select>` instead of a free-text input.** — Archived 2026-06-19 → `context/archive/2026-06-19-category-enum-grouping/`. Lesson: —.
 - **S-16: user receives a full month-end summary email showing what was paid (amount due vs. paid, date) and what was missed/overdue, with totals; toggle and on-demand send button in Settings → Email Notifications.** — Archived 2026-06-23 → `context/archive/2026-06-23-monthly-summary-email/`. Lesson: —.
-- **I-01: PostgreSQL 17 runs in its own `postgres` service using the official image; the backend image contains only Python + app code; the two processes can be restarted and observed independently.** — Archived 2026-06-24 → `context/archive/2026-06-24-postgres-service-extract/`. Lesson: —.
+- **I-01: PostgreSQL 17 runs in its own `postgres` service using the official image; the backend image contains only Python + app code; the two processes can be restarted and observed independently.** — Archived 2026-06-24 → `context/archive/2026-06-24-postgres-service-extract/`. Lesson: —. **Superseded 2026-07-24** — the Postgres→SQLite migration removed the `postgres` service entirely in favor of an embedded SQLite file.
 - **S-17: user can request a password reset link by email; receive a secure one-time link; and set a new password via that link.** — Archived 2026-06-24 → `context/archive/2026-06-24-reset-password/`. Lesson: —.
 - **S-18: before confirming a restore, the user sees a comparison of their current data against the backup file being uploaded — bill count, payment count, and the backup's export date — plus a visual warning if the backup has fewer bills or payments than current data.** — Archived 2026-07-10 → `context/archive/2026-07-10-restore-safety-comparison/`. Lesson: —.
 - **S-19: immediately before a restore executes its destructive delete-and-replace, the server automatically snapshots the user's current data, so that data can be recovered if the restore turns out to have been a mistake — a safety net that holds even if the user proceeds past the S-18 warning, or if the request bypasses the UI entirely (e.g. direct API call).** — Archived 2026-07-10 → `context/archive/2026-07-10-restore-auto-backup-safety-net/`. Lesson: —.

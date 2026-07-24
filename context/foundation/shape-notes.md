@@ -223,7 +223,7 @@ tech-stack selection but are NOT part of the PRD:
 
 - Frontend: Next.js (React), PWA
 - Backend: Python, FastAPI, OpenPyXL
-- Database: PostgreSQL
+- Database: SQLite
 - Auth: FastAPI JWT
 - Infrastructure: Docker, Docker Compose
 - Export: .xlsx via OpenPyXL; backup as JSON
