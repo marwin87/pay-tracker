@@ -1,0 +1,29 @@
+[project]
+name = "paytracker-app"
+version = "0.1.0"
+description = "Pay Tracker — standalone Flet app (macOS first)"
+requires-python = ">=3.13"
+dependencies = [
+    "flet==0.86.2",
+    "sqlalchemy==2.0.51",
+    "openpyxl==3.1.5",
+    "pandas==3.0.5",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=6.0",
+]
+
+[tool.pytest.ini_options]
+addopts = "--cov=paytracker --cov-report=term-missing"
+
+[tool.coverage.run]
+omit = ["tests/*"]
+
+[tool.flet]
+product = "Pay Tracker"
+org = "com.paytracker"
+company = "Pay Tracker"
+build_number = 1
