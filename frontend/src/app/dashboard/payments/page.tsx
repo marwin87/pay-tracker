@@ -205,7 +205,7 @@ function PaymentsPageInner() {
     setXlsxError(null);
     setXlsxLoadingYear(year);
     try {
-      await downloadXlsx(year);
+      await downloadXlsx(year, locale);
     } catch {
       setXlsxError(t("exportXlsxError"));
     } finally {

@@ -54,8 +54,8 @@ export async function restoreFromSnapshot(): Promise<{
   return apiFetch("/export/restore-snapshot", { method: "POST" });
 }
 
-export async function downloadXlsx(year: number): Promise<void> {
-  const res = await fetch(`${BASE_URL}/export/xlsx?year=${year}`, {
+export async function downloadXlsx(year: number, lang: string): Promise<void> {
+  const res = await fetch(`${BASE_URL}/export/xlsx?year=${year}&lang=${lang}`, {
     credentials: "include",
   });
 
@@ -65,7 +65,7 @@ export async function downloadXlsx(year: number): Promise<void> {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `pay-tracker-${year}.xlsx`;
+  a.download = `pay-tracker-${lang}-${year}.xlsx`;
   a.click();
   URL.revokeObjectURL(url);
 }

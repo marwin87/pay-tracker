@@ -24,6 +24,7 @@ from app.models.restore_snapshot import RestoreSnapshot
 from app.models.user import User
 from app.schemas.bill import BackupPayload, ExportSummaryOut, RestoreSnapshotOut
 from app.services.categories import seed_default_categories
+from app.services.recurrence import backfill_template_instances
 
 router = APIRouter(prefix="/export", tags=["export"])
 
@@ -74,13 +75,105 @@ _COLUMNS = [
     "Notes",
 ]
 
+# Mirrors the per-language dicts already established in
+# app/services/reminder_job.py for outbound emails.
+_COLUMN_LABELS: dict[str, list[str]] = {
+    "en": _COLUMNS,
+    "pl": [
+        "Rachunek",
+        "Kategoria",
+        "Okres",
+        "Termin płatności",
+        "Kwota",
+        "Waluta",
+        "Status",
+        "Kwota zapłacona",
+        "Data zapłaty",
+        "Notatki",
+    ],
+    "de": [
+        "Rechnung",
+        "Kategorie",
+        "Zeitraum",
+        "Fälligkeitsdatum",
+        "Betrag",
+        "Währung",
+        "Status",
+        "Bezahlter Betrag",
+        "Bezahlt am",
+        "Notizen",
+    ],
+}
+
+_STATUS_LABELS: dict[str, dict[str, str]] = {
+    "en": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
+    "pl": {"upcoming": "Nadchodzące", "overdue": "Zaległe", "paid": "Opłacone"},
+    "de": {"upcoming": "Bevorstehend", "overdue": "Überfällig", "paid": "Bezahlt"},
+}
+
+_MONTH_ABBR: dict[str, list[str]] = {
+    "en": [calendar.month_abbr[m] for m in range(1, 13)],
+    "pl": [
+        "sty",
+        "lut",
+        "mar",
+        "kwi",
+        "maj",
+        "cze",
+        "lip",
+        "sie",
+        "wrz",
+        "paź",
+        "lis",
+        "gru",
+    ],
+    "de": [
+        "Jan",
+        "Feb",
+        "Mär",
+        "Apr",
+        "Mai",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Okt",
+        "Nov",
+        "Dez",
+    ],
+}
+
+
+def _ensure_year_instances(db: Session, user_id: int, year: int) -> None:
+    """Backfill missing payment instances for every eligible template across
+    the full year, so export isn't limited to months the user has already
+    visited in the UI (list_payments/sync-instances only seed on demand)."""
+    templates = (
+        db.query(BillTemplate)
+        .filter(
+            BillTemplate.user_id == user_id,
+            BillTemplate.is_archived.is_(False),
+            BillTemplate.is_paused.is_(False),
+            BillTemplate.frequency != BillFrequency.one_off,
+        )
+        .all()
+    )
+    for template in templates:
+        backfill_template_instances(db, template, f"{year}-01", f"{year}-12")
+
 
 @router.get("/xlsx")
 def export_xlsx(
     year: int = Query(default_factory=lambda: date.today().year),
+    lang: str = Query(default="en"),
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
+    if lang not in _COLUMN_LABELS:
+        lang = "en"
+
+    _ensure_year_instances(db, me.id, year)
+
     instances = (
         db.query(PaymentInstance)
         .options(selectinload(PaymentInstance.template))
@@ -106,27 +199,29 @@ def export_xlsx(
                 "Due Date": i.due_date.isoformat(),
                 "Amount": float(i.amount),
                 "Currency": i.template.currency,
-                "Status": i.status,
+                "Status": _STATUS_LABELS[lang].get(i.status, i.status),
                 "Paid Amount": float(i.paid_amount) if i.paid_amount else None,
                 "Paid At": i.paid_at.isoformat() if i.paid_at else None,
                 "Notes": i.notes,
             }
         )
 
+    headers = _COLUMN_LABELS[lang]
     buf = io.BytesIO()
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
         for month in range(1, 13):
-            sheet_name = f"{calendar.month_abbr[month]} {year}"
+            sheet_name = f"{_MONTH_ABBR[lang][month - 1]} {year}"
             rows = by_month[month]
             df = (
                 pd.DataFrame(rows, columns=_COLUMNS)
                 if rows
                 else pd.DataFrame(columns=_COLUMNS)
             )
+            df.columns = headers
             df.to_excel(writer, index=False, sheet_name=sheet_name)
     buf.seek(0)
 
-    filename = f"pay-tracker-{year}.xlsx"
+    filename = f"pay-tracker-{lang}-{year}.xlsx"
     return StreamingResponse(
         buf,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

@@ -106,8 +106,9 @@ def _stub(
 @pytest.mark.parametrize(
     "frequency,start_period,target_period,expected",
     [
-        # monthly is always active (early return, no anchor math)
+        # monthly — active from anchor onward, inactive before it
         (BillFrequency.monthly, "2026-01", "2026-06", True),
+        (BillFrequency.monthly, "2026-06", "2026-01", False),  # before anchor
         # quarterly — active at anchor, at multiples of 3, inactive otherwise
         (BillFrequency.quarterly, "2026-01", "2026-01", True),  # 0 months offset
         (BillFrequency.quarterly, "2026-01", "2026-04", True),  # +3 months

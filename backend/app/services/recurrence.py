@@ -39,9 +39,6 @@ def _due_date_for_period(period: str, due_day: int | None) -> date:
 
 def _bill_active_in_period(template: BillTemplate, period: str) -> bool:
     """Return True if this template's frequency schedule falls on the given period."""
-    if template.frequency == BillFrequency.monthly:
-        return True
-
     # Use start_period (YYYY-MM) as the recurrence anchor when set.
     # Falls back to created_at UTC month for rows predating the column.
     anchor = template.start_period or template.created_at.strftime("%Y-%m")
@@ -52,6 +49,8 @@ def _bill_active_in_period(template: BillTemplate, period: str) -> bool:
     if months_diff < 0:
         return False
 
+    if template.frequency == BillFrequency.monthly:
+        return True
     if template.frequency == BillFrequency.every_2_months:
         return months_diff % 2 == 0
     if template.frequency == BillFrequency.quarterly:
