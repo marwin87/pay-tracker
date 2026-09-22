@@ -3,16 +3,22 @@
 import {
   createContext,
   useContext,
-  useState,
+  useSyncExternalStore,
   useCallback,
   useEffect,
   useRef,
   ReactNode,
 } from "react";
 import { useRouter } from "next/navigation";
-import { getAuthToken, SESSION_EXPIRED_KEY } from "@/lib/auth";
+import { SESSION_EXPIRED_KEY, clearAuthPresence } from "@/lib/auth";
 import { apiFetch, setSessionExpiredHandler } from "@/lib/api";
 import { fetchMe } from "@/lib/user-api";
+import {
+  subscribeAuthChange,
+  notifyAuthChange,
+  getAuthSnapshot,
+  getAuthServerSnapshot,
+} from "@/lib/auth-store";
 
 // How often to proactively check the session while a tab is authenticated
 // and visible. This is what redirects an idle tab to /login on its own once
@@ -33,16 +39,22 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // Presence is detected from the non-HttpOnly auth_logged_in cookie.
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(
-    () => getAuthToken() !== null,
+  // Presence is detected from the non-HttpOnly auth_logged_in cookie, via an
+  // external store (see lib/auth-store.ts): the cookie can only be read on
+  // the client, so getServerSnapshot fixes the SSR value at `false` and the
+  // client's first render agrees with it — no server/client mismatch on the
+  // very first paint of an authenticated page.
+  const isAuthenticated = useSyncExternalStore(
+    subscribeAuthChange,
+    getAuthSnapshot,
+    getAuthServerSnapshot,
   );
   const router = useRouter();
   // Guards against multiple parallel 401s all triggering the redirect.
   const loggingOutRef = useRef(false);
 
   // Backend sets both HttpOnly access_token and presence auth_logged_in cookies.
-  // login() just syncs React state to reflect the new auth state.
+  // login() just tells subscribers to re-read the now-updated cookie.
   //
   // router.refresh() busts Next's client Router Cache, which can hold a
   // stale middleware redirect (see src/proxy.ts) captured for a nav link
@@ -51,7 +63,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // to /login after a fresh, valid re-login.
   const login = useCallback(() => {
     loggingOutRef.current = false;
-    setIsAuthenticated(true);
+    notifyAuthChange();
     router.refresh();
   }, [router]);
 
@@ -61,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Proceed with client-side logout even if the request fails.
     }
-    setIsAuthenticated(false);
+    notifyAuthChange();
     router.refresh();
     router.push("/login");
   }, [router]);
@@ -71,7 +83,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (loggingOutRef.current) return;
       loggingOutRef.current = true;
       sessionStorage.setItem(SESSION_EXPIRED_KEY, "1");
-      setIsAuthenticated(false);
+      // The backend never touches this cookie on a bare 401 (only real
+      // logout does) — clear it ourselves so the store's next read agrees
+      // with the "logged out" UI we're about to show.
+      clearAuthPresence();
+      notifyAuthChange();
       router.refresh();
       router.push("/login");
     });

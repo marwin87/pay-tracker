@@ -18,20 +18,9 @@ export default function LoginPage() {
   const { notifyDueToday } = useNotifications();
   const t = useTranslations("Auth");
   const tCommon = useTranslations("Common");
-  const [error, setError] = useState<string | null>(() => {
-    if (typeof window === "undefined") return null;
-    // Two independent triggers for this banner: a client-side 401 caught
-    // mid-session (flagged via sessionStorage, see auth-context.tsx), or
-    // proxy.ts redirecting here server-side because the cookie was already
-    // gone before the page ever loaded (flagged via query param, since
-    // middleware can't touch sessionStorage).
-    const hasQueryFlag =
-      new URLSearchParams(window.location.search).get("session_expired") === "1";
-    const hasStorageFlag = sessionStorage.getItem(SESSION_EXPIRED_KEY) !== null;
-    if (!hasQueryFlag && !hasStorageFlag) return null;
-    sessionStorage.removeItem(SESSION_EXPIRED_KEY);
-    return t("sessionExpired");
-  });
+  // Starts null on both server and client render so hydration can't mismatch
+  // on it; the real value is read once, after mount, below.
+  const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [smtpConfigured, setSmtpConfigured] = useState(false);
 
@@ -40,6 +29,25 @@ export default function LoginPage() {
       .then((data) => setSmtpConfigured(data?.configured ?? false))
       .catch(() => setSmtpConfigured(false));
   }, []);
+
+  // Two independent triggers for this banner: a client-side 401 caught
+  // mid-session (flagged via sessionStorage, see auth-context.tsx), or
+  // proxy.ts redirecting here server-side because the cookie was already
+  // gone before the page ever loaded (flagged via query param, since
+  // middleware can't touch sessionStorage). window/sessionStorage only exist
+  // on the client, so this has to run after mount rather than in the state
+  // initializer — reading them during the render itself is what caused the
+  // hydration mismatch this replaces. The setState is deferred into a
+  // microtask (a "callback", not the effect body) so it lands as a distinct
+  // update rather than a synchronous same-commit one.
+  useEffect(() => {
+    const hasQueryFlag =
+      new URLSearchParams(window.location.search).get("session_expired") === "1";
+    const hasStorageFlag = sessionStorage.getItem(SESSION_EXPIRED_KEY) !== null;
+    if (!hasQueryFlag && !hasStorageFlag) return;
+    sessionStorage.removeItem(SESSION_EXPIRED_KEY);
+    queueMicrotask(() => setError(t("sessionExpired")));
+  }, [t]);
 
   // Strip ?session_expired so a manual refresh of this URL doesn't re-show the banner.
   useEffect(() => {

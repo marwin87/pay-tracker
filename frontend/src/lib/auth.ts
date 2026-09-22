@@ -31,5 +31,17 @@ export function getCsrfToken(): string | null {
   return match ? decodeURIComponent(match.slice(CSRF_COOKIE.length + 1)) : null;
 }
 
-// setAuthToken and clearAuthToken are handled by backend Set-Cookie headers.
-// Login sets both cookies; POST /auth/logout clears them.
+/**
+ * Expires the presence cookie from the client. A real /auth/logout call
+ * already gets this cleared via the backend's Set-Cookie response, but a
+ * session-expired 401 (token revoked/expired without the user hitting
+ * logout) never touches this cookie server-side — the JWT itself dies, but
+ * this one would otherwise sit valid until its own max-age runs out, keeping
+ * the UI's auth state stuck "logged in".
+ */
+export function clearAuthPresence(): void {
+  if (typeof document === "undefined") return;
+  document.cookie = `${PRESENCE_COOKIE}=; Max-Age=0; path=/`;
+}
+
+// Login sets both cookies via the backend's Set-Cookie response headers.
