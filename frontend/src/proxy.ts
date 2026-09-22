@@ -3,6 +3,40 @@ import type { NextRequest } from "next/server";
 
 const publicRoutes = ["/login", "/register", "/forgot-password", "/reset-password"];
 
+// The backend lives on a different origin (cross-origin fetch + CORS, not a
+// same-origin proxy path), so the CSP has to explicitly allow talking to it.
+const API_ORIGIN = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8010";
+
+const CONTENT_SECURITY_POLICY = [
+  "default-src 'self'",
+  // 'unsafe-inline' is required here: Next.js ships its hydration payload as
+  // an inline <script>, and there's no nonce/hash plumbing in this app to
+  // allow just that script without loosening the directive generally. Still
+  // blocks loading a *remote* <script src="...">, which is the more common
+  // XSS payload shape.
+  "script-src 'self' 'unsafe-inline'",
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self' data:",
+  `connect-src 'self' ${API_ORIGIN}`,
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+
+function withSecurityHeaders(response: NextResponse): NextResponse {
+  response.headers.set("X-Content-Type-Options", "nosniff");
+  response.headers.set("X-Frame-Options", "DENY");
+  response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  response.headers.set(
+    "Permissions-Policy",
+    "geolocation=(), camera=(), microphone=()",
+  );
+  response.headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
+  return response;
+}
+
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("access_token")?.value;
@@ -18,14 +52,14 @@ export function proxy(request: NextRequest) {
     // runs server-side, before React mounts, so it can't touch sessionStorage.
     const url = new URL("/login", request.url);
     url.searchParams.set("session_expired", "1");
-    return NextResponse.redirect(url);
+    return withSecurityHeaders(NextResponse.redirect(url));
   }
 
   if (token && isPublicRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return withSecurityHeaders(NextResponse.redirect(new URL("/dashboard", request.url)));
   }
 
-  return NextResponse.next();
+  return withSecurityHeaders(NextResponse.next());
 }
 
 export const config = {
