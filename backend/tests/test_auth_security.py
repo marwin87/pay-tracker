@@ -1,5 +1,10 @@
 """Tests for logout token revocation and CSRF double-submit protection."""
 
+from datetime import datetime, timedelta, timezone
+
+from jose import jwt
+
+from app.core.config import settings
 from tests.conftest import auth, register_and_login
 
 _PASSWORD = "pw123456"  # pragma: allowlist secret
@@ -74,3 +79,50 @@ def test_bearer_token_request_bypasses_csrf_check(client):
         "/auth/me", json={"language_preference": "pl"}, headers=auth(token)
     )
     assert r.status_code == 200
+
+
+# ---------------------------------------------------------------------------
+# JWT issuer/audience — a validly-signed token for the wrong iss/aud is
+# rejected outright, not just trusted on signature
+# ---------------------------------------------------------------------------
+
+
+def _token_with_claims(**overrides) -> str:
+    payload = {
+        "sub": "1",
+        "ver": 0,
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=5),
+        "iss": "pay-tracker",
+        "aud": "pay-tracker-app",
+    }
+    payload.update(overrides)
+    return jwt.encode(payload, settings.jwt_secret, algorithm=settings.jwt_algorithm)
+
+
+def test_token_with_wrong_audience_is_rejected(client):
+    register_and_login(client, "wrong_aud@test.com", _PASSWORD)
+    bad_token = _token_with_claims(aud="some-other-app")
+    r = client.get("/auth/me", headers=auth(bad_token))
+    assert r.status_code == 401
+
+
+def test_token_with_wrong_issuer_is_rejected(client):
+    register_and_login(client, "wrong_iss@test.com", _PASSWORD)
+    bad_token = _token_with_claims(iss="some-other-backend")
+    r = client.get("/auth/me", headers=auth(bad_token))
+    assert r.status_code == 401
+
+
+def test_token_missing_audience_is_rejected(client):
+    register_and_login(client, "missing_aud@test.com", _PASSWORD)
+    payload = {
+        "sub": "1",
+        "ver": 0,
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=5),
+        "iss": "pay-tracker",
+    }
+    bad_token = jwt.encode(
+        payload, settings.jwt_secret, algorithm=settings.jwt_algorithm
+    )
+    r = client.get("/auth/me", headers=auth(bad_token))
+    assert r.status_code == 401

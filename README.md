@@ -42,14 +42,15 @@ curl -O https://raw.githubusercontent.com/marwin87/pay-tracker/main/.env.example
 cp .env.example .env
 ```
 
-Edit `.env` and set a strong `JWT_SECRET`, then:
+Edit `.env`: set a strong `JWT_SECRET` and `ENVIRONMENT=production` — this is a real deployment, and that flag is what enables secure cookies and rejects a weak/default JWT secret (see the [environment variables](#environment-variables) table). Then:
 
 ```bash
 docker compose -f docker-compose.prod.yml up -d
 ```
 
 - Frontend: http://localhost:3010
-- API docs: http://localhost:8010/docs
+
+(`/docs` is intentionally unavailable in `ENVIRONMENT=production` — see [Getting started](#getting-started) below if you need the API docs.)
 
 To try it with pre-seeded demo data instead of starting empty:
 
@@ -104,9 +105,10 @@ The settings page also shows the current server time (UTC) so you can set the se
 
 | Variable | Required | Description |
 | --- | --- | --- |
+| `ENVIRONMENT` | no (default: `development`) | Set to `production` for any real deployment — enables the `Secure` cookie flag, rejects a weak/default `JWT_SECRET`, and disables `/docs`, `/redoc`, `/openapi.json` |
 | `JWT_SECRET` | yes | JWT signing secret — use a long random string |
 | `DATABASE_URL` | yes | PostgreSQL connection string |
-| `NEXT_PUBLIC_API_URL` | yes | Backend URL as seen by the browser |
+| `NEXT_PUBLIC_API_URL` | yes | Backend URL as seen by the browser. **Baked in at frontend build time**, not read at container startup — only takes effect when building the frontend yourself (`docker compose up --build`, see [Getting started](#getting-started)). The pre-built images used in [Quick start without cloning](#quick-start-without-cloning) always ship with this set to `http://localhost:8010`, since it's baked in once at release time before any deployment's real domain is known |
 | `SMTP_HOST` | no | SMTP server for email reminders |
 | `SMTP_PORT` | no | SMTP port (default: 587) |
 | `SMTP_USER` | no | SMTP login |
