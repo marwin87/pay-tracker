@@ -186,7 +186,7 @@
         "revert": "Cofnij płatność",
         "due": "Termin",
         "paidOn": "Opłacono",
-        "amountMismatch": "Oczekiwano {expected}, zapłacono {paid}",
+        "amountMismatch": "Oczekiwano <expTag>{expected}</expTag>, zapłacono <paidTag>{paid}</paidTag>",
         "delete": "Usuń płatność",
         "paymentNote": "Notatka do płatności",
         "emailNotification": "Powiadomienie email",

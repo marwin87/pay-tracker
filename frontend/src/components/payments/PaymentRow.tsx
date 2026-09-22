@@ -27,21 +27,8 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
   const t = useTranslations("PaymentRow");
   const locale = useLocale();
   const [reverting, setReverting] = useState(false);
-  const [noteOpen, setNoteOpen] = useState(false);
-  const noteRef = useRef<HTMLDivElement>(null);
   const [emailOpen, setEmailOpen] = useState(false);
   const emailRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!noteOpen) return;
-    function handleClickOutside(e: MouseEvent) {
-      if (noteRef.current && !noteRef.current.contains(e.target as Node)) {
-        setNoteOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [noteOpen]);
 
   useEffect(() => {
     if (!emailOpen) return;
@@ -157,28 +144,6 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
                 <span className="hidden sm:inline">{t("markAsPaid")}</span>
               </button>
             )}
-            {/* Note — visible for paid instances with a note */}
-            {instance.status === "paid" && instance.notes && (
-              <>
-                <div className="relative" ref={noteRef}>
-                  <button
-                    aria-label={t("paymentNote")}
-                    aria-expanded={noteOpen}
-                    onClick={() => setNoteOpen((o) => !o)}
-                    className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
-                  >
-                    <MessageSquare size={14} />
-                  </button>
-                  {noteOpen && (
-                    <div className="absolute bottom-full right-0 mb-2 w-56 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10">
-                      {instance.notes}
-                      <div className="absolute top-full right-3 -mt-px border-4 border-transparent border-t-slate-800 dark:border-t-slate-700" />
-                    </div>
-                  )}
-                </div>
-                <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
-              </>
-            )}
             {/* Revert — visible for paid instances */}
             {instance.status === "paid" && (
               <button
@@ -225,11 +190,28 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
             </button>
           </div>
         </div>
+        {/* Note — shown below when present */}
+        {instance.status === "paid" && instance.notes && (
+          <>
+            <div className="border-t border-slate-200 dark:border-slate-700 mt-1 pt-1" />
+            <div className="flex items-start gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <MessageSquare size={12} className="shrink-0 mt-0.5" />
+              <span>{instance.notes}</span>
+            </div>
+          </>
+        )}
         {/* Amount mismatch warning */}
         {amountMismatch && (
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 dark:text-slate-500 mt-0.5">
+          <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 mt-0.5">
             <AlertCircle size={12} className="shrink-0 text-amber-500 dark:text-amber-400" />
-            <span>{t("amountMismatch", { expected: `${instance.amount} ${instance.currency}`, paid: `${instance.paid_amount} ${instance.currency}` })}</span>
+            <span>
+              {t.rich("amountMismatch", {
+                expected: `${instance.amount} ${instance.currency}`,
+                paid: `${instance.paid_amount} ${instance.currency}`,
+                expTag: (chunks) => <strong className="font-semibold text-slate-800 dark:text-slate-100">{chunks}</strong>,
+                paidTag: (chunks) => <strong className="font-semibold text-amber-600 dark:text-amber-400">{chunks}</strong>,
+              })}
+            </span>
           </div>
         )}
       </div>

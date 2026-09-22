@@ -190,7 +190,7 @@
         "revert": "Zahlung rückgängig machen",
         "due": "Fällig",
         "paidOn": "Bezahlt am",
-        "amountMismatch": "Erwartet {expected}, bezahlt {paid}",
+        "amountMismatch": "Erwartet <expTag>{expected}</expTag>, bezahlt <paidTag>{paid}</paidTag>",
         "delete": "Zahlung löschen",
         "paymentNote": "Zahlungsnotiz",
         "emailNotification": "E-Mail-Benachrichtigung",

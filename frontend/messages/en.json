@@ -186,7 +186,7 @@
         "revert": "Revert payment",
         "due": "Due",
         "paidOn": "Paid on",
-        "amountMismatch": "Expected {expected}, paid {paid}",
+        "amountMismatch": "Expected <expTag>{expected}</expTag>, paid <paidTag>{paid}</paidTag>",
         "delete": "Delete payment",
         "paymentNote": "Payment note",
         "emailNotification": "Email notification",
