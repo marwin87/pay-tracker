@@ -7,6 +7,20 @@ on:
     branches: [ main ]
 
 jobs:
+  guard:
+    name: guard - no tracked .env
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Ensure no .env file is tracked
+        run: |
+          if git ls-files | grep -E '(^|/)\.env$'; then
+            echo "::error::A .env file is tracked by git — remove it and rely on .env.example only."
+            exit 1
+          fi
+
   frontend:
     name: Frontend — build & lint
     runs-on: ubuntu-latest

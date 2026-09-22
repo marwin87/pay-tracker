@@ -57,4 +57,4 @@ To update the secrets baseline after an intentional addition: `detect-secrets sc
 
 ## Commit Guidelines
 
-Conventional Commits prefix required: `feat:`, `fix:`, `chore:`, `docs:`, `refactor:`. One-line subject under 72 characters. Reference the PRD FR number in the body when implementing a functional requirement (e.g. `Implements FR-009`).
+Conventional Commits format required: `type(scope): subject` — e.g. `fix(pre-commit): restore project-specific hooks`. Allowed types: `feat`, `fix`, `chore`, `docs`, `refactor`. One-line subject under 72 characters. Reference the PRD FR number in the body when implementing a functional requirement (e.g. `Implements FR-009`).
