@@ -64,4 +64,10 @@ def csrf_token_valid(request: Request) -> bool:
         return True
     cookie = request.cookies.get("csrf_token")
     header = request.headers.get("x-csrf-token")
-    return bool(cookie) and bool(header) and secrets.compare_digest(cookie, header)
+    # `is not None` (not `bool(...)`) so mypy actually narrows cookie/header
+    # to `str` before they reach compare_digest, which doesn't accept None.
+    return (
+        cookie is not None
+        and header is not None
+        and secrets.compare_digest(cookie, header)
+    )
