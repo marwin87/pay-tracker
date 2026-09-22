@@ -60,6 +60,12 @@ class Settings(BaseSettings):
             )
         return v
 
+    @property
+    def docs_enabled(self) -> bool:
+        """API docs (Swagger/ReDoc/OpenAPI schema) are dev-only — same
+        environment gate as the cookie/secret hardening above."""
+        return self.environment.lower() == "development"
+
     @field_validator("jwt_secret")
     @classmethod
     def jwt_secret_must_be_strong(cls, v: str, info) -> str:

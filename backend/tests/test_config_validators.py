@@ -42,3 +42,13 @@ def test_never_expiring_reset_token_allowed_in_development():
         environment="development", password_reset_token_expire_minutes=0
     )
     assert settings.password_reset_token_expire_minutes == 0
+
+
+def test_docs_enabled_in_development():
+    settings = Settings(environment="development")
+    assert settings.docs_enabled is True
+
+
+def test_docs_disabled_in_production():
+    settings = Settings(environment="production", jwt_secret="x" * 32)
+    assert settings.docs_enabled is False
