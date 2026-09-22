@@ -1,14 +1,19 @@
-import os
 import warnings
 
 from pydantic import SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _DEFAULT_JWT_SECRET = "changeme-use-a-long-random-string"
+_MIN_JWT_SECRET_LENGTH = 32
 
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file="../.env", extra="ignore")
+
+    # Gates cookie `secure`, JWT secret strength, and password-reset token
+    # expiry checks below. Must be set to a non-"development" value on real
+    # deployments — see .env.example.
+    environment: str = "development"
 
     database_url: str = "postgresql://paytracker:changeme@localhost:5432/paytracker"
 
@@ -41,8 +46,13 @@ class Settings(BaseSettings):
 
     @field_validator("password_reset_token_expire_minutes")
     @classmethod
-    def warn_if_no_token_expiry(cls, v: int) -> int:
+    def warn_if_no_token_expiry(cls, v: int, info) -> int:
         if v == 0:
+            if info.data.get("environment", "development") != "development":
+                raise ValueError(
+                    "PASSWORD_RESET_TOKEN_EXPIRE_MINUTES=0 (never expire) is not allowed "
+                    "outside ENVIRONMENT=development."
+                )
             warnings.warn(
                 "PASSWORD_RESET_TOKEN_EXPIRE_MINUTES=0: reset tokens never expire. "
                 "Only use this in development/testing.",
@@ -52,15 +62,17 @@ class Settings(BaseSettings):
 
     @field_validator("jwt_secret")
     @classmethod
-    def jwt_secret_must_not_be_default(cls, v: str) -> str:
-        if v == _DEFAULT_JWT_SECRET:
-            if os.getenv("ENVIRONMENT", "development") == "production":
+    def jwt_secret_must_be_strong(cls, v: str, info) -> str:
+        is_weak = v == _DEFAULT_JWT_SECRET or len(v) < _MIN_JWT_SECRET_LENGTH
+        if is_weak:
+            if info.data.get("environment", "development") != "development":
                 raise ValueError(
-                    "JWT_SECRET is set to the default placeholder. "
-                    "Set a strong random value via the JWT_SECRET environment variable."
+                    f"JWT_SECRET is missing or too weak (must be a random string of at "
+                    f"least {_MIN_JWT_SECRET_LENGTH} characters). Set a strong random "
+                    "value via the JWT_SECRET environment variable."
                 )
             warnings.warn(
-                "JWT_SECRET is set to the default placeholder — insecure for production.",
+                "JWT_SECRET is weak or the default placeholder — insecure outside development.",
                 stacklevel=2,
             )
         return v

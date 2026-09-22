@@ -1,3 +1,5 @@
+import secrets
+
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError
@@ -28,7 +30,7 @@ def current_user(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated"
         )
     try:
-        user_id = decode_token(token)
+        user_id, token_version = decode_token(token)
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
@@ -38,4 +40,28 @@ def current_user(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found"
         )
+    # Logout bumps token_version, invalidating every token issued before it.
+    if token_version != user.token_version:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid token"
+        )
     return user
+
+
+def csrf_token_valid(request: Request) -> bool:
+    """Double-submit CSRF check for cookie-authenticated mutating requests.
+
+    Bearer-token clients (tests, non-browser clients) aren't cookie-based and
+    so aren't exposed to CSRF — they're exempt. A request with no access_token
+    cookie at all isn't an authenticated cookie session either — it's exempt
+    too, and falls through to the route's own 401 (current_user), rather than
+    this returning a misleading 403 for a request that never claimed a session.
+    Used by the CSRF middleware in main.py, applied to every unsafe-method route.
+    """
+    if request.headers.get("authorization"):
+        return True
+    if not request.cookies.get("access_token"):
+        return True
+    cookie = request.cookies.get("csrf_token")
+    header = request.headers.get("x-csrf-token")
+    return bool(cookie) and bool(header) and secrets.compare_digest(cookie, header)

@@ -7,7 +7,7 @@
  * POST /export/restore-snapshot, DB round-trip, Settings page rendering.
  */
 import { test, expect } from '@playwright/test';
-import { loginNewUser, createBillViaApi } from './helpers';
+import { loginNewUser, createBillViaApi, getCsrfHeader } from './helpers';
 
 test('restoring a backup creates a recoverable snapshot that restores the prior data', async ({
   page,
@@ -36,6 +36,7 @@ test('restoring a backup creates a recoverable snapshot that restores the prior 
         buffer: Buffer.from(JSON.stringify(emptyBackup)),
       },
     },
+    headers: await getCsrfHeader(page),
   });
   expect(restoreRes.ok()).toBeTruthy();
 
@@ -43,8 +44,9 @@ test('restoring a backup creates a recoverable snapshot that restores the prior 
   await page.goto('/dashboard/bills');
   await expect(page.getByText(billName)).not.toBeVisible();
 
-  // Step: the recovery section appears in Settings > Restore.
+  // Step: the recovery section appears in Settings > Data > Restore.
   await page.goto('/dashboard/settings');
+  await page.getByRole('button', { name: 'Data' }).click();
   await expect(
     page.getByText(/A snapshot of your data was saved on/)
   ).toBeVisible();
@@ -69,6 +71,7 @@ test('restoring a backup creates a recoverable snapshot that restores the prior 
 
   // Assert: the snapshot was consumed — recovery section no longer shows.
   await page.goto('/dashboard/settings');
+  await page.getByRole('button', { name: 'Data' }).click();
   await expect(
     page.getByText(/A snapshot of your data was saved on/)
   ).not.toBeVisible();
@@ -78,6 +81,7 @@ test('a user with no prior restore sees no recovery section', async ({ page }) =
   await loginNewUser(page);
 
   await page.goto('/dashboard/settings');
+  await page.getByRole('button', { name: 'Data' }).click();
   await expect(
     page.getByText(/A snapshot of your data was saved on/)
   ).not.toBeVisible();

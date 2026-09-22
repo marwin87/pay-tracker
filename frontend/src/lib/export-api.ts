@@ -1,4 +1,5 @@
 import { apiFetch, BASE_URL, extractApiError } from "./api";
+import { getCsrfToken } from "./auth";
 
 export async function downloadBackup(): Promise<void> {
   const res = await fetch(`${BASE_URL}/export/json`, {
@@ -22,9 +23,14 @@ export async function restoreFromBackup(
 ): Promise<{ restored_templates: number; restored_instances: number }> {
   const form = new FormData();
   form.append("file", file);
+  const csrfToken = getCsrfToken();
   const res = await fetch(`${BASE_URL}/export/restore`, {
     method: "POST",
     credentials: "include",
+    // No Content-Type here on purpose — the browser sets multipart/form-data
+    // with the correct boundary itself; apiFetch can't be used since it
+    // forces application/json.
+    headers: csrfToken ? { "X-CSRF-Token": csrfToken } : undefined,
     body: form,
   });
   if (!res.ok) throw await extractApiError(res);

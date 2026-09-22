@@ -27,8 +27,9 @@ test('created bill appears in current month payments', async ({ page }) => {
   // Step: fill amount
   await page.getByLabel('Amount').fill('45.00');
 
-  // Step: select category (plain <select>)
-  await page.getByLabel('Category').selectOption('utilities');
+  // Step: select category (plain <select>) — options are keyed by numeric
+  // category_id (per-user categories), so match by visible label, not value.
+  await page.getByLabel('Category').selectOption({ label: 'Utilities' });
 
   // Step: save the bill
   await page.getByRole('button', { name: 'Save' }).click();

@@ -39,21 +39,51 @@ export async function loginNewUser(page: Page): Promise<{ email: string; passwor
 }
 
 /**
+ * Reads the csrf_token cookie the backend set on this page's context, so
+ * direct page.request.* calls (which bypass the frontend's apiFetch wrapper
+ * and its automatic X-CSRF-Token header) can still pass the double-submit
+ * CSRF check on cookie-authenticated mutating requests.
+ */
+export async function getCsrfHeader(page: Page): Promise<Record<string, string>> {
+  const cookies = await page.context().cookies();
+  const csrf = cookies.find((c) => c.name === 'csrf_token');
+  return csrf ? { 'X-CSRF-Token': csrf.value } : {};
+}
+
+/**
+ * Looks up the id of one of the current user's seeded default categories by
+ * slug. Bills are keyed by category_id (per-user categories), not a slug.
+ */
+async function categoryIdBySlug(page: Page, slug: string): Promise<number> {
+  const res = await page.request.get(`${API}/categories`);
+  if (!res.ok()) {
+    throw new Error(`Fetch categories failed: ${res.status()} — ${await res.text()}`);
+  }
+  const categories: Array<{ id: number; slug: string }> = await res.json();
+  const match = categories.find((c) => c.slug === slug);
+  if (!match) {
+    throw new Error(`No category with slug "${slug}" found`);
+  }
+  return match.id;
+}
+
+/**
  * Creates a bill via the backend API. Requires an authenticated page context
  * (call loginNewUser first).
  */
 export async function createBillViaApi(page: Page, name: string): Promise<number> {
+  const category_id = await categoryIdBySlug(page, 'utilities');
   const res = await page.request.post(`${API}/bills`, {
     data: {
       name,
-      category: 'utilities',
+      category_id,
       frequency: 'monthly',
       amount: '99.99',
       currency: 'PLN',
       due_day: 15,
       is_paused: false,
     },
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...(await getCsrfHeader(page)) },
   });
 
   if (!res.ok()) {
@@ -70,5 +100,7 @@ export async function createBillViaApi(page: Page, name: string): Promise<number
  */
 export async function syncPaymentsViaApi(page: Page): Promise<void> {
   const month = new Date().toISOString().slice(0, 7);
-  await page.request.post(`${API}/bills/sync-instances?month=${month}`);
+  await page.request.post(`${API}/bills/sync-instances?month=${month}`, {
+    headers: await getCsrfHeader(page),
+  });
 }

@@ -31,8 +31,9 @@ test('restore from backup preserves bill count', async ({ page }) => {
   const tmpFile = path.join(os.tmpdir(), `pay-tracker-backup-${Date.now()}.json`);
   fs.writeFileSync(tmpFile, JSON.stringify(backup));
 
-  // Step: navigate to settings where RestoreButton lives
+  // Step: navigate to settings where RestoreButton lives, under the Data tab
   await page.goto('/dashboard/settings');
+  await page.getByRole('button', { name: 'Data' }).click();
   await expect(page.getByRole('button', { name: 'Restore from backup' })).toBeVisible();
 
   // Step: click restore button — triggers hidden file input
@@ -46,11 +47,15 @@ test('restore from backup preserves bill count', async ({ page }) => {
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
 
-  // Step: confirm "Replace My Data"
-  await dialog.getByRole('button', { name: 'Replace My Data' }).click();
-
-  // RestoreButton reloads the page on success — wait for navigation
-  await page.waitForURL('**/settings');
+  // Step: confirm "Replace My Data". Success triggers window.location.reload()
+  // on the same URL, so waitForURL('**/settings') would resolve immediately
+  // regardless of outcome (already there) and silently mask a failed restore
+  // (dialog would stay open showing an error instead of reloading) — wait for
+  // the reload's load event instead, which only fires on an actual reload.
+  await Promise.all([
+    page.waitForEvent('load'),
+    dialog.getByRole('button', { name: 'Replace My Data' }).click(),
+  ]);
 
   // Step: re-export to verify count matches
   const afterRes = await page.request.get(`${apiUrl}/export/json`);
@@ -91,6 +96,7 @@ test('restoring a backup with fewer bills/payments than current shows the stale-
   await syncPaymentsViaApi(page);
 
   await page.goto('/dashboard/settings');
+  await page.getByRole('button', { name: 'Data' }).click();
   const [fileChooser] = await Promise.all([
     page.waitForEvent('filechooser'),
     page.getByRole('button', { name: 'Restore from backup' }).click(),
@@ -121,6 +127,7 @@ test('picking a malformed backup file shows an inline error, not the comparison/
   fs.writeFileSync(tmpFile, 'this is not valid JSON {{{');
 
   await page.goto('/dashboard/settings');
+  await page.getByRole('button', { name: 'Data' }).click();
   const [fileChooser] = await Promise.all([
     page.waitForEvent('filechooser'),
     page.getByRole('button', { name: 'Restore from backup' }).click(),

@@ -41,28 +41,44 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 
 def _set_auth_cookie(response: Response, token: str) -> None:
     """Set the JWT as an HttpOnly cookie plus a non-HttpOnly presence flag."""
+    secure = settings.environment != "development"
+    max_age = settings.access_token_expire_minutes * 60
     response.set_cookie(
         key="access_token",
         value=token,
         httponly=True,
+        secure=secure,
         samesite="lax",
         path="/",
-        max_age=settings.access_token_expire_minutes * 60,
+        max_age=max_age,
     )
     # Non-HttpOnly presence flag so the frontend can detect login state without XSS risk.
     response.set_cookie(
         key="auth_logged_in",
         value="1",
         httponly=False,
+        secure=secure,
         samesite="lax",
         path="/",
-        max_age=settings.access_token_expire_minutes * 60,
+        max_age=max_age,
+    )
+    # Non-HttpOnly double-submit CSRF token — the frontend echoes this back in
+    # an X-CSRF-Token header on mutating requests (see core/deps.py:verify_csrf).
+    response.set_cookie(
+        key="csrf_token",
+        value=secrets.token_urlsafe(32),
+        httponly=False,
+        secure=secure,
+        samesite="lax",
+        path="/",
+        max_age=max_age,
     )
 
 
 def _clear_auth_cookies(response: Response) -> None:
     response.delete_cookie(key="access_token", path="/")
     response.delete_cookie(key="auth_logged_in", path="/")
+    response.delete_cookie(key="csrf_token", path="/")
 
 
 @router.post(
@@ -77,7 +93,7 @@ def register(body: RegisterRequest, response: Response, db: Session = Depends(ge
     seed_default_categories(db, user.id)
     db.commit()
     db.refresh(user)
-    token = create_access_token(str(user.id))
+    token = create_access_token(str(user.id), user.token_version)
     _set_auth_cookie(response, token)
     return TokenResponse(access_token=token)
 
@@ -87,13 +103,20 @@ def login(body: LoginRequest, response: Response, db: Session = Depends(get_db))
     user = db.query(User).filter(User.email == body.email).first()
     if not user or not verify_password(body.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    token = create_access_token(str(user.id))
+    token = create_access_token(str(user.id), user.token_version)
     _set_auth_cookie(response, token)
     return TokenResponse(access_token=token)
 
 
 @router.post("/logout", status_code=status.HTTP_204_NO_CONTENT)
-def logout(response: Response):
+def logout(
+    response: Response,
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+):
+    # Invalidates every token issued for this user, not just the current one.
+    user.token_version += 1
+    db.commit()
     _clear_auth_cookies(response)
 
 

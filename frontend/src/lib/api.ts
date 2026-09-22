@@ -1,3 +1,5 @@
+import { getCsrfToken } from "@/lib/auth";
+
 export interface TokenResponse {
   access_token: string;
   token_type: string;
@@ -14,7 +16,11 @@ export class SessionExpiredError extends Error {
 
 // A 401 on this path is an expected outcome (bad credentials), not a
 // sign of an expired session, so it must not trigger auto-logout.
-const AUTH_401_EXEMPT_PATHS = ["/auth/login"];
+// /auth/logout is exempt too: auth-context already swallows its errors, and a
+// stale/duplicate logout call shouldn't also fire the global session-expired flow.
+const AUTH_401_EXEMPT_PATHS = ["/auth/login", "/auth/logout"];
+
+const CSRF_PROTECTED_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 
 type SessionExpiredHandler = () => void;
 let sessionExpiredHandler: SessionExpiredHandler | null = null;
@@ -38,8 +44,11 @@ export async function apiFetch<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
+  const method = (init?.method ?? "GET").toUpperCase();
+  const csrfToken = CSRF_PROTECTED_METHODS.has(method) ? getCsrfToken() : null;
   const headers: HeadersInit = {
     "Content-Type": "application/json",
+    ...(csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
     ...(init?.headers ?? {}),
   };
 
