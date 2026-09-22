@@ -258,8 +258,12 @@
     },
     "SettingsPage": {
         "pageTitle": "Ustawienia",
-        "collapseAll": "Zwiń wszystko",
-        "expandAll": "Rozwiń wszystko",
+        "tabs": {
+            "account": "Konto",
+            "notifications": "Powiadomienia",
+            "categories": "Kategorie",
+            "data": "Dane"
+        },
         "unsavedTitle": "Niezapisane zmiany",
         "unsavedDescription": "Masz niezapisane zmiany. Wyjść bez zapisywania?",
         "unsavedLeave": "Wyjdź",

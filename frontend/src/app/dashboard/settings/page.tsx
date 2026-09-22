@@ -2,14 +2,9 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  HardDriveDownload,
-  HardDriveUpload,
-  ChevronsUpDown,
-} from "lucide-react";
+import { HardDriveDownload, HardDriveUpload } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { fetchMe, UserProfile } from "@/lib/user-api";
-import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import BackupButton from "@/components/BackupButton";
 import RestoreButton from "@/components/RestoreButton";
 import SnapshotRecoverySection from "@/components/SnapshotRecoverySection";
@@ -29,10 +24,9 @@ export default function SettingsPage() {
   const [emailDirty, setEmailDirty] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
 
-  const TILE_KEYS = ["categories", "profile", "email-notifications", "browser-notifications", "backup", "restore"] as const;
-
-  const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
-    useCollapsedCategories("settings-collapsed-tiles", TILE_KEYS);
+  const TABS = ["account", "notifications", "categories", "data"] as const;
+  type TabKey = (typeof TABS)[number];
+  const [activeTab, setActiveTab] = useState<TabKey>("account");
 
   const isDirtyAny = profileDirty || emailDirty;
 
@@ -94,73 +88,72 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
-          {t("pageTitle")}
-        </h1>
-        <button
-          onClick={allCollapsed ? expandAll : collapseAll}
-          className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
-        >
-          <ChevronsUpDown size={13} />
-          {allCollapsed ? t("expandAll") : t("collapseAll")}
-        </button>
+      <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
+        {t("pageTitle")}
+      </h1>
+
+      <div className="flex gap-1 border-b border-slate-200 dark:border-slate-700">
+        {TABS.map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+              activeTab === tab
+                ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
+                : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
+            }`}
+          >
+            {t(`tabs.${tab}`)}
+          </button>
+        ))}
       </div>
 
-      <CategoriesTile
-        t={t}
-        isCollapsed={collapsed.has("categories")}
-        onToggle={() => toggle("categories")}
-      />
+      <div className={`space-y-4 ${activeTab === "account" ? "" : "hidden"}`}>
+        <ProfileTile
+          profile={profile}
+          onProfileUpdate={setProfile}
+          onDirtyChange={onProfileDirty}
+          t={t}
+        />
+      </div>
 
-      <ProfileTile
-        profile={profile}
-        onProfileUpdate={setProfile}
-        onDirtyChange={onProfileDirty}
-        t={t}
-        isCollapsed={collapsed.has("profile")}
-        onToggle={() => toggle("profile")}
-      />
+      <div className={`space-y-4 ${activeTab === "notifications" ? "" : "hidden"}`}>
+        <EmailNotificationsTile
+          profile={profile}
+          onProfileUpdate={setProfile}
+          onDirtyChange={onEmailDirty}
+          t={t}
+        />
 
-      <EmailNotificationsTile
-        profile={profile}
-        onProfileUpdate={setProfile}
-        onDirtyChange={onEmailDirty}
-        t={t}
-        isCollapsed={collapsed.has("email-notifications")}
-        onToggle={() => toggle("email-notifications")}
-      />
+        <BrowserNotificationsTile t={t} />
+      </div>
 
-      <BrowserNotificationsTile
-        t={t}
-        isCollapsed={collapsed.has("browser-notifications")}
-        onToggle={() => toggle("browser-notifications")}
-      />
+      <div className={`space-y-4 ${activeTab === "categories" ? "" : "hidden"}`}>
+        <CategoriesTile t={t} />
+      </div>
 
-      <Tile
-        color="blue"
-        icon={HardDriveDownload}
-        title={t("backup.title")}
-        description={t("backup.description")}
-        t={t}
-        isCollapsed={collapsed.has("backup")}
-        onToggle={() => toggle("backup")}
-      >
-        <BackupButton label="Backup" />
-      </Tile>
+      <div className={`space-y-4 ${activeTab === "data" ? "" : "hidden"}`}>
+        <Tile
+          color="blue"
+          icon={HardDriveDownload}
+          title={t("backup.title")}
+          description={t("backup.description")}
+          t={t}
+        >
+          <BackupButton label="Backup" />
+        </Tile>
 
-      <Tile
-        color="red"
-        icon={HardDriveUpload}
-        title={t("restore.title")}
-        description={t("restore.description")}
-        t={t}
-        isCollapsed={collapsed.has("restore")}
-        onToggle={() => toggle("restore")}
-      >
-        <RestoreButton label="Restore" />
-        <SnapshotRecoverySection />
-      </Tile>
+        <Tile
+          color="red"
+          icon={HardDriveUpload}
+          title={t("restore.title")}
+          description={t("restore.description")}
+          t={t}
+        >
+          <RestoreButton label="Restore" />
+          <SnapshotRecoverySection />
+        </Tile>
+      </div>
 
       {pendingHref && (
         <UnsavedChangesDialog

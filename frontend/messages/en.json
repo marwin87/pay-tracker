@@ -262,8 +262,12 @@
     },
     "SettingsPage": {
         "pageTitle": "Settings",
-        "collapseAll": "Collapse all",
-        "expandAll": "Expand all",
+        "tabs": {
+            "account": "Account",
+            "notifications": "Notifications",
+            "categories": "Categories",
+            "data": "Data"
+        },
         "unsavedTitle": "Unsaved changes",
         "unsavedDescription": "You have unsaved changes. Leave without saving?",
         "unsavedLeave": "Leave",

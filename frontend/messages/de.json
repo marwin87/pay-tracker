@@ -266,8 +266,12 @@
     },
     "SettingsPage": {
         "pageTitle": "Einstellungen",
-        "collapseAll": "Alle einklappen",
-        "expandAll": "Alle ausklappen",
+        "tabs": {
+            "account": "Konto",
+            "notifications": "Benachrichtigungen",
+            "categories": "Kategorien",
+            "data": "Daten"
+        },
         "unsavedTitle": "Nicht gespeicherte Änderungen",
         "unsavedDescription": "Sie haben nicht gespeicherte Änderungen. Ohne Speichern verlassen?",
         "unsavedLeave": "Verlassen",
