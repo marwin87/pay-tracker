@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Archive, Receipt, CreditCard, LogOut, Menu, X, Settings } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
+import { getAuthToken } from "@/lib/auth";
 import { fetchMe } from "@/lib/user-api";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
@@ -34,7 +35,14 @@ export default function DashboardLayout({
   const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isAuthenticated) router.replace("/login");
+    // `isAuthenticated` is forced false for one render right after hydration
+    // (useSyncExternalStore's getServerSnapshot, see lib/auth-store.ts) even
+    // when the real auth_logged_in cookie is already present — redirecting
+    // on that alone bounces a fresh, valid page load to /login, which then
+    // bounces back to /dashboard (proxy.ts redirects an authenticated user
+    // off a public route), stomping the actual nested route being loaded.
+    // Only redirect once the real cookie also agrees we're logged out.
+    if (!isAuthenticated && getAuthToken() === null) router.replace("/login");
   }, [isAuthenticated, router]);
 
   useEffect(() => {
