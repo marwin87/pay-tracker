@@ -229,6 +229,7 @@
         "currentLabel": "Aktuell",
         "backupLabel": "Backup",
         "countsSummary": "{bills} Rechnungen, {payments} Zahlungen",
+        "categoriesCount": "{categories} Kategorien",
         "countsUnavailable": "nicht verfügbar",
         "exportDateUnknown": "Exportdatum unbekannt (älteres Backup-Format)",
         "staleDataWarning": "Dieses Backup enthält weniger Rechnungen und Zahlungen als Ihre aktuellen Daten. Die Wiederherstellung löscht die Differenz dauerhaft."
@@ -327,6 +328,19 @@
         "restore": {
             "title": "Daten wiederherstellen",
             "description": "Ersetzen Sie alle aktuellen Daten durch eine zuvor heruntergeladene Sicherungsdatei."
+        },
+        "categories": {
+            "title": "Kategorien",
+            "description": "Fügen Sie eigene Kategorien hinzu oder benennen und färben Sie die Standardkategorien um.",
+            "loadError": "Kategorien konnten nicht geladen werden. Bitte erneut versuchen.",
+            "nameRequired": "Name ist erforderlich.",
+            "namePlaceholder": "z. B. Hobbys",
+            "defaultBadge": "Standard",
+            "archivedBadge": "archiviert",
+            "edit": "Bearbeiten",
+            "archive": "Archivieren",
+            "unarchive": "Wiederherstellen",
+            "addNew": "+ Kategorie hinzufügen"
         }
     },
     "Categories": {

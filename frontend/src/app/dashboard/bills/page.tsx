@@ -12,10 +12,9 @@ import {
   type BillTemplateOut,
   type BillTemplateCreate,
   type BillTemplateUpdate,
-  type BillCategory,
 } from "@/lib/bills-api";
 import { SessionExpiredError } from "@/lib/api";
-import { CATEGORY_ORDER } from "@/lib/categories";
+import { categoryLabel, distinctCategories } from "@/lib/categories";
 import BillTemplateForm from "@/components/bills/BillTemplateForm";
 import BillTemplateRow from "@/components/bills/BillTemplateRow";
 import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
@@ -37,26 +36,26 @@ export default function BillsPage() {
   const [deletedFutureMap, setDeletedFutureMap] = useState<Record<number, boolean>>({});
   const [restoreTarget, setRestoreTarget] = useState<{ id: number; name: string; data: BillTemplateUpdate } | null>(null);
   const [restoring, setRestoring] = useState(false);
-  const [categoryFilter, setCategoryFilter] = useState<BillCategory | "all">("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
   const filteredTemplates =
     categoryFilter === "all"
       ? templates
-      : templates.filter((tmpl) => tmpl.category === categoryFilter);
+      : templates.filter((tmpl) => String(tmpl.category.id) === categoryFilter);
 
   const categoryOptions = [
     { value: "all", label: tFilters("allCategories") },
-    ...CATEGORY_ORDER.filter((cat) => templates.some((tmpl) => tmpl.category === cat)).map(
-      (cat) => ({ value: cat, label: tCategories(cat) }),
-    ),
+    ...distinctCategories(templates, (tmpl) => tmpl.category).map((cat) => ({
+      value: String(cat.id),
+      label: categoryLabel(cat, tCategories),
+    })),
   ];
 
-  const activeCategories = CATEGORY_ORDER.filter((cat) =>
-    filteredTemplates.some((tmpl) => tmpl.category === cat),
-  );
+  const activeCategories = distinctCategories(filteredTemplates, (tmpl) => tmpl.category);
+  const activeCategoryKeys = activeCategories.map((cat) => String(cat.id));
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
-    useCollapsedCategories("bills-collapsed-categories", activeCategories);
+    useCollapsedCategories("bills-collapsed-categories", activeCategoryKeys);
 
   useEffect(() => {
     let cancelled = false;
@@ -203,7 +202,7 @@ export default function BillsPage() {
             {templates.length > 0 && (
               <FilterSelect
                 value={categoryFilter}
-                onChange={(v) => setCategoryFilter(v as BillCategory | "all")}
+                onChange={setCategoryFilter}
                 options={categoryOptions}
                 ariaLabel={tFilters("allCategories")}
               />
@@ -266,30 +265,31 @@ export default function BillsPage() {
       ) : (
         <div className="flex flex-col gap-6">
           {activeCategories.map((cat) => {
+            const key = String(cat.id);
             const group = filteredTemplates
-              .filter((tmpl) => tmpl.category === cat)
+              .filter((tmpl) => tmpl.category.id === cat.id)
               .sort((a, b) => a.name.localeCompare(b.name));
             return (
-              <div key={cat}>
+              <div key={key}>
                 <button
-                  onClick={() => toggle(cat)}
+                  onClick={() => toggle(key)}
                   className="mb-3 flex w-full items-center gap-2.5 text-left"
                 >
                   <ChevronRight
                     size={12}
                     className={`shrink-0 text-slate-400 dark:text-slate-500 transition-transform duration-150 ${
-                      collapsed.has(cat) ? "" : "rotate-90"
+                      collapsed.has(key) ? "" : "rotate-90"
                     }`}
                   />
                   <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 shrink-0">
-                    {tCategories(cat)}
+                    {categoryLabel(cat, tCategories)}
                   </span>
                   <span className="rounded-full bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:text-slate-500 shrink-0 tabular-nums">
                     {group.length}
                   </span>
                   <div className="flex-1 h-px bg-slate-100 dark:bg-slate-700/60" />
                 </button>
-                {!collapsed.has(cat) && (
+                {!collapsed.has(key) && (
                   <div className="flex flex-col gap-2">
                     {group.map((tmpl) => (
                       <BillTemplateRow

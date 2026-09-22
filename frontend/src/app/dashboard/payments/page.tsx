@@ -11,8 +11,7 @@ import {
   type PaymentInstanceOut,
   type PaymentStatus,
 } from "@/lib/payments-api";
-import type { BillCategory } from "@/lib/bills-api";
-import { CATEGORY_ORDER } from "@/lib/categories";
+import { categoryLabel, distinctCategories } from "@/lib/categories";
 import { downloadXlsx } from "@/lib/export-api";
 import { SessionExpiredError } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
@@ -171,14 +170,14 @@ function PaymentsPageInner() {
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
   const [statusFilter, setStatusFilter] = useState<PaymentStatus | "all">("all");
-  const [categoryFilter, setCategoryFilter] = useState<BillCategory | "all">("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
   const todayStr = getTodayStr();
 
   const filteredInstances = instances.filter(
     (inst) =>
       (statusFilter === "all" || inst.status === statusFilter) &&
-      (categoryFilter === "all" || inst.category === categoryFilter),
+      (categoryFilter === "all" || String(inst.category.id) === categoryFilter),
   );
 
   const statusOptions = [
@@ -190,17 +189,17 @@ function PaymentsPageInner() {
 
   const categoryOptions = [
     { value: "all", label: tFilters("allCategories") },
-    ...CATEGORY_ORDER.filter((cat) => instances.some((inst) => inst.category === cat)).map(
-      (cat) => ({ value: cat, label: tCategories(cat) }),
-    ),
+    ...distinctCategories(instances, (inst) => inst.category).map((cat) => ({
+      value: String(cat.id),
+      label: categoryLabel(cat, tCategories),
+    })),
   ];
 
-  const activeCategories = CATEGORY_ORDER.filter((cat) =>
-    filteredInstances.some((inst) => inst.category === cat),
-  );
+  const activeCategories = distinctCategories(filteredInstances, (inst) => inst.category);
+  const activeCategoryKeys = activeCategories.map((cat) => String(cat.id));
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
-    useCollapsedCategories("payments-collapsed-categories", activeCategories);
+    useCollapsedCategories("payments-collapsed-categories", activeCategoryKeys);
 
   async function handleExportXlsx(year: number) {
     setXlsxError(null);
@@ -373,7 +372,7 @@ function PaymentsPageInner() {
               />
               <FilterSelect
                 value={categoryFilter}
-                onChange={(v) => setCategoryFilter(v as BillCategory | "all")}
+                onChange={setCategoryFilter}
                 options={categoryOptions}
                 ariaLabel={tFilters("allCategories")}
               />
@@ -412,26 +411,27 @@ function PaymentsPageInner() {
       {!loading && !loadError && filteredInstances.length > 0 && (
         <div className="flex flex-col gap-4">
           {activeCategories.map((cat) => {
-            const group = filteredInstances.filter((inst) => inst.category === cat);
+            const key = String(cat.id);
+            const group = filteredInstances.filter((inst) => inst.category.id === cat.id);
             return (
-              <div key={cat}>
+              <div key={key}>
                 <button
-                  onClick={() => toggle(cat)}
+                  onClick={() => toggle(key)}
                   className="mb-3 flex w-full items-center gap-2.5 text-left"
                 >
                   <ChevronRight
                     size={12}
                     className={`shrink-0 text-slate-400 dark:text-slate-500 transition-transform duration-150 ${
-                      collapsed.has(cat) ? "" : "rotate-90"
+                      collapsed.has(key) ? "" : "rotate-90"
                     }`}
                   />
                   <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 shrink-0">
-                    {tCategories(cat)}
+                    {categoryLabel(cat, tCategories)}
                   </span>
                   <span className="rounded-full bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:text-slate-500 shrink-0 tabular-nums">
                     {group.length}
                   </span>
-                  {collapsed.has(cat) && (
+                  {collapsed.has(key) && (
                     <CategorySummary
                       group={group}
                       todayStr={todayStr}
@@ -445,7 +445,7 @@ function PaymentsPageInner() {
                   )}
                   <div className="flex-1 h-px bg-slate-100 dark:bg-slate-700/60" />
                 </button>
-                {!collapsed.has(cat) && (
+                {!collapsed.has(key) && (
                   <div className="flex flex-col gap-2">
                     {group.map((inst) => (
                       <PaymentRow

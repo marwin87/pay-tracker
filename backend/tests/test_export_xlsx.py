@@ -4,11 +4,10 @@ import io
 
 import openpyxl
 
-from tests.conftest import auth, register_and_login, sync_payments
+from tests.conftest import auth, category_id, register_and_login, sync_payments
 
 _BILL_A = {
     "name": "Electric",
-    "category": "utilities",
     "frequency": "monthly",
     "amount": 100.00,
     "currency": "PLN",
@@ -19,7 +18,6 @@ _BILL_A = {
 
 _BILL_B = {
     "name": "Internet",
-    "category": "utilities",
     "frequency": "monthly",
     "amount": 60.00,
     "currency": "PLN",
@@ -38,10 +36,15 @@ def _data_rows(xlsx_bytes: bytes) -> int:
 def test_xlsx_row_count_matches_live_instances(client):
     """XLSX data rows == number of live payment instances for the exported year."""
     tok = register_and_login(client, "xlsx_count@test.com")
+    cat_id = category_id(client, tok)
 
-    r1 = client.post("/bills", json=_BILL_A, headers=auth(tok))
+    r1 = client.post(
+        "/bills", json={**_BILL_A, "category_id": cat_id}, headers=auth(tok)
+    )
     assert r1.status_code == 201
-    r2 = client.post("/bills", json=_BILL_B, headers=auth(tok))
+    r2 = client.post(
+        "/bills", json={**_BILL_B, "category_id": cat_id}, headers=auth(tok)
+    )
     assert r2.status_code == 201
 
     sync_payments(client, tok)
@@ -60,7 +63,11 @@ def test_xlsx_excludes_deleted_instances(client):
     """Soft-deleted instances are excluded from the XLSX export (Phase 1 filter check)."""
     tok = register_and_login(client, "xlsx_del@test.com")
 
-    r = client.post("/bills", json=_BILL_A, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL_A, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
 
     sync_payments(client, tok)
@@ -80,10 +87,15 @@ def test_xlsx_excludes_deleted_instances(client):
 def test_xlsx_partial_deletion(client):
     """Deleting one of two instances leaves exactly one row — proves filter is scoped, not blanket."""
     tok = register_and_login(client, "xlsx_partial@test.com")
+    cat_id = category_id(client, tok)
 
-    r1 = client.post("/bills", json=_BILL_A, headers=auth(tok))
+    r1 = client.post(
+        "/bills", json={**_BILL_A, "category_id": cat_id}, headers=auth(tok)
+    )
     assert r1.status_code == 201
-    r2 = client.post("/bills", json=_BILL_B, headers=auth(tok))
+    r2 = client.post(
+        "/bills", json={**_BILL_B, "category_id": cat_id}, headers=auth(tok)
+    )
     assert r2.status_code == 201
 
     sync_payments(client, tok)

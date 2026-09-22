@@ -4,11 +4,10 @@ Each test registers two users (A and B), creates data as A, then asserts
 B cannot see or mutate it.
 """
 
-from tests.conftest import auth, register_and_login, sync_payments
+from tests.conftest import auth, category_id, register_and_login, sync_payments
 
 _BILL = {
     "name": "Electricity",
-    "category": "utilities",
     "frequency": "monthly",
     "amount": 120.00,
     "currency": "PLN",
@@ -19,7 +18,8 @@ _BILL = {
 
 
 def _create_bill(client, token: str) -> int:
-    r = client.post("/bills", json=_BILL, headers=auth(token))
+    payload = {**_BILL, "category_id": category_id(client, token)}
+    r = client.post("/bills", json=payload, headers=auth(token))
     assert r.status_code == 201, r.text
     return r.json()["id"]
 
@@ -155,7 +155,7 @@ def test_export_json_scoped(client):
     r = client.get("/export/json", headers=auth(tok_b))
     assert r.status_code == 200
     data = r.json()
-    assert data["schema_version"] == 3
+    assert data["schema_version"] == 4
     assert data["exported_by"] == "b@test.com"
     assert "users" not in data
     assert data["bill_templates"] == []

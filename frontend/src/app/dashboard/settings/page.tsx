@@ -17,6 +17,7 @@ import { Tile } from "@/components/settings/Tile";
 import { ProfileTile } from "@/components/settings/ProfileTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
 import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificationsTile";
+import { CategoriesTile } from "@/components/settings/CategoriesTile";
 import { UnsavedChangesDialog } from "@/components/settings/UnsavedChangesDialog";
 
 export default function SettingsPage() {
@@ -28,7 +29,7 @@ export default function SettingsPage() {
   const [emailDirty, setEmailDirty] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
 
-  const TILE_KEYS = ["profile", "email-notifications", "browser-notifications", "backup", "restore"] as const;
+  const TILE_KEYS = ["categories", "profile", "email-notifications", "browser-notifications", "backup", "restore"] as const;
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
     useCollapsedCategories("settings-collapsed-tiles", TILE_KEYS);
@@ -105,6 +106,12 @@ export default function SettingsPage() {
           {allCollapsed ? t("expandAll") : t("collapseAll")}
         </button>
       </div>
+
+      <CategoriesTile
+        t={t}
+        isCollapsed={collapsed.has("categories")}
+        onToggle={() => toggle("categories")}
+      />
 
       <ProfileTile
         profile={profile}

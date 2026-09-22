@@ -16,15 +16,17 @@ import pytest
 from sqlalchemy.exc import IntegrityError as SAIntegrityError
 
 import app.models.bill  # noqa: F401 — register models with SQLAlchemy's mapper
+import app.models.category  # noqa: F401
 import app.models.user  # noqa: F401
 from app.models.bill import (
-    BillCategory,
     BillFrequency,
     BillTemplate,
     PaymentInstance,
     PaymentStatus,
 )
+from app.models.category import Category
 from app.models.user import User
+from app.services.categories import seed_default_categories
 from app.services.recurrence import (
     _bill_active_in_period,
     _due_date_for_period,
@@ -155,6 +157,7 @@ def _make_user(db, email: str = "u@test.com") -> User:
     user = User(email=email, password_hash="x")
     db.add(user)
     db.flush()
+    seed_default_categories(db, user.id)
     return user
 
 
@@ -169,6 +172,11 @@ def _make_bill(
     is_paused: bool = False,
     is_archived: bool = False,
 ) -> BillTemplate:
+    category = (
+        db.query(Category)
+        .filter(Category.user_id == user_id, Category.slug == "other")
+        .first()
+    )
     bill = BillTemplate(
         name="Test Bill",
         frequency=frequency,
@@ -178,7 +186,7 @@ def _make_bill(
         start_period=start_period,
         is_paused=is_paused,
         is_archived=is_archived,
-        category=BillCategory.other,
+        category_id=category.id,
         user_id=user_id,
     )
     db.add(bill)

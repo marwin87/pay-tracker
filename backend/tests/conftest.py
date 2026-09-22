@@ -3,6 +3,7 @@
 # Import models before app to (a) register them in Base.metadata for create_all
 # and (b) avoid shadowing the `app` FastAPI instance with the `app` package name.
 import app.models.bill  # noqa: F401
+import app.models.category  # noqa: F401
 import app.models.reset_token  # noqa: F401
 import app.models.restore_snapshot  # noqa: F401
 import app.models.user  # noqa: F401
@@ -99,6 +100,16 @@ def register_and_login(
 
 def auth(token: str) -> dict:
     return {"Authorization": f"Bearer {token}"}
+
+
+def category_id(client: TestClient, token: str, slug: str = "utilities") -> int:
+    """Id of one of the user's seeded default categories, looked up by slug."""
+    r = client.get("/categories", headers=auth(token))
+    assert r.status_code == 200, r.text
+    for c in r.json():
+        if c["slug"] == slug:
+            return c["id"]
+    raise AssertionError(f"no category with slug={slug!r} for this user")
 
 
 def sync_payments(client: TestClient, token: str, month: str | None = None) -> None:

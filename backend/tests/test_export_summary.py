@@ -1,10 +1,9 @@
 """Integration tests for GET /export/summary — counts, is_deleted exclusion, and user scoping."""
 
-from tests.conftest import auth, register_and_login, sync_payments
+from tests.conftest import auth, category_id, register_and_login, sync_payments
 
 _BILL_A = {
     "name": "Electric",
-    "category": "utilities",
     "frequency": "monthly",
     "amount": 100.00,
     "currency": "PLN",
@@ -15,7 +14,6 @@ _BILL_A = {
 
 _BILL_B = {
     "name": "Internet",
-    "category": "utilities",
     "frequency": "monthly",
     "amount": 60.00,
     "currency": "PLN",
@@ -27,10 +25,15 @@ _BILL_B = {
 
 def test_summary_counts_match_live_data(client):
     tok = register_and_login(client, "summary_counts@test.com")
+    cat_id = category_id(client, tok)
 
-    r1 = client.post("/bills", json=_BILL_A, headers=auth(tok))
+    r1 = client.post(
+        "/bills", json={**_BILL_A, "category_id": cat_id}, headers=auth(tok)
+    )
     assert r1.status_code == 201
-    r2 = client.post("/bills", json=_BILL_B, headers=auth(tok))
+    r2 = client.post(
+        "/bills", json={**_BILL_B, "category_id": cat_id}, headers=auth(tok)
+    )
     assert r2.status_code == 201
 
     sync_payments(client, tok)
@@ -46,7 +49,11 @@ def test_summary_counts_match_live_data(client):
 def test_summary_excludes_deleted_instances(client):
     tok = register_and_login(client, "summary_del@test.com")
 
-    r = client.post("/bills", json=_BILL_A, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL_A, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
 
     sync_payments(client, tok)
@@ -67,10 +74,15 @@ def test_summary_excludes_deleted_instances(client):
 def test_summary_scoped_to_current_user(client):
     tok_a = register_and_login(client, "summary_a@test.com")
     tok_b = register_and_login(client, "summary_b@test.com")
+    cat_id = category_id(client, tok_a)
 
-    r1 = client.post("/bills", json=_BILL_A, headers=auth(tok_a))
+    r1 = client.post(
+        "/bills", json={**_BILL_A, "category_id": cat_id}, headers=auth(tok_a)
+    )
     assert r1.status_code == 201
-    r2 = client.post("/bills", json=_BILL_B, headers=auth(tok_a))
+    r2 = client.post(
+        "/bills", json={**_BILL_B, "category_id": cat_id}, headers=auth(tok_a)
+    )
     assert r2.status_code == 201
     sync_payments(client, tok_a)
 

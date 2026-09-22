@@ -225,6 +225,7 @@
         "currentLabel": "Obecnie",
         "backupLabel": "Kopia zapasowa",
         "countsSummary": "{bills} rachunków, {payments} płatności",
+        "categoriesCount": "{categories} kategorii",
         "countsUnavailable": "niedostępne",
         "exportDateUnknown": "data eksportu nieznana (starszy format kopii zapasowej)",
         "staleDataWarning": "Ta kopia zapasowa zawiera mniej rachunków i płatności niż Twoje obecne dane. Przywrócenie trwale usunie różnicę."
@@ -319,6 +320,19 @@
         "restore": {
             "title": "Przywracanie danych",
             "description": "Zastąp wszystkie bieżące dane wcześniej pobraną kopią zapasową."
+        },
+        "categories": {
+            "title": "Kategorie",
+            "description": "Dodawaj własne kategorie albo zmieniaj nazwę i kolor domyślnych.",
+            "loadError": "Nie udało się wczytać kategorii. Spróbuj ponownie.",
+            "nameRequired": "Nazwa jest wymagana.",
+            "namePlaceholder": "np. Hobby",
+            "defaultBadge": "domyślna",
+            "archivedBadge": "zarchiwizowana",
+            "edit": "Edytuj",
+            "archive": "Archiwizuj",
+            "unarchive": "Przywróć",
+            "addNew": "+ Dodaj kategorię"
         }
     },
     "Categories": {

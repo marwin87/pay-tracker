@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.core.database import get_db
 from app.core.deps import current_user
 from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
+from app.models.category import Category
 from app.models.user import User
 from app.schemas.bill import (
     BillTemplateCreate,
@@ -15,6 +16,7 @@ from app.schemas.bill import (
     MarkPaidRequest,
     PaymentInstanceOut,
 )
+from app.schemas.category import CategoryOut
 from app.services.recurrence import (
     _due_date_for_period,
     backfill_template_instances,
@@ -23,6 +25,14 @@ from app.services.recurrence import (
 )
 
 router = APIRouter(prefix="/bills", tags=["bills"])
+
+
+def _check_category_ownership(db: Session, category_id: int, user_id: int) -> None:
+    category = db.get(Category, category_id)
+    if not category:
+        raise HTTPException(status_code=404, detail="Category not found")
+    if category.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
 
 
 def _to_out(
@@ -44,7 +54,7 @@ def _to_out(
             "bill_name": inst.template.name,
             "currency": inst.template.currency,
             "frequency": inst.template.frequency,
-            "category": inst.template.category,
+            "category": CategoryOut.model_validate(inst.template.category),
             "email_sent_at": inst.email_sent_at,
         }
     )
@@ -71,6 +81,8 @@ def create_bill(
     from app.models.bill import BillFrequency as BF
 
     RECURRING = (BF.monthly, BF.every_2_months, BF.quarterly)
+
+    _check_category_ownership(db, body.category_id, me.id)
 
     now = datetime.now(timezone.utc)
     if body.due_month and body.frequency in (BF.annual, BF.one_off):
@@ -278,6 +290,8 @@ def update_bill(
     updates = body.model_dump(exclude_unset=True)
     updates.pop("recreate_deleted_future", None)
     due_month = updates.pop("due_month", None)
+    if "category_id" in updates:
+        _check_category_ownership(db, updates["category_id"], me.id)
     due_day_changed = "due_day" in updates and updates["due_day"] != bill.due_day
     for field, value in updates.items():
         setattr(bill, field, value)

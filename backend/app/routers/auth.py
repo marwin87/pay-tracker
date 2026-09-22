@@ -14,6 +14,7 @@ from app.core.deps import current_user
 from app.core.security import create_access_token, hash_password, verify_password
 from app.models.reset_token import PasswordResetToken
 from app.models.user import User
+from app.services.categories import seed_default_categories
 from app.schemas.auth import (
     ChangeEmailRequest,
     ChangePasswordRequest,
@@ -72,6 +73,8 @@ def register(body: RegisterRequest, response: Response, db: Session = Depends(ge
         raise HTTPException(status_code=409, detail="Email already registered")
     user = User(email=body.email, password_hash=hash_password(body.password))
     db.add(user)
+    db.flush()
+    seed_default_categories(db, user.id)
     db.commit()
     db.refresh(user)
     token = create_access_token(str(user.id))

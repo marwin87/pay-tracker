@@ -8,7 +8,7 @@ import { getExportSummary, restoreFromBackup } from "@/lib/export-api";
 
 type State = "idle" | "confirming" | "restoring" | "error";
 
-type Counts = { bills: number; payments: number };
+type Counts = { bills: number; payments: number; categories?: number };
 
 export default function RestoreButton({ label }: { label?: string } = {}) {
   const t = useTranslations("RestoreButton");
@@ -53,7 +53,12 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
       return;
     }
 
-    let parsed: { bill_templates: unknown; payment_instances: unknown; exported_at?: unknown };
+    let parsed: {
+      bill_templates: unknown;
+      payment_instances: unknown;
+      categories?: unknown;
+      exported_at?: unknown;
+    };
     try {
       parsed = JSON.parse(await file.text());
     } catch {
@@ -71,6 +76,7 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
     setBackupCounts({
       bills: parsed.bill_templates.length,
       payments: parsed.payment_instances.length,
+      categories: Array.isArray(parsed.categories) ? parsed.categories.length : undefined,
     });
     setBackupExportedAt(
       typeof parsed.exported_at === "string" ? parsed.exported_at : null
@@ -176,6 +182,8 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
                         bills: backupCounts.bills,
                         payments: backupCounts.payments,
                       })}
+                      {backupCounts.categories != null &&
+                        ` · ${t("categoriesCount", { categories: backupCounts.categories })}`}
                     </span>
                   </div>
                   <div className="text-xs text-slate-400 dark:text-slate-500">

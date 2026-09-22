@@ -2,11 +2,10 @@
 
 import pytest
 
-from tests.conftest import auth, register_and_login, sync_payments
+from tests.conftest import auth, category_id, register_and_login, sync_payments
 
 _BASE_BILL = {
     "name": "TestBill",
-    "category": "utilities",
     "frequency": "monthly",
     "amount": "100.00",
     "currency": "PLN",
@@ -15,8 +14,8 @@ _BASE_BILL = {
 }
 
 
-def _bill(**overrides) -> dict:
-    return {**_BASE_BILL, **overrides}
+def _bill(client, token, **overrides) -> dict:
+    return {**_BASE_BILL, "category_id": category_id(client, token), **overrides}
 
 
 # ---------------------------------------------------------------------------
@@ -38,7 +37,7 @@ def test_create_monthly_bill_with_past_due_month_seeds_history(client):
     token = register_and_login(client, "backfill_monthly@test.com")
     r = client.post(
         "/bills",
-        json=_bill(frequency="monthly", due_month=past_month),
+        json=_bill(client, token, frequency="monthly", due_month=past_month),
         headers=auth(token),
     )
     assert r.status_code == 201
@@ -56,7 +55,7 @@ def test_create_monthly_bill_with_current_month_does_not_backfill(client):
     token = register_and_login(client, "no_backfill@test.com")
     r = client.post(
         "/bills",
-        json=_bill(frequency="monthly", due_month=today.month),
+        json=_bill(client, token, frequency="monthly", due_month=today.month),
         headers=auth(token),
     )
     assert r.status_code == 201
@@ -81,7 +80,9 @@ def test_create_annual_bill_with_future_due_month_sets_next_year(client):
     token = register_and_login(client, "annual_future@test.com")
     r = client.post(
         "/bills",
-        json=_bill(frequency="annual", due_month=future_month, due_day=None),
+        json=_bill(
+            client, token, frequency="annual", due_month=future_month, due_day=None
+        ),
         headers=auth(token),
     )
     assert r.status_code == 201
@@ -103,7 +104,9 @@ def test_create_annual_bill_with_past_due_month_sets_next_year(client):
     token = register_and_login(client, "annual_past@test.com")
     r = client.post(
         "/bills",
-        json=_bill(frequency="annual", due_month=past_month, due_day=None),
+        json=_bill(
+            client, token, frequency="annual", due_month=past_month, due_day=None
+        ),
         headers=auth(token),
     )
     assert r.status_code == 201
@@ -127,38 +130,48 @@ def test_create_bill_missing_required_name_returns_422(client):
 
 def test_create_bill_invalid_frequency_returns_422(client):
     token = register_and_login(client, "val_freq@test.com")
-    r = client.post("/bills", json=_bill(frequency="weekly"), headers=auth(token))
+    r = client.post(
+        "/bills", json=_bill(client, token, frequency="weekly"), headers=auth(token)
+    )
     assert r.status_code == 422
 
 
 def test_create_bill_due_day_zero_returns_422(client):
     token = register_and_login(client, "val_day0@test.com")
-    r = client.post("/bills", json=_bill(due_day=0), headers=auth(token))
+    r = client.post("/bills", json=_bill(client, token, due_day=0), headers=auth(token))
     assert r.status_code == 422
 
 
 def test_create_bill_due_day_32_returns_422(client):
     token = register_and_login(client, "val_day32@test.com")
-    r = client.post("/bills", json=_bill(due_day=32), headers=auth(token))
+    r = client.post(
+        "/bills", json=_bill(client, token, due_day=32), headers=auth(token)
+    )
     assert r.status_code == 422
 
 
 def test_create_bill_due_month_13_returns_422(client):
     token = register_and_login(client, "val_month13@test.com")
-    r = client.post("/bills", json=_bill(due_month=13), headers=auth(token))
+    r = client.post(
+        "/bills", json=_bill(client, token, due_month=13), headers=auth(token)
+    )
     assert r.status_code == 422
 
 
 def test_create_bill_negative_amount_is_accepted_as_zero_floor(client):
     """amount has no lower-bound validator — Decimal accepts negatives; document the behavior."""
     token = register_and_login(client, "val_neg@test.com")
-    r = client.post("/bills", json=_bill(amount="-50.00"), headers=auth(token))
+    r = client.post(
+        "/bills", json=_bill(client, token, amount="-50.00"), headers=auth(token)
+    )
     # Current schema has no non-negative constraint; this test documents that.
     # If a validator is added later, update this to assert 422 instead.
     assert r.status_code == 201
 
 
-def test_create_bill_invalid_category_returns_422(client):
+def test_create_bill_nonexistent_category_id_returns_404(client):
     token = register_and_login(client, "val_cat@test.com")
-    r = client.post("/bills", json=_bill(category="unknown_cat"), headers=auth(token))
-    assert r.status_code == 422
+    r = client.post(
+        "/bills", json=_bill(client, token, category_id=999999), headers=auth(token)
+    )
+    assert r.status_code == 404

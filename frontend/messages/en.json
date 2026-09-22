@@ -225,6 +225,7 @@
         "currentLabel": "Current",
         "backupLabel": "Backup",
         "countsSummary": "{bills} bills, {payments} payments",
+        "categoriesCount": "{categories} categories",
         "countsUnavailable": "unavailable",
         "exportDateUnknown": "export date unknown (older backup format)",
         "staleDataWarning": "This backup has fewer bills and payments than your current data. Restoring will permanently delete the difference."
@@ -323,6 +324,19 @@
         "restore": {
             "title": "Restore Data",
             "description": "Replace all current data with a previously downloaded backup file."
+        },
+        "categories": {
+            "title": "Categories",
+            "description": "Add your own categories or rename and recolor the defaults.",
+            "loadError": "Couldn't load categories. Please try again.",
+            "nameRequired": "Name is required.",
+            "namePlaceholder": "e.g. Hobbies",
+            "defaultBadge": "default",
+            "archivedBadge": "archived",
+            "edit": "Edit",
+            "archive": "Archive",
+            "unarchive": "Unarchive",
+            "addNew": "+ Add category"
         }
     },
     "Categories": {

@@ -14,25 +14,51 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
 from app.models.bill import (
-    BillCategory,
     BillFrequency,
     BillTemplate,
     PaymentInstance,
     PaymentStatus,
 )
+from app.models.category import Category
 from app.models.restore_snapshot import RestoreSnapshot
 from app.models.user import User
 from app.schemas.bill import BackupPayload, ExportSummaryOut, RestoreSnapshotOut
+from app.services.categories import seed_default_categories
 
 router = APIRouter(prefix="/export", tags=["export"])
 
-_VALID_CATEGORIES = {c.value for c in BillCategory}
+
+def _legacy_category_id(
+    db: Session, user_id: int, slug: str | None, fallback_id: int
+) -> int:
+    """v2/v3 backups only carry the old free-text category string (now used
+    as `slug`). Map it to one of the user's current categories by slug,
+    falling back to their 'other' category (or any category at all) if it
+    was renamed/archived away."""
+    if slug:
+        match = (
+            db.query(Category.id)
+            .filter(Category.user_id == user_id, Category.slug == slug)
+            .first()
+        )
+        if match:
+            return match[0]
+    return fallback_id
 
 
-def _coerce_category(raw: str | None) -> BillCategory:
-    if raw in _VALID_CATEGORIES:
-        return BillCategory(raw)
-    return BillCategory.other
+def _fallback_category_id(db: Session, user_id: int) -> int:
+    other = (
+        db.query(Category.id)
+        .filter(Category.user_id == user_id, Category.slug == "other")
+        .first()
+    )
+    if other:
+        return other[0]
+    any_category = db.query(Category.id).filter(Category.user_id == user_id).first()
+    if any_category:
+        return any_category[0]
+    seeded = seed_default_categories(db, user_id)
+    return next(c.id for c in seeded if c.slug == "other")
 
 
 _COLUMNS = [
@@ -75,7 +101,7 @@ def export_xlsx(
         by_month[month].append(
             {
                 "Bill": i.template.name,
-                "Category": i.template.category,
+                "Category": i.template.category.name,
                 "Period": i.period,
                 "Due Date": i.due_date.isoformat(),
                 "Amount": float(i.amount),
@@ -109,8 +135,9 @@ def export_xlsx(
 
 
 def _build_backup_arrays(db: Session, user_id: int) -> dict:
-    """Serialize a user's bill_templates/payment_instances into the backup shape
-    shared by GET /export/json and the pre-restore snapshot."""
+    """Serialize a user's categories/bill_templates/payment_instances into the
+    backup shape shared by GET /export/json and the pre-restore snapshot."""
+    categories = db.query(Category).filter(Category.user_id == user_id).all()
     templates = db.query(BillTemplate).filter(BillTemplate.user_id == user_id).all()
     template_ids = [t.id for t in templates]
     instances = (
@@ -124,11 +151,23 @@ def _build_backup_arrays(db: Session, user_id: int) -> dict:
         else []
     )
     return {
+        "categories": [
+            {
+                "id": c.id,
+                "name": c.name,
+                "slug": c.slug,
+                "color": c.color,
+                "sort_order": c.sort_order,
+                "is_default": c.is_default,
+                "is_archived": c.is_archived,
+            }
+            for c in categories
+        ],
         "bill_templates": [
             {
                 "id": t.id,
                 "name": t.name,
-                "category": t.category,
+                "category_id": t.category_id,
                 "frequency": t.frequency,
                 "amount": float(t.amount),
                 "currency": t.currency,
@@ -167,7 +206,7 @@ def export_json(
     me: User = Depends(current_user),
 ):
     payload = {
-        "schema_version": 3,
+        "schema_version": 4,
         "exported_by": me.email,
         "exported_at": datetime.now(timezone.utc).isoformat(),
         **_build_backup_arrays(db, me.id),
@@ -219,11 +258,42 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
             synchronize_session=False
         )
 
+    category_id_map: dict[int, int] = {}
+    if backup.categories:
+        db.query(Category).filter(Category.user_id == user_id).delete(
+            synchronize_session=False
+        )
+        for bc in backup.categories:
+            category_obj = Category(
+                user_id=user_id,
+                name=bc.name,
+                slug=bc.slug,
+                color=bc.color,
+                sort_order=bc.sort_order,
+                is_default=bc.is_default,
+                is_archived=bc.is_archived,
+            )
+            db.add(category_obj)
+            db.flush()
+            category_id_map[bc.id] = category_obj.id
+
+    fallback_category_id = _fallback_category_id(db, user_id)
+
     id_map: dict[int, int] = {}
     for bt in backup.bill_templates:
+        if backup.categories:
+            category_id = (
+                category_id_map.get(bt.category_id, fallback_category_id)
+                if bt.category_id is not None
+                else fallback_category_id
+            )
+        else:
+            category_id = _legacy_category_id(
+                db, user_id, bt.category, fallback_category_id
+            )
         template_obj = BillTemplate(
             name=bt.name,
-            category=_coerce_category(bt.category),
+            category_id=category_id,
             frequency=BillFrequency(bt.frequency),
             amount=Decimal(str(bt.amount)),
             currency=bt.currency,
@@ -276,7 +346,7 @@ def restore_json(
     except json.JSONDecodeError:
         raise HTTPException(status_code=422, detail="Invalid JSON")
 
-    if raw.get("schema_version") not in {2, 3}:
+    if raw.get("schema_version") not in {2, 3, 4}:
         raise HTTPException(status_code=422, detail="Unsupported schema version")
 
     try:
@@ -299,7 +369,7 @@ def restore_json(
     )
     if has_existing_bills:
         snapshot_payload = {
-            "schema_version": 3,
+            "schema_version": 4,
             **_build_backup_arrays(db, me.id),
         }
         db.query(RestoreSnapshot).filter(RestoreSnapshot.user_id == me.id).delete(

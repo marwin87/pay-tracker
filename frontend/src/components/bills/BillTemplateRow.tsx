@@ -12,7 +12,7 @@ import {
 import { useLocale, useTranslations } from "next-intl";
 import BillTemplateForm from "./BillTemplateForm";
 import type { BillTemplateOut, BillTemplateUpdate } from "@/lib/bills-api";
-import { CATEGORY_BORDER } from "@/lib/categories";
+import { categoryBorderClass } from "@/lib/categories";
 
 interface Props {
   template: BillTemplateOut;
@@ -64,7 +64,7 @@ export default function BillTemplateRow({
   // Paused overrides category color with amber
   const leftBorder = template.is_paused
     ? "border-l-amber-400 dark:border-l-amber-500"
-    : CATEGORY_BORDER[template.category];
+    : categoryBorderClass(template.category.color);
 
   return (
     <div
@@ -156,7 +156,7 @@ export default function BillTemplateRow({
           <BillTemplateForm
             initial={{
               name: template.name,
-              category: template.category,
+              category_id: template.category.id,
               frequency: template.frequency,
               amount: template.amount,
               currency: template.currency,

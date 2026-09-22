@@ -3,7 +3,7 @@
 import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-export type TileColor = "blue" | "yellow" | "red";
+export type TileColor = "blue" | "green" | "yellow" | "red";
 
 export const TILE_STYLES: Record<
   TileColor,
@@ -13,6 +13,11 @@ export const TILE_STYLES: Record<
     border: "border-blue-400 dark:border-blue-500",
     header: "bg-blue-50 dark:bg-blue-900/30",
     icon: "text-blue-500 dark:text-blue-400",
+  },
+  green: {
+    border: "border-green-400 dark:border-emerald-500",
+    header: "bg-green-50 dark:bg-emerald-900/30",
+    icon: "text-green-600 dark:text-emerald-400",
   },
   yellow: {
     border: "border-yellow-400 dark:border-yellow-500",
@@ -58,7 +63,7 @@ export function Tile({
   const s = TILE_STYLES[color];
   return (
     <div
-      className={`rounded-xl border-l-4 border border-slate-200 dark:border-slate-700 overflow-hidden ${s.border}`}
+      className={`rounded-xl border-l-4 border overflow-hidden ${s.border}`}
     >
       <button
         onClick={onToggle}

@@ -8,11 +8,10 @@ from sqlalchemy.orm import sessionmaker
 from app.models.restore_snapshot import RestoreSnapshot
 from app.models.user import User
 from app.services.snapshot_cleanup import cleanup_old_snapshots
-from tests.conftest import auth, register_and_login, sync_payments
+from tests.conftest import auth, category_id, register_and_login, sync_payments
 
 _BILL = {
     "name": "Electricity",
-    "category": "utilities",
     "frequency": "monthly",
     "amount": 120.00,
     "currency": "PLN",
@@ -45,7 +44,11 @@ def _make_backup(templates, instances, schema_version: int = 3):
 def test_snapshot_created_after_restore_with_existing_data(client, client_db):
     tok = register_and_login(client, "snap_a@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     sync_payments(client, tok)
     client.get("/bills/payments", headers=auth(tok))
@@ -68,7 +71,11 @@ def test_snapshot_created_after_restore_with_existing_data(client, client_db):
 def test_second_restore_overwrites_snapshot_not_duplicates(client, client_db):
     tok = register_and_login(client, "snap_b@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     sync_payments(client, tok)
 
@@ -76,7 +83,11 @@ def test_second_restore_overwrites_snapshot_not_duplicates(client, client_db):
     assert r.status_code == 200
 
     # Recreate data so the second restore also has something to snapshot.
-    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     sync_payments(client, tok)
 
@@ -103,7 +114,11 @@ def test_cleanup_removes_stale_snapshots_keeps_fresh(client, client_db):
     tok_fresh = register_and_login(client, "snap_fresh@test.com")
 
     for tok in (tok_old, tok_fresh):
-        r = client.post("/bills", json=_BILL, headers=auth(tok))
+        r = client.post(
+            "/bills",
+            json={**_BILL, "category_id": category_id(client, tok)},
+            headers=auth(tok),
+        )
         assert r.status_code == 201
         sync_payments(client, tok)
         r = _upload(client, tok, _make_backup([], []))
@@ -129,7 +144,11 @@ def test_snapshot_scoped_per_user(client, client_db):
     tok_a = register_and_login(client, "snap_scope_a@test.com")
     tok_b = register_and_login(client, "snap_scope_b@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok_a))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok_a)},
+        headers=auth(tok_a),
+    )
     assert r.status_code == 201
     sync_payments(client, tok_a)
 
@@ -159,7 +178,11 @@ def test_last_snapshot_404_when_none_exists(client):
 def test_last_snapshot_returns_created_at_when_exists(client):
     tok = register_and_login(client, "last_snap_exists@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     sync_payments(client, tok)
 
@@ -174,7 +197,11 @@ def test_last_snapshot_returns_created_at_when_exists(client):
 def test_restore_from_snapshot_restores_data_and_removes_snapshot(client, client_db):
     tok = register_and_login(client, "restore_snap@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     sync_payments(client, tok)
 
@@ -212,7 +239,11 @@ def test_recovery_endpoints_scoped_per_user(client):
     tok_a = register_and_login(client, "recovery_scope_a@test.com")
     tok_b = register_and_login(client, "recovery_scope_b@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok_a))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok_a)},
+        headers=auth(tok_a),
+    )
     assert r.status_code == 201
     sync_payments(client, tok_a)
     r = _upload(client, tok_a, _make_backup([], []))
@@ -232,7 +263,11 @@ def test_recovery_endpoints_scoped_per_user(client):
 def test_last_snapshot_404_when_past_retention_window(client, client_db):
     tok = register_and_login(client, "last_snap_stale@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     sync_payments(client, tok)
     r = _upload(client, tok, _make_backup([], []))
@@ -250,7 +285,11 @@ def test_last_snapshot_404_when_past_retention_window(client, client_db):
 def test_restore_from_snapshot_404_when_past_retention_window(client, client_db):
     tok = register_and_login(client, "restore_snap_stale@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     sync_payments(client, tok)
     r = _upload(client, tok, _make_backup([], []))

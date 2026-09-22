@@ -6,11 +6,10 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app.models.bill import PaymentInstance, PaymentStatus
-from tests.conftest import auth, register_and_login
+from tests.conftest import auth, category_id, register_and_login
 
 _BILL = {
     "name": "Electricity",
-    "category": "utilities",
     "frequency": "monthly",
     "amount": 120.00,
     "currency": "PLN",
@@ -21,7 +20,7 @@ _BILL = {
 
 
 def _create_bill(client: TestClient, token: str, overrides: dict | None = None) -> int:
-    payload = {**_BILL, **(overrides or {})}
+    payload = {**_BILL, "category_id": category_id(client, token), **(overrides or {})}
     r = client.post("/bills", json=payload, headers=auth(token))
     assert r.status_code == 201, r.text
     return r.json()["id"]

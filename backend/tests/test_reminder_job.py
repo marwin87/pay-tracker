@@ -11,15 +11,17 @@ def _today_utc() -> date:
 
 
 import app.models.bill  # noqa: F401 — register models
+import app.models.category  # noqa: F401
 import app.models.user  # noqa: F401
 from app.models.bill import (
-    BillCategory,
     BillFrequency,
     BillTemplate,
     PaymentInstance,
     PaymentStatus,
 )
+from app.models.category import Category
 from app.models.user import User
+from app.services.categories import seed_default_categories
 from app.services.reminder_job import (
     send_catchup_reminders,
     send_daily_reminders,
@@ -49,7 +51,16 @@ def _make_user(
     )
     db.add(user)
     db.flush()
+    seed_default_categories(db, user.id)
     return user
+
+
+def _default_category_id(db, user_id: int, slug: str = "utilities") -> int:
+    return (
+        db.query(Category.id)
+        .filter(Category.user_id == user_id, Category.slug == slug)
+        .scalar()
+    )
 
 
 def _make_bill(db, user_id: int) -> BillTemplate:
@@ -58,7 +69,7 @@ def _make_bill(db, user_id: int) -> BillTemplate:
         frequency=BillFrequency.monthly,
         amount=Decimal("99.99"),
         currency="PLN",
-        category=BillCategory.utilities,
+        category_id=_default_category_id(db, user_id),
         user_id=user_id,
     )
     db.add(bill)
@@ -308,7 +319,7 @@ def _make_bill_named(db, user_id: int, name: str) -> BillTemplate:
         frequency=BillFrequency.monthly,
         amount=Decimal("99.99"),
         currency="PLN",
-        category=BillCategory.utilities,
+        category_id=_default_category_id(db, user_id),
         user_id=user_id,
     )
     db.add(bill)

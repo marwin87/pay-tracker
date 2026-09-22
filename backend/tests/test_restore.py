@@ -2,7 +2,7 @@
 
 import json
 
-from tests.conftest import auth, register_and_login, sync_payments
+from tests.conftest import auth, category_id, register_and_login, sync_payments
 
 _BILL = {
     "name": "Electricity",
@@ -69,8 +69,9 @@ def _make_backup(templates, instances, schema_version: int = 3):
     }
 
 
-# Fields not preserved through restore (created_at uses DB default on insert)
-_EXCLUDE_TEMPLATE = {"id", "created_at"}
+# Fields not preserved through restore (created_at uses DB default on insert;
+# category_id is remapped since categories are wiped and reinserted too).
+_EXCLUDE_TEMPLATE = {"id", "created_at", "category_id"}
 _EXCLUDE_INSTANCE = {"id", "bill_id", "created_at"}
 
 
@@ -115,7 +116,11 @@ def _make_instance_dict(
 def test_restore_happy_path(client):
     tok = register_and_login(client, "a@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     sync_payments(client, tok)
     client.get("/bills/payments", headers=auth(tok))
@@ -147,7 +152,11 @@ def test_restore_wrong_schema_version(client):
 def test_restore_orphaned_instance(client):
     tok = register_and_login(client, "a@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     sync_payments(client, tok)
     client.get("/bills/payments", headers=auth(tok))
@@ -164,9 +173,17 @@ def test_restore_orphaned_instance(client):
 def test_restore_replaces_existing_data(client):
     tok = register_and_login(client, "a@test.com")
 
-    r1 = client.post("/bills", json=_BILL, headers=auth(tok))
+    r1 = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r1.status_code == 201
-    r2 = client.post("/bills", json=_BILL2, headers=auth(tok))
+    r2 = client.post(
+        "/bills",
+        json={**_BILL2, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r2.status_code == 201
 
     template_id = r1.json()["id"]
@@ -202,7 +219,11 @@ def test_restore_user_isolation(client):
     tok_a = register_and_login(client, "a@test.com")
     tok_b = register_and_login(client, "b@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok_a))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok_a)},
+        headers=auth(tok_a),
+    )
     assert r.status_code == 201
 
     empty_backup = _make_backup([], [])
@@ -229,9 +250,17 @@ def test_round_trip_field_level(client):
     """Seed → export → restore → re-export: all schema fields (except id/bill_id/created_at) survive unchanged."""
     tok = register_and_login(client, "rt@test.com")
 
-    r1 = client.post("/bills", json=_BILL_ALPHA, headers=auth(tok))
+    r1 = client.post(
+        "/bills",
+        json={**_BILL_ALPHA, "category_id": category_id(client, tok, "utilities")},
+        headers=auth(tok),
+    )
     assert r1.status_code == 201
-    r2 = client.post("/bills", json=_BILL_BETA, headers=auth(tok))
+    r2 = client.post(
+        "/bills",
+        json={**_BILL_BETA, "category_id": category_id(client, tok, "entertainment")},
+        headers=auth(tok),
+    )
     assert r2.status_code == 201
 
     sync_payments(client, tok)
@@ -284,7 +313,11 @@ def test_v2_backup_defaults_reminder_fields(client):
     """A v2-format backup (no reminder fields in instance dicts) restores with reminder flags = False."""
     tok = register_and_login(client, "v2@test.com")
 
-    r = client.post("/bills", json=_BILL_ALPHA, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL_ALPHA, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     template_id = r.json()["id"]
 
@@ -323,7 +356,11 @@ def test_restore_cross_user_import(client):
     tok_a = register_and_login(client, "cross_a@test.com")
     tok_b = register_and_login(client, "cross_b@test.com")
 
-    r = client.post("/bills", json=_BILL, headers=auth(tok_a))
+    r = client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok_a)},
+        headers=auth(tok_a),
+    )
     assert r.status_code == 201
     sync_payments(client, tok_a)
     client.get("/bills/payments", headers=auth(tok_a))
@@ -353,7 +390,11 @@ def test_v3_backup_preserves_reminder_flags(client):
     """A v3 backup with reminder_sent_upcoming=True preserves the flag through restore."""
     tok = register_and_login(client, "v3@test.com")
 
-    r = client.post("/bills", json=_BILL_ALPHA, headers=auth(tok))
+    r = client.post(
+        "/bills",
+        json={**_BILL_ALPHA, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
     assert r.status_code == 201
     template_id = r.json()["id"]
 
@@ -388,6 +429,69 @@ def test_v3_backup_preserves_reminder_flags(client):
     inst = after["payment_instances"][0]
     assert inst["reminder_sent_upcoming"] is True
     assert inst["reminder_sent_overdue"] is False
+
+
+def test_v4_backup_round_trips_categories(client):
+    """v4 backup includes the categories array; restore recreates them and remaps
+    each bill's category_id to the newly-inserted category correctly."""
+    tok = register_and_login(client, "v4cat@test.com")
+
+    r = client.post(
+        "/categories", json={"name": "Hobbies", "color": "teal"}, headers=auth(tok)
+    )
+    assert r.status_code == 201
+    custom_category_id = r.json()["id"]
+
+    r = client.post(
+        "/bills",
+        json={**_BILL_ALPHA, "category_id": custom_category_id},
+        headers=auth(tok),
+    )
+    assert r.status_code == 201
+
+    backup = client.get("/export/json", headers=auth(tok)).json()
+    assert backup["schema_version"] == 4
+    assert any(c["name"] == "Hobbies" for c in backup["categories"])
+
+    r = _upload(client, tok, backup)
+    assert r.status_code == 200
+
+    after = client.get("/export/json", headers=auth(tok)).json()
+    assert len(after["categories"]) == len(backup["categories"])
+    restored_bill = after["bill_templates"][0]
+    restored_category = next(
+        c for c in after["categories"] if c["id"] == restored_bill["category_id"]
+    )
+    assert restored_category["name"] == "Hobbies"
+
+
+def test_legacy_restore_falls_back_to_other_for_unknown_category_slug(client):
+    """A v2/v3 backup whose category string matches none of the user's current
+    categories falls back to their 'other' category instead of failing."""
+    tok = register_and_login(client, "legacy_fallback@test.com")
+
+    template_dict = {
+        "id": 1,
+        "name": "Mystery Bill",
+        "category": "no_such_category",
+        "frequency": "monthly",
+        "amount": 10.0,
+        "currency": "PLN",
+        "due_day": 1,
+        "notes": None,
+        "is_archived": False,
+        "is_paused": False,
+        "start_period": None,
+        "created_at": "2026-01-01T00:00:00+00:00",
+    }
+    payload = _make_backup([template_dict], [], schema_version=3)
+
+    r = _upload(client, tok, payload)
+    assert r.status_code == 200
+
+    bills = client.get("/bills", headers=auth(tok)).json()
+    assert len(bills) == 1
+    assert bills[0]["category"]["slug"] == "other"
 
 
 # ---------------------------------------------------------------------------
