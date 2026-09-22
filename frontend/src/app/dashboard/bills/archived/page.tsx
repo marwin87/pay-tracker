@@ -4,10 +4,13 @@ import { useEffect, useState } from "react";
 import { Archive, ChevronRight, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { fetchBills, type BillTemplateOut } from "@/lib/bills-api";
-import { categoryLabel, distinctCategories } from "@/lib/categories";
+import { categoryLabel, distinctCategories, sortCategoriesByLabel, type CategorySortOrder } from "@/lib/categories";
 import { SessionExpiredError } from "@/lib/api";
 import FilterSelect from "@/components/FilterSelect";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
+import { useSortOption } from "@/hooks/useSortOption";
+
+const CATEGORY_SORT_OPTIONS: CategorySortOrder[] = ["az", "za"];
 
 export default function ArchivedBillsPage() {
   const t = useTranslations("ArchivedBillsPage");
@@ -36,6 +39,17 @@ export default function ArchivedBillsPage() {
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
     useCollapsedCategories("archived-bills-collapsed-categories", activeCategoryKeys);
+
+  const [sortOption, setSortOption] = useSortOption<CategorySortOrder>(
+    "archived-bills-sort",
+    "az",
+    CATEGORY_SORT_OPTIONS,
+  );
+  const sortedCategories = sortCategoriesByLabel(activeCategories, sortOption, tCategories);
+  const sortOptions = [
+    { value: "az", label: tFilters("sortCategoryAsc") },
+    { value: "za", label: tFilters("sortCategoryDesc") },
+  ];
 
   useEffect(() => {
     let cancelled = false;
@@ -68,13 +82,31 @@ export default function ArchivedBillsPage() {
           {t("subtitle")}
         </p>
         {templates.length > 0 && (
-          <div className="mt-3 flex items-center justify-end gap-2">
-            <FilterSelect
-              value={categoryFilter}
-              onChange={setCategoryFilter}
-              options={categoryOptions}
-              ariaLabel={tFilters("allCategories")}
-            />
+          <div className="mt-3 flex flex-wrap items-center justify-end gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                {tFilters("filterBy")}
+              </span>
+              <FilterSelect
+                value={categoryFilter}
+                onChange={setCategoryFilter}
+                options={categoryOptions}
+                ariaLabel={tFilters("allCategories")}
+              />
+            </div>
+            <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                {tFilters("sortBy")}
+              </span>
+              <FilterSelect
+                value={sortOption}
+                onChange={(v) => setSortOption(v as CategorySortOrder)}
+                options={sortOptions}
+                ariaLabel={tFilters("sortBy")}
+              />
+            </div>
+            <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
             <button
               onClick={allCollapsed ? expandAll : collapseAll}
               className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
@@ -123,7 +155,7 @@ export default function ArchivedBillsPage() {
 
       {!loading && filteredTemplates.length > 0 && (
         <div className="flex flex-col gap-6">
-          {activeCategories.map((cat) => {
+          {sortedCategories.map((cat) => {
             const key = String(cat.id);
             const group = filteredTemplates
               .filter((tmpl) => tmpl.category.id === cat.id)

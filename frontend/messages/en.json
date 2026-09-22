@@ -356,6 +356,12 @@
     },
     "Filters": {
         "allCategories": "All categories",
-        "allStatuses": "All statuses"
+        "allStatuses": "All statuses",
+        "filterBy": "Filter by",
+        "sortBy": "Sort by",
+        "sortCategoryAsc": "Category A-Z",
+        "sortCategoryDesc": "Category Z-A",
+        "sortPaidFirst": "Paid first",
+        "sortUnpaidFirst": "Unpaid first"
     }
 }

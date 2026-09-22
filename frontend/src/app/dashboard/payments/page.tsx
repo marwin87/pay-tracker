@@ -11,7 +11,7 @@ import {
   type PaymentInstanceOut,
   type PaymentStatus,
 } from "@/lib/payments-api";
-import { categoryLabel, distinctCategories } from "@/lib/categories";
+import { categoryLabel, distinctCategories, sortCategoriesByLabel, type CategorySortOrder } from "@/lib/categories";
 import { downloadXlsx } from "@/lib/export-api";
 import { SessionExpiredError } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
@@ -19,6 +19,15 @@ import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
 import FilterSelect from "@/components/FilterSelect";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
+import { useSortOption } from "@/hooks/useSortOption";
+
+type PaymentSortOption = "category-az" | "category-za" | "paid-first" | "unpaid-first";
+const PAYMENT_SORT_OPTIONS: PaymentSortOption[] = [
+  "category-az",
+  "category-za",
+  "paid-first",
+  "unpaid-first",
+];
 import {
   PaymentActionProvider,
   usePaymentActions,
@@ -201,6 +210,20 @@ function PaymentsPageInner() {
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
     useCollapsedCategories("payments-collapsed-categories", activeCategoryKeys);
 
+  const [sortOption, setSortOption] = useSortOption<PaymentSortOption>(
+    "payments-sort",
+    "category-az",
+    PAYMENT_SORT_OPTIONS,
+  );
+  const categorySortOrder: CategorySortOrder = sortOption === "category-za" ? "za" : "az";
+  const sortedCategories = sortCategoriesByLabel(activeCategories, categorySortOrder, tCategories);
+  const sortOptions = [
+    { value: "category-az", label: tFilters("sortCategoryAsc") },
+    { value: "category-za", label: tFilters("sortCategoryDesc") },
+    { value: "paid-first", label: tFilters("sortPaidFirst") },
+    { value: "unpaid-first", label: tFilters("sortUnpaidFirst") },
+  ];
+
   async function handleExportXlsx(year: number) {
     setXlsxError(null);
     setXlsxLoadingYear(year);
@@ -326,7 +349,7 @@ function PaymentsPageInner() {
       </div>
 
       {/* Selected month header */}
-      <div className="mb-4 pb-3 border-b border-slate-200 dark:border-slate-700">
+      <div className="mb-4 pb-5 border-b border-slate-200 dark:border-slate-700">
         <div className="flex items-center gap-2">
           <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
             {(() => {
@@ -346,36 +369,54 @@ function PaymentsPageInner() {
           )}
         </div>
         {!loading && !loadError && (
-          <div className="mt-0.5 flex items-center justify-between gap-3">
-            <p className="text-sm text-slate-500 dark:text-slate-400">
-              {filteredInstances.length === 0
-                ? instances.length === 0
-                  ? t("noPayments")
-                  : t("noFilterResults")
-                : [
-                    filteredInstances.filter((i) => i.status === "upcoming").length > 0 &&
-                      `${filteredInstances.filter((i) => i.status === "upcoming").length} ${tRow("status.upcoming").toLowerCase()}`,
-                    filteredInstances.filter((i) => i.status === "overdue").length > 0 &&
-                      `${filteredInstances.filter((i) => i.status === "overdue").length} ${tRow("status.overdue").toLowerCase()}`,
-                    filteredInstances.filter((i) => i.status === "paid").length > 0 &&
-                      `${filteredInstances.filter((i) => i.status === "paid").length} ${tRow("status.paid").toLowerCase()}`,
-                  ]
-                    .filter(Boolean)
-                    .join(" · ")}
-            </p>
-            <div className="flex shrink-0 items-center gap-2">
-              <FilterSelect
-                value={statusFilter}
-                onChange={(v) => setStatusFilter(v as PaymentStatus | "all")}
-                options={statusOptions}
-                ariaLabel={tFilters("allStatuses")}
+          <div className="mt-0.5 flex flex-col gap-3">
+            {filteredInstances.length === 0 ? (
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {instances.length === 0 ? t("noPayments") : t("noFilterResults")}
+              </p>
+            ) : (
+              <CategorySummary
+                group={filteredInstances}
+                todayStr={todayStr}
+                labels={{
+                  upcoming: t("summaryUpcoming"),
+                  overdueToday: t("summaryOverdueToday"),
+                  overdue: t("summaryOverdue"),
+                  paid: t("summaryPaid"),
+                }}
               />
-              <FilterSelect
-                value={categoryFilter}
-                onChange={setCategoryFilter}
-                options={categoryOptions}
-                ariaLabel={tFilters("allCategories")}
-              />
+            )}
+            <div className="flex flex-wrap items-center justify-end gap-3">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                  {tFilters("filterBy")}
+                </span>
+                <FilterSelect
+                  value={statusFilter}
+                  onChange={(v) => setStatusFilter(v as PaymentStatus | "all")}
+                  options={statusOptions}
+                  ariaLabel={tFilters("allStatuses")}
+                />
+                <FilterSelect
+                  value={categoryFilter}
+                  onChange={setCategoryFilter}
+                  options={categoryOptions}
+                  ariaLabel={tFilters("allCategories")}
+                />
+              </div>
+              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                  {tFilters("sortBy")}
+                </span>
+                <FilterSelect
+                  value={sortOption}
+                  onChange={(v) => setSortOption(v as PaymentSortOption)}
+                  options={sortOptions}
+                  ariaLabel={tFilters("sortBy")}
+                />
+              </div>
+              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
               <button
                 onClick={allCollapsed ? expandAll : collapseAll}
                 className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
@@ -410,9 +451,15 @@ function PaymentsPageInner() {
       {/* Payment list */}
       {!loading && !loadError && filteredInstances.length > 0 && (
         <div className="flex flex-col gap-4">
-          {activeCategories.map((cat) => {
+          {sortedCategories.map((cat) => {
             const key = String(cat.id);
             const group = filteredInstances.filter((inst) => inst.category.id === cat.id);
+            if (sortOption === "paid-first" || sortOption === "unpaid-first") {
+              const sign = sortOption === "paid-first" ? -1 : 1;
+              group.sort(
+                (a, b) => (Number(a.status === "paid") - Number(b.status === "paid")) * sign,
+              );
+            }
             return (
               <div key={key}>
                 <button

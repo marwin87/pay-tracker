@@ -14,13 +14,16 @@ import {
   type BillTemplateUpdate,
 } from "@/lib/bills-api";
 import { SessionExpiredError } from "@/lib/api";
-import { categoryLabel, distinctCategories } from "@/lib/categories";
+import { categoryLabel, distinctCategories, sortCategoriesByLabel, type CategorySortOrder } from "@/lib/categories";
 import BillTemplateForm from "@/components/bills/BillTemplateForm";
 import BillTemplateRow from "@/components/bills/BillTemplateRow";
 import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
 import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 import FilterSelect from "@/components/FilterSelect";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
+import { useSortOption } from "@/hooks/useSortOption";
+
+const CATEGORY_SORT_OPTIONS: CategorySortOrder[] = ["az", "za"];
 
 export default function BillsPage() {
   const t = useTranslations("BillsPage");
@@ -56,6 +59,17 @@ export default function BillsPage() {
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
     useCollapsedCategories("bills-collapsed-categories", activeCategoryKeys);
+
+  const [sortOption, setSortOption] = useSortOption<CategorySortOrder>(
+    "bills-sort",
+    "az",
+    CATEGORY_SORT_OPTIONS,
+  );
+  const sortedCategories = sortCategoriesByLabel(activeCategories, sortOption, tCategories);
+  const sortOptions = [
+    { value: "az", label: tFilters("sortCategoryAsc") },
+    { value: "za", label: tFilters("sortCategoryDesc") },
+  ];
 
   useEffect(() => {
     let cancelled = false;
@@ -198,14 +212,38 @@ export default function BillsPage() {
             <Plus size={16} />
             {expandedId === "new" ? t("cancel") : t("newBill")}
           </button>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-3">
             {templates.length > 0 && (
-              <FilterSelect
-                value={categoryFilter}
-                onChange={setCategoryFilter}
-                options={categoryOptions}
-                ariaLabel={tFilters("allCategories")}
-              />
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                  {tFilters("filterBy")}
+                </span>
+                <FilterSelect
+                  value={categoryFilter}
+                  onChange={setCategoryFilter}
+                  options={categoryOptions}
+                  ariaLabel={tFilters("allCategories")}
+                />
+              </div>
+            )}
+            {templates.length > 0 && (
+              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
+            )}
+            {templates.length > 0 && (
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                  {tFilters("sortBy")}
+                </span>
+                <FilterSelect
+                  value={sortOption}
+                  onChange={(v) => setSortOption(v as CategorySortOrder)}
+                  options={sortOptions}
+                  ariaLabel={tFilters("sortBy")}
+                />
+              </div>
+            )}
+            {templates.length > 0 && (
+              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
             )}
             {templates.length > 0 && (
               <button
@@ -264,7 +302,7 @@ export default function BillsPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-6">
-          {activeCategories.map((cat) => {
+          {sortedCategories.map((cat) => {
             const key = String(cat.id);
             const group = filteredTemplates
               .filter((tmpl) => tmpl.category.id === cat.id)

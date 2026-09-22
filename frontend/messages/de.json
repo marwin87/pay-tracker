@@ -360,6 +360,12 @@
     },
     "Filters": {
         "allCategories": "Alle Kategorien",
-        "allStatuses": "Alle Status"
+        "allStatuses": "Alle Status",
+        "filterBy": "Filtern nach",
+        "sortBy": "Sortieren nach",
+        "sortCategoryAsc": "Kategorie A-Z",
+        "sortCategoryDesc": "Kategorie Z-A",
+        "sortPaidFirst": "Bezahlt zuerst",
+        "sortUnpaidFirst": "Unbezahlt zuerst"
     }
 }

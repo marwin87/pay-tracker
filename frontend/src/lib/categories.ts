@@ -83,3 +83,15 @@ export function distinctCategories<T>(
   }
   return Array.from(map.values()).sort((a, b) => a.sort_order - b.sort_order);
 }
+
+export type CategorySortOrder = "az" | "za";
+
+// Reorders category group headers by translated label.
+export function sortCategoriesByLabel<T extends Pick<Category, "slug" | "name">>(
+  categories: T[],
+  order: CategorySortOrder,
+  t: (key: string) => string,
+): T[] {
+  const sorted = [...categories].sort((a, b) => categoryLabel(a, t).localeCompare(categoryLabel(b, t)));
+  return order === "za" ? sorted.reverse() : sorted;
+}
