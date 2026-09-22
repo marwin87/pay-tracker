@@ -9,13 +9,16 @@ import {
   fetchPayments,
   syncInstances,
   type PaymentInstanceOut,
+  type PaymentStatus,
 } from "@/lib/payments-api";
+import type { BillCategory } from "@/lib/bills-api";
 import { CATEGORY_ORDER } from "@/lib/categories";
 import { downloadXlsx } from "@/lib/export-api";
 import { SessionExpiredError } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
+import FilterSelect from "@/components/FilterSelect";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import {
   PaymentActionProvider,
@@ -101,6 +104,7 @@ function PaymentsPageInner() {
   const t = useTranslations("PaymentsPage");
   const tRow = useTranslations("PaymentRow");
   const tCategories = useTranslations("Categories");
+  const tFilters = useTranslations("Filters");
   const locale = useLocale();
 
   const today = new Date();
@@ -166,10 +170,33 @@ function PaymentsPageInner() {
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
+  const [statusFilter, setStatusFilter] = useState<PaymentStatus | "all">("all");
+  const [categoryFilter, setCategoryFilter] = useState<BillCategory | "all">("all");
+
   const todayStr = getTodayStr();
 
+  const filteredInstances = instances.filter(
+    (inst) =>
+      (statusFilter === "all" || inst.status === statusFilter) &&
+      (categoryFilter === "all" || inst.category === categoryFilter),
+  );
+
+  const statusOptions = [
+    { value: "all", label: tFilters("allStatuses") },
+    { value: "upcoming", label: tRow("status.upcoming") },
+    { value: "overdue", label: tRow("status.overdue") },
+    { value: "paid", label: tRow("status.paid") },
+  ];
+
+  const categoryOptions = [
+    { value: "all", label: tFilters("allCategories") },
+    ...CATEGORY_ORDER.filter((cat) => instances.some((inst) => inst.category === cat)).map(
+      (cat) => ({ value: cat, label: tCategories(cat) }),
+    ),
+  ];
+
   const activeCategories = CATEGORY_ORDER.filter((cat) =>
-    instances.some((inst) => inst.category === cat),
+    filteredInstances.some((inst) => inst.category === cat),
   );
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
@@ -322,20 +349,34 @@ function PaymentsPageInner() {
         {!loading && !loadError && (
           <div className="mt-0.5 flex items-center justify-between gap-3">
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              {instances.length === 0
-                ? t("noPayments")
+              {filteredInstances.length === 0
+                ? instances.length === 0
+                  ? t("noPayments")
+                  : t("noFilterResults")
                 : [
-                    instances.filter((i) => i.status === "upcoming").length > 0 &&
-                      `${instances.filter((i) => i.status === "upcoming").length} ${tRow("status.upcoming").toLowerCase()}`,
-                    instances.filter((i) => i.status === "overdue").length > 0 &&
-                      `${instances.filter((i) => i.status === "overdue").length} ${tRow("status.overdue").toLowerCase()}`,
-                    instances.filter((i) => i.status === "paid").length > 0 &&
-                      `${instances.filter((i) => i.status === "paid").length} ${tRow("status.paid").toLowerCase()}`,
+                    filteredInstances.filter((i) => i.status === "upcoming").length > 0 &&
+                      `${filteredInstances.filter((i) => i.status === "upcoming").length} ${tRow("status.upcoming").toLowerCase()}`,
+                    filteredInstances.filter((i) => i.status === "overdue").length > 0 &&
+                      `${filteredInstances.filter((i) => i.status === "overdue").length} ${tRow("status.overdue").toLowerCase()}`,
+                    filteredInstances.filter((i) => i.status === "paid").length > 0 &&
+                      `${filteredInstances.filter((i) => i.status === "paid").length} ${tRow("status.paid").toLowerCase()}`,
                   ]
                     .filter(Boolean)
                     .join(" · ")}
             </p>
-            {activeCategories.length > 1 && (
+            <div className="flex shrink-0 items-center gap-2">
+              <FilterSelect
+                value={statusFilter}
+                onChange={(v) => setStatusFilter(v as PaymentStatus | "all")}
+                options={statusOptions}
+                ariaLabel={tFilters("allStatuses")}
+              />
+              <FilterSelect
+                value={categoryFilter}
+                onChange={(v) => setCategoryFilter(v as BillCategory | "all")}
+                options={categoryOptions}
+                ariaLabel={tFilters("allCategories")}
+              />
               <button
                 onClick={allCollapsed ? expandAll : collapseAll}
                 className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
@@ -343,7 +384,7 @@ function PaymentsPageInner() {
                 <ChevronsUpDown size={13} />
                 {allCollapsed ? t("expandAll") : t("collapseAll")}
               </button>
-            )}
+            </div>
           </div>
         )}
       </div>
@@ -368,10 +409,10 @@ function PaymentsPageInner() {
       )}
 
       {/* Payment list */}
-      {!loading && !loadError && instances.length > 0 && (
+      {!loading && !loadError && filteredInstances.length > 0 && (
         <div className="flex flex-col gap-4">
-          {CATEGORY_ORDER.filter((cat) => instances.some((inst) => inst.category === cat)).map((cat) => {
-            const group = instances.filter((inst) => inst.category === cat);
+          {activeCategories.map((cat) => {
+            const group = filteredInstances.filter((inst) => inst.category === cat);
             return (
               <div key={cat}>
                 <button
@@ -425,12 +466,12 @@ function PaymentsPageInner() {
       )}
 
       {/* Empty state */}
-      {!loading && !loadError && instances.length === 0 && (
+      {!loading && !loadError && filteredInstances.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 px-6 py-16 text-center">
           <p className="font-medium text-slate-700 dark:text-slate-300">
-            {t("noPayments")}
+            {instances.length === 0 ? t("noPayments") : t("noFilterResults")}
           </p>
-          {!isReadOnly && (
+          {instances.length === 0 && !isReadOnly && (
             <Link
               href="/dashboard/bills"
               className="mt-3 text-sm font-medium text-green-700 hover:underline dark:text-green-500"

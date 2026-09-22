@@ -66,6 +66,7 @@
         "noBillsYet": "Brak rachunków",
         "addFirstBill": "Dodaj pierwszy rachunek",
         "viewArchive": "Zarchiwizowane rachunki",
+        "noFilterResults": "Brak rachunków pasujących do wybranego filtra",
         "collapseAll": "Zwiń wszystko",
         "expandAll": "Rozwiń wszystko"
     },
@@ -76,6 +77,7 @@
         "loadError": "Nie udało się załadować zarchiwizowanych rachunków.",
         "noArchivedBills": "Brak zarchiwizowanych rachunków",
         "willAppearHere": "Tutaj pojawią się zarchiwizowane rachunki",
+        "noFilterResults": "Brak zarchiwizowanych rachunków pasujących do wybranego filtra",
         "archived": "Zarchiwizowany",
         "frequency": {
             "monthly": "Miesięcznie",
@@ -164,6 +166,7 @@
         "subtitle": "Śledź i oznaczaj swoje rachunki miesiąc po miesiącu.",
         "loadError": "Nie udało się załadować płatności.",
         "noPayments": "Brak rachunków w tym miesiącu",
+        "noFilterResults": "Brak płatności pasujących do wybranych filtrów",
         "addBills": "Dodaj rachunki →",
         "pastMonth": "Poprzedni",
         "exportXlsx": "Eksport Excel",
@@ -328,5 +331,9 @@
         "healthcare": "Zdrowie",
         "education": "Edukacja",
         "other": "Inne"
+    },
+    "Filters": {
+        "allCategories": "Wszystkie kategorie",
+        "allStatuses": "Wszystkie statusy"
     }
 }

@@ -66,6 +66,7 @@
         "noBillsYet": "No bills yet",
         "addFirstBill": "Add your first bill",
         "viewArchive": "Archived bills",
+        "noFilterResults": "No bills match the selected filter",
         "collapseAll": "Collapse all",
         "expandAll": "Expand all"
     },
@@ -76,6 +77,7 @@
         "loadError": "Failed to load archived bills.",
         "noArchivedBills": "No archived bills",
         "willAppearHere": "Bills you archive will appear here",
+        "noFilterResults": "No archived bills match the selected filter",
         "archived": "Archived",
         "frequency": {
             "monthly": "Monthly",
@@ -164,6 +166,7 @@
         "subtitle": "Track and mark your bills month by month.",
         "loadError": "Failed to load payments.",
         "noPayments": "No bills for this month",
+        "noFilterResults": "No payments match the selected filters",
         "addBills": "Add bills →",
         "pastMonth": "Past",
         "exportXlsx": "Excel Export",
@@ -332,5 +335,9 @@
         "healthcare": "Healthcare",
         "education": "Education",
         "other": "Other"
+    },
+    "Filters": {
+        "allCategories": "All categories",
+        "allStatuses": "All statuses"
     }
 }

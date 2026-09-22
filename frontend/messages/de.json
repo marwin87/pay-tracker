@@ -66,6 +66,7 @@
         "noBillsYet": "Noch keine Rechnungen",
         "addFirstBill": "Erste Rechnung hinzufügen",
         "viewArchive": "Archivierte Rechnungen",
+        "noFilterResults": "Keine Rechnungen entsprechen dem ausgewählten Filter",
         "collapseAll": "Alle einklappen",
         "expandAll": "Alle ausklappen"
     },
@@ -76,6 +77,7 @@
         "loadError": "Archivierte Rechnungen konnten nicht geladen werden.",
         "noArchivedBills": "Keine archivierten Rechnungen",
         "willAppearHere": "Archivierte Rechnungen erscheinen hier",
+        "noFilterResults": "Keine archivierten Rechnungen entsprechen dem ausgewählten Filter",
         "archived": "Archiviert",
         "frequency": {
             "monthly": "Monatlich",
@@ -164,6 +166,7 @@
         "subtitle": "Verfolgen und markieren Sie Ihre Rechnungen Monat für Monat.",
         "loadError": "Zahlungen konnten nicht geladen werden.",
         "noPayments": "Keine Rechnungen für diesen Monat",
+        "noFilterResults": "Keine Zahlungen entsprechen den ausgewählten Filtern",
         "addBills": "Rechnungen hinzufügen →",
         "pastMonth": "Vergangen",
         "exportXlsx": "Excel-Export",
@@ -336,5 +339,9 @@
         "healthcare": "Gesundheit",
         "education": "Bildung",
         "other": "Sonstiges"
+    },
+    "Filters": {
+        "allCategories": "Alle Kategorien",
+        "allStatuses": "Alle Status"
     }
 }

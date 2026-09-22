@@ -3,20 +3,35 @@
 import { useEffect, useState } from "react";
 import { Archive, ChevronRight, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { fetchBills, type BillTemplateOut } from "@/lib/bills-api";
+import { fetchBills, type BillTemplateOut, type BillCategory } from "@/lib/bills-api";
 import { CATEGORY_ORDER } from "@/lib/categories";
 import { SessionExpiredError } from "@/lib/api";
+import FilterSelect from "@/components/FilterSelect";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 
 export default function ArchivedBillsPage() {
   const t = useTranslations("ArchivedBillsPage");
   const tCategories = useTranslations("Categories");
+  const tFilters = useTranslations("Filters");
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [categoryFilter, setCategoryFilter] = useState<BillCategory | "all">("all");
+
+  const filteredTemplates =
+    categoryFilter === "all"
+      ? templates
+      : templates.filter((tmpl) => tmpl.category === categoryFilter);
+
+  const categoryOptions = [
+    { value: "all", label: tFilters("allCategories") },
+    ...CATEGORY_ORDER.filter((cat) => templates.some((tmpl) => tmpl.category === cat)).map(
+      (cat) => ({ value: cat, label: tCategories(cat) }),
+    ),
+  ];
 
   const activeCategories = CATEGORY_ORDER.filter((cat) =>
-    templates.some((tmpl) => tmpl.category === cat),
+    filteredTemplates.some((tmpl) => tmpl.category === cat),
   );
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
@@ -52,8 +67,14 @@ export default function ArchivedBillsPage() {
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {t("subtitle")}
         </p>
-        {activeCategories.length > 1 && (
-          <div className="mt-3 flex justify-end">
+        {templates.length > 0 && (
+          <div className="mt-3 flex items-center justify-end gap-2">
+            <FilterSelect
+              value={categoryFilter}
+              onChange={(v) => setCategoryFilter(v as BillCategory | "all")}
+              options={categoryOptions}
+              ariaLabel={tFilters("allCategories")}
+            />
             <button
               onClick={allCollapsed ? expandAll : collapseAll}
               className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
@@ -94,10 +115,16 @@ export default function ArchivedBillsPage() {
         </div>
       )}
 
-      {!loading && templates.length > 0 && (
+      {!loading && !loadError && templates.length > 0 && filteredTemplates.length === 0 && (
+        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 px-6 py-16 text-center">
+          <p className="font-medium text-slate-700 dark:text-slate-300">{t("noFilterResults")}</p>
+        </div>
+      )}
+
+      {!loading && filteredTemplates.length > 0 && (
         <div className="flex flex-col gap-6">
-          {CATEGORY_ORDER.filter((cat) => templates.some((tmpl) => tmpl.category === cat)).map((cat) => {
-            const group = templates
+          {activeCategories.map((cat) => {
+            const group = filteredTemplates
               .filter((tmpl) => tmpl.category === cat)
               .sort((a, b) => a.name.localeCompare(b.name));
             return (

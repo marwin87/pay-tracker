@@ -12,6 +12,7 @@ import {
   type BillTemplateOut,
   type BillTemplateCreate,
   type BillTemplateUpdate,
+  type BillCategory,
 } from "@/lib/bills-api";
 import { SessionExpiredError } from "@/lib/api";
 import { CATEGORY_ORDER } from "@/lib/categories";
@@ -19,11 +20,13 @@ import BillTemplateForm from "@/components/bills/BillTemplateForm";
 import BillTemplateRow from "@/components/bills/BillTemplateRow";
 import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
 import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
+import FilterSelect from "@/components/FilterSelect";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 
 export default function BillsPage() {
   const t = useTranslations("BillsPage");
   const tCategories = useTranslations("Categories");
+  const tFilters = useTranslations("Filters");
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -34,9 +37,22 @@ export default function BillsPage() {
   const [deletedFutureMap, setDeletedFutureMap] = useState<Record<number, boolean>>({});
   const [restoreTarget, setRestoreTarget] = useState<{ id: number; name: string; data: BillTemplateUpdate } | null>(null);
   const [restoring, setRestoring] = useState(false);
+  const [categoryFilter, setCategoryFilter] = useState<BillCategory | "all">("all");
+
+  const filteredTemplates =
+    categoryFilter === "all"
+      ? templates
+      : templates.filter((tmpl) => tmpl.category === categoryFilter);
+
+  const categoryOptions = [
+    { value: "all", label: tFilters("allCategories") },
+    ...CATEGORY_ORDER.filter((cat) => templates.some((tmpl) => tmpl.category === cat)).map(
+      (cat) => ({ value: cat, label: tCategories(cat) }),
+    ),
+  ];
 
   const activeCategories = CATEGORY_ORDER.filter((cat) =>
-    templates.some((tmpl) => tmpl.category === cat),
+    filteredTemplates.some((tmpl) => tmpl.category === cat),
   );
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
@@ -183,15 +199,25 @@ export default function BillsPage() {
             <Plus size={16} />
             {expandedId === "new" ? t("cancel") : t("newBill")}
           </button>
-          {activeCategories.length > 1 && (
-            <button
-              onClick={allCollapsed ? expandAll : collapseAll}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
-            >
-              <ChevronsUpDown size={13} />
-              {allCollapsed ? t("expandAll") : t("collapseAll")}
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {templates.length > 0 && (
+              <FilterSelect
+                value={categoryFilter}
+                onChange={(v) => setCategoryFilter(v as BillCategory | "all")}
+                options={categoryOptions}
+                ariaLabel={tFilters("allCategories")}
+              />
+            )}
+            {templates.length > 0 && (
+              <button
+                onClick={allCollapsed ? expandAll : collapseAll}
+                className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
+              >
+                <ChevronsUpDown size={13} />
+                {allCollapsed ? t("expandAll") : t("collapseAll")}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -233,10 +259,14 @@ export default function BillsPage() {
             {t("addFirstBill")}
           </button>
         </div>
+      ) : filteredTemplates.length === 0 ? (
+        <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 px-6 py-16 text-center">
+          <p className="font-medium text-slate-700 dark:text-slate-300">{t("noFilterResults")}</p>
+        </div>
       ) : (
         <div className="flex flex-col gap-6">
-          {CATEGORY_ORDER.filter((cat) => templates.some((tmpl) => tmpl.category === cat)).map((cat) => {
-            const group = templates
+          {activeCategories.map((cat) => {
+            const group = filteredTemplates
               .filter((tmpl) => tmpl.category === cat)
               .sort((a, b) => a.name.localeCompare(b.name));
             return (
