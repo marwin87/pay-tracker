@@ -85,10 +85,13 @@ def create_bill(
     _check_category_ownership(db, body.category_id, me.id)
 
     now = datetime.now(timezone.utc)
-    if body.due_month and body.frequency in (BF.annual, BF.one_off):
+    if body.due_month and body.frequency == BF.annual:
         year = now.year if body.due_month >= now.month else now.year + 1
         start_period = f"{year:04d}-{body.due_month:02d}"
-    elif body.due_month and body.frequency in RECURRING:
+    elif body.due_month and body.frequency in (*RECURRING, BF.one_off):
+        # One-off never repeats, so it always anchors to the current year even
+        # when due_month has already passed — it should show as due/overdue
+        # now, not roll forward to next year like an annual renewal would.
         start_period = f"{now.year:04d}-{body.due_month:02d}"
     else:
         start_period = now.strftime("%Y-%m")
@@ -101,6 +104,19 @@ def create_bill(
     current_period = now.strftime("%Y-%m")
     if body.frequency in RECURRING and start_period < current_period:
         backfill_template_instances(db, bill, start_period, current_period)
+    elif body.frequency == BF.one_off:
+        # A one-off bill never repeats, so it gets exactly one instance,
+        # created right away instead of waiting on the recurring backfill.
+        db.add(
+            PaymentInstance(
+                bill_id=bill.id,
+                period=start_period,
+                due_date=_due_date_for_period(start_period, bill.due_day),
+                amount=bill.amount,
+                status=PaymentStatus.upcoming,
+            )
+        )
+        db.commit()
 
     return bill
 

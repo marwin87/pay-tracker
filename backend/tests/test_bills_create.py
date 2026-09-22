@@ -116,6 +116,54 @@ def test_create_annual_bill_with_past_due_month_sets_next_year(client):
     assert data["start_period"].startswith(str(expected_year))
 
 
+def test_create_one_off_bill_with_past_due_month_stays_current_year(client):
+    """One-off bill with due_month < current month → stays this year (never repeats,
+    so unlike annual it must not roll forward to next year)."""
+    from datetime import date
+
+    today = date.today()
+    if today.month <= 1:
+        pytest.skip("Requires a past month (month > January)")
+
+    past_month = today.month - 1
+    token = register_and_login(client, "oneoff_past@test.com")
+    r = client.post(
+        "/bills",
+        json=_bill(
+            client, token, frequency="one_off", due_month=past_month, due_day=None
+        ),
+        headers=auth(token),
+    )
+    assert r.status_code == 201
+    assert r.json()["start_period"].startswith(str(today.year))
+
+
+def test_create_one_off_bill_with_past_due_month_generates_overdue_instance(client):
+    """A one-off bill must generate its single payment instance immediately,
+    shown as overdue when its due date has already passed."""
+    from datetime import date
+
+    today = date.today()
+    if today.month <= 1:
+        pytest.skip("Requires a past month (month > January)")
+
+    past_month = today.month - 1
+    past_period = f"{today.year}-{past_month:02d}"
+    token = register_and_login(client, "oneoff_overdue@test.com")
+    r = client.post(
+        "/bills",
+        json=_bill(client, token, frequency="one_off", due_month=past_month, due_day=1),
+        headers=auth(token),
+    )
+    assert r.status_code == 201
+
+    r = client.get(f"/bills/payments?month={past_period}", headers=auth(token))
+    assert r.status_code == 200
+    payments = r.json()
+    assert len(payments) == 1
+    assert payments[0]["status"] == "overdue"
+
+
 # ---------------------------------------------------------------------------
 # Input validation — covers 422 paths in Pydantic schema
 # ---------------------------------------------------------------------------
