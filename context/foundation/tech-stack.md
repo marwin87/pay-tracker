@@ -7,7 +7,7 @@ hints:
   team_size: solo
   deployment_target: self-host
   ci_provider: github-actions
-  ci_default_flow: auto-deploy-on-merge
+  ci_default_flow: build-and-release-on-tag
   bootstrapper_confidence: verified
   path_taken: custom
   quality_override: false
@@ -26,16 +26,21 @@ hints:
 
 ## Why this stack
 
-Pay Tracker is a solo, 7-week after-hours project with auth, background tasks
-(auto-generated payment instances + email reminders), Excel/JSON export, and a
-self-hosted Docker Compose deployment target.
-The stack is intentionally polyglot: Next.js (TypeScript, App Router) is the
-frontend and primary scaffolding layer — it passes all four agent-friendly gates
-and ships from an official CLI (create-next-app); FastAPI (Python, Pydantic,
-uv) handles the backend API, export via OpenPyXL, JWT auth, and email reminders
-— functionality that genuinely benefits from Python's data library ecosystem.
-Both starters pass all four quality gates. Bootstrapper will scaffold the
-Next.js shell; the FastAPI backend is a second service scaffolded manually
-alongside it and wired together by Docker Compose. No Cloudflare or Vercel
-lock-in; self-host is the deployment target. CI runs on GitHub Actions with
-auto-deploy-on-merge.
+Pay Tracker is a solo, after-hours project with auth, background tasks
+(auto-generated payment instances, email reminders, monthly summary), Excel/JSON
+export/restore, and a self-hosted Docker Compose deployment target.
+The stack is intentionally polyglot: Next.js 16 (TypeScript, App Router,
+Tailwind 4, next-intl for 7 locales) is the frontend and primary scaffolding
+layer — it passes all four agent-friendly gates and ships from an official CLI
+(create-next-app); FastAPI (Python 3.13, Pydantic, SQLAlchemy 2.0, Alembic, uv)
+handles the API, OpenPyXL export, cookie-based JWT auth, APScheduler jobs and
+SMTP email. Both starters pass all four quality gates. Bootstrapper scaffolded
+the Next.js shell; the FastAPI backend was added as a second service.
+
+## Current shape (as of 2026-09-23)
+
+- **Services** (`docker-compose.yml`, `docker-compose.prod.yml`): `postgres` (official PostgreSQL 17 image, own service since I-01), `backend` (FastAPI + Alembic auto-migrate on start), `frontend` (Next.js), optional `demo` profile with seed data. Ports: backend 8010, frontend 3010.
+- **Auth**: JWT in an HttpOnly cookie (plus presence flag cookie); password reset via SMTP.
+- **Testing**: backend pytest against real PostgreSQL (`backend/tests/`); Playwright e2e in `frontend/tests/e2e/` (see `test-plan.md`).
+- **CI/CD**: GitHub Actions — `ci.yml` (env guard, frontend lint+build, backend black/mypy/pytest, Docker build + Playwright e2e) and `release.yml` (multi-arch images to GHCR on version tags). No auto-deploy: self-hosters pull tagged images (`infrastructure.md`).
+- **Deployment target**: self-host; no Cloudflare/Vercel lock-in.

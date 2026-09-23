@@ -126,7 +126,7 @@ Copy `.env.example` to `.env`. Never commit `.env`.
 
 - **Frontend:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, next-intl
 - **Backend:** FastAPI, Python 3.13, SQLAlchemy 2.0, Alembic, Pydantic v2
-- **Database:** PostgreSQL 17 (co-located in the backend container)
+- **Database:** PostgreSQL 17 (own Compose service)
 - **Runtime:** Docker Compose
 
 

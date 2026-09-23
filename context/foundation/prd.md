@@ -1,7 +1,8 @@
 ---
 project: pay-tracker
-version: 1
-status: draft
+version: 2
+updated: 2026-09-23
+status: active
 created: 2026-06-11
 context_type: greenfield
 product_type: web-app
@@ -197,15 +198,33 @@ household finance manager does not need to check the dashboard proactively.
 
 ### Localisation
 
-- FR-016: UI is available in English and Polish. The user can switch language via a toggle
-  in the UI. Priority: must-have
-  > Socratic: Two languages cover the primary household (Polish-speaking) and English as
-  > universal fallback. Additional locales deferred to v2.
+- FR-016: UI is available in English, Polish, German, Spanish, Italian, French and Chinese.
+  The user can switch language via a toggle and choose which languages appear in it
+  (per-user enabled languages). Priority: must-have
+  > Started as EN/PL; extended after v1 (S-07 and later commits).
 
 - FR-017: The user's selected language is persisted per account and restored automatically
   after login. Priority: must-have
   > Socratic: Without persistence the user must re-select the language on every session,
   > which contradicts the "household-first" convenience goal.
+
+### Post-v1 additions (implemented; details in `context/archive/history.md`)
+
+- FR-023: Categories are per-user DB records (9 defaults seeded; create, rename, recolor,
+  archive/unarchive). Archiving a category does not touch bills or payments using it.
+  Supersedes the fixed category enum from S-15.
+- FR-024: Per-user default currency (PLN, EUR, USD, CNY, custom) used for new bills.
+- FR-025: Restore is guarded: the confirmation dialog compares current vs. backup data,
+  and the server auto-snapshots current data before every restore; the last snapshot can
+  be restored from Settings.
+- FR-026: Password reset by emailed one-time link (available when SMTP is configured).
+- FR-027: Monthly summary email (paid vs. missed, totals), toggle plus "send now" in Settings.
+- FR-028: User can delete their account with all data (cascade).
+- FR-029: Payments view: calendar of due days, multi-select status/category filters,
+  payment date and note on Mark as Paid, confirmation before reverting.
+- FR-030: Archived bill templates can be restored to the active list.
+- FR-031: Settings page (tabs: profile, preferences, notifications, categories, backup/restore).
+- FR-032: Demo mode: pre-seeded demo account/image (`demo/`), notifications disabled.
 
 ## Non-Functional Requirements
 
@@ -273,11 +292,4 @@ by the household. Each registrant gets a fully isolated data partition.
 ## Open Questions
 
 1. **Local-mode PWA and HTTPS.** A self-hosted deployment without HTTPS cannot install
-   as a PWA on most browsers. A reverse-proxy or certificate setup guide is needed in
-   deployment documentation. — Owner: implementation team. Block: no (does not affect core
-   functionality; deferred to deployment docs).
-
-2. **Email delivery configuration (FR-012).** The mail provider, credentials, and
-   configuration format for email reminders are deployment concerns, not product concerns.
-   These must be documented in deployment guides. — Owner: implementation team. Block: no
-   (FR-012 is nice-to-have; deferred to deployment docs).
+   as a PWA on most browsers; needs deployment-docs guidance. Not blocking.

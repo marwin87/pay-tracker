@@ -6,9 +6,9 @@
 
 **Rule:** Store JWT access tokens in HttpOnly cookies, not localStorage. localStorage is accessible to any JavaScript on the page — a single XSS vector exposes the token.
 
-**Why:** Pay Tracker currently stores the JWT in localStorage (auth-context.tsx). This is a known risk flagged during the bill-template-management impl review. Migrating requires coordinated changes: backend must set a `Set-Cookie` header with `HttpOnly; SameSite=Strict`, and the frontend removes the localStorage read/write and sends cookies automatically.
+**Why:** Pay Tracker originally stored the JWT in localStorage (flagged during the bill-template-management impl review). Migrated: the backend now sets the token via `Set-Cookie` (HttpOnly, plus a non-HttpOnly presence flag for the frontend — see `_set_auth_cookie` in `backend/app/routers/auth.py`) and the frontend sends cookies automatically.
 
-**Applies to:** Any future auth implementation or auth refactor. New features must not expand the localStorage JWT pattern. When implementing auth from scratch, always start with HttpOnly cookies.
+**Applies to:** Any future auth implementation or auth refactor. Never reintroduce token storage in localStorage/sessionStorage. When implementing auth from scratch, always start with HttpOnly cookies.
 
 ## Currency must be a per-template field, never hardcoded
 

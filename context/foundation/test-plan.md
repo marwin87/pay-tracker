@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-17 (Phase 3 complete)
+> Last updated: 2026-09-23 (all 4 phases complete)
 
 ---
 
@@ -47,7 +47,7 @@ research's job, see §1 principle #3).
 | 1 | Marking a payment as paid succeeds but the next-period instance is silently never created; the bill disappears from the dashboard without error | High | High | US-01, FR-006, FR-009; interview Q1, Q3; `backend/app/services` hot-spot (16 commits/30d) |
 | 2 | Recurrence period math produces a wrong due date at month boundaries (e.g. `due_day=31` in February, `due_day=28` in a leap year, December→January year-rollover) | High | High | Interview Q2, Q3; `backend/app/services` hot-spot (16 commits/30d) |
 | 3 | A payment instance endpoint (mark-paid, revert, delete) accepts an instance_id belonging to a different user and performs the mutation — IDOR on per-instance operations | High | Medium | FR-020, abuse lens; `backend/app/routers` hot-spot (29 commits/30d) |
-| 4 | An existing test passes on SQLite in-memory but the same assertion fails on PostgreSQL due to constraint, type-coercion, or date-arithmetic divergence | High | Medium | Interview Q2; `backend/tests/` test base uses SQLite StaticPool |
+| 4 | An existing test passes on SQLite in-memory but the same assertion fails on PostgreSQL due to constraint, type-coercion, or date-arithmetic divergence | High | Medium | Interview Q2; test base was SQLite StaticPool (mitigated in Phase 2) |
 | 5 | Restore from a JSON backup silently drops or corrupts payment instances; or XLSX export omits rows without raising an error | High | Medium | FR-010, FR-011; interview Q1, Q4; `context/archive/2026-06-15-data-restore` |
 | 6 | Adding a new field to the backup schema (as occurred v2→v3) causes restore of older exports to fail or default incorrectly | Medium | Medium | `context/archive/2026-06-16-email-reminders` (v2→v3 guard); interview Q3 |
 | 7 | The core payment-tracking loop (create template → mark paid → next instance visible) regresses in the frontend and is not caught because the frontend has zero test coverage | High | Low | FR-007, FR-008, FR-009; interview Q4; `frontend/src/app/dashboard` hot-spot (19 commits/30d) |
@@ -74,10 +74,10 @@ orchestrator updates Status as artifacts appear on disk.
 
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|------------|-----------------|---------------|------------|--------|---------------|
-| 1 | Recurrence unit tests | Prove period math and next-instance generation are correct at all boundary cases | #1, #2 | unit | done | context/archive/2026-06-17-testing-recurrence-unit/ |
-| 2 | PostgreSQL integration baseline | Replace SQLite fixture with real PostgreSQL; add per-endpoint IDOR integration tests | #3, #4 | integration | done | context/archive/2026-06-17-testing-postgresql-integration/ |
-| 3 | Export/restore round-trip | Prove backup→restore is lossless and backward-compatible with v2 exports | #5, #6 | integration | done | context/changes/testing-export-restore-round-trip/ |
-| 4 | Frontend E2E critical paths | Catch regressions in the core payment loop and auth flows from the user's perspective | #7 | e2e | not started | — |
+| 1 | Recurrence unit tests | Prove period math and next-instance generation are correct at all boundary cases | #1, #2 | unit | done | archive/history.md#testing-recurrence-unit |
+| 2 | PostgreSQL integration baseline | Replace SQLite fixture with real PostgreSQL; add per-endpoint IDOR integration tests | #3, #4 | integration | done | archive/history.md#testing-postgresql-integration |
+| 3 | Export/restore round-trip | Prove backup→restore is lossless and backward-compatible with v2 exports | #5, #6 | integration | done | archive/history.md#testing-export-restore-round-trip |
+| 4 | Frontend E2E critical paths | Catch regressions in the core payment loop and auth flows from the user's perspective | #7 | e2e | done | `frontend/tests/e2e/` (Playwright, 18 specs) |
 
 ---
 
@@ -92,16 +92,16 @@ and the MCP/tools actually exposed in the current session.
 |-------|------|---------|-------|
 | Backend unit + integration | pytest | ≥ 8.0 | Configured in `backend/pyproject.toml`; test files in `backend/tests/` |
 | Backend HTTP client (tests) | httpx | ≥ 0.28 | Used with FastAPI `TestClient` for router-level integration tests |
-| Backend DB fixture | SQLite StaticPool | — | Current; Phase 2 migrates this to PostgreSQL |
-| Frontend unit | none yet | — | See §3 Phase 4 |
-| Frontend e2e | Playwright | none yet | See §3 Phase 4; to be added as a `devDependency` in `frontend/package.json` |
+| Backend DB fixture | PostgreSQL via testcontainers | 17 | Replaced SQLite in Phase 2 (`backend/tests/conftest.py`) |
+| Frontend unit | none | — | Not in scope |
+| Frontend e2e | Playwright | ^1.61 | `frontend/tests/e2e/*.spec.ts`; `npm run test:e2e`; also runs in CI |
 | Accessibility | none yet | — | Not in current rollout scope |
 
 **Stack grounding tools (current session):**
-- Docs: none — no Context7/framework docs MCP available in this session; checked: 2026-06-17
-- Search: none — no Exa.ai/web search MCP available in this session; checked: 2026-06-17
-- Runtime/browser: none — no Playwright MCP in session; checked: 2026-06-17
-- Provider/platform: none — no GitHub/Supabase/Cloudflare MCP available; checked: 2026-06-17
+- Docs: none — no Context7/framework docs MCP available in this session; checked: 2026-09-23
+- Search: none — no Exa.ai/web search MCP available in this session; checked: 2026-09-23
+- Runtime/browser: none — no Playwright MCP in session; checked: 2026-09-23
+- Provider/platform: none — no GitHub/Supabase/Cloudflare MCP available; checked: 2026-09-23
 
 ---
 
@@ -176,9 +176,9 @@ given cost × signal, but are not blocked:
 
 ## 8. Freshness Ledger
 
-- Strategy (§1–§5) last reviewed: 2026-06-17
-- Stack versions last verified: 2026-06-17
-- AI-native tool references last verified: 2026-06-17 (none used)
+- Strategy (§1–§5) last reviewed: 2026-09-23
+- Stack versions last verified: 2026-09-23
+- AI-native tool references last verified: 2026-09-23 (none used)
 
 Refresh (`/10x-test-plan --refresh`) when:
 
