@@ -247,7 +247,7 @@
     "RestoreButton": {
         "ariaLabel": "Przywróć z kopii zapasowej",
         "dialogTitle": "Przywróć z kopii zapasowej",
-        "dialogDescription": "Spowoduje to trwałe zastąpienie wszystkich Twoich danych zawartością pliku “{filename}”. Tej operacji nie można cofnąć.",
+        "dialogDescription": "Spowoduje to trwałe zastąpienie danych zawartych w pliku “{filename}” (sekcje, których brak w pliku, pozostaną bez zmian). Tej operacji nie można cofnąć.",
         "cancel": "Anuluj",
         "confirm": "Zastąp moje dane",
         "restoring": "Przywracanie…",
@@ -260,18 +260,29 @@
         "categoriesCount": "{categories} kategorii",
         "countsUnavailable": "niedostępne",
         "exportDateUnknown": "data eksportu nieznana (starszy format kopii zapasowej)",
-        "staleDataWarning": "Ta kopia zapasowa zawiera mniej rachunków i płatności niż Twoje obecne dane. Przywrócenie trwale usunie różnicę."
+        "staleDataWarning": "Ta kopia zapasowa zawiera mniej rachunków i płatności niż Twoje obecne dane. Przywrócenie trwale usunie różnicę.",
+        "noBillsInFile": "Brak rachunków i płatności w tym pliku — obecne rachunki pozostaną bez zmian."
     },
     "BackupButton": {
         "ariaLabel": "Pobierz kopię zapasową",
         "dialogTitle": "Pobierz kopię zapasową",
-        "dialogDescription": "Zostanie pobrana pełna kopia danych Pay Tracker — szablony rachunków, historia płatności i konta użytkowników. Przechowuj plik w bezpiecznym miejscu.",
+        "dialogDescription": "Wybierz, co uwzględnić w kopii zapasowej. Przechowuj plik w bezpiecznym miejscu.",
         "cancel": "Anuluj",
         "confirm": "Pobierz",
         "downloading": "Pobieranie…",
         "error": "Tworzenie kopii nie powiodło się. Spróbuj ponownie.",
         "telegramWarning": "Backup został pobrany, ale nie zawiera tokenu bota Telegram: nie można go już odczytać (zmienił się sekret serwera). Wpisz token ponownie w Ustawieniach i pobierz nowy backup.",
-        "ok": "OK"
+        "ok": "OK",
+        "selectAll": "Zaznacz wszystko",
+        "deselectAll": "Odznacz wszystko",
+        "sections": {
+            "bills": "Rachunki i płatności",
+            "categories": "Własne kategorie",
+            "email": "Powiadomienia e-mail",
+            "telegram": "Telegram (token bota i przypomnienia)",
+            "languages": "Ustawienia języków",
+            "currency": "Domyślna waluta"
+        }
     },
     "SnapshotRecoverySection": {
         "message": "Migawka Twoich danych została zapisana {date}, tuż przed ostatnim przywróceniem.",

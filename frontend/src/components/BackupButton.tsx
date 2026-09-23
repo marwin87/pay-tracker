@@ -4,18 +4,32 @@ import { useState } from "react";
 import { createPortal } from "react-dom";
 import { HardDriveDownload, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { downloadBackup } from "@/lib/export-api";
+import { BACKUP_SECTIONS, BackupSection, downloadBackup } from "@/lib/export-api";
 
 type State = "idle" | "confirming" | "downloading" | "warning" | "error";
 
 export default function BackupButton({ label }: { label?: string } = {}) {
   const t = useTranslations("BackupButton");
   const [state, setState] = useState<State>("idle");
+  const [selected, setSelected] = useState<Set<BackupSection>>(
+    () => new Set(BACKUP_SECTIONS)
+  );
+  const allSelected = selected.size === BACKUP_SECTIONS.length;
+
+  function toggle(section: BackupSection) {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (!next.delete(section)) next.add(section);
+      return next;
+    });
+  }
 
   async function handleConfirm() {
     setState("downloading");
     try {
-      const { telegramTokenUnreadable } = await downloadBackup();
+      const { telegramTokenUnreadable } = await downloadBackup(
+        BACKUP_SECTIONS.filter((s) => selected.has(s))
+      );
       setState(telegramTokenUnreadable ? "warning" : "idle");
     } catch {
       setState("error");
@@ -63,9 +77,36 @@ export default function BackupButton({ label }: { label?: string } = {}) {
               >
                 {t("dialogTitle")}
               </h2>
-              <p className="mb-6 text-sm text-slate-500 dark:text-slate-400">
+              <p className="mb-4 text-sm text-slate-500 dark:text-slate-400">
                 {t("dialogDescription")}
               </p>
+              {state !== "warning" && (
+                <fieldset className="mb-6 space-y-2" disabled={state === "downloading"}>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setSelected(allSelected ? new Set() : new Set(BACKUP_SECTIONS))
+                    }
+                    className="text-xs font-medium text-green-700 hover:underline dark:text-emerald-400"
+                  >
+                    {allSelected ? t("deselectAll") : t("selectAll")}
+                  </button>
+                  {BACKUP_SECTIONS.map((section) => (
+                    <label
+                      key={section}
+                      className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selected.has(section)}
+                        onChange={() => toggle(section)}
+                        className="h-4 w-4 accent-green-600"
+                      />
+                      {t(`sections.${section}`)}
+                    </label>
+                  ))}
+                </fieldset>
+              )}
               {state === "warning" ? (
                 <>
                   <p className="mb-4 rounded-lg border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm text-yellow-700 dark:border-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">
@@ -91,7 +132,7 @@ export default function BackupButton({ label }: { label?: string } = {}) {
                 </button>
                 <button
                   onClick={handleConfirm}
-                  disabled={state === "downloading"}
+                  disabled={state === "downloading" || selected.size === 0}
                   className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-green-200 bg-white py-2.5 text-sm font-medium text-green-700 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
                 >
                   {state === "downloading" ? (

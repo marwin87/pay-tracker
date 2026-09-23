@@ -103,6 +103,8 @@ class BackupTemplate(BaseModel):
     # to matching it by slug against the user's current categories.
     category_id: int | None = None
     category: str | None = None
+    # Lets bills restored without a `categories` section find a category by name.
+    category_name: str | None = None
     frequency: BillFrequency
     amount: Decimal
     currency: str
@@ -174,10 +176,25 @@ class BackupNotifications(BaseModel):
     browser_enabled: bool | None = None
 
 
+class BackupPreferences(BaseModel):
+    language_preference: str | None = Field(default=None, max_length=5)
+    enabled_languages: list[str] | None = None
+    default_currency: str | None = Field(default=None, max_length=10)
+
+    @field_validator("enabled_languages")
+    @classmethod
+    def _langs(cls, v: list[str] | None) -> list[str] | None:
+        if v is not None and (not v or any(not x or len(x) > 5 for x in v)):
+            raise ValueError("enabled_languages must be non-empty language codes")
+        return v
+
+
 class BackupPayload(BaseModel):
     schema_version: int
-    bill_templates: list[BackupTemplate]
-    payment_instances: list[BackupInstance]
+    # None = section absent from the file; restore leaves that data untouched.
+    bill_templates: list[BackupTemplate] | None = None
+    payment_instances: list[BackupInstance] | None = None
+    preferences: BackupPreferences | None = None
     categories: list[BackupCategory] = []
     telegram: BackupTelegram | None = None
     notifications: BackupNotifications | None = None

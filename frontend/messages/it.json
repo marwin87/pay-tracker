@@ -247,7 +247,7 @@
     "RestoreButton": {
         "ariaLabel": "Ripristina da backup",
         "dialogTitle": "Ripristina da backup",
-        "dialogDescription": "Questo sostituirà definitivamente tutti i tuoi dati attuali con il contenuto di “{filename}”. Questa azione non può essere annullata.",
+        "dialogDescription": "Questo sostituirà definitivamente i dati contenuti in “{filename}” (le sezioni assenti dal file restano invariate). Questa azione non può essere annullata.",
         "cancel": "Annulla",
         "confirm": "Sostituisci i miei dati",
         "restoring": "Ripristino…",
@@ -260,18 +260,29 @@
         "categoriesCount": "{categories} categorie",
         "countsUnavailable": "non disponibile",
         "exportDateUnknown": "data di esportazione sconosciuta (formato di backup precedente)",
-        "staleDataWarning": "Questo backup contiene meno bollette e pagamenti dei tuoi dati attuali. Il ripristino eliminerà definitivamente la differenza."
+        "staleDataWarning": "Questo backup contiene meno bollette e pagamenti dei tuoi dati attuali. Il ripristino eliminerà definitivamente la differenza.",
+        "noBillsInFile": "Nessuna bolletta o pagamento in questo file: le tue bollette attuali restano invariate."
     },
     "BackupButton": {
         "ariaLabel": "Scarica backup",
         "dialogTitle": "Scarica backup",
-        "dialogDescription": "Questo scaricherà una copia completa di tutti i dati di Pay Tracker: modelli di bollette, cronologia pagamenti e account utente. Conserva il file in modo sicuro.",
+        "dialogDescription": "Scegli cosa includere nel backup. Conserva il file in modo sicuro.",
         "cancel": "Annulla",
         "confirm": "Scarica",
         "downloading": "Download in corso…",
         "error": "Backup non riuscito. Riprova.",
         "telegramWarning": "Il backup è stato scaricato, ma non contiene il token del bot Telegram: non può più essere letto (il segreto del server è cambiato). Reinserisci il token nelle Impostazioni e scarica un nuovo backup.",
-        "ok": "OK"
+        "ok": "OK",
+        "selectAll": "Seleziona tutto",
+        "deselectAll": "Deseleziona tutto",
+        "sections": {
+            "bills": "Bollette e pagamenti",
+            "categories": "Categorie personalizzate",
+            "email": "Notifiche email",
+            "telegram": "Telegram (token del bot e promemoria)",
+            "languages": "Impostazioni lingua",
+            "currency": "Valuta predefinita"
+        }
     },
     "SnapshotRecoverySection": {
         "message": "Uno snapshot dei tuoi dati è stato salvato il {date}, appena prima dell'ultimo ripristino.",

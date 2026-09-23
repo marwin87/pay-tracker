@@ -247,7 +247,7 @@
     "RestoreButton": {
         "ariaLabel": "Restaurar desde copia de seguridad",
         "dialogTitle": "Restaurar desde copia de seguridad",
-        "dialogDescription": "Esto reemplazará permanentemente todos tus datos actuales con el contenido de “{filename}”. Esta acción no se puede deshacer.",
+        "dialogDescription": "Esto reemplazará permanentemente los datos contenidos en “{filename}” (las secciones ausentes del archivo no se modifican). Esta acción no se puede deshacer.",
         "cancel": "Cancelar",
         "confirm": "Reemplazar mis datos",
         "restoring": "Restaurando…",
@@ -260,18 +260,29 @@
         "categoriesCount": "{categories} categorías",
         "countsUnavailable": "no disponible",
         "exportDateUnknown": "fecha de exportación desconocida (formato de copia de seguridad antiguo)",
-        "staleDataWarning": "Esta copia de seguridad tiene menos facturas y pagos que tus datos actuales. Restaurarla eliminará permanentemente la diferencia."
+        "staleDataWarning": "Esta copia de seguridad tiene menos facturas y pagos que tus datos actuales. Restaurarla eliminará permanentemente la diferencia.",
+        "noBillsInFile": "No hay facturas ni pagos en este archivo: tus facturas actuales no se modifican."
     },
     "BackupButton": {
         "ariaLabel": "Descargar copia de seguridad",
         "dialogTitle": "Descargar copia de seguridad",
-        "dialogDescription": "Esto descargará una copia completa de todos los datos de Pay Tracker: plantillas de facturas, historial de pagos y cuentas de usuario. Guarda el archivo de forma segura.",
+        "dialogDescription": "Elige qué incluir en la copia de seguridad. Guarda el archivo de forma segura.",
         "cancel": "Cancelar",
         "confirm": "Descargar",
         "downloading": "Descargando…",
         "error": "Error al crear la copia de seguridad. Inténtalo de nuevo.",
         "telegramWarning": "Tu copia de seguridad se descargó, pero no incluye el token del bot de Telegram: ya no se puede leer (cambió el secreto del servidor). Vuelve a introducir el token en Ajustes y descarga una copia nueva.",
-        "ok": "OK"
+        "ok": "OK",
+        "selectAll": "Seleccionar todo",
+        "deselectAll": "Deseleccionar todo",
+        "sections": {
+            "bills": "Facturas y pagos",
+            "categories": "Categorías personalizadas",
+            "email": "Notificaciones por correo",
+            "telegram": "Telegram (token del bot y recordatorios)",
+            "languages": "Ajustes de idioma",
+            "currency": "Moneda predeterminada"
+        }
     },
     "SnapshotRecoverySection": {
         "message": "Se guardó una instantánea de tus datos el {date}, justo antes de tu última restauración.",

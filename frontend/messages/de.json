@@ -251,7 +251,7 @@
     "RestoreButton": {
         "ariaLabel": "Aus Backup wiederherstellen",
         "dialogTitle": "Aus Backup wiederherstellen",
-        "dialogDescription": "Dadurch werden alle Ihre aktuellen Daten dauerhaft durch den Inhalt von “{filename}” ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
+        "dialogDescription": "Dadurch werden die in „{filename}“ enthaltenen Daten dauerhaft ersetzt (Bereiche, die in der Datei fehlen, bleiben unverändert). Diese Aktion kann nicht rückgängig gemacht werden.",
         "cancel": "Abbrechen",
         "confirm": "Meine Daten ersetzen",
         "restoring": "Wird wiederhergestellt…",
@@ -264,18 +264,29 @@
         "categoriesCount": "{categories} Kategorien",
         "countsUnavailable": "nicht verfügbar",
         "exportDateUnknown": "Exportdatum unbekannt (älteres Backup-Format)",
-        "staleDataWarning": "Dieses Backup enthält weniger Rechnungen und Zahlungen als Ihre aktuellen Daten. Die Wiederherstellung löscht die Differenz dauerhaft."
+        "staleDataWarning": "Dieses Backup enthält weniger Rechnungen und Zahlungen als Ihre aktuellen Daten. Die Wiederherstellung löscht die Differenz dauerhaft.",
+        "noBillsInFile": "Keine Rechnungen oder Zahlungen in dieser Datei – Ihre aktuellen Rechnungen bleiben unverändert."
     },
     "BackupButton": {
         "ariaLabel": "Backup herunterladen",
         "dialogTitle": "Backup herunterladen",
-        "dialogDescription": "Es wird eine vollständige Kopie aller Pay Tracker-Daten heruntergeladen – Rechnungsvorlagen, Zahlungshistorie und Benutzerkonten. Bewahren Sie die Datei sicher auf.",
+        "dialogDescription": "Wählen Sie aus, was gesichert werden soll. Bewahren Sie die Datei sicher auf.",
         "cancel": "Abbrechen",
         "confirm": "Herunterladen",
         "downloading": "Wird heruntergeladen…",
         "error": "Backup fehlgeschlagen. Bitte erneut versuchen.",
         "telegramWarning": "Ihr Backup wurde heruntergeladen, enthält aber Ihr Telegram-Bot-Token nicht: Es kann nicht mehr gelesen werden (das Server-Geheimnis hat sich geändert). Geben Sie das Token in den Einstellungen erneut ein und laden Sie ein neues Backup herunter.",
-        "ok": "OK"
+        "ok": "OK",
+        "selectAll": "Alle auswählen",
+        "deselectAll": "Alle abwählen",
+        "sections": {
+            "bills": "Rechnungen & Zahlungen",
+            "categories": "Eigene Kategorien",
+            "email": "E-Mail-Benachrichtigungen",
+            "telegram": "Telegram (Bot-Token & Erinnerungen)",
+            "languages": "Spracheinstellungen",
+            "currency": "Standardwährung"
+        }
     },
     "SnapshotRecoverySection": {
         "message": "Ein Snapshot Ihrer Daten wurde am {date} gespeichert, kurz vor Ihrer letzten Wiederherstellung.",

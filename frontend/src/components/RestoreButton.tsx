@@ -8,7 +8,7 @@ import { getExportSummary, restoreFromBackup } from "@/lib/export-api";
 
 type State = "idle" | "confirming" | "restoring" | "error";
 
-type Counts = { bills: number; payments: number; categories?: number };
+type Counts = { bills?: number; payments?: number; categories?: number };
 
 export default function RestoreButton({ label }: { label?: string } = {}) {
   const t = useTranslations("RestoreButton");
@@ -18,7 +18,7 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
   const [errorMsg, setErrorMsg] = useState<string>("");
   const [backupCounts, setBackupCounts] = useState<Counts | null>(null);
   const [backupExportedAt, setBackupExportedAt] = useState<string | null>(null);
-  const [currentCounts, setCurrentCounts] = useState<Counts | null>(null);
+  const [currentCounts, setCurrentCounts] = useState<{ bills: number; payments: number } | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const exportDateLabel = (() => {
@@ -35,7 +35,8 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
 
   const isStale =
     currentCounts !== null &&
-    backupCounts !== null &&
+    backupCounts?.bills !== undefined &&
+    backupCounts.payments !== undefined &&
     (backupCounts.bills < currentCounts.bills ||
       backupCounts.payments < currentCounts.payments);
 
@@ -54,9 +55,12 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
     }
 
     let parsed: {
-      bill_templates: unknown;
-      payment_instances: unknown;
+      bill_templates?: unknown;
+      payment_instances?: unknown;
       categories?: unknown;
+      notifications?: unknown;
+      telegram?: unknown;
+      preferences?: unknown;
       exported_at?: unknown;
     };
     try {
@@ -66,7 +70,15 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
       setState("error");
       return;
     }
-    if (!Array.isArray(parsed.bill_templates) || !Array.isArray(parsed.payment_instances)) {
+    const hasBills =
+      Array.isArray(parsed.bill_templates) && Array.isArray(parsed.payment_instances);
+    const hasAnySection =
+      hasBills ||
+      Array.isArray(parsed.categories) ||
+      [parsed.notifications, parsed.telegram, parsed.preferences].some(
+        (v) => typeof v === "object" && v !== null
+      );
+    if (!parsed || typeof parsed !== "object" || !hasAnySection) {
       setErrorMsg(t("invalidFile"));
       setState("error");
       return;
@@ -74,8 +86,8 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
 
     setSelectedFile(file);
     setBackupCounts({
-      bills: parsed.bill_templates.length,
-      payments: parsed.payment_instances.length,
+      bills: hasBills ? (parsed.bill_templates as unknown[]).length : undefined,
+      payments: hasBills ? (parsed.payment_instances as unknown[]).length : undefined,
       categories: Array.isArray(parsed.categories) ? parsed.categories.length : undefined,
     });
     setBackupExportedAt(
@@ -164,6 +176,7 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
               </h2>
               {backupCounts && (
                 <div className="mb-4 space-y-1 rounded-lg bg-slate-50 p-3 text-sm dark:bg-slate-900/40">
+                  {backupCounts.bills !== undefined && (
                   <div className="flex justify-between text-slate-600 dark:text-slate-300">
                     <span>{t("currentLabel")}</span>
                     <span>
@@ -175,13 +188,16 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
                         : t("countsUnavailable")}
                     </span>
                   </div>
+                  )}
                   <div className="flex justify-between text-slate-600 dark:text-slate-300">
                     <span>{t("backupLabel")}</span>
                     <span>
-                      {t("countsSummary", {
-                        bills: backupCounts.bills,
-                        payments: backupCounts.payments,
-                      })}
+                      {backupCounts.bills !== undefined
+                        ? t("countsSummary", {
+                            bills: backupCounts.bills,
+                            payments: backupCounts.payments ?? 0,
+                          })
+                        : t("noBillsInFile")}
                       {backupCounts.categories != null &&
                         ` · ${t("categoriesCount", { categories: backupCounts.categories })}`}
                     </span>

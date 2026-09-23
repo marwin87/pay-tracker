@@ -3,8 +3,21 @@ import { getCsrfToken } from "./auth";
 
 // `telegramTokenUnreadable`: the backup was made without the Telegram token because
 // the server can no longer decrypt it (JWT_SECRET changed).
-export async function downloadBackup(): Promise<{ telegramTokenUnreadable: boolean }> {
-  const res = await fetch(`${BASE_URL}/export/json`, {
+export const BACKUP_SECTIONS = [
+  "bills",
+  "categories",
+  "email",
+  "telegram",
+  "languages",
+  "currency",
+] as const;
+export type BackupSection = (typeof BACKUP_SECTIONS)[number];
+
+export async function downloadBackup(
+  sections: readonly BackupSection[] = BACKUP_SECTIONS
+): Promise<{ telegramTokenUnreadable: boolean }> {
+  const qs = sections.map((s) => `sections=${s}`).join("&");
+  const res = await fetch(`${BASE_URL}/export/json?${qs}`, {
     credentials: "include",
   });
 

@@ -5,6 +5,8 @@ from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 
 import pandas as pd
+from typing import Literal
+
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from fastapi.responses import Response, StreamingResponse
 from pydantic import ValidationError
@@ -36,13 +38,36 @@ from app.services.recurrence import backfill_template_instances
 router = APIRouter(prefix="/export", tags=["export"])
 
 
+Section = Literal["bills", "categories", "email", "telegram", "languages", "currency"]
+ALL_SECTIONS: tuple[Section, ...] = (
+    "bills",
+    "categories",
+    "email",
+    "telegram",
+    "languages",
+    "currency",
+)
+
+
 def _legacy_category_id(
-    db: Session, user_id: int, slug: str | None, fallback_id: int
+    db: Session,
+    user_id: int,
+    slug: str | None,
+    fallback_id: int,
+    name: str | None = None,
 ) -> int:
-    """v2/v3 backups only carry the old free-text category string (now used
-    as `slug`). Map it to one of the user's current categories by slug,
-    falling back to their 'other' category (or any category at all) if it
-    was renamed/archived away."""
+    """Backups without a `categories` section carry either the old free-text
+    category string (v2/v3, now used as `slug`) or `category_name`. Map to one
+    of the user's current categories by name, then slug, falling back to their
+    'other' category (or any category at all) if it was renamed/archived away."""
+    if name:
+        match = (
+            db.query(Category.id)
+            .filter(Category.user_id == user_id, Category.name == name)
+            .first()
+        )
+        if match:
+            return match[0]
     if slug:
         match = (
             db.query(Category.id)
@@ -263,31 +288,37 @@ def _apply_schedule(user: User, ch: Channel, s: BackupChannelSchedule) -> None:
         setattr(user, user_attr, getattr(s, field))
 
 
-def _build_backup_arrays(db: Session, user_id: int) -> dict:
-    """Serialize a user's categories/bill_templates/payment_instances into the
-    backup shape shared by GET /export/json and the pre-restore snapshot."""
-    categories = db.query(Category).filter(Category.user_id == user_id).all()
-    templates = db.query(BillTemplate).filter(BillTemplate.user_id == user_id).all()
-    template_ids = [t.id for t in templates]
-    instances = (
-        db.query(PaymentInstance)
-        .filter(
-            PaymentInstance.bill_id.in_(template_ids),
-            PaymentInstance.is_deleted.is_(False),
-        )
-        .all()
-        if template_ids
-        else []
-    )
+def _build_backup_arrays(
+    db: Session, user_id: int, sections: tuple[Section, ...] | list[Section] = ALL_SECTIONS
+) -> dict:
+    """Serialize the requested sections of a user's data into the backup shape
+    shared by GET /export/json and the pre-restore snapshot. Only selected
+    sections appear as keys."""
     user = db.get(User, user_id)
     assert user is not None
-    return {
-        "notifications": {
-            "email": _schedule_out(user, EMAIL),
-            "telegram": _schedule_out(user, TELEGRAM),
-            "browser_enabled": user.browser_notifications_enabled,
-        },
-        "categories": [
+    out: dict = {}
+
+    notifications: dict = {}
+    if "email" in sections:
+        notifications["email"] = _schedule_out(user, EMAIL)
+        notifications["browser_enabled"] = user.browser_notifications_enabled
+    if "telegram" in sections:
+        notifications["telegram"] = _schedule_out(user, TELEGRAM)
+    if notifications:
+        out["notifications"] = notifications
+
+    prefs: dict = {}
+    if "languages" in sections:
+        prefs["language_preference"] = user.language_preference
+        prefs["enabled_languages"] = list(user.enabled_languages)
+    if "currency" in sections:
+        prefs["default_currency"] = user.default_currency
+    if prefs:
+        out["preferences"] = prefs
+
+    if "categories" in sections:
+        categories = db.query(Category).filter(Category.user_id == user_id).all()
+        out["categories"] = [
             {
                 "id": c.id,
                 "name": c.name,
@@ -298,12 +329,29 @@ def _build_backup_arrays(db: Session, user_id: int) -> dict:
                 "is_archived": c.is_archived,
             }
             for c in categories
-        ],
-        "bill_templates": [
+        ]
+
+    if "bills" in sections:
+        templates = (
+            db.query(BillTemplate).filter(BillTemplate.user_id == user_id).all()
+        )
+        template_ids = [t.id for t in templates]
+        instances = (
+            db.query(PaymentInstance)
+            .filter(
+                PaymentInstance.bill_id.in_(template_ids),
+                PaymentInstance.is_deleted.is_(False),
+            )
+            .all()
+            if template_ids
+            else []
+        )
+        out["bill_templates"] = [
             {
                 "id": t.id,
                 "name": t.name,
                 "category_id": t.category_id,
+                "category_name": t.category.name,
                 "frequency": t.frequency,
                 "amount": float(t.amount),
                 "currency": t.currency,
@@ -315,8 +363,8 @@ def _build_backup_arrays(db: Session, user_id: int) -> dict:
                 "created_at": t.created_at.isoformat(),
             }
             for t in templates
-        ],
-        "payment_instances": [
+        ]
+        out["payment_instances"] = [
             {
                 "id": i.id,
                 "bill_id": i.bill_id,
@@ -332,30 +380,35 @@ def _build_backup_arrays(db: Session, user_id: int) -> dict:
                 "reminder_sent_overdue": i.reminder_sent_overdue,
             }
             for i in instances
-        ],
-    }
+        ]
+    return out
 
 
 @router.get("/json")
 def export_json(
+    sections: list[Section] = Query(default=list(ALL_SECTIONS), min_length=1),
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
     payload = {
-        "schema_version": 4,
+        "schema_version": 5,
         "exported_by": me.email,
         "exported_at": datetime.now(timezone.utc).isoformat(),
-        **_build_backup_arrays(db, me.id),
+        **_build_backup_arrays(db, me.id, sections),
     }
     # Not in _build_backup_arrays: that also feeds the DB-stored restore snapshot,
     # which must never hold the bot token in plaintext.
-    token = decrypt_secret(me.telegram_bot_token) if me.telegram_bot_token else None
+    token = (
+        decrypt_secret(me.telegram_bot_token)
+        if "telegram" in sections and me.telegram_bot_token
+        else None
+    )
     if token and me.telegram_chat_id:
         payload["telegram"] = {"bot_token": token, "chat_id": me.telegram_chat_id}
     headers = {
         "Content-Disposition": f'attachment; filename="pay-tracker-backup-{datetime.now(timezone.utc).date()}.json"'
     }
-    if me.telegram_bot_token_unreadable:
+    if "telegram" in sections and me.telegram_bot_token_unreadable:
         # Stored but undecryptable (JWT_SECRET changed): the backup can't carry it.
         headers["X-Backup-Warning"] = "telegram-token-unreadable"
     return Response(
@@ -388,100 +441,149 @@ def export_summary(
     return ExportSummaryOut(bill_count=bill_count, payment_count=payment_count)
 
 
-def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int, int]:
-    """Destructively wipe a user's existing bill_templates/payment_instances and
-    re-insert the backup's contents. Shared by /restore and /restore-snapshot."""
-    existing_ids = [
-        t.id
-        for t in db.query(BillTemplate.id).filter(BillTemplate.user_id == user_id).all()
-    ]
-    if existing_ids:
-        db.query(PaymentInstance).filter(
-            PaymentInstance.bill_id.in_(existing_ids)
-        ).delete(synchronize_session=False)
-        db.query(BillTemplate).filter(BillTemplate.user_id == user_id).delete(
-            synchronize_session=False
-        )
-
-    category_id_map: dict[int, int] = {}
-    if backup.categories:
-        db.query(Category).filter(Category.user_id == user_id).delete(
-            synchronize_session=False
-        )
-        for bc in backup.categories:
-            category_obj = Category(
-                user_id=user_id,
-                name=bc.name,
-                slug=bc.slug,
-                color=bc.color,
-                sort_order=bc.sort_order,
-                is_default=bc.is_default,
-                is_archived=bc.is_archived,
-            )
-            db.add(category_obj)
-            db.flush()
-            category_id_map[bc.id] = category_obj.id
-
-    fallback_category_id = _fallback_category_id(db, user_id)
-
-    id_map: dict[int, int] = {}
-    for bt in backup.bill_templates:
-        if backup.categories:
-            category_id = (
-                category_id_map.get(bt.category_id, fallback_category_id)
-                if bt.category_id is not None
-                else fallback_category_id
-            )
-        else:
-            category_id = _legacy_category_id(
-                db, user_id, bt.category, fallback_category_id
-            )
-        template_obj = BillTemplate(
-            name=bt.name,
-            category_id=category_id,
-            frequency=BillFrequency(bt.frequency),
-            amount=Decimal(str(bt.amount)),
-            currency=bt.currency,
-            due_day=bt.due_day,
-            notes=bt.notes,
-            is_archived=bt.is_archived,
-            is_paused=bt.is_paused,
-            start_period=bt.start_period,
-            user_id=user_id,
-        )
-        db.add(template_obj)
-        db.flush()
-        id_map[bt.id] = template_obj.id
-
-    for bi in backup.payment_instances:
-        instance_obj = PaymentInstance(
-            bill_id=id_map[bi.bill_id],
-            period=bi.period,
-            due_date=date.fromisoformat(bi.due_date),
-            amount=Decimal(str(bi.amount)),
-            status=PaymentStatus(bi.status),
-            paid_at=datetime.fromisoformat(bi.paid_at) if bi.paid_at else None,
-            paid_amount=(
-                Decimal(str(bi.paid_amount)) if bi.paid_amount is not None else None
+def _merge_categories(db: Session, user_id: int, backup: BackupPayload) -> None:
+    """Categories-only restore: existing bills reference the current categories,
+    so match by slug (else name) and update in place; create the missing ones.
+    Never deletes."""
+    existing = db.query(Category).filter(Category.user_id == user_id).all()
+    for bc in backup.categories:
+        match = next(
+            (
+                c
+                for c in existing
+                if (bc.slug and c.slug == bc.slug) or (not bc.slug and c.name == bc.name)
             ),
-            notes=bi.notes,
-            reminder_sent_upcoming=bi.reminder_sent_upcoming,
-            reminder_sent_overdue=bi.reminder_sent_overdue,
+            None,
         )
-        db.add(instance_obj)
+        if match is None:
+            match = Category(user_id=user_id, name=bc.name, slug=bc.slug)
+            db.add(match)
+            existing.append(match)
+        match.name = bc.name
+        match.color = bc.color
+        match.sort_order = bc.sort_order
+        match.is_default = bc.is_default
+        match.is_archived = bc.is_archived
+    db.flush()
 
-    if backup.notifications:  # absent in older backups: keep current settings
+
+def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int, int]:
+    """Apply whatever sections the backup contains; absent sections leave the
+    user's current data untouched. Bills/payments are destructively replaced when
+    present. Shared by /restore and /restore-snapshot."""
+    templates_in = backup.bill_templates
+    if templates_in is None:
+        if backup.categories:
+            _merge_categories(db, user_id, backup)
+    else:
+        existing_ids = [
+            t.id
+            for t in db.query(BillTemplate.id)
+            .filter(BillTemplate.user_id == user_id)
+            .all()
+        ]
+        if existing_ids:
+            db.query(PaymentInstance).filter(
+                PaymentInstance.bill_id.in_(existing_ids)
+            ).delete(synchronize_session=False)
+            db.query(BillTemplate).filter(BillTemplate.user_id == user_id).delete(
+                synchronize_session=False
+            )
+
+        category_id_map: dict[int, int] = {}
+        if backup.categories:
+            db.query(Category).filter(Category.user_id == user_id).delete(
+                synchronize_session=False
+            )
+            for bc in backup.categories:
+                category_obj = Category(
+                    user_id=user_id,
+                    name=bc.name,
+                    slug=bc.slug,
+                    color=bc.color,
+                    sort_order=bc.sort_order,
+                    is_default=bc.is_default,
+                    is_archived=bc.is_archived,
+                )
+                db.add(category_obj)
+                db.flush()
+                category_id_map[bc.id] = category_obj.id
+
+        fallback_category_id = _fallback_category_id(db, user_id)
+
+        id_map: dict[int, int] = {}
+        for bt in templates_in:
+            if backup.categories:
+                category_id = (
+                    category_id_map.get(bt.category_id, fallback_category_id)
+                    if bt.category_id is not None
+                    else fallback_category_id
+                )
+            else:
+                category_id = _legacy_category_id(
+                    db, user_id, bt.category, fallback_category_id, bt.category_name
+                )
+            template_obj = BillTemplate(
+                name=bt.name,
+                category_id=category_id,
+                frequency=BillFrequency(bt.frequency),
+                amount=Decimal(str(bt.amount)),
+                currency=bt.currency,
+                due_day=bt.due_day,
+                notes=bt.notes,
+                is_archived=bt.is_archived,
+                is_paused=bt.is_paused,
+                start_period=bt.start_period,
+                user_id=user_id,
+            )
+            db.add(template_obj)
+            db.flush()
+            id_map[bt.id] = template_obj.id
+
+        for bi in backup.payment_instances or []:
+            instance_obj = PaymentInstance(
+                bill_id=id_map[bi.bill_id],
+                period=bi.period,
+                due_date=date.fromisoformat(bi.due_date),
+                amount=Decimal(str(bi.amount)),
+                status=PaymentStatus(bi.status),
+                paid_at=datetime.fromisoformat(bi.paid_at) if bi.paid_at else None,
+                paid_amount=(
+                    Decimal(str(bi.paid_amount)) if bi.paid_amount is not None else None
+                ),
+                notes=bi.notes,
+                reminder_sent_upcoming=bi.reminder_sent_upcoming,
+                reminder_sent_overdue=bi.reminder_sent_overdue,
+            )
+            db.add(instance_obj)
+
+    if backup.notifications or backup.preferences:
         user = db.get(User, user_id)
         assert user is not None
-        n = backup.notifications
-        if n.email:
-            _apply_schedule(user, EMAIL, n.email)
-        if n.telegram:
-            _apply_schedule(user, TELEGRAM, n.telegram)
-        if n.browser_enabled is not None:
-            user.browser_notifications_enabled = n.browser_enabled
+        if n := backup.notifications:  # absent/partial: keep current settings
+            if n.email:
+                _apply_schedule(user, EMAIL, n.email)
+            if n.telegram:
+                _apply_schedule(user, TELEGRAM, n.telegram)
+            if n.browser_enabled is not None:
+                user.browser_notifications_enabled = n.browser_enabled
+        if p := backup.preferences:
+            if p.language_preference is not None:
+                user.language_preference = p.language_preference
+            if p.enabled_languages is not None:
+                user.enabled_languages = p.enabled_languages
+            if p.default_currency is not None:
+                user.default_currency = p.default_currency
+            if (
+                user.language_preference
+                and user.language_preference not in user.enabled_languages
+            ):
+                raise HTTPException(
+                    status_code=422,
+                    detail="The active language must be one of the enabled languages",
+                )
 
-    return len(backup.bill_templates), len(backup.payment_instances)
+    return len(templates_in or []), len(backup.payment_instances or [])
 
 
 @router.post("/restore")
@@ -502,7 +604,7 @@ def restore_json(
     except json.JSONDecodeError:
         raise HTTPException(status_code=422, detail="Invalid JSON")
 
-    if raw.get("schema_version") not in {2, 3, 4}:
+    if raw.get("schema_version") not in {2, 3, 4, 5}:
         raise HTTPException(status_code=422, detail="Unsupported schema version")
 
     try:
@@ -510,9 +612,11 @@ def restore_json(
     except ValidationError as e:
         raise HTTPException(status_code=422, detail=str(e))
 
-    template_ids_in_backup = {t.id for t in backup.bill_templates}
+    template_ids_in_backup = {t.id for t in backup.bill_templates or []}
     orphaned = [
-        i for i in backup.payment_instances if i.bill_id not in template_ids_in_backup
+        i
+        for i in backup.payment_instances or []
+        if i.bill_id not in template_ids_in_backup
     ]
     if orphaned:
         raise HTTPException(
@@ -523,9 +627,9 @@ def restore_json(
         db.query(BillTemplate.id).filter(BillTemplate.user_id == me.id).first()
         is not None
     )
-    if has_existing_bills:
+    if has_existing_bills and backup.bill_templates is not None:
         snapshot_payload = {
-            "schema_version": 4,
+            "schema_version": 5,
             **_build_backup_arrays(db, me.id),
         }
         db.query(RestoreSnapshot).filter(RestoreSnapshot.user_id == me.id).delete(

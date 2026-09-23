@@ -247,7 +247,7 @@
     "RestoreButton": {
         "ariaLabel": "从备份恢复",
         "dialogTitle": "从备份恢复",
-        "dialogDescription": "此操作将用“{filename}”中的内容永久替换您当前的所有数据。此操作无法撤销。",
+        "dialogDescription": "此操作将永久替换“{filename}”中包含的数据（文件中缺少的部分保持不变）。此操作无法撤销。",
         "cancel": "取消",
         "confirm": "替换我的数据",
         "restoring": "正在恢复…",
@@ -260,18 +260,29 @@
         "categoriesCount": "{categories} 个类别",
         "countsUnavailable": "不可用",
         "exportDateUnknown": "导出日期未知（旧版备份格式）",
-        "staleDataWarning": "此备份的账单和付款记录数量少于您当前的数据。恢复将永久删除差异部分。"
+        "staleDataWarning": "此备份的账单和付款记录数量少于您当前的数据。恢复将永久删除差异部分。",
+        "noBillsInFile": "此文件不含账单或付款——您当前的账单保持不变。"
     },
     "BackupButton": {
         "ariaLabel": "下载备份",
         "dialogTitle": "下载备份",
-        "dialogDescription": "此操作将下载 Pay Tracker 全部数据的完整副本——账单模板、付款记录和用户账户。请妥善保存该文件。",
+        "dialogDescription": "选择要包含在备份中的内容。请妥善保存该文件。",
         "cancel": "取消",
         "confirm": "下载",
         "downloading": "正在下载…",
         "error": "备份失败，请重试。",
         "telegramWarning": "备份已下载，但不包含你的 Telegram 机器人令牌：它已无法读取（服务器密钥已更改）。请在设置中重新输入令牌，然后重新下载备份。",
-        "ok": "确定"
+        "ok": "确定",
+        "selectAll": "全选",
+        "deselectAll": "取消全选",
+        "sections": {
+            "bills": "账单和付款",
+            "categories": "自定义类别",
+            "email": "电子邮件通知设置",
+            "telegram": "Telegram（机器人令牌和提醒）",
+            "languages": "语言设置",
+            "currency": "默认货币"
+        }
     },
     "SnapshotRecoverySection": {
         "message": "系统已于 {date}（上次恢复操作前）保存了一份数据快照。",

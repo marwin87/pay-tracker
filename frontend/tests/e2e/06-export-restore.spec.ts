@@ -146,3 +146,26 @@ test('picking a malformed backup file shows an inline error, not the comparison/
 
   fs.unlinkSync(tmpFile);
 });
+
+test('backup dialog: select/deselect all drives a partial export', async ({ page }) => {
+  await loginNewUser(page);
+  await page.goto('/dashboard/settings');
+  await page.getByRole('tab', { name: 'Data', exact: true }).click();
+  await page.getByRole('button', { name: 'Download backup' }).click();
+
+  const dialog = page.getByRole('dialog');
+  const boxes = dialog.getByRole('checkbox');
+  await expect(boxes).toHaveCount(6);
+  for (const box of await boxes.all()) await expect(box).toBeChecked();
+
+  // Deselect all disables the download; selecting one section re-enables it.
+  await dialog.getByRole('button', { name: 'Deselect all' }).click();
+  await expect(dialog.getByRole('button', { name: 'Download', exact: true })).toBeDisabled();
+  await dialog.getByRole('checkbox', { name: 'Default currency' }).check();
+
+  const [request] = await Promise.all([
+    page.waitForRequest((r) => r.url().includes('/export/json')),
+    dialog.getByRole('button', { name: 'Download', exact: true }).click(),
+  ]);
+  expect(new URL(request.url()).searchParams.getAll('sections')).toEqual(['currency']);
+});

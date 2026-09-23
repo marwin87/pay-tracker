@@ -247,7 +247,7 @@
     "RestoreButton": {
         "ariaLabel": "Restore from backup",
         "dialogTitle": "Restore from Backup",
-        "dialogDescription": "This will permanently replace all your current data with the contents of “{filename}”. This action cannot be undone.",
+        "dialogDescription": "This will permanently replace the data contained in “{filename}” (sections missing from the file stay untouched). This action cannot be undone.",
         "cancel": "Cancel",
         "confirm": "Replace My Data",
         "restoring": "Restoring…",
@@ -260,18 +260,29 @@
         "categoriesCount": "{categories} categories",
         "countsUnavailable": "unavailable",
         "exportDateUnknown": "export date unknown (older backup format)",
-        "staleDataWarning": "This backup has fewer bills and payments than your current data. Restoring will permanently delete the difference."
+        "staleDataWarning": "This backup has fewer bills and payments than your current data. Restoring will permanently delete the difference.",
+        "noBillsInFile": "No bills or payments in this file — your current bills stay untouched."
     },
     "BackupButton": {
         "ariaLabel": "Download backup",
         "dialogTitle": "Download Backup",
-        "dialogDescription": "This will download a complete copy of all Pay Tracker data — bill templates, payment history, and user accounts. Store the file securely.",
+        "dialogDescription": "Choose what to include in the backup. Store the file securely.",
         "cancel": "Cancel",
         "confirm": "Download",
         "downloading": "Downloading…",
         "error": "Backup failed. Please try again.",
         "telegramWarning": "Your backup was downloaded, but it does not contain your Telegram bot token: it can no longer be read (the server secret changed). Re-enter the token in Settings, then download a new backup.",
-        "ok": "OK"
+        "ok": "OK",
+        "selectAll": "Select all",
+        "deselectAll": "Deselect all",
+        "sections": {
+            "bills": "Bills & payments",
+            "categories": "Custom categories",
+            "email": "Email notification setup",
+            "telegram": "Telegram (bot token & reminders)",
+            "languages": "Language settings",
+            "currency": "Default currency"
+        }
     },
     "SnapshotRecoverySection": {
         "message": "A snapshot of your data was saved on {date}, right before your last restore.",

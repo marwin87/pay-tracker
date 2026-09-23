@@ -247,7 +247,7 @@
     "RestoreButton": {
         "ariaLabel": "Restaurer depuis une sauvegarde",
         "dialogTitle": "Restaurer depuis une sauvegarde",
-        "dialogDescription": "Cela remplacera définitivement toutes vos données actuelles par le contenu de « {filename} ». Cette action est irréversible.",
+        "dialogDescription": "Cela remplacera définitivement les données contenues dans « {filename} » (les sections absentes du fichier restent inchangées). Cette action est irréversible.",
         "cancel": "Annuler",
         "confirm": "Remplacer mes données",
         "restoring": "Restauration…",
@@ -260,18 +260,29 @@
         "categoriesCount": "{categories} catégories",
         "countsUnavailable": "indisponible",
         "exportDateUnknown": "date d'exportation inconnue (ancien format de sauvegarde)",
-        "staleDataWarning": "Cette sauvegarde contient moins de factures et de paiements que vos données actuelles. La restauration supprimera définitivement la différence."
+        "staleDataWarning": "Cette sauvegarde contient moins de factures et de paiements que vos données actuelles. La restauration supprimera définitivement la différence.",
+        "noBillsInFile": "Aucune facture ni aucun paiement dans ce fichier : vos factures actuelles restent inchangées."
     },
     "BackupButton": {
         "ariaLabel": "Télécharger la sauvegarde",
         "dialogTitle": "Télécharger la sauvegarde",
-        "dialogDescription": "Cela téléchargera une copie complète de toutes les données de Pay Tracker — modèles de factures, historique des paiements et comptes utilisateurs. Conservez le fichier en lieu sûr.",
+        "dialogDescription": "Choisissez ce qu'il faut inclure dans la sauvegarde. Conservez le fichier en lieu sûr.",
         "cancel": "Annuler",
         "confirm": "Télécharger",
         "downloading": "Téléchargement…",
         "error": "Échec de la sauvegarde. Veuillez réessayer.",
         "telegramWarning": "Votre sauvegarde a été téléchargée, mais elle ne contient pas le jeton du bot Telegram : il n'est plus lisible (le secret du serveur a changé). Saisissez à nouveau le jeton dans les paramètres, puis téléchargez une nouvelle sauvegarde.",
-        "ok": "OK"
+        "ok": "OK",
+        "selectAll": "Tout sélectionner",
+        "deselectAll": "Tout désélectionner",
+        "sections": {
+            "bills": "Factures et paiements",
+            "categories": "Catégories personnalisées",
+            "email": "Notifications e-mail",
+            "telegram": "Telegram (jeton du bot et rappels)",
+            "languages": "Paramètres de langue",
+            "currency": "Devise par défaut"
+        }
     },
     "SnapshotRecoverySection": {
         "message": "Un instantané de vos données a été enregistré le {date}, juste avant votre dernière restauration.",
