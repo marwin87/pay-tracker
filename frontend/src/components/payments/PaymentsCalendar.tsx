@@ -112,7 +112,7 @@ export default function PaymentsCalendar({
                 isSelected
                   ? "ring-2 ring-green-600 dark:ring-emerald-400"
                   : isToday
-                  ? "ring-1 ring-inset ring-slate-400 dark:ring-slate-400"
+                  ? "ring-2 ring-inset ring-slate-500 dark:ring-slate-300"
                   : ""
               } ${isToday ? "font-bold" : ""}`}
             >
