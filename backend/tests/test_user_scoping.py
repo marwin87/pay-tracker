@@ -181,3 +181,51 @@ def test_export_xlsx_scoped(client):
     for sheet in wb.worksheets:
         # Each sheet has a header row only; no data rows for user B.
         assert sheet.max_row <= 1, f"Sheet {sheet.title} has unexpected data rows"
+
+
+# ---------------------------------------------------------------------------
+# Account deletion — must cascade only within the deleting user's own rows
+# ---------------------------------------------------------------------------
+
+
+def test_delete_account_only_removes_own_data(client_db):
+    from app.models.bill import BillTemplate
+    from app.models.category import Category
+    from app.models.user import User
+
+    client, db = client_db
+    tok_a = register_and_login(client, "a@test.com")
+    tok_b = register_and_login(client, "b@test.com")
+
+    bill_a = _create_bill(client, tok_a)
+    _seed_payment(client, tok_a, bill_a)
+    bill_b = _create_bill(client, tok_b)
+    _seed_payment(client, tok_b, bill_b)
+
+    r = client.delete("/auth/users/me", headers=auth(tok_a))
+    assert r.status_code == 204
+
+    # B's bills, payments, and categories are untouched.
+    r = client.get("/bills", headers=auth(tok_b))
+    assert r.status_code == 200
+    assert [bill["id"] for bill in r.json()] == [bill_b]
+
+    r = client.get("/bills/payments", headers=auth(tok_b))
+    assert r.status_code == 200
+    assert len(r.json()) == 1
+
+    r = client.get("/categories", headers=auth(tok_b))
+    assert r.status_code == 200
+    assert len(r.json()) > 0
+
+    # B's own account still works.
+    r = client.get("/auth/me", headers=auth(tok_b))
+    assert r.status_code == 200
+    assert r.json()["email"] == "b@test.com"
+
+    # A's rows are actually gone, B's survive, at the DB level.
+    assert db.query(User).filter(User.email == "a@test.com").first() is None
+    assert db.get(BillTemplate, bill_a) is None
+    assert db.get(BillTemplate, bill_b) is not None
+    user_b = db.query(User).filter(User.email == "b@test.com").one()
+    assert db.query(Category).filter(Category.user_id == user_b.id).count() > 0

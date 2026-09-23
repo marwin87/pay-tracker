@@ -152,6 +152,13 @@
         "archive": "Archivieren",
         "archiving": "Archivierung…"
     },
+    "DeleteAccountDialog": {
+        "title": "Konto löschen?",
+        "description": "Dadurch werden Ihr Konto und alles damit Verknüpfte dauerhaft gelöscht — Rechnungen, Kategorien und Zahlungshistorie. Dies kann nicht rückgängig gemacht werden.",
+        "cancel": "Abbrechen",
+        "confirm": "Konto löschen",
+        "deleting": "Wird gelöscht…"
+    },
     "RestoreConfirmDialog": {
         "title": "„{billName}” wiederherstellen?",
         "description": "Diese Rechnung erscheint wieder in der aktiven Liste und generiert erneut anstehende Zahlungen.",
@@ -363,6 +370,12 @@
         "restore": {
             "title": "Daten wiederherstellen",
             "description": "Ersetzen Sie alle aktuellen Daten durch eine zuvor heruntergeladene Sicherungsdatei."
+        },
+        "deleteAccount": {
+            "title": "Konto löschen",
+            "description": "Löschen Sie dauerhaft Ihr Konto und alles damit Verknüpfte. Dies kann nicht rückgängig gemacht werden.",
+            "button": "Konto löschen",
+            "error": "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
         },
         "categories": {
             "title": "Kategorien",

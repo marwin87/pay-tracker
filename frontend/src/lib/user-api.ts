@@ -80,3 +80,7 @@ export function changeEmail(
     }),
   });
 }
+
+export function deleteAccount(): Promise<void> {
+  return apiFetch<void>("/auth/users/me", { method: "DELETE" });
+}

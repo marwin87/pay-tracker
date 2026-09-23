@@ -2,9 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { HardDriveDownload, HardDriveUpload } from "lucide-react";
+import { HardDriveDownload, HardDriveUpload, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { fetchMe, UserProfile } from "@/lib/user-api";
+import { deleteAccount, fetchMe, UserProfile } from "@/lib/user-api";
+import { notifyAuthChange } from "@/lib/auth-store";
 import BackupButton from "@/components/BackupButton";
 import RestoreButton from "@/components/RestoreButton";
 import SnapshotRecoverySection from "@/components/SnapshotRecoverySection";
@@ -15,6 +16,7 @@ import { EmailNotificationsTile } from "@/components/settings/EmailNotifications
 import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificationsTile";
 import { CategoriesTile } from "@/components/settings/CategoriesTile";
 import { UnsavedChangesDialog } from "@/components/settings/UnsavedChangesDialog";
+import DeleteAccountDialog from "@/components/settings/DeleteAccountDialog";
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
@@ -25,6 +27,9 @@ export default function SettingsPage() {
   const [currencyDirty, setCurrencyDirty] = useState(false);
   const [emailDirty, setEmailDirty] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
 
   const TABS = ["account", "notifications", "categories", "data"] as const;
   type TabKey = (typeof TABS)[number];
@@ -79,6 +84,21 @@ export default function SettingsPage() {
     }
   }
 
+  async function handleDeleteConfirm() {
+    setDeleting(true);
+    setDeleteError(null);
+    try {
+      await deleteAccount();
+      setDeleteDialogOpen(false);
+      notifyAuthChange();
+      router.refresh();
+      router.push("/login");
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : t("deleteAccount.error"));
+      setDeleting(false);
+    }
+  }
+
   if (!profile) {
     return (
       <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
@@ -124,6 +144,22 @@ export default function SettingsPage() {
           onDirtyChange={onCurrencyDirty}
           t={t}
         />
+
+        <Tile
+          color="red"
+          icon={Trash2}
+          title={t("deleteAccount.title")}
+          description={t("deleteAccount.description")}
+          t={t}
+        >
+          <button
+            onClick={() => setDeleteDialogOpen(true)}
+            className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-red-700 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+          >
+            <Trash2 size={18} />
+            <span>{t("deleteAccount.button")}</span>
+          </button>
+        </Tile>
       </div>
 
       <div className={`space-y-4 ${activeTab === "notifications" ? "" : "hidden"}`}>
@@ -169,6 +205,15 @@ export default function SettingsPage() {
           onLeave={confirmLeave}
           onStay={() => setPendingHref(null)}
           t={t}
+        />
+      )}
+
+      {deleteDialogOpen && (
+        <DeleteAccountDialog
+          onConfirm={handleDeleteConfirm}
+          onCancel={() => setDeleteDialogOpen(false)}
+          deleting={deleting}
+          error={deleteError}
         />
       )}
     </div>

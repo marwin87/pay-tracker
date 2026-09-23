@@ -152,6 +152,13 @@
         "archive": "Archiwizuj",
         "archiving": "Archiwizowanie…"
     },
+    "DeleteAccountDialog": {
+        "title": "Usunąć konto?",
+        "description": "To trwale usunie Twoje konto oraz wszystko, co jest z nim powiązane — rachunki, kategorie i historię płatności. Tej operacji nie można cofnąć.",
+        "cancel": "Anuluj",
+        "confirm": "Usuń konto",
+        "deleting": "Usuwanie…"
+    },
     "RestoreConfirmDialog": {
         "title": "Przywrócić „{billName}”?",
         "description": "Ten rachunek pojawi się z powrotem na aktywnej liście i wznowi generowanie nadchodzących płatności.",
@@ -355,6 +362,12 @@
         "restore": {
             "title": "Przywracanie danych",
             "description": "Zastąp wszystkie bieżące dane wcześniej pobraną kopią zapasową."
+        },
+        "deleteAccount": {
+            "title": "Usuń konto",
+            "description": "Trwale usuń swoje konto oraz wszystko, co jest z nim powiązane. Tej operacji nie można cofnąć.",
+            "button": "Usuń konto",
+            "error": "Nie udało się usunąć konta. Spróbuj ponownie."
         },
         "categories": {
             "title": "Kategorie",
