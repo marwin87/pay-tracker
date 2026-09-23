@@ -205,6 +205,14 @@
         "deleting": "Deleting…",
         "deleteFailed": "Failed to delete payment."
     },
+    "RevertPaymentDialog": {
+        "title": "Revert this payment?",
+        "description": "This payment will be marked as unpaid again.",
+        "cancel": "Cancel",
+        "confirm": "Revert",
+        "reverting": "Reverting…",
+        "revertFailed": "Failed to revert payment."
+    },
     "MarkPaidDialog": {
         "title": "Mark as Paid: {billName}",
         "dateLabel": "Date paid",

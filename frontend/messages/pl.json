@@ -205,6 +205,14 @@
         "deleting": "Usuwanie…",
         "deleteFailed": "Nie udało się usunąć płatności."
     },
+    "RevertPaymentDialog": {
+        "title": "Cofnąć tę płatność?",
+        "description": "Ta płatność zostanie ponownie oznaczona jako nieopłacona.",
+        "cancel": "Anuluj",
+        "confirm": "Cofnij",
+        "reverting": "Cofanie…",
+        "revertFailed": "Nie udało się cofnąć płatności."
+    },
     "MarkPaidDialog": {
         "title": "Oznacz jako opłacone: {billName}",
         "dateLabel": "Data zapłaty",

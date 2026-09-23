@@ -1,10 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { AlertCircle, AtSign, CheckCircle, Loader2, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
+import { AlertCircle, AtSign, CheckCircle, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import type { PaymentInstanceOut } from "@/lib/payments-api";
-import { revertPay } from "@/lib/payments-api";
 
 const STATUS_STYLES: Record<string, string> = {
   upcoming:
@@ -18,15 +17,14 @@ interface Props {
   instance: PaymentInstanceOut;
   onMarkPaid: (instance: PaymentInstanceOut) => void;
   onDelete: (instance: PaymentInstanceOut) => void;
-  onReverted: (updated: PaymentInstanceOut) => void;
+  onRevert: (instance: PaymentInstanceOut) => void;
   /** True for past months — hides the Mark as Paid button. */
   readOnly?: boolean;
 }
 
-export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted, readOnly = false }: Props) {
+export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, readOnly = false }: Props) {
   const t = useTranslations("PaymentRow");
   const locale = useLocale();
-  const [reverting, setReverting] = useState(false);
   const [emailOpen, setEmailOpen] = useState(false);
   const emailRef = useRef<HTMLDivElement>(null);
 
@@ -40,16 +38,6 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [emailOpen]);
-
-  async function handleRevert() {
-    setReverting(true);
-    try {
-      const updated = await revertPay(instance.id);
-      onReverted(updated);
-    } finally {
-      setReverting(false);
-    }
-  }
 
   // Append T00:00:00 so JS treats due_date as local time, not UTC midnight
   const dueDate = new Date(instance.due_date + "T00:00:00");
@@ -147,13 +135,12 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onReverted,
             {/* Revert — visible for paid instances */}
             {instance.status === "paid" && (
               <button
-                onClick={handleRevert}
-                disabled={reverting}
+                onClick={() => onRevert(instance)}
                 title={t("revert")}
                 aria-label={t("revert")}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 disabled:opacity-50 disabled:cursor-not-allowed dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
               >
-                {reverting ? <Loader2 size={14} className="animate-spin" /> : <RotateCcw size={14} />}
+                <RotateCcw size={14} />
               </button>
             )}
             <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />

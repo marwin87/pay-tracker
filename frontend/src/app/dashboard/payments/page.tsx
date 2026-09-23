@@ -23,6 +23,7 @@ import PaymentRow from "@/components/payments/PaymentRow";
 import PaymentsCalendar from "@/components/payments/PaymentsCalendar";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
+import RevertPaymentDialog from "@/components/payments/RevertPaymentDialog";
 import FilterSelect from "@/components/FilterSelect";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
@@ -126,7 +127,14 @@ function PaymentsPageInner() {
   const currentMonth = getCurrentMonth();
 
   const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth);
-  const { dialogTarget, setDialogTarget, deleteTarget, setDeleteTarget } = usePaymentActions();
+  const {
+    dialogTarget,
+    setDialogTarget,
+    deleteTarget,
+    setDeleteTarget,
+    revertTarget,
+    setRevertTarget,
+  } = usePaymentActions();
   const [instances, setInstances] = useState<PaymentInstanceOut[]>([]);
   const [loadedMonth, setLoadedMonth] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -202,6 +210,7 @@ function PaymentsPageInner() {
     setInstances((prev) =>
       prev.map((inst) => (inst.id === updated.id ? updated : inst)),
     );
+    setRevertTarget(null);
   }
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -287,6 +296,14 @@ function PaymentsPageInner() {
           isOpen={true}
           onClose={() => setDeleteTarget(null)}
           onDeleted={handleInstanceDeleted}
+        />
+      )}
+      {revertTarget && (
+        <RevertPaymentDialog
+          instance={revertTarget}
+          isOpen={true}
+          onClose={() => setRevertTarget(null)}
+          onReverted={handleInstanceReverted}
         />
       )}
 
@@ -579,7 +596,7 @@ function PaymentsPageInner() {
                         readOnly={false}
                         onMarkPaid={setDialogTarget}
                         onDelete={setDeleteTarget}
-                        onReverted={handleInstanceReverted}
+                        onRevert={setRevertTarget}
                       />
                     ))}
                   </div>

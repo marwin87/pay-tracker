@@ -8,6 +8,8 @@ interface PaymentActionContextValue {
   setDialogTarget: (instance: PaymentInstanceOut | null) => void;
   deleteTarget: PaymentInstanceOut | null;
   setDeleteTarget: (instance: PaymentInstanceOut | null) => void;
+  revertTarget: PaymentInstanceOut | null;
+  setRevertTarget: (instance: PaymentInstanceOut | null) => void;
 }
 
 const PaymentActionContext = createContext<PaymentActionContextValue | null>(null);
@@ -15,10 +17,18 @@ const PaymentActionContext = createContext<PaymentActionContextValue | null>(nul
 export function PaymentActionProvider({ children }: { children: ReactNode }) {
   const [dialogTarget, setDialogTarget] = useState<PaymentInstanceOut | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<PaymentInstanceOut | null>(null);
+  const [revertTarget, setRevertTarget] = useState<PaymentInstanceOut | null>(null);
 
   return (
     <PaymentActionContext.Provider
-      value={{ dialogTarget, setDialogTarget, deleteTarget, setDeleteTarget }}
+      value={{
+        dialogTarget,
+        setDialogTarget,
+        deleteTarget,
+        setDeleteTarget,
+        revertTarget,
+        setRevertTarget,
+      }}
     >
       {children}
     </PaymentActionContext.Provider>

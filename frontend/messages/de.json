@@ -209,6 +209,14 @@
         "deleting": "Löschen…",
         "deleteFailed": "Zahlung konnte nicht gelöscht werden."
     },
+    "RevertPaymentDialog": {
+        "title": "Zahlung rückgängig machen?",
+        "description": "Diese Zahlung wird wieder als unbezahlt markiert.",
+        "cancel": "Abbrechen",
+        "confirm": "Rückgängig machen",
+        "reverting": "Wird rückgängig gemacht…",
+        "revertFailed": "Zahlung konnte nicht rückgängig gemacht werden."
+    },
     "MarkPaidDialog": {
         "title": "Als bezahlt markieren: {billName}",
         "dateLabel": "Zahlungsdatum",
