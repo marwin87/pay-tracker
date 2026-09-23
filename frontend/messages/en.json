@@ -315,6 +315,14 @@
             "emailTaken": "That email is already registered.",
             "emailAndPasswordRequired": "Please enter both a new email address and your current password."
         },
+        "currency": {
+            "title": "Default Currency",
+            "description": "Used to preselect the currency when you create a new bill.",
+            "ariaLabel": "Currency",
+            "customOption": "Custom…",
+            "customCurrencyAriaLabel": "Custom currency code",
+            "customCurrencyPlaceholder": "e.g. CHF"
+        },
         "emailNotifications": {
             "title": "Email Notifications",
             "description": "Choose when to receive email reminders for upcoming and overdue bills.",

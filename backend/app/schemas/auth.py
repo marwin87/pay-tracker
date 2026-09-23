@@ -23,6 +23,7 @@ class UserProfileOut(BaseModel):
 
     email: EmailStr
     language_preference: str | None
+    default_currency: str | None
     email_reminders_enabled: bool
     notify_2_days_before: bool
     notify_1_day_before: bool
@@ -34,6 +35,7 @@ class UserProfileOut(BaseModel):
 
 class UserProfileUpdate(BaseModel):
     language_preference: Literal["en", "pl", "de"] | None = None
+    default_currency: str | None = None
     email_reminders_enabled: bool | None = None
     notify_2_days_before: bool | None = None
     notify_1_day_before: bool | None = None

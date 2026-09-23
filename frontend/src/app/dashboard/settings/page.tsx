@@ -10,6 +10,7 @@ import RestoreButton from "@/components/RestoreButton";
 import SnapshotRecoverySection from "@/components/SnapshotRecoverySection";
 import { Tile } from "@/components/settings/Tile";
 import { ProfileTile } from "@/components/settings/ProfileTile";
+import { CurrencyTile } from "@/components/settings/CurrencyTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
 import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificationsTile";
 import { CategoriesTile } from "@/components/settings/CategoriesTile";
@@ -21,6 +22,7 @@ export default function SettingsPage() {
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [profileDirty, setProfileDirty] = useState(false);
+  const [currencyDirty, setCurrencyDirty] = useState(false);
   const [emailDirty, setEmailDirty] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
 
@@ -28,9 +30,10 @@ export default function SettingsPage() {
   type TabKey = (typeof TABS)[number];
   const [activeTab, setActiveTab] = useState<TabKey>("account");
 
-  const isDirtyAny = profileDirty || emailDirty;
+  const isDirtyAny = profileDirty || currencyDirty || emailDirty;
 
   const onProfileDirty = useCallback((d: boolean) => setProfileDirty(d), []);
+  const onCurrencyDirty = useCallback((d: boolean) => setCurrencyDirty(d), []);
   const onEmailDirty = useCallback((d: boolean) => setEmailDirty(d), []);
 
   useEffect(() => {
@@ -113,6 +116,12 @@ export default function SettingsPage() {
           profile={profile}
           onProfileUpdate={setProfile}
           onDirtyChange={onProfileDirty}
+          t={t}
+        />
+        <CurrencyTile
+          profile={profile}
+          onProfileUpdate={setProfile}
+          onDirtyChange={onCurrencyDirty}
           t={t}
         />
       </div>

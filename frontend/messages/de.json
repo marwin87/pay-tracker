@@ -319,6 +319,14 @@
             "emailTaken": "Diese E-Mail-Adresse ist bereits registriert.",
             "emailAndPasswordRequired": "Bitte gib eine neue E-Mail-Adresse und dein aktuelles Passwort ein."
         },
+        "currency": {
+            "title": "Standardwährung",
+            "description": "Wird verwendet, um die Währung beim Erstellen einer neuen Rechnung vorzuauswählen.",
+            "ariaLabel": "Währung",
+            "customOption": "Andere…",
+            "customCurrencyAriaLabel": "Benutzerdefinierter Währungscode",
+            "customCurrencyPlaceholder": "z. B. CHF"
+        },
         "emailNotifications": {
             "title": "E-Mail-Benachrichtigungen",
             "description": "Wählen Sie, wann Sie E-Mail-Erinnerungen für bevorstehende und überfällige Rechnungen erhalten möchten.",

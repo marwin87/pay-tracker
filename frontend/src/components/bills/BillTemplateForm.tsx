@@ -4,24 +4,17 @@ import { FormEvent, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import CategoryCombobox from "./CategoryCombobox";
 import MonthDayCalendar from "./MonthDayCalendar";
+import CurrencyPicker from "@/components/CurrencyPicker";
+import { LOCALE_DEFAULT_CURRENCY } from "@/lib/currency";
 import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
-
-const PRESET_CURRENCIES = ["EUR", "PLN", "USD"] as const;
 
 const FREQUENCY_VALUES: BillFrequency[] = ["monthly", "every_2_months", "quarterly", "annual", "one_off"];
 
 const RECURRING_FREQUENCIES: BillFrequency[] = ["monthly", "every_2_months", "quarterly"];
 
-const LOCALE_DEFAULT_CURRENCY: Record<string, string> = {
-  pl: "PLN",
-  de: "EUR",
-  en: "USD",
-};
-
-type CurrencyOption = (typeof PRESET_CURRENCIES)[number] | "custom";
-
 interface Props {
   initial?: Partial<BillTemplateCreate>;
+  defaultCurrency?: string | null;
   onSave: (data: BillTemplateCreate) => Promise<void>;
   onCancel: () => void;
 }
@@ -38,7 +31,7 @@ const inputClass =
 
 const labelClass = "block text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500 mb-1.5";
 
-export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
+export default function BillTemplateForm({ initial, defaultCurrency, onSave, onCancel }: Props) {
   const t = useTranslations("BillTemplateForm");
   const locale = useLocale();
   const [name, setName] = useState(initial?.name ?? "");
@@ -47,12 +40,9 @@ export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
     initial?.frequency ?? "monthly",
   );
   const [amount, setAmount] = useState(initial?.amount ?? "");
-  const initialCurrency = initial?.currency ?? LOCALE_DEFAULT_CURRENCY[locale] ?? "EUR";
-  const isPreset = (PRESET_CURRENCIES as readonly string[]).includes(initialCurrency);
-  const [currencyOption, setCurrencyOption] = useState<CurrencyOption>(
-    isPreset ? (initialCurrency as CurrencyOption) : "custom",
-  );
-  const [customCurrency, setCustomCurrency] = useState(isPreset ? "" : initialCurrency);
+  const initialCurrency =
+    initial?.currency ?? defaultCurrency ?? LOCALE_DEFAULT_CURRENCY[locale] ?? "EUR";
+  const [currency, setCurrency] = useState(initialCurrency);
   const [dueDay, setDueDay] = useState(
     initial?.due_day != null ? String(initial.due_day) : String(new Date().getDate()),
   );
@@ -102,14 +92,12 @@ export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
     setSaving(true);
     setApiError(null);
     try {
-      const resolvedCurrency =
-        currencyOption === "custom" ? customCurrency.trim().toUpperCase() : currencyOption;
       const payload: BillTemplateCreate = {
         name: name.trim(),
         category_id: categoryId as number,
         frequency,
         amount: amount.trim() || "0",
-        currency: resolvedCurrency || "EUR",
+        currency: currency || "EUR",
         due_day: dueDay ? parseInt(dueDay, 10) : null,
         due_month: dueMonth ? parseInt(dueMonth, 10) : null,
         notes: notes.trim() || null,
@@ -149,7 +137,7 @@ export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
 
         <div>
           <label htmlFor="bill-amount" className={labelClass}>{t("amountLabel")}</label>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <input
               id="bill-amount"
               value={amount}
@@ -158,28 +146,15 @@ export default function BillTemplateForm({ initial, onSave, onCancel }: Props) {
               inputMode="decimal"
               className={inputClass}
             />
-            <select
-              aria-label={t("currencyAriaLabel")}
-              value={currencyOption}
-              onChange={(e) => setCurrencyOption(e.target.value as CurrencyOption)}
-              className="w-28 shrink-0 rounded-xl border border-slate-200 bg-white px-2 py-2.5 text-sm text-slate-800 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40"
-            >
-              {PRESET_CURRENCIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-              <option value="custom">{t("customOption")}</option>
-            </select>
-          </div>
-          {currencyOption === "custom" && (
-            <input
-              aria-label={t("customCurrencyAriaLabel")}
-              value={customCurrency}
-              onChange={(e) => setCustomCurrency(e.target.value)}
-              placeholder={t("customCurrencyPlaceholder")}
-              maxLength={10}
-              className={inputClass + " mt-2"}
+            <CurrencyPicker
+              value={currency}
+              onChange={setCurrency}
+              ariaLabel={t("currencyAriaLabel")}
+              customOption={t("customOption")}
+              customCurrencyAriaLabel={t("customCurrencyAriaLabel")}
+              customCurrencyPlaceholder={t("customCurrencyPlaceholder")}
             />
-          )}
+          </div>
           {errors.amount && <p className="mt-1 text-xs text-red-500">{errors.amount}</p>}
         </div>
       </div>

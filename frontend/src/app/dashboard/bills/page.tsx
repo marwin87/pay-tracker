@@ -14,6 +14,7 @@ import {
   type BillTemplateUpdate,
 } from "@/lib/bills-api";
 import { SessionExpiredError } from "@/lib/api";
+import { fetchMe } from "@/lib/user-api";
 import {
   categoryFilterLabel,
   distinctCategories,
@@ -46,6 +47,11 @@ export default function BillsPage() {
   const [restoreTarget, setRestoreTarget] = useState<{ id: number; name: string; data: BillTemplateUpdate } | null>(null);
   const [restoring, setRestoring] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
+  const [defaultCurrency, setDefaultCurrency] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchMe().then((p) => setDefaultCurrency(p.default_currency)).catch(() => {});
+  }, []);
 
   const filteredTemplates =
     categoryFilter.size === 0
@@ -278,6 +284,7 @@ export default function BillsPage() {
             <BillTemplateForm
               onSave={handleCreate}
               onCancel={() => setExpandedId(null)}
+              defaultCurrency={defaultCurrency}
             />
           </div>
         </div>

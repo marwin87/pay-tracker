@@ -311,6 +311,14 @@
             "emailTaken": "Ten adres e-mail jest już zarejestrowany.",
             "emailAndPasswordRequired": "Podaj nowy adres e-mail oraz aktualne hasło."
         },
+        "currency": {
+            "title": "Domyślna waluta",
+            "description": "Używana do wstępnego wyboru waluty przy tworzeniu nowego rachunku.",
+            "ariaLabel": "Waluta",
+            "customOption": "Inna…",
+            "customCurrencyAriaLabel": "Kod waluty niestandardowej",
+            "customCurrencyPlaceholder": "np. CHF"
+        },
         "emailNotifications": {
             "title": "Powiadomienia e-mail",
             "description": "Wybierz, kiedy otrzymywać przypomnienia e-mail o nadchodzących i zaległych rachunkach.",
