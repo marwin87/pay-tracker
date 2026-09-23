@@ -11,7 +11,7 @@ permissions:
 jobs:
   version:
     name: Resolve version
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     outputs:
       value: ${{ steps.version.outputs.value }}
     steps:
@@ -21,7 +21,7 @@ jobs:
 
   backend-and-demo:
     name: Docker — build & push backend/demo (QEMU multi-arch)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: version
     steps:
       - uses: actions/checkout@v5
@@ -116,7 +116,7 @@ jobs:
   frontend-merge:
     name: Docker — merge frontend multi-arch manifest
     needs: [version, frontend-build]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Download digests
         uses: actions/download-artifact@v4
@@ -149,7 +149,7 @@ jobs:
 
   sync-version:
     name: Sync version files to released tag
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     needs: [backend-and-demo, frontend-merge]
     steps:
       - uses: actions/checkout@v5
