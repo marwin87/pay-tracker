@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { deletePayment, type PaymentInstanceOut } from "@/lib/payments-api";
+import { Checkbox } from "@/components/ui/Checkbox";
 
 interface Props {
   instance: PaymentInstanceOut;
@@ -78,18 +79,16 @@ export default function DeletePaymentDialog({
         </p>
 
         {isRecurring && (
-          <label className="mb-5 flex cursor-pointer items-start gap-3">
-            <input
-              type="checkbox"
+          <div className="mb-5">
+            <Checkbox
               checked={deleteFuture}
-              onChange={(e) => setDeleteFuture(e.target.checked)}
+              onChange={setDeleteFuture}
               disabled={isDeleting}
-              className="mt-0.5 h-4 w-4 shrink-0 cursor-pointer rounded border-slate-300 accent-red-600 disabled:opacity-50"
+              color="red"
+              align="start"
+              label={t("deleteFutureLabel")}
             />
-            <span className="text-sm text-slate-600 dark:text-slate-400">
-              {t("deleteFutureLabel")}
-            </span>
-          </label>
+          </div>
         )}
 
         {error && (

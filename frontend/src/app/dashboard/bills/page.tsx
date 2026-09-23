@@ -276,8 +276,8 @@ export default function BillsPage() {
 
       {/* Inline create form */}
       {expandedId === "new" && (
-        <div className="mb-4 overflow-hidden rounded-xl border border-green-200 bg-white shadow-sm dark:border-green-900 dark:bg-slate-800">
-          <div className="border-b border-green-100 bg-green-50 px-5 py-3 dark:border-green-900 dark:bg-green-900/20">
+        <div className="mb-4 rounded-xl border border-green-200 bg-white shadow-sm dark:border-green-900 dark:bg-slate-800">
+          <div className="rounded-t-xl border-b border-green-100 bg-green-50 px-5 py-3 dark:border-green-900 dark:bg-green-900/20">
             <h2 className="text-sm font-semibold text-green-800 dark:text-green-300">{t("newBill")}</h2>
           </div>
           <div className="p-5">

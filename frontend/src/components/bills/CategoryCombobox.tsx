@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { fetchCategories, type Category } from "@/lib/categories-api";
 import { categoryLabel } from "@/lib/categories";
+import Dropdown from "@/components/ui/Dropdown";
 
 interface Props {
   id: string;
@@ -32,23 +33,25 @@ export default function CategoryCombobox({ id, value, onChange }: Props) {
     };
   }, []);
 
-  const options = categories
+  const categoryOptions = categories
     .filter((cat) => !cat.is_archived || cat.id === value)
     .sort((a, b) => a.sort_order - b.sort_order);
 
+  const options = [
+    { value: "", label: "—" },
+    ...categoryOptions.map((cat) => ({
+      value: String(cat.id),
+      label: categoryLabel(cat, t),
+    })),
+  ];
+
   return (
-    <select
+    <Dropdown
       id={id}
-      value={value}
-      onChange={(e) => onChange(e.target.value ? Number(e.target.value) : "")}
-      className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-colors focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40"
-    >
-      <option value="">—</option>
-      {options.map((cat) => (
-        <option key={cat.id} value={cat.id}>
-          {categoryLabel(cat, t)}
-        </option>
-      ))}
-    </select>
+      value={value === "" ? "" : String(value)}
+      onChange={(v) => onChange(v === "" ? "" : Number(v))}
+      options={options}
+      scrollable
+    />
   );
 }

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { CURRENCY_NAMES, PRESET_CURRENCIES } from "@/lib/currency";
+import Dropdown from "@/components/ui/Dropdown";
 
 type CurrencyOption = (typeof PRESET_CURRENCIES)[number] | "custom";
 
@@ -12,7 +13,6 @@ interface Props {
   customOption: string;
   customCurrencyAriaLabel: string;
   customCurrencyPlaceholder: string;
-  selectClassName: string;
   inputClassName: string;
 }
 
@@ -23,7 +23,6 @@ export default function CurrencyPicker({
   customOption,
   customCurrencyAriaLabel,
   customCurrencyPlaceholder,
-  selectClassName,
   inputClassName,
 }: Props) {
   const isPreset = (PRESET_CURRENCIES as readonly string[]).includes(value);
@@ -43,19 +42,19 @@ export default function CurrencyPicker({
     onChange(v.trim().toUpperCase());
   }
 
+  const options: { value: CurrencyOption; label: string }[] = [
+    ...PRESET_CURRENCIES.map((c) => ({ value: c, label: `${c} — ${CURRENCY_NAMES[c]}` })),
+    { value: "custom" as const, label: customOption },
+  ];
+
   return (
     <>
-      <select
-        aria-label={ariaLabel}
+      <Dropdown
+        ariaLabel={ariaLabel}
         value={currencyOption}
-        onChange={(e) => handleOptionChange(e.target.value as CurrencyOption)}
-        className={selectClassName}
-      >
-        {PRESET_CURRENCIES.map((c) => (
-          <option key={c} value={c}>{c} — {CURRENCY_NAMES[c]}</option>
-        ))}
-        <option value="custom">{customOption}</option>
-      </select>
+        onChange={handleOptionChange}
+        options={options}
+      />
       {currencyOption === "custom" && (
         <input
           aria-label={customCurrencyAriaLabel}

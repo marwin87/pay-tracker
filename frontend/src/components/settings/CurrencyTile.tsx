@@ -83,7 +83,6 @@ export function CurrencyTile({
         customOption={tp("currency.customOption")}
         customCurrencyAriaLabel={tp("currency.customCurrencyAriaLabel")}
         customCurrencyPlaceholder={tp("currency.customCurrencyPlaceholder")}
-        selectClassName={selectClass}
         inputClassName={customInputClass}
       />
 

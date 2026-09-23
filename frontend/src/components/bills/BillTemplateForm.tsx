@@ -5,6 +5,7 @@ import { useTranslations, useLocale } from "next-intl";
 import CategoryCombobox from "./CategoryCombobox";
 import MonthDayCalendar from "./MonthDayCalendar";
 import CurrencyPicker from "@/components/CurrencyPicker";
+import { Checkbox } from "@/components/ui/Checkbox";
 import { LOCALE_DEFAULT_CURRENCY } from "@/lib/currency";
 import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
 
@@ -154,7 +155,6 @@ export default function BillTemplateForm({ initial, defaultCurrency, onSave, onC
               customOption={t("customOption")}
               customCurrencyAriaLabel={t("customCurrencyAriaLabel")}
               customCurrencyPlaceholder={t("customCurrencyPlaceholder")}
-              selectClassName={inputClass}
               inputClassName={inputClass + " mt-2"}
             />
           </div>
@@ -221,15 +221,7 @@ export default function BillTemplateForm({ initial, defaultCurrency, onSave, onC
       </div>
 
       {/* Paused toggle */}
-      <label className="flex cursor-pointer items-center gap-2.5 text-sm text-slate-600 dark:text-slate-400">
-        <input
-          type="checkbox"
-          checked={isPaused}
-          onChange={(e) => setIsPaused(e.target.checked)}
-          className="h-4 w-4 rounded accent-green-700"
-        />
-        {t("pauseRecurrence")}
-      </label>
+      <Checkbox checked={isPaused} onChange={setIsPaused} label={t("pauseRecurrence")} />
 
       <div className="flex justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-700">
         <button

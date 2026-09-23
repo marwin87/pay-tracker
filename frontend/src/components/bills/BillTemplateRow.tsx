@@ -68,7 +68,7 @@ export default function BillTemplateRow({
 
   return (
     <div
-      className={`group rounded-xl border border-slate-200 bg-white overflow-hidden shadow-sm dark:bg-slate-800 dark:border-slate-700 border-l-4 ${leftBorder}`}
+      className={`group rounded-xl border border-slate-200 bg-white shadow-sm dark:bg-slate-800 dark:border-slate-700 border-l-4 ${leftBorder}`}
     >
       {/* Collapsed row */}
       <div
@@ -152,7 +152,7 @@ export default function BillTemplateRow({
 
       {/* Expanded edit form */}
       {isExpanded && (
-        <div className="border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-5">
+        <div className="rounded-b-xl border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-5">
           <BillTemplateForm
             initial={{
               name: template.name,

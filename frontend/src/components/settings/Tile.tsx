@@ -63,11 +63,11 @@ export function Tile({
   const s = TILE_STYLES[color];
   return (
     <div
-      className={`rounded-xl border-l-4 border overflow-hidden ${s.border}`}
+      className={`rounded-xl border-l-4 border ${s.border}`}
     >
       <button
         onClick={onToggle}
-        className={`w-full text-left px-5 py-4 ${s.header} ${onToggle ? "cursor-pointer" : "cursor-default"}`}
+        className={`w-full text-left px-5 py-4 ${isCollapsed ? "rounded-xl" : "rounded-t-xl"} ${s.header} ${onToggle ? "cursor-pointer" : "cursor-default"}`}
       >
         <div className="flex items-center gap-2">
           <Icon size={18} className={s.icon} />
@@ -91,7 +91,7 @@ export function Tile({
       </button>
 
       {!isCollapsed && (
-        <div className="px-5 py-4 space-y-4 bg-white dark:bg-slate-800">
+        <div className="rounded-b-xl px-5 py-4 space-y-4 bg-white dark:bg-slate-800">
           {children}
 
           {saveError && (

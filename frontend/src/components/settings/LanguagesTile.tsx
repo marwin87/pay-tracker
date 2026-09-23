@@ -3,6 +3,7 @@
 import { Languages } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useLocale, type Locale } from "@/context/locale-context";
+import { CheckboxMark } from "@/components/ui/Checkbox";
 import { Tile } from "./Tile";
 
 const LOCALES: { value: Locale; flag: string; name: string }[] = [
@@ -52,12 +53,10 @@ export function LanguagesTile({
               key={value}
               className={`flex items-center ${isActive ? "opacity-50" : "cursor-pointer"}`}
             >
-              <input
-                type="checkbox"
+              <CheckboxMark
                 checked={enabledLocales.includes(value)}
                 disabled={isActive}
-                onChange={(e) => handleChange(value, e.target.checked)}
-                className="h-4 w-4 rounded border-slate-200 accent-green-700 focus:ring-green-500 dark:border-slate-600"
+                onChange={(checked) => handleChange(value, checked)}
               />
               <span className="ml-2 text-sm text-slate-700 dark:text-slate-300">
                 {flag} {name}

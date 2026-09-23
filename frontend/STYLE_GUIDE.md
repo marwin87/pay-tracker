@@ -96,12 +96,55 @@ In practice, every real tile renders its own local `save`/`cancel` buttons as ch
 
 Note `Tile`'s header (icon + title + description) always renders as a `<button>`, even when the tile has no `onToggle` (non-collapsible) — see the gotcha above.
 
+`Tile.tsx` rounds its header/content corners via `rounded-t-xl`/`rounded-b-xl` on those individual elements, not `overflow-hidden` on the outer wrapper — that wrapper used to have `overflow-hidden` for the same corner-clipping purpose, but it silently clipped any `Dropdown` popup rendered inside the tile the moment it overflowed past the tile's edge. Don't reintroduce `overflow-hidden` there.
+
 ## Inputs
 
 ```
 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40
 ```
-Same class for `<select>` (drop the `placeholder:` part). Focus ring is always green regardless of the tile's color — don't theme it per-tile.
+Focus ring is always green regardless of the tile's color — don't theme it per-tile.
+
+## Checkboxes
+
+**Never use a bare `accent-*` checkbox.** The `accent-color` CSS property still renders the browser/OS-native checkbox shape underneath — sized and shaped differently across browsers — and looks inconsistent with everything else. Every checkbox uses the shared component in `frontend/src/components/ui/Checkbox.tsx`, built the same way as `Switch.tsx`: a visually-hidden native `<input type="checkbox">` (`sr-only peer`) driving a fully custom `peer-checked:`-styled box + `lucide-react` `Check` icon, so it stays keyboard/screen-reader accessible without inheriting native rendering.
+
+```tsx
+<Checkbox checked={value} onChange={setValue} label="…" />              // label + box, the common case
+<Checkbox checked={value} onChange={setValue} label="…" color="red" align="start" />  // destructive dialog, multi-line label
+<CheckboxMark checked={value} onChange={setValue} size="sm" />          // bare box only — you already have your own <label>/layout (see MultiSelectFilter.tsx)
+```
+
+- `color`: `green` (default) or `red` — same semantics as the button color guide (red = destructive action, e.g. `DeletePaymentDialog.tsx`'s "also delete future entries").
+- `align`: `center` (default, single-line label) or `start` (label wraps to multiple lines — aligns the box to the first line, see `DeletePaymentDialog.tsx`).
+- `size` (on `CheckboxMark` only): `md` (default, `h-4 w-4`) or `sm` (`h-3.5 w-3.5`, for dense contexts like the `MultiSelectFilter.tsx` popup).
+
+## Dropdowns
+
+**Never use a native `<select>`.** The open popup renders with OS-native styling that can't be themed and looks inconsistent with the rest of the app. Every dropdown in this app — including any list of choices, not just form fields — uses the shared `Dropdown` component (`frontend/src/components/ui/Dropdown.tsx`), which generalizes the custom popup pattern originally built for `DayPicker.tsx` (click-outside/Escape to close, `role="listbox"`/`role="option"`, green hover/selected states).
+
+```tsx
+<Dropdown
+  value={value}
+  onChange={setValue}
+  options={[{ value: "a", label: "A" }, ...]}
+  ariaLabel="…"        // or pass `id` + an associated <label htmlFor>
+  variant="field"        // "field" | "pill" | "pill-sm"
+  scrollable              // for long option lists (time slots, categories)
+/>
+```
+
+Pick `variant` by context, matching the reference components:
+
+| Variant | Shape | Reference |
+|---|---|---|
+| `field` (default) | full-width form field, `rounded-xl` | `CategoryCombobox.tsx`, `CurrencyPicker.tsx` |
+| `pill` | compact rounded pill, `text-sm` | `LanguageToggle.tsx`, the reminder-time picker in `EmailNotificationsTile.tsx` |
+| `pill-sm` | same pill, `text-xs` | `FilterSelect.tsx` (Sort by / Filter by) — don't use plain `pill` here, it was already tried and produced visibly oversized filter dropdowns |
+
+`options[].value` must be `string` — for a numeric or union-typed value (category id, currency code with a "custom" fallback), convert at the call site (`String(id)` in, `Number(v)` out) rather than extending the component's generic. See `CategoryCombobox.tsx` for the pattern.
+
+**Gotcha inherited from the `overflow-hidden` corner-clipping trick** (see Settings tiles above and `BillTemplateRow.tsx`): never put `overflow-hidden` on a container that has a `Dropdown` (or any absolutely-positioned popup) inside it, even indirectly — it silently clips the open popup at the container's edge instead of erroring. If a container needs rounded corners clipped, round the specific child elements that have their own background (`rounded-t-xl`/`rounded-b-xl`) instead of the whole box.
 
 ## Text colors
 

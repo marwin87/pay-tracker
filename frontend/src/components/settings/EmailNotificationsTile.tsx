@@ -11,6 +11,8 @@ import {
   type UserProfile,
 } from "@/lib/user-api";
 import { Switch } from "@/components/ui/Switch";
+import { Checkbox } from "@/components/ui/Checkbox";
+import Dropdown from "@/components/ui/Dropdown";
 import { Tile } from "./Tile";
 
 const SLOTS = Array.from({ length: 48 }, (_, i) => i * 30);
@@ -169,10 +171,6 @@ export function EmailNotificationsTile({
     }
   }
 
-  const checkboxClass =
-    "h-4 w-4 rounded border-slate-200 accent-green-700 focus:ring-green-500 dark:border-slate-600";
-  const labelClass = "ml-2 text-sm text-slate-700 dark:text-slate-300 cursor-pointer";
-
   const checkboxes: [string, boolean, (v: boolean) => void, string][] = [
     ["2-before", notify2, setNotify2, tp("emailNotifications.twoDaysBefore")],
     ["1-before", notify1, setNotify1, tp("emailNotifications.oneDayBefore")],
@@ -200,15 +198,7 @@ export function EmailNotificationsTile({
       <div className={!emailEnabled ? "opacity-50 pointer-events-none" : ""}>
         <div className="space-y-2">
           {checkboxes.map(([key, checked, setter, label]) => (
-            <label key={key} className="flex items-center">
-              <input
-                type="checkbox"
-                checked={checked}
-                onChange={(e) => setter(e.target.checked)}
-                className={checkboxClass}
-              />
-              <span className={labelClass}>{label}</span>
-            </label>
+            <Checkbox key={key} checked={checked} onChange={setter} label={label} />
           ))}
         </div>
 
@@ -225,15 +215,14 @@ export function EmailNotificationsTile({
           <label className="text-sm font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
             {tp("emailNotifications.sendTimeLabel")}
           </label>
-          <select
-            value={sendMinute}
-            onChange={(e) => setSendMinute(Number(e.target.value))}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 shadow-sm outline-none transition-all hover:border-slate-300 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-slate-500 dark:focus:border-green-600 dark:focus:ring-green-900/40"
-          >
-            {SLOTS.map((h) => (
-              <option key={h} value={h}>{fmtSlot(h)}</option>
-            ))}
-          </select>
+          <Dropdown
+            variant="pill"
+            value={String(sendMinute)}
+            onChange={(v) => setSendMinute(Number(v))}
+            options={SLOTS.map((h) => ({ value: String(h), label: fmtSlot(h) }))}
+            ariaLabel={tp("emailNotifications.sendTimeLabel")}
+            scrollable
+          />
         </div>
 
         {isDirty && (
@@ -242,14 +231,14 @@ export function EmailNotificationsTile({
               <button
                 onClick={save}
                 disabled={isSaving}
-                className="rounded-lg border border-green-700 bg-green-700 px-4 py-1.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 disabled:opacity-50"
+                className="rounded-lg border border-emerald-200 bg-white px-4 py-1.5 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
               >
                 {isSaving ? t("saving") : t("save")}
               </button>
               <button
                 onClick={cancel}
                 disabled={isSaving}
-                className="rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                className="rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
               >
                 {t("cancel")}
               </button>

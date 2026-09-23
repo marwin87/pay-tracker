@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { CheckboxMark } from "@/components/ui/Checkbox";
 
 interface Option {
   value: string;
@@ -97,13 +98,12 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
           {options.map((opt) => (
             <label
               key={opt.value}
-              className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-700"
+              className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-700 hover:bg-green-50 hover:text-green-800 dark:text-slate-300 dark:hover:bg-green-900/30 dark:hover:text-green-300"
             >
-              <input
-                type="checkbox"
+              <CheckboxMark
+                size="sm"
                 checked={selected.has(opt.value)}
                 onChange={() => toggle(opt.value)}
-                className="h-3.5 w-3.5 shrink-0 rounded border-slate-300 accent-green-600"
               />
               <span className="truncate">{opt.label}</span>
             </label>
