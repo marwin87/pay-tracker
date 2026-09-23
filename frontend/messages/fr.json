@@ -294,6 +294,7 @@
         "pageTitle": "Paramètres",
         "tabs": {
             "account": "Compte",
+            "preferences": "Préférences",
             "notifications": "Notifications",
             "categories": "Catégories",
             "data": "Données"
@@ -308,7 +309,7 @@
         "saveFailed": "Échec de l'enregistrement. Veuillez réessayer.",
         "profile": {
             "title": "Profil utilisateur",
-            "description": "Mettez à jour votre email et votre mot de passe de connexion.",
+            "description": "Modifiez l’adresse email de connexion.",
             "currentEmailLabel": "Email actuel :",
             "emailLabel": "Nouvelle adresse email",
             "emailHint": "Saisissez une nouvelle adresse, puis confirmez avec votre mot de passe actuel.",
@@ -321,6 +322,10 @@
             "wrongPassword": "Le mot de passe actuel est incorrect.",
             "emailTaken": "Cette adresse email est déjà enregistrée.",
             "emailAndPasswordRequired": "Veuillez saisir à la fois la nouvelle adresse email et votre mot de passe actuel."
+        },
+        "password": {
+            "title": "Mot de passe",
+            "description": "Choisissez un nouveau mot de passe de connexion."
         },
         "currency": {
             "title": "Devise par défaut",

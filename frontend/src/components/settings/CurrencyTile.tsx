@@ -68,7 +68,7 @@ export function CurrencyTile({
 
   return (
     <Tile
-      color="green"
+      color="purple"
       icon={Coins}
       title={tp("currency.title")}
       description={tp("currency.description")}

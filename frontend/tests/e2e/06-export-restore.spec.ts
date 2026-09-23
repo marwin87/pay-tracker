@@ -33,7 +33,7 @@ test('restore from backup preserves bill count', async ({ page }) => {
 
   // Step: navigate to settings where RestoreButton lives, under the Data tab
   await page.goto('/dashboard/settings');
-  await page.getByRole('button', { name: 'Data' }).click();
+  await page.getByRole('tab', { name: 'Data', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Restore from backup' })).toBeVisible();
 
   // Step: click restore button — triggers hidden file input
@@ -96,7 +96,7 @@ test('restoring a backup with fewer bills/payments than current shows the stale-
   await syncPaymentsViaApi(page);
 
   await page.goto('/dashboard/settings');
-  await page.getByRole('button', { name: 'Data' }).click();
+  await page.getByRole('tab', { name: 'Data', exact: true }).click();
   const [fileChooser] = await Promise.all([
     page.waitForEvent('filechooser'),
     page.getByRole('button', { name: 'Restore from backup' }).click(),
@@ -127,7 +127,7 @@ test('picking a malformed backup file shows an inline error, not the comparison/
   fs.writeFileSync(tmpFile, 'this is not valid JSON {{{');
 
   await page.goto('/dashboard/settings');
-  await page.getByRole('button', { name: 'Data' }).click();
+  await page.getByRole('tab', { name: 'Data', exact: true }).click();
   const [fileChooser] = await Promise.all([
     page.waitForEvent('filechooser'),
     page.getByRole('button', { name: 'Restore from backup' }).click(),

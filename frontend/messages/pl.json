@@ -290,6 +290,7 @@
         "pageTitle": "Ustawienia",
         "tabs": {
             "account": "Konto",
+            "preferences": "Preferencje",
             "notifications": "Powiadomienia",
             "categories": "Kategorie",
             "data": "Dane"
@@ -304,7 +305,7 @@
         "saveFailed": "Zapis nie powiódł się. Spróbuj ponownie.",
         "profile": {
             "title": "Profil użytkownika",
-            "description": "Zmień swój adres e-mail i hasło.",
+            "description": "Zmień adres e-mail, którego używasz do logowania.",
             "currentEmailLabel": "Aktualny e-mail:",
             "emailLabel": "Nowy adres e-mail",
             "emailHint": "Wpisz nowy adres i potwierdź aktualnym hasłem.",
@@ -317,6 +318,10 @@
             "wrongPassword": "Aktualne hasło jest nieprawidłowe.",
             "emailTaken": "Ten adres e-mail jest już zarejestrowany.",
             "emailAndPasswordRequired": "Podaj nowy adres e-mail oraz aktualne hasło."
+        },
+        "password": {
+            "title": "Hasło",
+            "description": "Ustaw nowe hasło do logowania."
         },
         "currency": {
             "title": "Domyślna waluta",

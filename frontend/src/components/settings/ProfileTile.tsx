@@ -3,7 +3,7 @@
 import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { changeEmail, changePassword, type UserProfile } from "@/lib/user-api";
+import { changeEmail, type UserProfile } from "@/lib/user-api";
 import { Tile } from "./Tile";
 
 const inputClass =
@@ -36,14 +36,8 @@ export function ProfileTile({
   const [emailError, setEmailError] = useState<string | null>(null);
   const [isEmailSaving, setIsEmailSaving] = useState(false);
 
-  const [curPassword, setCurPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [isPasswordSaving, setIsPasswordSaving] = useState(false);
-
   const isEmailDirty = emailInput.length > 0 || emailPassword.length > 0;
-  const isPasswordDirty = curPassword.length > 0 || newPassword.length > 0;
-  const isDirty = isEmailDirty || isPasswordDirty;
+  const isDirty = isEmailDirty;
 
   useEffect(() => {
     onDirtyChange(isDirty);
@@ -70,24 +64,6 @@ export function ProfileTile({
       );
     } finally {
       setIsEmailSaving(false);
-    }
-  }
-
-  async function savePassword() {
-    if (newPassword.length < 8) {
-      setPasswordError(tp("profile.passwordTooShort"));
-      return;
-    }
-    setPasswordError(null);
-    setIsPasswordSaving(true);
-    try {
-      await changePassword(curPassword, newPassword);
-      setCurPassword("");
-      setNewPassword("");
-    } catch {
-      setPasswordError(tp("profile.wrongPassword"));
-    } finally {
-      setIsPasswordSaving(false);
     }
   }
 
@@ -144,45 +120,6 @@ export function ProfileTile({
         )}
       </div>
 
-      <hr className="border-slate-200 dark:border-slate-700" />
-
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-          {tp("profile.newPasswordLabel")}
-        </label>
-        <p className="text-xs text-slate-400 dark:text-slate-500">{tp("profile.passwordHint")}</p>
-        <input
-          type="password"
-          value={curPassword}
-          onChange={(e) => setCurPassword(e.target.value)}
-          placeholder={tp("profile.currentPasswordPlaceholder")}
-          className={inputClass}
-        />
-        <input
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          placeholder={tp("profile.newPasswordPlaceholder")}
-          className={inputClass}
-        />
-        {passwordError && (
-          <p className="text-sm text-red-600 dark:text-red-400">{passwordError}</p>
-        )}
-        {isPasswordDirty && (
-          <div className="flex gap-2 pt-1">
-            <button onClick={savePassword} disabled={isPasswordSaving} className={btnSave}>
-              {isPasswordSaving ? tp("saving") : tp("save")}
-            </button>
-            <button
-              onClick={() => { setCurPassword(""); setNewPassword(""); setPasswordError(null); }}
-              disabled={isPasswordSaving}
-              className={btnCancel}
-            >
-              {tp("cancel")}
-            </button>
-          </div>
-        )}
-      </div>
     </Tile>
   );
 }

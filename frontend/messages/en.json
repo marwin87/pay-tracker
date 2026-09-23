@@ -294,6 +294,7 @@
         "pageTitle": "Settings",
         "tabs": {
             "account": "Account",
+            "preferences": "Preferences",
             "notifications": "Notifications",
             "categories": "Categories",
             "data": "Data"
@@ -308,7 +309,7 @@
         "saveFailed": "Save failed. Please try again.",
         "profile": {
             "title": "User Profile",
-            "description": "Update your login email and password.",
+            "description": "Change the email address you sign in with.",
             "currentEmailLabel": "Current email:",
             "emailLabel": "New email address",
             "emailHint": "Enter a new address, then confirm with your current password.",
@@ -321,6 +322,10 @@
             "wrongPassword": "Current password is incorrect.",
             "emailTaken": "That email is already registered.",
             "emailAndPasswordRequired": "Please enter both a new email address and your current password."
+        },
+        "password": {
+            "title": "Password",
+            "description": "Choose a new password for signing in."
         },
         "currency": {
             "title": "Default Currency",

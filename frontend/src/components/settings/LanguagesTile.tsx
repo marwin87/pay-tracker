@@ -37,7 +37,7 @@ export function LanguagesTile({
 
   return (
     <Tile
-      color="blue"
+      color="purple"
       icon={Languages}
       title={tp("languages.title")}
       description={tp("languages.description")}

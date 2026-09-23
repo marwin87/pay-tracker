@@ -294,6 +294,7 @@
         "pageTitle": "Ajustes",
         "tabs": {
             "account": "Cuenta",
+            "preferences": "Preferencias",
             "notifications": "Notificaciones",
             "categories": "Categorías",
             "data": "Datos"
@@ -308,7 +309,7 @@
         "saveFailed": "Error al guardar. Inténtalo de nuevo.",
         "profile": {
             "title": "Perfil de usuario",
-            "description": "Actualiza tu correo electrónico y contraseña de inicio de sesión.",
+            "description": "Cambia el correo electrónico con el que inicias sesión.",
             "currentEmailLabel": "Correo electrónico actual:",
             "emailLabel": "Nueva dirección de correo electrónico",
             "emailHint": "Introduce una nueva dirección y confirma con tu contraseña actual.",
@@ -321,6 +322,10 @@
             "wrongPassword": "La contraseña actual es incorrecta.",
             "emailTaken": "Ese correo electrónico ya está registrado.",
             "emailAndPasswordRequired": "Introduce tanto la nueva dirección de correo como tu contraseña actual."
+        },
+        "password": {
+            "title": "Contraseña",
+            "description": "Elige una nueva contraseña para iniciar sesión."
         },
         "currency": {
             "title": "Moneda predeterminada",

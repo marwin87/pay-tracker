@@ -9,8 +9,9 @@ import { notifyAuthChange } from "@/lib/auth-store";
 import BackupButton from "@/components/BackupButton";
 import RestoreButton from "@/components/RestoreButton";
 import SnapshotRecoverySection from "@/components/SnapshotRecoverySection";
-import { Tile } from "@/components/settings/Tile";
+import { Tile, TILE_STYLES, type TileColor } from "@/components/settings/Tile";
 import { ProfileTile } from "@/components/settings/ProfileTile";
+import { PasswordTile } from "@/components/settings/PasswordTile";
 import { CurrencyTile } from "@/components/settings/CurrencyTile";
 import { LanguagesTile } from "@/components/settings/LanguagesTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
@@ -18,6 +19,24 @@ import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificat
 import { CategoriesTile } from "@/components/settings/CategoriesTile";
 import { UnsavedChangesDialog } from "@/components/settings/UnsavedChangesDialog";
 import DeleteAccountDialog from "@/components/settings/DeleteAccountDialog";
+
+const TABS = ["account", "preferences", "notifications", "categories", "data"] as const;
+type TabKey = (typeof TABS)[number];
+
+// One color per tab; tiles inside a tab and the active-tab underline all use it.
+const TAB_COLOR: Record<TabKey, TileColor> = {
+  account: "blue",
+  preferences: "purple",
+  notifications: "yellow",
+  categories: "green",
+  data: "orange",
+};
+
+function tabFromUrl(): TabKey {
+  if (typeof window === "undefined") return "account";
+  const tab = new URLSearchParams(window.location.search).get("tab");
+  return TABS.find((k) => k === tab) ?? "account";
+}
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
@@ -27,20 +46,26 @@ export default function SettingsPage() {
   const [profileDirty, setProfileDirty] = useState(false);
   const [currencyDirty, setCurrencyDirty] = useState(false);
   const [emailDirty, setEmailDirty] = useState(false);
+  const [passwordDirty, setPasswordDirty] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
 
-  const TABS = ["account", "notifications", "categories", "data"] as const;
-  type TabKey = (typeof TABS)[number];
-  const [activeTab, setActiveTab] = useState<TabKey>("account");
+  // Safe to read the URL in the initializer: nothing tab-related renders until the profile loads.
+  const [activeTab, setActiveTab] = useState<TabKey>(tabFromUrl);
 
-  const isDirtyAny = profileDirty || currencyDirty || emailDirty;
+  const isDirtyAny = profileDirty || currencyDirty || emailDirty || passwordDirty;
 
   const onProfileDirty = useCallback((d: boolean) => setProfileDirty(d), []);
   const onCurrencyDirty = useCallback((d: boolean) => setCurrencyDirty(d), []);
   const onEmailDirty = useCallback((d: boolean) => setEmailDirty(d), []);
+  const onPasswordDirty = useCallback((d: boolean) => setPasswordDirty(d), []);
+
+  function selectTab(tab: TabKey) {
+    setActiveTab(tab);
+    window.history.replaceState(null, "", `?tab=${tab}`);
+  }
 
   useEffect(() => {
     fetchMe().then(setProfile).catch(() => {});
@@ -116,14 +141,21 @@ export default function SettingsPage() {
         {t("pageTitle")}
       </h1>
 
-      <div className="flex gap-1 border-b border-slate-200 dark:border-slate-700">
+      <div
+        role="tablist"
+        className="flex gap-1 border-b border-slate-200 dark:border-slate-700"
+      >
         {TABS.map((tab) => (
           <button
             key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+            id={`settings-tab-${tab}`}
+            role="tab"
+            aria-selected={activeTab === tab}
+            aria-controls={`settings-panel-${tab}`}
+            onClick={() => selectTab(tab)}
+            className={`whitespace-nowrap px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
               activeTab === tab
-                ? "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400"
+                ? TILE_STYLES[TAB_COLOR[tab]].tab
                 : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
@@ -132,20 +164,19 @@ export default function SettingsPage() {
         ))}
       </div>
 
-      <div className={`space-y-4 ${activeTab === "account" ? "" : "hidden"}`}>
+      <div
+        role="tabpanel"
+        id="settings-panel-account"
+        aria-labelledby="settings-tab-account"
+        className={`space-y-4 ${activeTab === "account" ? "" : "hidden"}`}
+      >
         <ProfileTile
           profile={profile}
           onProfileUpdate={setProfile}
           onDirtyChange={onProfileDirty}
           t={t}
         />
-        <CurrencyTile
-          profile={profile}
-          onProfileUpdate={setProfile}
-          onDirtyChange={onCurrencyDirty}
-          t={t}
-        />
-        <LanguagesTile t={t} />
+        <PasswordTile onDirtyChange={onPasswordDirty} t={t} />
 
         <Tile
           color="red"
@@ -164,7 +195,27 @@ export default function SettingsPage() {
         </Tile>
       </div>
 
-      <div className={`space-y-4 ${activeTab === "notifications" ? "" : "hidden"}`}>
+      <div
+        role="tabpanel"
+        id="settings-panel-preferences"
+        aria-labelledby="settings-tab-preferences"
+        className={`space-y-4 ${activeTab === "preferences" ? "" : "hidden"}`}
+      >
+        <CurrencyTile
+          profile={profile}
+          onProfileUpdate={setProfile}
+          onDirtyChange={onCurrencyDirty}
+          t={t}
+        />
+        <LanguagesTile t={t} />
+      </div>
+
+      <div
+        role="tabpanel"
+        id="settings-panel-notifications"
+        aria-labelledby="settings-tab-notifications"
+        className={`space-y-4 ${activeTab === "notifications" ? "" : "hidden"}`}
+      >
         <EmailNotificationsTile
           profile={profile}
           onProfileUpdate={setProfile}
@@ -175,13 +226,23 @@ export default function SettingsPage() {
         <BrowserNotificationsTile t={t} />
       </div>
 
-      <div className={`space-y-4 ${activeTab === "categories" ? "" : "hidden"}`}>
+      <div
+        role="tabpanel"
+        id="settings-panel-categories"
+        aria-labelledby="settings-tab-categories"
+        className={`space-y-4 ${activeTab === "categories" ? "" : "hidden"}`}
+      >
         <CategoriesTile t={t} />
       </div>
 
-      <div className={`space-y-4 ${activeTab === "data" ? "" : "hidden"}`}>
+      <div
+        role="tabpanel"
+        id="settings-panel-data"
+        aria-labelledby="settings-tab-data"
+        className={`space-y-4 ${activeTab === "data" ? "" : "hidden"}`}
+      >
         <Tile
-          color="blue"
+          color={TAB_COLOR.data}
           icon={HardDriveDownload}
           title={t("backup.title")}
           description={t("backup.description")}
@@ -191,7 +252,7 @@ export default function SettingsPage() {
         </Tile>
 
         <Tile
-          color="red"
+          color={TAB_COLOR.data}
           icon={HardDriveUpload}
           title={t("restore.title")}
           description={t("restore.description")}

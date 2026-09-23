@@ -21,7 +21,7 @@ test('create, rename and archive a custom category in Settings', async ({ page }
 
   await loginNewUser(page);
   await page.goto('/dashboard/settings');
-  await page.getByRole('button', { name: 'Categories', exact: true }).first().click();
+  await page.getByRole('tab', { name: 'Categories', exact: true }).click();
 
   // Step: create
   await page.getByRole('button', { name: '+ Add category' }).click();
@@ -43,7 +43,7 @@ test('create, rename and archive a custom category in Settings', async ({ page }
 
   // Assert: rename + archive are persisted server-side
   await page.reload();
-  await page.getByRole('button', { name: 'Categories', exact: true }).first().click();
+  await page.getByRole('tab', { name: 'Categories', exact: true }).click();
   await expect(page.getByText(renamed, { exact: true })).toBeVisible();
   await expect(page.getByText('archived', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Unarchive', exact: true })).toBeVisible();

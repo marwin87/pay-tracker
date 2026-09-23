@@ -294,6 +294,7 @@
         "pageTitle": "Impostazioni",
         "tabs": {
             "account": "Account",
+            "preferences": "Preferenze",
             "notifications": "Notifiche",
             "categories": "Categorie",
             "data": "Dati"
@@ -308,7 +309,7 @@
         "saveFailed": "Salvataggio non riuscito. Riprova.",
         "profile": {
             "title": "Profilo utente",
-            "description": "Aggiorna la tua email e password di accesso.",
+            "description": "Cambia l’email con cui accedi.",
             "currentEmailLabel": "Email attuale:",
             "emailLabel": "Nuovo indirizzo email",
             "emailHint": "Inserisci un nuovo indirizzo, quindi conferma con la password attuale.",
@@ -321,6 +322,10 @@
             "wrongPassword": "La password attuale non è corretta.",
             "emailTaken": "Quell'email è già registrata.",
             "emailAndPasswordRequired": "Inserisci sia il nuovo indirizzo email sia la password attuale."
+        },
+        "password": {
+            "title": "Password",
+            "description": "Scegli una nuova password di accesso."
         },
         "currency": {
             "title": "Valuta predefinita",

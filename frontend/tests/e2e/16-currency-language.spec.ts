@@ -1,5 +1,5 @@
 /**
- * Flow 16: Settings — default currency and UI language
+ * Flow 16: Settings → Preferences — default currency and UI language
  * Risk: the chosen currency/language is applied only in memory and is lost on reload
  *       (new bills default to the wrong currency, UI reverts to English).
  * Real boundaries: auth, PATCH /auth/me, locale/profile context, reload.
@@ -11,6 +11,7 @@ import { loginNewUser } from './helpers';
 test('default currency change is saved and pre-selected in a new bill', async ({ page }) => {
   await loginNewUser(page);
   await page.goto('/dashboard/settings');
+  await page.getByRole('tab', { name: 'Preferences', exact: true }).click();
 
   // Step: pick PLN in the Currency dropdown and save
   await page.getByRole('button', { name: 'Currency', exact: true }).click();

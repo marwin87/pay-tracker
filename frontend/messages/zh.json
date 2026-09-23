@@ -294,6 +294,7 @@
         "pageTitle": "设置",
         "tabs": {
             "account": "账户",
+            "preferences": "偏好设置",
             "notifications": "通知",
             "categories": "类别",
             "data": "数据"
@@ -308,7 +309,7 @@
         "saveFailed": "保存失败，请重试。",
         "profile": {
             "title": "用户资料",
-            "description": "更新您的登录邮箱和密码。",
+            "description": "更改您的登录邮箱。",
             "currentEmailLabel": "当前邮箱：",
             "emailLabel": "新邮箱地址",
             "emailHint": "输入新地址，然后使用当前密码确认。",
@@ -321,6 +322,10 @@
             "wrongPassword": "当前密码不正确。",
             "emailTaken": "该邮箱已被注册。",
             "emailAndPasswordRequired": "请同时输入新邮箱地址和当前密码。"
+        },
+        "password": {
+            "title": "密码",
+            "description": "设置新的登录密码。"
         },
         "currency": {
             "title": "默认货币",

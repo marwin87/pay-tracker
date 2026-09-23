@@ -46,7 +46,7 @@ test('restoring a backup creates a recoverable snapshot that restores the prior 
 
   // Step: the recovery section appears in Settings > Data > Restore.
   await page.goto('/dashboard/settings');
-  await page.getByRole('button', { name: 'Data' }).click();
+  await page.getByRole('tab', { name: 'Data', exact: true }).click();
   await expect(
     page.getByText(/A snapshot of your data was saved on/)
   ).toBeVisible();
@@ -71,7 +71,7 @@ test('restoring a backup creates a recoverable snapshot that restores the prior 
 
   // Assert: the snapshot was consumed — recovery section no longer shows.
   await page.goto('/dashboard/settings');
-  await page.getByRole('button', { name: 'Data' }).click();
+  await page.getByRole('tab', { name: 'Data', exact: true }).click();
   await expect(
     page.getByText(/A snapshot of your data was saved on/)
   ).not.toBeVisible();
@@ -81,7 +81,7 @@ test('a user with no prior restore sees no recovery section', async ({ page }) =
   await loginNewUser(page);
 
   await page.goto('/dashboard/settings');
-  await page.getByRole('button', { name: 'Data' }).click();
+  await page.getByRole('tab', { name: 'Data', exact: true }).click();
   await expect(
     page.getByText(/A snapshot of your data was saved on/)
   ).not.toBeVisible();

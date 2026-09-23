@@ -3,31 +3,49 @@
 import { ChevronRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 
-export type TileColor = "blue" | "green" | "yellow" | "red";
+// One color per Settings tab: every tile in a tab shares it, and the tab underline reuses it.
+// Exception: red is reserved for the Delete Account tile (destructive), never a tab color.
+export type TileColor = "blue" | "purple" | "yellow" | "green" | "orange" | "red";
 
 export const TILE_STYLES: Record<
   TileColor,
-  { border: string; header: string; icon: string }
+  { border: string; header: string; icon: string; tab: string }
 > = {
   blue: {
     border: "border-blue-400 dark:border-blue-500",
     header: "bg-blue-50 dark:bg-blue-900/30",
     icon: "text-blue-500 dark:text-blue-400",
+    tab: "border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400",
   },
-  green: {
-    border: "border-green-400 dark:border-emerald-500",
-    header: "bg-green-50 dark:bg-emerald-900/30",
-    icon: "text-green-600 dark:text-emerald-400",
+  purple: {
+    border: "border-purple-400 dark:border-purple-500",
+    header: "bg-purple-50 dark:bg-purple-900/30",
+    icon: "text-purple-500 dark:text-purple-400",
+    tab: "border-purple-600 text-purple-600 dark:border-purple-400 dark:text-purple-400",
   },
   yellow: {
     border: "border-yellow-400 dark:border-yellow-500",
     header: "bg-yellow-50 dark:bg-yellow-900/30",
     icon: "text-yellow-600 dark:text-yellow-400",
+    tab: "border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400",
+  },
+  green: {
+    border: "border-green-400 dark:border-emerald-500",
+    header: "bg-green-50 dark:bg-emerald-900/30",
+    icon: "text-green-600 dark:text-emerald-400",
+    tab: "border-green-600 text-green-600 dark:border-emerald-400 dark:text-emerald-400",
+  },
+  orange: {
+    border: "border-orange-400 dark:border-orange-500",
+    header: "bg-orange-50 dark:bg-orange-900/30",
+    icon: "text-orange-500 dark:text-orange-400",
+    tab: "border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-400",
   },
   red: {
     border: "border-red-400 dark:border-red-500",
     header: "bg-red-50 dark:bg-red-900/30",
     icon: "text-red-500 dark:text-red-400",
+    tab: "border-red-600 text-red-600 dark:border-red-400 dark:text-red-400",
   },
 };
 

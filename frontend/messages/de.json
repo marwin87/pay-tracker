@@ -298,6 +298,7 @@
         "pageTitle": "Einstellungen",
         "tabs": {
             "account": "Konto",
+            "preferences": "Einstellungen",
             "notifications": "Benachrichtigungen",
             "categories": "Kategorien",
             "data": "Daten"
@@ -312,7 +313,7 @@
         "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
         "profile": {
             "title": "Benutzerprofil",
-            "description": "Aktualisieren Sie Ihre Anmelde-E-Mail und Ihr Passwort.",
+            "description": "Ändern Sie die E-Mail-Adresse für Ihre Anmeldung.",
             "currentEmailLabel": "Aktuelle E-Mail:",
             "emailLabel": "Neue E-Mail-Adresse",
             "emailHint": "Neue Adresse eingeben und mit dem aktuellen Passwort bestätigen.",
@@ -325,6 +326,10 @@
             "wrongPassword": "Das aktuelle Passwort ist falsch.",
             "emailTaken": "Diese E-Mail-Adresse ist bereits registriert.",
             "emailAndPasswordRequired": "Bitte gib eine neue E-Mail-Adresse und dein aktuelles Passwort ein."
+        },
+        "password": {
+            "title": "Passwort",
+            "description": "Wählen Sie ein neues Passwort für die Anmeldung."
         },
         "currency": {
             "title": "Standardwährung",

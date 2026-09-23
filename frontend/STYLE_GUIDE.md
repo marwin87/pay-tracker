@@ -83,14 +83,17 @@ Non-negotiables: `createPortal(..., document.body)` (never inline — see memory
 
 ## Settings tiles
 
-Always use the shared `Tile` component (`frontend/src/components/settings/Tile.tsx`) for anything on the Settings page — never hand-roll a card. Pick a color by semantics:
+Always use the shared `Tile` component (`frontend/src/components/settings/Tile.tsx`) for anything on the Settings page — never hand-roll a card. **Color is per tab, not per meaning**: every tile in a tab uses the tab's color, and the active-tab underline reuses it (`TAB_COLOR` in `settings/page.tsx`, `tab` class in `TILE_STYLES`). A new tile takes its tab's color — don't pick one.
 
-| Color | Meaning | Example |
-|---|---|---|
-| `blue` | identity / account info | Profile |
-| `green` | positive data actions | Currency, Backup |
-| `yellow` | reserved (not yet used) | — |
-| `red` | destructive or overwrite-risk actions | Restore (overwrites data), Delete account |
+| Tab | Color |
+|---|---|
+| Account | `blue` |
+| Preferences | `purple` |
+| Notifications | `yellow` |
+| Categories | `green` |
+| Data | `orange` |
+
+Sole exception: the Delete Account tile is always `red` (destructive), and `red` is never a tab color.
 
 In practice, every real tile renders its own local `save`/`cancel` buttons as children (outline emerald/slate, see Buttons above) rather than using `Tile`'s built-in `isDirty`/`onSave`/`onCancel` props — that prop path exists but isn't the pattern actually in use. Follow `CurrencyTile.tsx`/`ProfileTile.tsx`, not `Tile.tsx`'s internal solid-green fallback button.
 
