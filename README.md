@@ -19,6 +19,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 ## What it does
 
 - **Bill templates** — define a bill once: name, category, amount, currency, recurrence frequency, due day of month. Pay Tracker generates payment instances automatically each period.
+- **Archive bills** — archive a bill you no longer need to hide it from the active list; its payment history stays intact and stays accessible from the Archive page. Restore an archived bill any time to bring it back to the active list and resume generating payments.
 - **Category grouping** — bills and payments are grouped under category headers. Every account starts with 9 defaults (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other); add your own, rename or recolor any of them, or archive ones you no longer use from Settings. Category is required on every bill. Archiving a category hides it from the "new bill" picker but doesn't touch bills already using it — they keep working and stay filterable, just flagged as archived.
 - **Payment tracking** — view upcoming, overdue, and paid bills for any month, grouped by category. Mark as paid with an optional amount override and note. Revert if you made a mistake.
 - **Email reminders** — optional. Configure SMTP credentials and a send time (30-minute precision) and the app emails you before or after each bill's due date.

@@ -381,3 +381,18 @@ def archive_bill(
         raise HTTPException(status_code=403, detail="Not authorized")
     bill.is_archived = True
     db.commit()
+
+
+@router.post("/{bill_id}/unarchive", status_code=status.HTTP_204_NO_CONTENT)
+def unarchive_bill(
+    bill_id: int,
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    bill = db.get(BillTemplate, bill_id)
+    if not bill:
+        raise HTTPException(status_code=404, detail="Bill not found")
+    if bill.user_id != me.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    bill.is_archived = False
+    db.commit()

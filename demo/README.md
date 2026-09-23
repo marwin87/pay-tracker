@@ -13,7 +13,7 @@ This folder contains a seed script that populates Pay Tracker with realistic dem
 | Streaming (Old) | custom | **archived** — still referenced by an active bill |
 | Side Hustle | custom | active |
 
-**22 bill templates** covering all frequencies, plus these edge cases:
+**26 bill templates** covering all frequencies, plus these edge cases:
 
 | Name | Category | Frequency | Amount | Notes |
 |---|---|---|---|---|
@@ -29,8 +29,14 @@ This folder contains a seed script that populates Pay Tracker with realistic dem
 | Old Music App | **Streaming (Old)** *(archived category)* | Monthly | €4.99 | bill stays active — category is what's archived |
 | Coworking Desk | **Side Hustle** *(custom category)* | Monthly | €120.00 | |
 | Newspaper Subscription | Subscriptions | Monthly | €12.00 | **paused** |
+| Yoga Studio Membership *(archived bill)* | Healthcare | Monthly | €60.00 | |
+| Cloud Storage 2TB *(archived bill)* | Subscriptions | Monthly | €9.99 | |
+| Car Lease *(archived bill)* | Transport | Monthly | €310.00 | |
+| Piano Lessons *(archived bill)* | Education | Monthly | €40.00 | |
 
-**59 payment instances** (from `seed_data.json`) covering all statuses:
+5 bills are archived in total, spread across 4 categories, so the Archive page (`/dashboard/bills/archived`) has enough entries to exercise its category filter and sort.
+
+**68 payment instances** (from `seed_data.json`) covering all statuses:
 - **paid** — historical records with `paid_at` timestamps, across all four combinations of full/partial amount and with/without a note
 - **overdue** — several bills with a missed payment
 - **upcoming** — future periods ready to be paid

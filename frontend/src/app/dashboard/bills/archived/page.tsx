@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Archive, ChevronRight, ChevronsUpDown } from "lucide-react";
+import { Archive, ArchiveRestore, ChevronRight, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { fetchBills, type BillTemplateOut } from "@/lib/bills-api";
+import { fetchBills, unarchiveBill, type BillTemplateOut } from "@/lib/bills-api";
 import {
   categoryFilterLabel,
   categoryLabel,
@@ -13,6 +13,7 @@ import {
 } from "@/lib/categories";
 import { SessionExpiredError } from "@/lib/api";
 import FilterSelect from "@/components/FilterSelect";
+import RestoreConfirmDialog from "@/components/bills/RestoreConfirmDialog";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
@@ -26,6 +27,8 @@ export default function ArchivedBillsPage() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [restoreTarget, setRestoreTarget] = useState<BillTemplateOut | null>(null);
+  const [restoring, setRestoring] = useState(false);
 
   const filteredTemplates =
     categoryFilter === "all"
@@ -78,8 +81,32 @@ export default function ArchivedBillsPage() {
     };
   }, [t]);
 
+  async function handleRestoreConfirm() {
+    if (!restoreTarget || restoring) return;
+    setRestoring(true);
+    try {
+      await unarchiveBill(restoreTarget.id);
+      setTemplates((prev) => prev.filter((tmpl) => tmpl.id !== restoreTarget.id));
+      setRestoreTarget(null);
+    } catch (err: unknown) {
+      if (err instanceof SessionExpiredError) return;
+      setLoadError(err instanceof Error ? err.message : t("restoreError"));
+    } finally {
+      setRestoring(false);
+    }
+  }
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
+      {restoreTarget && (
+        <RestoreConfirmDialog
+          billName={restoreTarget.name}
+          onConfirm={handleRestoreConfirm}
+          onCancel={() => setRestoreTarget(null)}
+          restoring={restoring}
+        />
+      )}
+
       <div className="mb-6">
         <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
           {t("title")}
@@ -208,6 +235,15 @@ export default function ArchivedBillsPage() {
                       <span className="shrink-0 rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
                         {t("archived")}
                       </span>
+                      <button
+                        onClick={() => setRestoreTarget(tmpl)}
+                        disabled={restoreTarget?.id === tmpl.id && restoring}
+                        aria-label={t("restore")}
+                        className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+                      >
+                        <ArchiveRestore size={14} />
+                        <span className="hidden sm:inline">{t("restore")}</span>
+                      </button>
                     </div>
                   ))}
                 </div>}

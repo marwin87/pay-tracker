@@ -1,8 +1,9 @@
 /**
- * Flow 5: Archive a bill → moves to archived page
+ * Flow 5: Archive a bill → moves to archived page; restoring it brings it back
  * Risk: bill remains on the active list after archiving, or does not appear on
- *       the archived list — user thinks the bill was deleted.
- * Real boundaries: auth, PATCH /bills/:id (is_archived=true), bills list pages.
+ *       the archived list — user thinks the bill was deleted. Or: restore does
+ *       nothing and an archived bill can never come back.
+ * Real boundaries: auth, POST /bills/:id/archive + /unarchive, bills list pages.
  * Each test uses a fresh isolated user → exactly one bill on the active list.
  */
 import { test, expect } from '@playwright/test';
@@ -43,5 +44,22 @@ test('archived bill leaves active list and appears on archived page', async ({ p
   await page.goto('/dashboard/bills/archived');
 
   // Assert: bill appears in the archived list
+  await expect(page.getByText(billName)).toBeVisible();
+
+  // Step: click "Restore" (opens RestoreConfirmDialog)
+  await page.getByRole('button', { name: 'Restore' }).click();
+
+  const restoreDialog = page.getByRole('dialog');
+  await expect(restoreDialog).toBeVisible();
+
+  // Step: confirm restore
+  await restoreDialog.getByRole('button', { name: 'Restore' }).click();
+
+  // Assert: bill no longer on the archived list
+  await expect(page.getByRole('dialog')).not.toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).not.toBeVisible();
+
+  // Assert: bill is back on the active bills list
+  await page.goto('/dashboard/bills');
   await expect(page.getByText(billName)).toBeVisible();
 });

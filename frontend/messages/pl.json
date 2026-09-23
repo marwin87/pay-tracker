@@ -90,7 +90,9 @@
             "one_off": "Jednorazowo"
         },
         "collapseAll": "Zwiń wszystko",
-        "expandAll": "Rozwiń wszystko"
+        "expandAll": "Rozwiń wszystko",
+        "restore": "Przywróć",
+        "restoreError": "Nie udało się przywrócić rachunku."
     },
     "BillTemplateForm": {
         "nameLabel": "Nazwa",
@@ -149,6 +151,13 @@
         "cancel": "Anuluj",
         "archive": "Archiwizuj",
         "archiving": "Archiwizowanie…"
+    },
+    "RestoreConfirmDialog": {
+        "title": "Przywrócić „{billName}”?",
+        "description": "Ten rachunek pojawi się z powrotem na aktywnej liście i wznowi generowanie nadchodzących płatności.",
+        "cancel": "Anuluj",
+        "restore": "Przywróć",
+        "restoring": "Przywracanie…"
     },
     "Frequencies": {
         "monthly": "Miesięcznie",

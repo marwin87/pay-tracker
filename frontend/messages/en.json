@@ -90,7 +90,9 @@
             "one_off": "One-off"
         },
         "collapseAll": "Collapse all",
-        "expandAll": "Expand all"
+        "expandAll": "Expand all",
+        "restore": "Restore",
+        "restoreError": "Failed to restore bill."
     },
     "BillTemplateForm": {
         "nameLabel": "Name",
@@ -149,6 +151,13 @@
         "cancel": "Cancel",
         "archive": "Archive",
         "archiving": "Archiving…"
+    },
+    "RestoreConfirmDialog": {
+        "title": "Restore “{billName}”?",
+        "description": "This bill will reappear on the active list and resume generating upcoming payments.",
+        "cancel": "Cancel",
+        "restore": "Restore",
+        "restoring": "Restoring…"
     },
     "Frequencies": {
         "monthly": "Monthly",

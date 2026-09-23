@@ -90,7 +90,9 @@
             "one_off": "Einmalig"
         },
         "collapseAll": "Alle einklappen",
-        "expandAll": "Alle ausklappen"
+        "expandAll": "Alle ausklappen",
+        "restore": "Wiederherstellen",
+        "restoreError": "Rechnung konnte nicht wiederhergestellt werden."
     },
     "BillTemplateForm": {
         "nameLabel": "Name",
@@ -149,6 +151,13 @@
         "cancel": "Abbrechen",
         "archive": "Archivieren",
         "archiving": "Archivierung…"
+    },
+    "RestoreConfirmDialog": {
+        "title": "„{billName}” wiederherstellen?",
+        "description": "Diese Rechnung erscheint wieder in der aktiven Liste und generiert erneut anstehende Zahlungen.",
+        "cancel": "Abbrechen",
+        "restore": "Wiederherstellen",
+        "restoring": "Wiederherstellung…"
     },
     "Frequencies": {
         "monthly": "Monatlich",
