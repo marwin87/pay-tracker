@@ -14,6 +14,19 @@ export class SessionExpiredError extends Error {
   }
 }
 
+// Carries the HTTP status alongside the (English, backend-authored) message
+// so callers can branch on a stable status code instead of matching raw
+// text — the message itself is a last-resort fallback, never shown as-is
+// for cases the caller maps to a localized string.
+export class ApiError extends Error {
+  status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+  }
+}
+
 // A 401 on this path is an expected outcome (bad credentials), not a
 // sign of an expired session, so it must not trigger auto-logout.
 // /auth/logout is exempt too: auth-context already swallows its errors, and a
@@ -31,13 +44,13 @@ export function setSessionExpiredHandler(handler: SessionExpiredHandler | null):
   sessionExpiredHandler = handler;
 }
 
-export async function extractApiError(res: Response): Promise<Error> {
+export async function extractApiError(res: Response): Promise<ApiError> {
   const body = await res.json().catch(() => ({}));
   const detail = (body as { detail?: unknown }).detail;
   const message = Array.isArray(detail)
     ? detail.map((e: { msg?: string }) => e.msg ?? String(e)).join("; ")
     : (detail ?? `Request failed with status ${res.status}`);
-  return new Error(String(message));
+  return new ApiError(String(message), res.status);
 }
 
 export async function apiFetch<T>(

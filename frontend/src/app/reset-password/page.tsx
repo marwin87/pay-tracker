@@ -27,6 +27,13 @@ function ResetPasswordForm() {
     const newPassword = form.get("new_password") as string;
     const confirmPassword = form.get("confirm_password") as string;
 
+    // Checked client-side (and localized) so a weak password never reaches
+    // the catch block below, which treats any backend failure as an
+    // invalid/expired token — that would otherwise mislabel this case.
+    if (newPassword.length < 8) {
+      setError(t("passwordTooShort"));
+      return;
+    }
     if (newPassword !== confirmPassword) {
       setError(t("passwordsDoNotMatch"));
       return;
@@ -61,7 +68,7 @@ function ResetPasswordForm() {
           </Link>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
           <p className="text-sm text-slate-500 dark:text-slate-400">
             {t("resetPasswordSubtitle")}
           </p>
@@ -77,7 +84,6 @@ function ResetPasswordForm() {
               id="new_password"
               name="new_password"
               type="password"
-              required
               autoComplete="new-password"
             />
           </div>
@@ -93,7 +99,6 @@ function ResetPasswordForm() {
               id="confirm_password"
               name="confirm_password"
               type="password"
-              required
               autoComplete="new-password"
             />
           </div>

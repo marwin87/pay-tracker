@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
-import { apiFetch, type TokenResponse } from "@/lib/api";
+import { apiFetch, ApiError, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
+import { validateEmail } from "@/lib/auth-validation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
@@ -15,23 +16,25 @@ export default function RegisterPage() {
   const { login } = useAuth();
   const t = useTranslations("Auth");
   const [error, setError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
-    setLoading(true);
 
     const form = new FormData(e.currentTarget);
     const email = form.get("email") as string;
     const password = form.get("password") as string;
 
-    if (password.length < 8) {
-      setError(t("passwordTooShort"));
-      setLoading(false);
-      return;
-    }
+    const emailErr = validateEmail(email, t);
+    const passwordErr = password.length < 8 ? t("passwordTooShort") : null;
+    setEmailError(emailErr);
+    setPasswordError(passwordErr);
+    if (emailErr || passwordErr) return;
 
+    setLoading(true);
     try {
       await apiFetch<TokenResponse>("/auth/register", {
         method: "POST",
@@ -40,7 +43,11 @@ export default function RegisterPage() {
       login();
       router.push("/dashboard");
     } catch (err) {
-      setError(err instanceof Error ? err.message : t("registrationFailed"));
+      setError(
+        err instanceof ApiError && err.status === 409
+          ? t("emailAlreadyRegistered")
+          : t("registrationFailed"),
+      );
     } finally {
       setLoading(false);
     }
@@ -61,7 +68,7 @@ export default function RegisterPage() {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:bg-slate-800 dark:border-slate-700">
-          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <label
                 htmlFor="email"
@@ -73,8 +80,8 @@ export default function RegisterPage() {
                 id="email"
                 name="email"
                 type="email"
-                required
                 autoComplete="email"
+                error={emailError ?? undefined}
               />
             </div>
 
@@ -89,8 +96,8 @@ export default function RegisterPage() {
                 id="password"
                 name="password"
                 type="password"
-                required
                 autoComplete="new-password"
+                error={passwordError ?? undefined}
               />
               <p className="text-xs text-slate-400 dark:text-slate-500">
                 {t("passwordHint")}

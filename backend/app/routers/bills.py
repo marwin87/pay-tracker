@@ -184,7 +184,9 @@ def mark_paid(
     if template.user_id != me.id:
         raise HTTPException(status_code=403, detail="Not authorized")
     if body.paid_at is not None and body.paid_at > date.today():
-        raise HTTPException(status_code=400, detail="Payment date cannot be in the future")
+        raise HTTPException(
+            status_code=400, detail="Payment date cannot be in the future"
+        )
 
     now = datetime.now(timezone.utc)
     instance.status = PaymentStatus.paid

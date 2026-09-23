@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { apiFetch } from "@/lib/api";
+import { validateEmail } from "@/lib/auth-validation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
@@ -12,15 +13,20 @@ export default function ForgotPasswordPage() {
   const t = useTranslations("Auth");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [emailError, setEmailError] = useState<string | null>(null);
   const [sent, setSent] = useState(false);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError(null);
-    setLoading(true);
 
     const email = (new FormData(e.currentTarget).get("email") as string) ?? "";
 
+    const emailErr = validateEmail(email, t);
+    setEmailError(emailErr);
+    if (emailErr) return;
+
+    setLoading(true);
     try {
       await apiFetch("/auth/forgot-password", {
         method: "POST",
@@ -61,7 +67,7 @@ export default function ForgotPasswordPage() {
               {t("resetLinkSent")}
             </p>
           ) : (
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
               <p className="text-sm text-slate-500 dark:text-slate-400">
                 {t("forgotPasswordSubtitle")}
               </p>
@@ -77,8 +83,8 @@ export default function ForgotPasswordPage() {
                   id="email"
                   name="email"
                   type="email"
-                  required
                   autoComplete="email"
+                  error={emailError ?? undefined}
                 />
               </div>
 
