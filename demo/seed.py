@@ -122,6 +122,18 @@ def has_data(session: requests.Session, token: str) -> bool:
     return r.status_code == 200 and len(r.json()) > 0
 
 
+def disable_notifications(session: requests.Session, token: str) -> None:
+    r = session.patch(
+        f"{BASE_URL}/auth/me",
+        headers={"Authorization": f"Bearer {token}"},
+        json={"email_reminders_enabled": False, "monthly_summary_enabled": False},
+    )
+    if r.status_code != 200:
+        print(f"  Disable notifications failed ({r.status_code}): {r.text}")
+        sys.exit(1)
+    print("  Notifications disabled")
+
+
 def restore(session: requests.Session, token: str) -> None:
     if has_data(session, token):
         print("  Demo data already present, skipping restore.")
@@ -160,6 +172,9 @@ def main() -> None:
 
         print("3. Restoring seed data...")
         restore(session, token)
+
+        print("4. Disabling notifications...")
+        disable_notifications(session, token)
 
     print()
     print("Done. Log in at http://localhost:3010")
