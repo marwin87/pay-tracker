@@ -68,14 +68,14 @@ export default function BackupButton({ label }: { label?: string } = {}) {
                   onClick={() => setState("idle")}
                   disabled={state === "downloading"}
                   autoFocus
-                  className="flex-1 rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-700 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                  className="flex-1 rounded-lg border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
                 >
                   {t("cancel")}
                 </button>
                 <button
                   onClick={handleConfirm}
                   disabled={state === "downloading"}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-green-700 bg-green-700 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 disabled:opacity-50"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-green-200 bg-white py-2.5 text-sm font-medium text-green-700 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-800 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
                 >
                   {state === "downloading" ? (
                     <>

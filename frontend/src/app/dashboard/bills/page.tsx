@@ -212,7 +212,7 @@ export default function BillsPage() {
         <div className="mt-3 flex items-center justify-between gap-2">
           <button
             onClick={() => toggleExpand("new")}
-            className="flex items-center gap-2 rounded-xl border border-green-700 bg-green-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800 active:bg-green-900"
+            className="flex items-center gap-2 rounded-lg border border-green-200 bg-white px-4 py-2 text-sm font-medium text-green-700 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-800 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
           >
             <Plus size={16} />
             {expandedId === "new" ? t("cancel") : t("newBill")}
@@ -296,7 +296,7 @@ export default function BillsPage() {
           </p>
           <button
             onClick={() => toggleExpand("new")}
-            className="mt-4 rounded-xl border border-green-700 bg-green-700 px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800"
+            className="mt-4 rounded-lg border border-green-700 bg-green-700 px-5 py-2 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800"
           >
             {t("addFirstBill")}
           </button>
