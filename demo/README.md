@@ -30,12 +30,13 @@ This folder contains a seed script that populates Pay Tracker with realistic dem
 | Coworking Desk | **Side Hustle** *(custom category)* | Monthly | €120.00 | |
 | Newspaper Subscription | Subscriptions | Monthly | €12.00 | **paused** |
 
-**55 payment instances** covering all statuses:
-- **paid** — historical records with `paid_at` timestamps
+**59 payment instances** (from `seed_data.json`) covering all statuses:
+- **paid** — historical records with `paid_at` timestamps, across all four combinations of full/partial amount and with/without a note
 - **overdue** — several bills with a missed payment
 - **upcoming** — future periods ready to be paid
 - Amounts that differ from the template (real-world invoice variance)
-- Two instances backdated to today's date so the app always has something due "now"
+
+**Plus 6 instances generated for the current month at seed time** (`inject_current_month_cases` in `seed.py`), since the static rows above are dated in fixed 2026 months that won't generally line up with whatever "today" is when you run the script. Whichever month the Payments page opens to by default, it shows every case at a glance: upcoming (due today), overdue, paid full amount with/without a note, and paid partial amount with/without a note.
 
 ## Requirements
 

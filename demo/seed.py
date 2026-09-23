@@ -4,7 +4,7 @@
 import json
 import os
 import sys
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 try:
@@ -40,52 +40,77 @@ def login(session: requests.Session) -> str:
     return token
 
 
-def inject_paid_today(data: dict) -> dict:
-    """Replace two instances with ones paid today, using today's actual date."""
+def inject_current_month_cases(data: dict) -> dict:
+    """Replace whichever bills the current month lands on with instances covering
+    every status/amount/note combination, so the Payments page shows the full
+    variety immediately on the month it opens to by default — regardless of
+    which real-world date the script is run on. Static seed_data.json rows are
+    dated in fixed 2026 months and won't generally line up with "today"."""
     today = date.today()
     period = today.strftime("%Y-%m")
     today_iso = today.isoformat()
     created_at = f"{today_iso}T09:00:00+00:00"
 
-    # Bill 1 = Rent, Bill 14 = Gym Membership — both monthly, good demo candidates
-    paid_today = [
+    def day(n: int) -> str:
+        # Earlier day in the current month, clamped to the 1st if that would
+        # spill into the previous month (e.g. script run on the 1st/2nd).
+        d = today - timedelta(days=n)
+        if d.month != today.month or d.year != today.year:
+            d = today.replace(day=1)
+        return d.isoformat()
+
+    current_month_cases = [
+        # Rent — upcoming, due today
         {
-            "id": 9001,
-            "bill_id": 1,
-            "period": period,
-            "due_date": today_iso,
-            "amount": 1200.0,
-            "status": "upcoming",
-            "paid_at": None,
-            "paid_amount": None,
-            "notes": None,
-            "created_at": created_at,
-            "reminder_sent_upcoming": True,
-            "reminder_sent_overdue": False,
+            "id": 9001, "bill_id": 1, "period": period, "due_date": today_iso,
+            "amount": 1200.0, "status": "upcoming", "paid_at": None,
+            "paid_amount": None, "notes": None, "created_at": created_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": False,
         },
+        # Internet — overdue
         {
-            "id": 9002,
-            "bill_id": 14,
-            "period": period,
-            "due_date": today_iso,
-            "amount": 45.0,
-            "status": "upcoming",
-            "paid_at": None,
-            "paid_amount": None,
-            "notes": None,
-            "created_at": created_at,
-            "reminder_sent_upcoming": True,
-            "reminder_sent_overdue": False,
+            "id": 9002, "bill_id": 4, "period": period, "due_date": day(6),
+            "amount": 39.99, "status": "overdue", "paid_at": None,
+            "paid_amount": None, "notes": None, "created_at": created_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": True,
+        },
+        # Gym Membership — paid, full amount, no note
+        {
+            "id": 9003, "bill_id": 14, "period": period, "due_date": day(5),
+            "amount": 45.0, "status": "paid", "paid_at": f"{day(5)}T07:00:00+00:00",
+            "paid_amount": 45.0, "notes": None, "created_at": created_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": False,
+        },
+        # Netflix — paid, full amount, with note
+        {
+            "id": 9004, "bill_id": 8, "period": period, "due_date": day(4),
+            "amount": 17.99, "status": "paid", "paid_at": f"{day(4)}T08:00:00+00:00",
+            "paid_amount": 17.99, "notes": "Paid via gift card", "created_at": created_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": False,
+        },
+        # Language School — paid, partial amount, no note
+        {
+            "id": 9005, "bill_id": 17, "period": period, "due_date": day(3),
+            "amount": 89.0, "status": "paid", "paid_at": f"{day(3)}T09:00:00+00:00",
+            "paid_amount": 80.0, "notes": None, "created_at": created_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": False,
+        },
+        # Cinema Club — paid, partial amount, with note
+        {
+            "id": 9006, "bill_id": 11, "period": period, "due_date": day(2),
+            "amount": 24.99, "status": "paid", "paid_at": f"{day(2)}T09:00:00+00:00",
+            "paid_amount": 19.99, "notes": "Group discount applied", "created_at": created_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": False,
         },
     ]
 
     # Remove any static instance that would collide on (bill_id, period)
-    today_keys = {(inst["bill_id"], period) for inst in paid_today}
+    current_month_keys = {(inst["bill_id"], period) for inst in current_month_cases}
     data["payment_instances"] = [
         inst for inst in data["payment_instances"]
-        if (inst["bill_id"], inst["period"]) not in today_keys
+        if (inst["bill_id"], inst["period"]) not in current_month_keys
     ]
-    data["payment_instances"].extend(paid_today)
+    data["payment_instances"].extend(current_month_cases)
     return data
 
 
@@ -102,7 +127,7 @@ def restore(session: requests.Session, token: str) -> None:
         print("  Demo data already present, skipping restore.")
         return
     data = json.loads(DATA_FILE.read_text())
-    data = inject_paid_today(data)
+    data = inject_current_month_cases(data)
     payload = json.dumps(data)
     r = session.post(
         f"{BASE_URL}/export/restore",
