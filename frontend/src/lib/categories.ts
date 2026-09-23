@@ -69,6 +69,16 @@ export function categoryLabel(
   return category.slug ? t(category.slug) : category.name;
 }
 
+// Filter dropdown label — flags archived categories so users aren't
+// surprised to see one they thought they removed.
+export function categoryFilterLabel(
+  category: Pick<Category, "slug" | "name" | "is_archived">,
+  t: (key: string) => string,
+): string {
+  const label = categoryLabel(category, t);
+  return category.is_archived ? `${label} ${t("archivedSuffix")}` : label;
+}
+
 // Distinct categories referenced by a list of items, sorted by sort_order —
 // used to build filter dropdowns and group headers from live data instead of
 // a hardcoded category list.

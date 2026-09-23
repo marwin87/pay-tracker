@@ -14,7 +14,12 @@ import {
   type BillTemplateUpdate,
 } from "@/lib/bills-api";
 import { SessionExpiredError } from "@/lib/api";
-import { categoryLabel, distinctCategories, sortCategoriesByLabel, type CategorySortOrder } from "@/lib/categories";
+import {
+  categoryFilterLabel,
+  distinctCategories,
+  sortCategoriesByLabel,
+  type CategorySortOrder,
+} from "@/lib/categories";
 import BillTemplateForm from "@/components/bills/BillTemplateForm";
 import BillTemplateRow from "@/components/bills/BillTemplateRow";
 import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
@@ -50,7 +55,7 @@ export default function BillsPage() {
     { value: "all", label: tFilters("allCategories") },
     ...distinctCategories(templates, (tmpl) => tmpl.category).map((cat) => ({
       value: String(cat.id),
-      label: categoryLabel(cat, tCategories),
+      label: categoryFilterLabel(cat, tCategories),
     })),
   ];
 
@@ -320,7 +325,7 @@ export default function BillsPage() {
                     }`}
                   />
                   <span className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 shrink-0">
-                    {categoryLabel(cat, tCategories)}
+                    {categoryFilterLabel(cat, tCategories)}
                   </span>
                   <span className="rounded-full bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:text-slate-500 shrink-0 tabular-nums">
                     {group.length}

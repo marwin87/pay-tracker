@@ -354,7 +354,8 @@
         "transport": "Transport",
         "healthcare": "Healthcare",
         "education": "Education",
-        "other": "Other"
+        "other": "Other",
+        "archivedSuffix": "(archived)"
     },
     "Filters": {
         "allCategories": "All categories",

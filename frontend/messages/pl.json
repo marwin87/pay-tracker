@@ -350,7 +350,8 @@
         "transport": "Transport",
         "healthcare": "Zdrowie",
         "education": "Edukacja",
-        "other": "Inne"
+        "other": "Inne",
+        "archivedSuffix": "(zarchiwizowana)"
     },
     "Filters": {
         "allCategories": "Wszystkie kategorie",

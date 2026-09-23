@@ -4,7 +4,13 @@ import { useEffect, useState } from "react";
 import { Archive, ChevronRight, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { fetchBills, type BillTemplateOut } from "@/lib/bills-api";
-import { categoryLabel, distinctCategories, sortCategoriesByLabel, type CategorySortOrder } from "@/lib/categories";
+import {
+  categoryFilterLabel,
+  categoryLabel,
+  distinctCategories,
+  sortCategoriesByLabel,
+  type CategorySortOrder,
+} from "@/lib/categories";
 import { SessionExpiredError } from "@/lib/api";
 import FilterSelect from "@/components/FilterSelect";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
@@ -30,7 +36,7 @@ export default function ArchivedBillsPage() {
     { value: "all", label: tFilters("allCategories") },
     ...distinctCategories(templates, (tmpl) => tmpl.category).map((cat) => ({
       value: String(cat.id),
-      label: categoryLabel(cat, tCategories),
+      label: categoryFilterLabel(cat, tCategories),
     })),
   ];
 
