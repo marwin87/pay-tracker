@@ -76,6 +76,7 @@ class PaymentInstanceOut(BaseModel):
 class MarkPaidRequest(BaseModel):
     paid_amount: Decimal | None = None  # defaults to template amount when None
     notes: str | None = None
+    paid_at: date | None = None  # defaults to now() when None; must not be future
 
 
 class HasDeletedFutureOut(BaseModel):

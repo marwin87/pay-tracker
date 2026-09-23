@@ -38,11 +38,16 @@ export function markPaid(
   instanceId: number,
   paidAmount: string | null,
   notes?: string,
+  paidAt?: string, // "YYYY-MM-DD"; omitted defaults to today server-side
 ): Promise<PaymentInstanceOut> {
   const amount = paidAmount ? parseFloat(paidAmount) : null;
   return apiFetch<PaymentInstanceOut>(`/bills/payments/${instanceId}/pay`, {
     method: "POST",
-    body: JSON.stringify({ paid_amount: amount, notes: notes ?? null }),
+    body: JSON.stringify({
+      paid_amount: amount,
+      notes: notes ?? null,
+      paid_at: paidAt ?? null,
+    }),
   });
 }
 

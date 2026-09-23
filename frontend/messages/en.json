@@ -207,6 +207,7 @@
     },
     "MarkPaidDialog": {
         "title": "Mark as Paid: {billName}",
+        "dateLabel": "Date paid",
         "amountLabel": "Amount paid",
         "notesLabel": "Notes (optional)",
         "cancel": "Cancel",

@@ -207,6 +207,7 @@
     },
     "MarkPaidDialog": {
         "title": "Oznacz jako opłacone: {billName}",
+        "dateLabel": "Data zapłaty",
         "amountLabel": "Zapłacona kwota",
         "notesLabel": "Notatki (opcjonalnie)",
         "cancel": "Anuluj",

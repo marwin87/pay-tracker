@@ -211,6 +211,7 @@
     },
     "MarkPaidDialog": {
         "title": "Als bezahlt markieren: {billName}",
+        "dateLabel": "Zahlungsdatum",
         "amountLabel": "Bezahlter Betrag",
         "notesLabel": "Notizen (optional)",
         "cancel": "Abbrechen",

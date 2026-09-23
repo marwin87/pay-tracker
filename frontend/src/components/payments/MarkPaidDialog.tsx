@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { markPaid, type PaymentInstanceOut } from "@/lib/payments-api";
+import PaymentDateCalendar, { toISODate } from "./PaymentDateCalendar";
 
 interface Props {
   instance: PaymentInstanceOut;
@@ -21,6 +22,7 @@ export default function MarkPaidDialog({
   const t = useTranslations("MarkPaidDialog");
 
   const [paidAmount, setPaidAmount] = useState(instance.amount ?? "");
+  const [paidDate, setPaidDate] = useState(toISODate(new Date()));
   const [notes, setNotes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +35,7 @@ export default function MarkPaidDialog({
     setIsSubmitting(true);
     setError(null);
     try {
-      const updated = await markPaid(instance.id, paidAmount || null, notes || undefined);
+      const updated = await markPaid(instance.id, paidAmount || null, notes || undefined, paidDate);
       onConfirm(updated);
     } catch (err) {
       if (!mounted.current) return;
@@ -61,6 +63,13 @@ export default function MarkPaidDialog({
         >
           {t("title", { billName: instance.bill_name })}
         </h2>
+
+        <div className="mb-3">
+          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+            {t("dateLabel")}
+          </label>
+          <PaymentDateCalendar value={paidDate} onChange={setPaidDate} />
+        </div>
 
         <div className="mb-3">
           <label
