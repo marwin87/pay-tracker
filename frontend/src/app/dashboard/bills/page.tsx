@@ -25,6 +25,7 @@ import BillTemplateRow from "@/components/bills/BillTemplateRow";
 import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
 import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 import FilterSelect from "@/components/FilterSelect";
+import MultiSelectFilter from "@/components/MultiSelectFilter";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
@@ -44,20 +45,17 @@ export default function BillsPage() {
   const [deletedFutureMap, setDeletedFutureMap] = useState<Record<number, boolean>>({});
   const [restoreTarget, setRestoreTarget] = useState<{ id: number; name: string; data: BillTemplateUpdate } | null>(null);
   const [restoring, setRestoring] = useState(false);
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
 
   const filteredTemplates =
-    categoryFilter === "all"
+    categoryFilter.size === 0
       ? templates
-      : templates.filter((tmpl) => String(tmpl.category.id) === categoryFilter);
+      : templates.filter((tmpl) => categoryFilter.has(String(tmpl.category.id)));
 
-  const categoryOptions = [
-    { value: "all", label: tFilters("allCategories") },
-    ...distinctCategories(templates, (tmpl) => tmpl.category).map((cat) => ({
-      value: String(cat.id),
-      label: categoryFilterLabel(cat, tCategories),
-    })),
-  ];
+  const categoryOptions = distinctCategories(templates, (tmpl) => tmpl.category).map((cat) => ({
+    value: String(cat.id),
+    label: categoryFilterLabel(cat, tCategories),
+  }));
 
   const activeCategories = distinctCategories(filteredTemplates, (tmpl) => tmpl.category);
   const activeCategoryKeys = activeCategories.map((cat) => String(cat.id));
@@ -223,11 +221,12 @@ export default function BillsPage() {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                   {tFilters("filterBy")}
                 </span>
-                <FilterSelect
-                  value={categoryFilter}
+                <MultiSelectFilter
+                  selected={categoryFilter}
                   onChange={setCategoryFilter}
                   options={categoryOptions}
                   ariaLabel={tFilters("allCategories")}
+                  allLabel={tFilters("allCategories")}
                 />
               </div>
             )}

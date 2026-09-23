@@ -13,6 +13,7 @@ import {
 } from "@/lib/categories";
 import { SessionExpiredError } from "@/lib/api";
 import FilterSelect from "@/components/FilterSelect";
+import MultiSelectFilter from "@/components/MultiSelectFilter";
 import RestoreConfirmDialog from "@/components/bills/RestoreConfirmDialog";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
@@ -26,22 +27,19 @@ export default function ArchivedBillsPage() {
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
   const [restoreTarget, setRestoreTarget] = useState<BillTemplateOut | null>(null);
   const [restoring, setRestoring] = useState(false);
 
   const filteredTemplates =
-    categoryFilter === "all"
+    categoryFilter.size === 0
       ? templates
-      : templates.filter((tmpl) => String(tmpl.category.id) === categoryFilter);
+      : templates.filter((tmpl) => categoryFilter.has(String(tmpl.category.id)));
 
-  const categoryOptions = [
-    { value: "all", label: tFilters("allCategories") },
-    ...distinctCategories(templates, (tmpl) => tmpl.category).map((cat) => ({
-      value: String(cat.id),
-      label: categoryFilterLabel(cat, tCategories),
-    })),
-  ];
+  const categoryOptions = distinctCategories(templates, (tmpl) => tmpl.category).map((cat) => ({
+    value: String(cat.id),
+    label: categoryFilterLabel(cat, tCategories),
+  }));
 
   const activeCategories = distinctCategories(filteredTemplates, (tmpl) => tmpl.category);
   const activeCategoryKeys = activeCategories.map((cat) => String(cat.id));
@@ -120,11 +118,12 @@ export default function ArchivedBillsPage() {
               <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                 {tFilters("filterBy")}
               </span>
-              <FilterSelect
-                value={categoryFilter}
+              <MultiSelectFilter
+                selected={categoryFilter}
                 onChange={setCategoryFilter}
                 options={categoryOptions}
                 ariaLabel={tFilters("allCategories")}
+                allLabel={tFilters("allCategories")}
               />
             </div>
             <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
