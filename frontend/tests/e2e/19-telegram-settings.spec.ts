@@ -34,7 +34,15 @@ test('Telegram schedule is independent from the email schedule', async ({ page }
   await loginNewUser(page);
   await openNotifications(page);
 
+  // Step: notifications are off and the schedule is locked until credentials
+  // are saved, so save those and enable Telegram first
+  await page.getByLabel('Bot token').fill(BOT_TOKEN);
+  await page.getByLabel('Telegram chat ID').fill('123456789');
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(page.getByText('Token saved. Enter a new one to replace it.')).toBeVisible();
+
   // Step: enable "On the payment date" for Telegram only (2nd tile) and save
+  await page.getByText('Enable Telegram notifications').click();
   await page.getByText('On the payment date').nth(1).click();
   await page.getByRole('button', { name: 'Save', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Save', exact: true })).toBeHidden();

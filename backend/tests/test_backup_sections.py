@@ -103,7 +103,9 @@ def test_export_prefs_sections_are_independent(client):
         "language_preference",
         "enabled_languages",
     }
-    assert set(_export(client, tok, ["currency"])["preferences"]) == {"default_currency"}
+    assert set(_export(client, tok, ["currency"])["preferences"]) == {
+        "default_currency"
+    }
 
 
 def test_export_email_excludes_telegram_and_vice_versa(client):
@@ -190,12 +192,16 @@ def test_categories_only_restore_merges_without_breaking_bills(client):
     tok = register_and_login(client, "co@test.com")
     _seed(client, tok)
     client.post(
-        "/categories", json={"name": "Pets", "color": next(iter(CATEGORY_COLORS))}, headers=auth(tok)
+        "/categories",
+        json={"name": "Pets", "color": next(iter(CATEGORY_COLORS))},
+        headers=auth(tok),
     )
     backup = _export(client, tok, ["categories"])
     # archive the custom one, then restore: it comes back active
     pets = next(
-        c for c in client.get("/categories", headers=auth(tok)).json() if c["name"] == "Pets"
+        c
+        for c in client.get("/categories", headers=auth(tok)).json()
+        if c["name"] == "Pets"
     )
     client.post(f"/categories/{pets['id']}/archive", headers=auth(tok))
     assert "Pets" not in [

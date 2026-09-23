@@ -511,7 +511,9 @@ def test_rotated_jwt_secret_makes_stored_bot_token_unreadable(client):
 
     # JWT_SECRET changes: the stored ciphertext can no longer be decrypted
     with patch("app.services.notify.settings") as st:
-        st.jwt_secret = "a-completely-different-secret-value-1234"  # pragma: allowlist secret
+        st.jwt_secret = (
+            "a-completely-different-secret-value-1234"  # pragma: allowlist secret
+        )
         me = client.get("/auth/me", headers=auth(token)).json()
         assert me["telegram_bot_token_set"] is False
         assert me["telegram_bot_token_unreadable"] is True

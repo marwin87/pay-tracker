@@ -23,7 +23,7 @@ test('wrong password shows an error, correct credentials reach the dashboard', a
   await expect(page).toHaveURL(/\/login/);
 
   // Step: retry with the right password
-  await page.getByLabel('Password').fill(password);
+  await page.getByLabel('Password', { exact: true }).fill(password);
   await page.getByRole('button', { name: 'Sign in' }).click();
 
   // Assert: authenticated and redirected

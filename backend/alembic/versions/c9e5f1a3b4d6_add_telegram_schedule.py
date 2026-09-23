@@ -48,7 +48,9 @@ def upgrade() -> None:
     )
     op.add_column(
         "users",
-        sa.Column("telegram_monthly_summary_last_sent", sa.String(length=7), nullable=True),
+        sa.Column(
+            "telegram_monthly_summary_last_sent", sa.String(length=7), nullable=True
+        ),
     )
     for name in _INSTANCE_FLAGS:
         op.add_column(

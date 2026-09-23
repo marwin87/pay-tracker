@@ -289,7 +289,9 @@ def _apply_schedule(user: User, ch: Channel, s: BackupChannelSchedule) -> None:
 
 
 def _build_backup_arrays(
-    db: Session, user_id: int, sections: tuple[Section, ...] | list[Section] = ALL_SECTIONS
+    db: Session,
+    user_id: int,
+    sections: tuple[Section, ...] | list[Section] = ALL_SECTIONS,
 ) -> dict:
     """Serialize the requested sections of a user's data into the backup shape
     shared by GET /export/json and the pre-restore snapshot. Only selected
@@ -332,9 +334,7 @@ def _build_backup_arrays(
         ]
 
     if "bills" in sections:
-        templates = (
-            db.query(BillTemplate).filter(BillTemplate.user_id == user_id).all()
-        )
+        templates = db.query(BillTemplate).filter(BillTemplate.user_id == user_id).all()
         template_ids = [t.id for t in templates]
         instances = (
             db.query(PaymentInstance)
@@ -451,7 +451,8 @@ def _merge_categories(db: Session, user_id: int, backup: BackupPayload) -> None:
             (
                 c
                 for c in existing
-                if (bc.slug and c.slug == bc.slug) or (not bc.slug and c.name == bc.name)
+                if (bc.slug and c.slug == bc.slug)
+                or (not bc.slug and c.name == bc.name)
             ),
             None,
         )
