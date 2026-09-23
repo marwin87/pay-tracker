@@ -177,7 +177,9 @@
         "summaryUpcoming": "nadchodzące",
         "summaryOverdueToday": "zaległe dzisiaj",
         "summaryOverdue": "zaległe",
-        "summaryPaid": "opłacone"
+        "summaryPaid": "opłacone",
+        "calendarTitle": "Kalendarz",
+        "clearDayFilter": "Wyczyść"
     },
     "PaymentRow": {
         "status": {"upcoming": "Nadchodzące", "overdue": "Zaległe", "paid": "Opłacone"},

@@ -177,7 +177,9 @@
         "summaryUpcoming": "bevorstehend",
         "summaryOverdueToday": "heute überfällig",
         "summaryOverdue": "überfällig",
-        "summaryPaid": "bezahlt"
+        "summaryPaid": "bezahlt",
+        "calendarTitle": "Kalender",
+        "clearDayFilter": "Zurücksetzen"
     },
     "PaymentRow": {
         "status": {

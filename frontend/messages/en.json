@@ -177,7 +177,9 @@
         "summaryUpcoming": "upcoming",
         "summaryOverdueToday": "overdue today",
         "summaryOverdue": "overdue",
-        "summaryPaid": "paid"
+        "summaryPaid": "paid",
+        "calendarTitle": "Calendar",
+        "clearDayFilter": "Clear"
     },
     "PaymentRow": {
         "status": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},

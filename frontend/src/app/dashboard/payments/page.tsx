@@ -15,6 +15,7 @@ import { categoryLabel, distinctCategories, sortCategoriesByLabel, type Category
 import { downloadXlsx } from "@/lib/export-api";
 import { SessionExpiredError } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
+import PaymentsCalendar from "@/components/payments/PaymentsCalendar";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
 import FilterSelect from "@/components/FilterSelect";
@@ -126,6 +127,28 @@ function PaymentsPageInner() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [xlsxLoadingYear, setXlsxLoadingYear] = useState<number | null>(null);
   const [xlsxError, setXlsxError] = useState<string | null>(null);
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [calendarOpen, setCalendarOpen] = useState(() => {
+    if (typeof window === "undefined") return true;
+    try {
+      const raw = localStorage.getItem("payments-calendar-open");
+      return raw === null ? true : raw === "1";
+    } catch {
+      return true;
+    }
+  });
+
+  function toggleCalendarOpen() {
+    setCalendarOpen((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem("payments-calendar-open", next ? "1" : "0");
+      } catch {
+        // ignore storage errors (e.g. private browsing quota)
+      }
+      return next;
+    });
+  }
 
   // Derived: true whenever selectedMonth hasn't finished loading yet.
   // Becomes true immediately when selectedMonth changes (same render), so no
@@ -183,10 +206,17 @@ function PaymentsPageInner() {
 
   const todayStr = getTodayStr();
 
-  const filteredInstances = instances.filter(
+  // A day picked in a previous month has nothing to do with the month now
+  // selected — treat it as cleared without a setState-in-effect round trip.
+  const dayFilter = selectedDay && selectedDay.startsWith(selectedMonth) ? selectedDay : null;
+
+  const statusCategoryFiltered = instances.filter(
     (inst) =>
       (statusFilter === "all" || inst.status === statusFilter) &&
       (categoryFilter === "all" || String(inst.category.id) === categoryFilter),
+  );
+  const filteredInstances = statusCategoryFiltered.filter(
+    (inst) => dayFilter === null || inst.due_date === dayFilter,
   );
 
   const statusOptions = [
@@ -344,6 +374,49 @@ function PaymentsPageInner() {
           </button>
           {xlsxError && (
             <p className="text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
+          )}
+        </div>
+
+        {/* Calendar view */}
+        <div className="mt-4">
+          <button
+            type="button"
+            onClick={toggleCalendarOpen}
+            aria-expanded={calendarOpen}
+            className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+          >
+            <ChevronRight
+              size={14}
+              className={`transition-transform duration-150 ${calendarOpen ? "rotate-90" : ""}`}
+            />
+            {t("calendarTitle")}
+          </button>
+          {calendarOpen && (
+            <div className="mt-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+              <PaymentsCalendar
+                year={parseInt(selectedMonth.split("-")[0], 10)}
+                month={parseInt(selectedMonth.split("-")[1], 10)}
+                instances={statusCategoryFiltered}
+                todayStr={todayStr}
+                selectedDay={dayFilter}
+                onSelectDay={(d) => setSelectedDay((prev) => (prev === d ? null : d))}
+              />
+              {dayFilter && (
+                <div className="mt-2 flex items-center gap-2 text-xs">
+                  <span className="text-slate-500 dark:text-slate-400">
+                    {new Intl.DateTimeFormat(locale, { day: "numeric", month: "long" }).format(
+                      new Date(dayFilter + "T00:00:00"),
+                    )}
+                  </span>
+                  <button
+                    onClick={() => setSelectedDay(null)}
+                    className="text-green-700 hover:underline dark:text-emerald-400"
+                  >
+                    {t("clearDayFilter")}
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
