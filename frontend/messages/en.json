@@ -330,6 +330,11 @@
             "customCurrencyAriaLabel": "Custom currency code",
             "customCurrencyPlaceholder": "e.g. CHF"
         },
+        "languages": {
+            "title": "Languages",
+            "description": "Choose which languages appear in the language switcher.",
+            "activeSuffix": "(current)"
+        },
         "emailNotifications": {
             "title": "Email Notifications",
             "description": "Choose when to receive email reminders for upcoming and overdue bills.",

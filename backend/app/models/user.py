@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
-from sqlalchemy import Boolean, DateTime, Integer, String
+from sqlalchemy import ARRAY, Boolean, DateTime, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -28,6 +28,11 @@ class User(Base):
     )
     language_preference: Mapped[str | None] = mapped_column(
         String(5), nullable=True, default=None
+    )
+    enabled_languages: Mapped[list[str]] = mapped_column(
+        ARRAY(String(5)),
+        nullable=False,
+        server_default="'{en,pl,de}'",
     )
     default_currency: Mapped[str | None] = mapped_column(
         String(10), nullable=True, default=None

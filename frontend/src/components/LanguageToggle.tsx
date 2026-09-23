@@ -11,7 +11,7 @@ const LOCALES: { value: Locale; flag: string; name: string }[] = [
 
 export default function LanguageToggle() {
   const t = useTranslations("LanguageToggle");
-  const { locale, setLocale } = useLocale();
+  const { locale, setLocale, enabledLocales } = useLocale();
 
   return (
     <div className="relative flex items-center">
@@ -21,7 +21,7 @@ export default function LanguageToggle() {
         aria-label={t("ariaLabel")}
         className="appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-7 py-1.5 text-sm font-medium text-slate-600 shadow-sm outline-none transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:focus:border-green-600 dark:focus:ring-green-900/40 cursor-pointer"
       >
-        {LOCALES.map(({ value, flag, name }) => (
+        {LOCALES.filter(({ value }) => enabledLocales.includes(value)).map(({ value, flag, name }) => (
           <option key={value} value={value}>
             {flag} {name}
           </option>

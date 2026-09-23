@@ -334,6 +334,11 @@
             "customCurrencyAriaLabel": "Benutzerdefinierter Währungscode",
             "customCurrencyPlaceholder": "z. B. CHF"
         },
+        "languages": {
+            "title": "Sprachen",
+            "description": "Wähle, welche Sprachen im Sprachumschalter verfügbar sein sollen.",
+            "activeSuffix": "(aktuell)"
+        },
         "emailNotifications": {
             "title": "E-Mail-Benachrichtigungen",
             "description": "Wählen Sie, wann Sie E-Mail-Erinnerungen für bevorstehende und überfällige Rechnungen erhalten möchten.",

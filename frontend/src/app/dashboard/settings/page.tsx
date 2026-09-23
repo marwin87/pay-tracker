@@ -12,6 +12,7 @@ import SnapshotRecoverySection from "@/components/SnapshotRecoverySection";
 import { Tile } from "@/components/settings/Tile";
 import { ProfileTile } from "@/components/settings/ProfileTile";
 import { CurrencyTile } from "@/components/settings/CurrencyTile";
+import { LanguagesTile } from "@/components/settings/LanguagesTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
 import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificationsTile";
 import { CategoriesTile } from "@/components/settings/CategoriesTile";
@@ -144,6 +145,7 @@ export default function SettingsPage() {
           onDirtyChange={onCurrencyDirty}
           t={t}
         />
+        <LanguagesTile t={t} />
 
         <Tile
           color="red"

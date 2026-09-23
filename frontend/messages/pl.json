@@ -326,6 +326,11 @@
             "customCurrencyAriaLabel": "Kod waluty niestandardowej",
             "customCurrencyPlaceholder": "np. CHF"
         },
+        "languages": {
+            "title": "Języki",
+            "description": "Wybierz, które języki mają być dostępne w przełączniku języka.",
+            "activeSuffix": "(aktualny)"
+        },
         "emailNotifications": {
             "title": "Powiadomienia e-mail",
             "description": "Wybierz, kiedy otrzymywać przypomnienia e-mail o nadchodzących i zaległych rachunkach.",

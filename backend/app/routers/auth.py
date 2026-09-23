@@ -132,7 +132,14 @@ def update_me(
     db: Session = Depends(get_db),
 ):
     # UserProfileUpdate is the security boundary — only fields declared there are patchable.
-    for field, value in body.model_dump(exclude_unset=True).items():
+    updates = body.model_dump(exclude_unset=True)
+    if "enabled_languages" in updates:
+        effective_lang = updates.get("language_preference", user.language_preference)
+        if effective_lang and effective_lang not in updates["enabled_languages"]:
+            raise HTTPException(
+                status_code=422, detail="Cannot disable the currently active language"
+            )
+    for field, value in updates.items():
         setattr(user, field, value)
     db.commit()
     db.refresh(user)

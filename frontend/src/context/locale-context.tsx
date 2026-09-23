@@ -36,6 +36,8 @@ function detectBrowserLocale(): Locale {
 interface LocaleContextValue {
   locale: Locale;
   setLocale: (l: Locale) => void;
+  enabledLocales: Locale[];
+  setEnabledLocales: (langs: Locale[]) => void;
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -43,6 +45,7 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
   const [locale, setLocaleState] = useState<Locale>(detectBrowserLocale);
+  const [enabledLocales, setEnabledLocalesState] = useState<Locale[]>(VALID_LOCALES);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -59,6 +62,10 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
           // Persist the browser-detected locale so backend emails use the right language
           updateMe({ language_preference: detectBrowserLocale() }).catch(() => {});
         }
+        const enabled = (profile.enabled_languages ?? []).filter((l): l is Locale =>
+          VALID_LOCALES.includes(l as Locale),
+        );
+        setEnabledLocalesState(enabled.length ? enabled : VALID_LOCALES);
       })
       .catch(() => {});
     return () => {
@@ -82,8 +89,22 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     [isAuthenticated],
   );
 
+  const setEnabledLocales = useCallback(
+    (langs: Locale[]) => {
+      setEnabledLocalesState(langs);
+      if (isAuthenticated) {
+        updateMe({ enabled_languages: langs }).catch(() => {
+          // persist failure is non-fatal
+        });
+      }
+    },
+    [isAuthenticated],
+  );
+
   return (
-    <LocaleContext.Provider value={{ locale, setLocale }}>
+    <LocaleContext.Provider
+      value={{ locale, setLocale, enabledLocales, setEnabledLocales }}
+    >
       <NextIntlClientProvider locale={locale} messages={messagesMap[locale]}>
         {children}
       </NextIntlClientProvider>

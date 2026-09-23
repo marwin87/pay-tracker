@@ -3,6 +3,7 @@ import { apiFetch } from "@/lib/api";
 export interface UserProfile {
   email: string;
   language_preference: "en" | "pl" | "de" | null;
+  enabled_languages: ("en" | "pl" | "de")[];
   default_currency: string | null;
   email_reminders_enabled: boolean;
   notify_2_days_before: boolean;
@@ -22,6 +23,7 @@ export function updateMe(
     Pick<
       UserProfile,
       | "language_preference"
+      | "enabled_languages"
       | "default_currency"
       | "email_reminders_enabled"
       | "notify_2_days_before"
