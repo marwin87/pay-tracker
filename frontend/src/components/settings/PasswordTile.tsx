@@ -4,6 +4,7 @@ import { KeyRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { changePassword } from "@/lib/user-api";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Tile } from "./Tile";
 
 const inputClass =
@@ -71,15 +72,13 @@ export function PasswordTile({
           {tp("profile.newPasswordLabel")}
         </label>
         <p className="text-xs text-slate-400 dark:text-slate-500">{tp("profile.passwordHint")}</p>
-        <input
-          type="password"
+        <PasswordInput
           value={curPassword}
           onChange={(e) => setCurPassword(e.target.value)}
           placeholder={tp("profile.currentPasswordPlaceholder")}
           className={inputClass}
         />
-        <input
-          type="password"
+        <PasswordInput
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
           placeholder={tp("profile.newPasswordPlaceholder")}

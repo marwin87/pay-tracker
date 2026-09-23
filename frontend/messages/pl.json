@@ -37,7 +37,9 @@
         "forgotPasswordFailed": "Coś poszło nie tak. Spróbuj ponownie."
     },
     "Common": {
-        "smtpNotConfigured": "E-mail nie jest skonfigurowany. Sprawdź konfigurację SMTP."
+        "smtpNotConfigured": "E-mail nie jest skonfigurowany. Sprawdź konfigurację SMTP.",
+        "showPassword": "Pokaż hasło",
+        "hidePassword": "Ukryj hasło"
     },
     "DashboardLayout": {
         "payments": "Płatności",

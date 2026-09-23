@@ -37,7 +37,9 @@
         "forgotPasswordFailed": "Qualcosa è andato storto. Riprova."
     },
     "Common": {
-        "smtpNotConfigured": "L'email non è configurata. Controlla la configurazione SMTP."
+        "smtpNotConfigured": "L'email non è configurata. Controlla la configurazione SMTP.",
+        "showPassword": "Mostra password",
+        "hidePassword": "Nascondi password"
     },
     "DashboardLayout": {
         "payments": "Pagamenti",

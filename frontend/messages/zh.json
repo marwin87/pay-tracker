@@ -37,7 +37,9 @@
         "forgotPasswordFailed": "出现问题，请重试。"
     },
     "Common": {
-        "smtpNotConfigured": "邮件功能未配置，请检查 SMTP 设置。"
+        "smtpNotConfigured": "邮件功能未配置，请检查 SMTP 设置。",
+        "showPassword": "显示密码",
+        "hidePassword": "隐藏密码"
     },
     "DashboardLayout": {
         "payments": "付款",

@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { sendTelegramTest, updateMe, type UserProfile } from "@/lib/user-api";
 import { ChannelScheduleSection } from "./ChannelScheduleSection";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Tile } from "./Tile";
 
 const INPUT_CLASS =
@@ -113,8 +114,8 @@ export function TelegramNotificationsTile({
       <div className="space-y-2">
         <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           {tp("telegramNotifications.botTokenLabel")}
-          <input
-            type="password"
+          <div className="mt-1">
+          <PasswordInput
             autoComplete="off"
             value={botToken}
             onChange={(e) => setBotToken(e.target.value)}
@@ -123,8 +124,9 @@ export function TelegramNotificationsTile({
                 ? "••••••••••"
                 : tp("telegramNotifications.botTokenPlaceholder")
             }
-            className={INPUT_CLASS}
+            className={INPUT_CLASS.replace("mt-1 ", "")}
           />
+          </div>
         </label>
         {profile.telegram_bot_token_unreadable && (
           <p className="text-sm text-red-600 dark:text-red-400">

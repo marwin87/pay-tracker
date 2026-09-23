@@ -4,6 +4,7 @@ import { User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { changeEmail, type UserProfile } from "@/lib/user-api";
+import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Tile } from "./Tile";
 
 const inputClass =
@@ -94,8 +95,7 @@ export function ProfileTile({
           placeholder={tp("profile.emailPlaceholder")}
           className={inputClass}
         />
-        <input
-          type="password"
+        <PasswordInput
           value={emailPassword}
           onChange={(e) => setEmailPassword(e.target.value)}
           placeholder={tp("profile.currentPasswordPlaceholder")}
