@@ -31,7 +31,12 @@ export class ApiError extends Error {
 // sign of an expired session, so it must not trigger auto-logout.
 // /auth/logout is exempt too: auth-context already swallows its errors, and a
 // stale/duplicate logout call shouldn't also fire the global session-expired flow.
-const AUTH_401_EXEMPT_PATHS = ["/auth/login", "/auth/logout"];
+const AUTH_401_EXEMPT_PATHS = [
+  "/auth/login",
+  "/auth/logout",
+  "/auth/change-email",
+  "/auth/change-password",
+];
 
 const CSRF_PROTECTED_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);
 

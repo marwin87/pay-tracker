@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import type { Page } from '@playwright/test';
 
-const API = process.env.E2E_API_URL ?? 'http://localhost:8010';
+export const API = process.env.E2E_API_URL ?? 'http://localhost:8010';
 const E2E_USERS_FILE = '/tmp/e2e-users.json';
 
 /**
@@ -68,11 +68,32 @@ async function categoryIdBySlug(page: Page, slug: string): Promise<number> {
 }
 
 /**
- * Creates a bill via the backend API. Requires an authenticated page context
- * (call loginNewUser first).
+ * Looks up the id of one of the current user's categories (default or custom)
+ * by its display name.
  */
-export async function createBillViaApi(page: Page, name: string): Promise<number> {
-  const category_id = await categoryIdBySlug(page, 'utilities');
+export async function categoryIdByName(page: Page, name: string): Promise<number> {
+  const res = await page.request.get(`${API}/categories`);
+  if (!res.ok()) {
+    throw new Error(`Fetch categories failed: ${res.status()} — ${await res.text()}`);
+  }
+  const categories: Array<{ id: number; name: string }> = await res.json();
+  const match = categories.find((c) => c.name === name);
+  if (!match) {
+    throw new Error(`No category named "${name}" found`);
+  }
+  return match.id;
+}
+
+/**
+ * Creates a bill via the backend API. Requires an authenticated page context
+ * (call loginNewUser first). Defaults to the seeded "utilities" category.
+ */
+export async function createBillViaApi(
+  page: Page,
+  name: string,
+  categoryId?: number,
+): Promise<number> {
+  const category_id = categoryId ?? (await categoryIdBySlug(page, 'utilities'));
   const res = await page.request.post(`${API}/bills`, {
     data: {
       name,

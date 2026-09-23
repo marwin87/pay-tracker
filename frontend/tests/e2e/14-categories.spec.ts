@@ -1,0 +1,81 @@
+/**
+ * Flow 14: Categories — create / rename / archive in Settings, filter payments by category
+ * Risk: a category change does not persist (or archive is not reflected), or the payments
+ *       category filter shows rows from other categories — user misreads what is due.
+ * Real boundaries: auth, /categories API, /bills/payments API, payments list filtering.
+ * Each test uses a fresh isolated user.
+ */
+import { test, expect } from '@playwright/test';
+import {
+  API,
+  categoryIdByName,
+  createBillViaApi,
+  getCsrfHeader,
+  loginNewUser,
+  syncPaymentsViaApi,
+} from './helpers';
+
+test('create, rename and archive a custom category in Settings', async ({ page }) => {
+  const name = `E2E Cat ${Date.now()}`;
+  const renamed = `${name} Renamed`;
+
+  await loginNewUser(page);
+  await page.goto('/dashboard/settings');
+  await page.getByRole('button', { name: 'Categories', exact: true }).first().click();
+
+  // Step: create
+  await page.getByRole('button', { name: '+ Add category' }).click();
+  await page.getByPlaceholder('e.g. Hobbies').fill(name);
+  await page.getByRole('button', { name: 'rose', exact: true }).click();
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(page.getByText(name, { exact: true })).toBeVisible();
+
+  // Step: rename — a new category gets the highest sort_order, so its row is last
+  await page.getByRole('button', { name: 'Edit', exact: true }).last().click();
+  await page.getByRole('textbox').last().fill(renamed);
+  await page.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(page.getByText(renamed, { exact: true })).toBeVisible();
+  await expect(page.getByText(name, { exact: true })).not.toBeVisible();
+
+  // Step: archive
+  await page.getByRole('button', { name: 'Archive', exact: true }).last().click();
+  await expect(page.getByText('archived', { exact: true })).toBeVisible();
+
+  // Assert: rename + archive are persisted server-side
+  await page.reload();
+  await page.getByRole('button', { name: 'Categories', exact: true }).first().click();
+  await expect(page.getByText(renamed, { exact: true })).toBeVisible();
+  await expect(page.getByText('archived', { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Unarchive', exact: true })).toBeVisible();
+});
+
+test('category filter on payments shows only the selected category', async ({ page }) => {
+  const stamp = Date.now();
+  const customCategory = `E2E Filter Cat ${stamp}`;
+  const defaultBill = `E2E Default Cat Bill ${stamp}`;
+  const customBill = `E2E Custom Cat Bill ${stamp}`;
+
+  await loginNewUser(page);
+  const res = await page.request.post(`${API}/categories`, {
+    data: { name: customCategory, color: 'rose' },
+    headers: { 'Content-Type': 'application/json', ...(await getCsrfHeader(page)) },
+  });
+  expect(res.ok()).toBeTruthy();
+  const customId = await categoryIdByName(page, customCategory);
+
+  await createBillViaApi(page, defaultBill); // utilities
+  await createBillViaApi(page, customBill, customId);
+  await syncPaymentsViaApi(page);
+
+  await page.goto('/dashboard/payments');
+  await expect(page.getByText(defaultBill)).toBeVisible();
+  await expect(page.getByText(customBill)).toBeVisible();
+
+  // Step: filter to the custom category only
+  await page.getByRole('button', { name: 'All categories' }).click();
+  await page.getByRole('checkbox', { name: customCategory }).check({ force: true });
+
+  // Assert: only the custom-category payment remains
+  await expect(page.getByText(customBill)).toBeVisible();
+  await expect(page.getByText(defaultBill)).not.toBeVisible();
+});
