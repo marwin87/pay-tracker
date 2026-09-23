@@ -1,6 +1,6 @@
 "use client";
 
-import { Loader2, Send } from "lucide-react";
+import { ChevronDown, CircleHelp, Loader2, Send } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { sendTelegramTest, updateMe, type UserProfile } from "@/lib/user-api";
@@ -94,16 +94,21 @@ export function TelegramNotificationsTile({
       description={tp("telegramNotifications.description")}
       t={t}
     >
-      <details className="group rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm text-slate-700 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300">
-        <summary className="cursor-pointer select-none font-medium">
-          {tp("telegramNotifications.helpTitle")}
+      <details className="group rounded-lg border border-slate-200 bg-white text-sm text-slate-700 shadow-sm dark:border-slate-600 dark:bg-slate-700 dark:text-slate-300">
+        <summary className="flex cursor-pointer select-none list-none items-center gap-2 rounded-lg px-3 py-2 font-medium text-slate-600 transition-colors hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-600/50 [&::-webkit-details-marker]:hidden">
+          <CircleHelp size={16} className="shrink-0 text-slate-400 dark:text-slate-500" />
+          <span className="flex-1">{tp("telegramNotifications.helpTitle")}</span>
+          <ChevronDown
+            size={14}
+            className="shrink-0 text-slate-400 transition-transform group-open:rotate-180 dark:text-slate-500"
+          />
         </summary>
-        <ol className="mt-2 list-decimal space-y-1.5 pl-5">
+        <ol className="list-decimal space-y-1.5 border-t border-slate-100 px-3 py-3 pl-8 text-slate-600 dark:border-slate-600 dark:text-slate-300">
           <li>{tp("telegramNotifications.helpStep1")}</li>
           <li>{tp("telegramNotifications.helpStep2")}</li>
           <li>
             {tp("telegramNotifications.helpStep3")}
-            <code className="mt-1 block break-all rounded bg-slate-100 px-2 py-1 text-xs dark:bg-slate-700">
+            <code className="mt-1 block break-all rounded-md bg-slate-100 px-2 py-1 text-xs text-slate-700 dark:bg-slate-800 dark:text-slate-300">
               https://api.telegram.org/bot&lt;TOKEN&gt;/getUpdates
             </code>
           </li>
