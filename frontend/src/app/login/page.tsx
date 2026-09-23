@@ -104,6 +104,12 @@ export default function LoginPage() {
         </div>
 
         <div className="rounded-2xl border border-slate-200 bg-white p-8 shadow-sm dark:bg-slate-800 dark:border-slate-700">
+          {error && (
+            <div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
+              {error}
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <label
@@ -136,12 +142,6 @@ export default function LoginPage() {
                 error={passwordError ?? undefined}
               />
             </div>
-
-            {error && (
-              <div className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:border-red-800 dark:text-red-400">
-                {error}
-              </div>
-            )}
 
             <Button type="submit" loading={loading} className="mt-1 w-full py-2.5">
               {loading ? t("signingIn") : t("signIn")}

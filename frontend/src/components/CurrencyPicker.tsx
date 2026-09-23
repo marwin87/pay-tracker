@@ -12,15 +12,9 @@ interface Props {
   customOption: string;
   customCurrencyAriaLabel: string;
   customCurrencyPlaceholder: string;
-  selectClassName?: string;
-  inputClassName?: string;
+  selectClassName: string;
+  inputClassName: string;
 }
-
-const defaultSelectClass =
-  "w-28 shrink-0 rounded-xl border border-slate-200 bg-white px-2 py-2.5 text-sm text-slate-800 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
-
-const defaultInputClass =
-  "w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
 
 export default function CurrencyPicker({
   value,
@@ -55,7 +49,7 @@ export default function CurrencyPicker({
         aria-label={ariaLabel}
         value={currencyOption}
         onChange={(e) => handleOptionChange(e.target.value as CurrencyOption)}
-        className={selectClassName ?? defaultSelectClass}
+        className={selectClassName}
       >
         {PRESET_CURRENCIES.map((c) => (
           <option key={c} value={c}>{c}</option>
@@ -69,7 +63,7 @@ export default function CurrencyPicker({
           onChange={(e) => handleCustomChange(e.target.value)}
           placeholder={customCurrencyPlaceholder}
           maxLength={10}
-          className={inputClassName ?? defaultInputClass + " basis-full"}
+          className={inputClassName}
         />
       )}
     </>

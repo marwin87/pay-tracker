@@ -137,15 +137,16 @@ export default function BillTemplateForm({ initial, defaultCurrency, onSave, onC
 
         <div>
           <label htmlFor="bill-amount" className={labelClass}>{t("amountLabel")}</label>
-          <div className="flex flex-wrap gap-2">
-            <input
-              id="bill-amount"
-              value={amount}
-              onChange={(e) => handleAmountChange(e.target.value)}
-              placeholder="0.00"
-              inputMode="decimal"
-              className={inputClass}
-            />
+          <input
+            id="bill-amount"
+            value={amount}
+            onChange={(e) => handleAmountChange(e.target.value)}
+            placeholder="0.00"
+            inputMode="decimal"
+            className={inputClass}
+          />
+          {errors.amount && <p className="mt-1 text-xs text-red-500">{errors.amount}</p>}
+          <div className="mt-2">
             <CurrencyPicker
               value={currency}
               onChange={setCurrency}
@@ -153,9 +154,10 @@ export default function BillTemplateForm({ initial, defaultCurrency, onSave, onC
               customOption={t("customOption")}
               customCurrencyAriaLabel={t("customCurrencyAriaLabel")}
               customCurrencyPlaceholder={t("customCurrencyPlaceholder")}
+              selectClassName={inputClass}
+              inputClassName={inputClass + " mt-2"}
             />
           </div>
-          {errors.amount && <p className="mt-1 text-xs text-red-500">{errors.amount}</p>}
         </div>
       </div>
 
