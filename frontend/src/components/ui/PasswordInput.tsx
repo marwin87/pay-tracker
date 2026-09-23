@@ -6,16 +6,26 @@ import { useTranslations } from "next-intl";
 
 type PasswordInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type">;
 
-/** Drop-in for `<input type="password">` with a show/hide toggle. Pass your usual input classes via `className`. */
-export function PasswordInput({ className = "", ...props }: PasswordInputProps) {
+/** Drop-in for `<input type="password">` with a show/hide toggle. Pass your usual input classes via `className`. The toggle is hidden while the field is empty (nothing to reveal), controlled or not. */
+export function PasswordInput({ className = "", onChange, ...props }: PasswordInputProps) {
   const t = useTranslations("Common");
   const [visible, setVisible] = useState(false);
+  const [typed, setTyped] = useState(!!props.defaultValue);
+  const hasValue = props.value !== undefined ? props.value !== "" : typed;
   const Icon = visible ? EyeOff : Eye;
   const label = t(visible ? "hidePassword" : "showPassword");
 
   return (
     <div className="relative">
-      <input {...props} type={visible ? "text" : "password"} className={`${className} pr-10`} />
+      <input
+        {...props}
+        onChange={(e) => {
+          setTyped(e.target.value !== "");
+          onChange?.(e);
+        }}
+        type={visible ? "text" : "password"} className={`${className} pr-10`}
+      />
+      {hasValue && (
       <button
         type="button"
         onClick={() => setVisible((v) => !v)}
@@ -25,6 +35,7 @@ export function PasswordInput({ className = "", ...props }: PasswordInputProps) 
       >
         <Icon className="h-4 w-4" />
       </button>
+      )}
     </div>
   );
 }
