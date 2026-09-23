@@ -1,6 +1,8 @@
 """Tests for auth endpoints: GET /me, PATCH /me, PATCH /change-password,
 PATCH /change-email, and 401 enforcement on protected routes."""
 
+from unittest.mock import patch
+
 import pytest
 
 from tests.conftest import auth, register_and_login
@@ -380,3 +382,166 @@ def test_send_monthly_summary_now_does_not_set_flag(client_db):
     db.expire_all()
     user = db.query(User).filter(User.email == "summary_flag@test.com").first()
     assert user.monthly_summary_last_sent != current_month
+
+
+# ---------------------------------------------------------------------------
+# Telegram credentials (bot token is write-only and encrypted at rest)
+# ---------------------------------------------------------------------------
+
+_BOT_TOKEN = "123456789:AAF3kxyz_-abcdefghij"  # pragma: allowlist secret
+
+
+def test_patch_me_telegram_token_is_write_only_and_encrypted(client, db_session):
+    from app.models.user import User
+
+    token = register_and_login(client, "tg@test.com", _PASSWORD)
+    r = client.patch(
+        "/auth/me",
+        json={"telegram_bot_token": _BOT_TOKEN, "telegram_chat_id": "42"},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+    body = r.json()
+    assert body["telegram_bot_token_set"] is True
+    assert body["telegram_chat_id"] == "42"
+    assert _BOT_TOKEN not in r.text and "telegram_bot_token" not in body
+
+    stored = db_session.query(User).filter_by(email="tg@test.com").one()
+    assert stored.telegram_bot_token and _BOT_TOKEN not in stored.telegram_bot_token
+
+    # omitting the token keeps it; empty string clears it
+    r = client.patch("/auth/me", json={"telegram_chat_id": "43"}, headers=auth(token))
+    assert r.json()["telegram_bot_token_set"] is True
+    r = client.patch("/auth/me", json={"telegram_bot_token": ""}, headers=auth(token))
+    assert r.json()["telegram_bot_token_set"] is False
+
+
+def test_send_telegram_test_requires_credentials(client):
+    token = register_and_login(client, "tg2@test.com", _PASSWORD)
+    r = client.post("/auth/send-telegram-test", headers=auth(token))
+    assert r.status_code == 400
+
+
+def test_send_telegram_test_delivers_via_notify(client):
+    token = register_and_login(client, "tg3@test.com", _PASSWORD)
+    client.patch(
+        "/auth/me",
+        json={"telegram_bot_token": _BOT_TOKEN, "telegram_chat_id": "42"},
+        headers=auth(token),
+    )
+    with patch("app.routers.auth.notify_send") as send:
+        r = client.post("/auth/send-telegram-test", headers=auth(token))
+    assert r.status_code == 200
+    assert send.call_args.args[0] == f"tgram://{_BOT_TOKEN}/42"
+
+
+def test_telegram_schedule_is_independent_of_email_schedule(client):
+    token = register_and_login(client, "tgsched@test.com", _PASSWORD)
+    r = client.patch(
+        "/auth/me",
+        json={
+            "telegram_notify_on_day": True,
+            "telegram_notify_1_day_before": False,
+            "telegram_send_minute": 600,
+            "telegram_monthly_summary_enabled": False,
+            "telegram_reminders_enabled": False,
+        },
+        headers=auth(token),
+    )
+    body = r.json()
+    assert body["telegram_notify_on_day"] is True
+    assert body["telegram_send_minute"] == 600
+    assert body["telegram_reminders_enabled"] is False
+    # email settings untouched
+    assert body["notify_on_day"] is False and body["notify_1_day_before"] is True
+    assert body["reminder_send_minute"] == 480
+
+
+def test_send_now_telegram_channel_requires_credentials(client):
+    token = register_and_login(client, "tgnow@test.com", _PASSWORD)
+    for path in ("/auth/send-notification-now", "/auth/send-monthly-summary-now"):
+        r = client.post(f"{path}?channel=telegram", headers=auth(token))
+        assert r.status_code == 400
+
+
+def test_send_now_telegram_uses_telegram_channel(client):
+    token = register_and_login(client, "tgnow2@test.com", _PASSWORD)
+    client.patch(
+        "/auth/me",
+        json={"telegram_bot_token": _BOT_TOKEN, "telegram_chat_id": "42"},
+        headers=auth(token),
+    )
+    with patch("app.routers.auth.send_reminders_for_user", return_value=2) as send:
+        r = client.post(
+            "/auth/send-notification-now?channel=telegram", headers=auth(token)
+        )
+    assert r.status_code == 200 and r.json() == {"sent": 2}
+    assert send.call_args.args[2].name == "telegram"
+
+    with patch(
+        "app.routers.auth.send_monthly_summary_for_user", return_value=True
+    ) as summ:
+        r = client.post(
+            "/auth/send-monthly-summary-now?channel=telegram", headers=auth(token)
+        )
+    assert r.json() == {"sent": True} and summ.call_args.args[3].name == "telegram"
+
+    client.patch(
+        "/auth/me", json={"telegram_reminders_enabled": False}, headers=auth(token)
+    )
+    r = client.post("/auth/send-notification-now?channel=telegram", headers=auth(token))
+    assert r.json() == {"sent": 0}
+
+
+def test_rotated_jwt_secret_makes_stored_bot_token_unreadable(client):
+    token = register_and_login(client, "tgrot@test.com", _PASSWORD)
+    client.patch(
+        "/auth/me",
+        json={"telegram_bot_token": _BOT_TOKEN, "telegram_chat_id": "42"},
+        headers=auth(token),
+    )
+    me = client.get("/auth/me", headers=auth(token)).json()
+    assert me["telegram_bot_token_set"] is True
+    assert me["telegram_bot_token_unreadable"] is False
+
+    # JWT_SECRET changes: the stored ciphertext can no longer be decrypted
+    with patch("app.services.notify.settings") as st:
+        st.jwt_secret = "a-completely-different-secret-value-1234"  # pragma: allowlist secret
+        me = client.get("/auth/me", headers=auth(token)).json()
+        assert me["telegram_bot_token_set"] is False
+        assert me["telegram_bot_token_unreadable"] is True
+        assert (
+            me["telegram_chat_id"] == "42"
+        )  # chat id survives, only the token is lost
+
+        r = client.post("/auth/send-telegram-test", headers=auth(token))
+        assert r.status_code == 400
+
+        # backup: warns instead of silently omitting the Telegram section
+        r = client.get("/export/json", headers=auth(token))
+        assert r.headers["X-Backup-Warning"] == "telegram-token-unreadable"
+        assert "telegram" not in r.json()
+
+        # re-entering the token under the new secret fixes it
+        me = client.patch(
+            "/auth/me", json={"telegram_bot_token": _BOT_TOKEN}, headers=auth(token)
+        ).json()
+        assert me["telegram_bot_token_set"] is True
+        assert me["telegram_bot_token_unreadable"] is False
+
+
+def test_no_backup_warning_when_token_is_fine_or_absent(client):
+    token = register_and_login(client, "tgnowarn@test.com", _PASSWORD)
+    assert (
+        "X-Backup-Warning"
+        not in client.get("/export/json", headers=auth(token)).headers
+    )
+    client.patch(
+        "/auth/me",
+        json={"telegram_bot_token": _BOT_TOKEN, "telegram_chat_id": "42"},
+        headers=auth(token),
+    )
+    assert (
+        "X-Backup-Warning"
+        not in client.get("/export/json", headers=auth(token)).headers
+    )

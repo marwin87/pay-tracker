@@ -267,7 +267,9 @@
         "cancel": "Cancel",
         "confirm": "Download",
         "downloading": "Downloading…",
-        "error": "Backup failed. Please try again."
+        "error": "Backup failed. Please try again.",
+        "telegramWarning": "Your backup was downloaded, but it does not contain your Telegram bot token: it can no longer be read (the server secret changed). Re-enter the token in Settings, then download a new backup.",
+        "ok": "OK"
     },
     "SnapshotRecoverySection": {
         "message": "A snapshot of your data was saved on {date}, right before your last restore.",
@@ -368,6 +370,31 @@
             "toggle": "Enable browser notifications",
             "osHint": "Not seeing notifications? Check your OS notification settings (macOS: System Settings → Notifications).",
             "blockedWarning": "Browser notifications are blocked. Enable them in your browser or operating system settings."
+        },
+        "telegramNotifications": {
+            "title": "Telegram Notifications",
+            "description": "Get reminders on Telegram. Configured separately from email.",
+            "chatIdLabel": "Telegram chat ID",
+            "chatIdPlaceholder": "e.g. 123456789",
+            "testButton": "Send test message",
+            "testSending": "Sending…",
+            "testSent": "Test message sent",
+            "invalidId": "Chat ID must be a number (negative for groups).",
+            "testFailed": "Test failed. Check the chat ID and that you have messaged the bot first.",
+            "botTokenLabel": "Bot token",
+            "botTokenPlaceholder": "Bot token from @BotFather",
+            "botTokenSaved": "Token saved. Enter a new one to replace it.",
+            "invalidToken": "Invalid bot token format.",
+            "remove": "Remove Telegram",
+            "helpTitle": "How do I get the bot token and chat ID?",
+            "helpStep1": "In Telegram open @BotFather, send /newbot and follow the steps. Copy the token you get.",
+            "helpStep2": "Open your new bot and send it any message (e.g. hi).",
+            "helpStep3": "Open this address in your browser (replace TOKEN with your token):",
+            "helpStep4": "In the result find \"chat\" and then \"id\". That number is your chat ID. Paste the token and the chat ID below.",
+            "masterToggle": "Enable Telegram notifications",
+            "noneWarning": "Select at least one option to receive Telegram reminders.",
+            "needCredentials": "Save the bot token and chat ID above to enable sending.",
+            "tokenUnreadable": "The saved bot token can no longer be read (the server secret changed). Enter the token again and save."
         },
         "backup": {
             "title": "Backup Data",

@@ -3,24 +3,18 @@
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { fetchPayments } from "@/lib/payments-api";
+import { fetchMe, updateMe } from "@/lib/user-api";
 
 const notificationsSupported =
   typeof window !== "undefined" && "Notification" in window;
-
-const BROWSER_NOTIF_KEY = "browser_notif_enabled";
 
 function getPermission(): NotificationPermission {
   if (!notificationsSupported) return "default";
   return Notification.permission;
 }
 
-function getInitialEnabled(): boolean {
-  if (!notificationsSupported) return false;
-  if (Notification.permission !== "granted") return false;
-  return localStorage.getItem(BROWSER_NOTIF_KEY) === "1";
-}
-
-export function useNotifications(): {
+// `initialPref` is the server-stored preference (Settings passes it from the profile).
+export function useNotifications(initialPref = false): {
   permission: NotificationPermission;
   isEnabled: boolean;
   requestPermission: () => Promise<void>;
@@ -28,7 +22,8 @@ export function useNotifications(): {
   notifyDueToday: () => Promise<void>;
 } {
   const [permission, setPermission] = useState<NotificationPermission>(getPermission);
-  const [isEnabled, setIsEnabledState] = useState(getInitialEnabled);
+  // The preference is stored on the server (so it is backed up); permission is per browser.
+  const [enabledPref, setEnabledPref] = useState(initialPref);
   // Requires a next-intl NextIntlClientProvider ancestor — notification title is i18n'd here intentionally.
   const t = useTranslations("NotificationToggle");
 
@@ -50,9 +45,11 @@ export function useNotifications(): {
     };
   }, []);
 
+  const isEnabled = enabledPref && permission === "granted";
+
   function setEnabled(v: boolean) {
-    localStorage.setItem(BROWSER_NOTIF_KEY, v ? "1" : "0");
-    setIsEnabledState(v);
+    setEnabledPref(v);
+    updateMe({ browser_notifications_enabled: v }).catch(() => setEnabledPref(!v));
   }
 
   async function requestPermission() {
@@ -65,9 +62,12 @@ export function useNotifications(): {
   }
 
   async function notifyDueToday() {
-    if (localStorage.getItem(BROWSER_NOTIF_KEY) !== "1") return;
     if (!notificationsSupported || Notification.permission !== "granted") return;
     if (!("serviceWorker" in navigator)) return;
+
+    // Server preference, not localStorage: it survives a new browser and a restore.
+    const me = await fetchMe().catch(() => null);
+    if (!me?.browser_notifications_enabled) return;
 
     const today = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD in local timezone
     const month = today.slice(0, 7); // YYYY-MM

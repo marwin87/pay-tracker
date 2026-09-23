@@ -1,9 +1,9 @@
 import html
-import smtplib
 from datetime import date
 from decimal import Decimal
-from email.message import EmailMessage
 from typing import Any
+
+from app.services import notify
 
 _SUBJECTS: dict[tuple[str, str], str] = {
     (
@@ -41,65 +41,75 @@ _SUBJECTS: dict[tuple[str, str], str] = {
 _BODIES: dict[tuple[str, str], str] = {
     ("2_days_before", "en"): (
         "This is a reminder that {bill_name} is due in 2 days ({due_date}).\n"
-        "Amount: {amount} {currency}\n\n"
-        "Manage your reminders in the Pay Tracker app."
+        "Amount: {amount} {currency}"
     ),
     ("2_days_before", "pl"): (
         "Przypominamy, że {bill_name} jest płatne za 2 dni ({due_date}).\n"
-        "Kwota: {amount} {currency}\n\n"
-        "Zarządzaj przypomnieniami w aplikacji Pay Tracker."
+        "Kwota: {amount} {currency}"
     ),
     ("2_days_before", "de"): (
         "Erinnerung: {bill_name} ist in 2 Tagen fällig ({due_date}).\n"
-        "Betrag: {amount} {currency}\n\n"
-        "Verwalten Sie Ihre Erinnerungen in der Pay Tracker App."
+        "Betrag: {amount} {currency}"
     ),
     ("upcoming", "en"): (
         "This is a reminder that {bill_name} is due tomorrow ({due_date}).\n"
-        "Amount: {amount} {currency}\n\n"
-        "Manage your reminders in the Pay Tracker app."
+        "Amount: {amount} {currency}"
     ),
     ("upcoming", "pl"): (
         "Przypominamy, że {bill_name} jest płatne jutro ({due_date}).\n"
-        "Kwota: {amount} {currency}\n\n"
-        "Zarządzaj przypomnieniami w aplikacji Pay Tracker."
+        "Kwota: {amount} {currency}"
     ),
     ("upcoming", "de"): (
         "Erinnerung: {bill_name} ist morgen fällig ({due_date}).\n"
-        "Betrag: {amount} {currency}\n\n"
-        "Verwalten Sie Ihre Erinnerungen in der Pay Tracker App."
+        "Betrag: {amount} {currency}"
     ),
     ("on_day", "en"): (
-        "{bill_name} is due today ({due_date}).\n"
-        "Amount: {amount} {currency}\n\n"
-        "Manage your reminders in the Pay Tracker app."
+        "{bill_name} is due today ({due_date}).\n" "Amount: {amount} {currency}"
     ),
     ("on_day", "pl"): (
-        "{bill_name} jest płatne dzisiaj ({due_date}).\n"
-        "Kwota: {amount} {currency}\n\n"
-        "Zarządzaj przypomnieniami w aplikacji Pay Tracker."
+        "{bill_name} jest płatne dzisiaj ({due_date}).\n" "Kwota: {amount} {currency}"
     ),
     ("on_day", "de"): (
-        "{bill_name} ist heute fällig ({due_date}).\n"
-        "Betrag: {amount} {currency}\n\n"
-        "Verwalten Sie Ihre Erinnerungen in der Pay Tracker App."
+        "{bill_name} ist heute fällig ({due_date}).\n" "Betrag: {amount} {currency}"
     ),
     ("1_day_after", "en"): (
         "{bill_name} was due yesterday ({due_date}) and remains unpaid.\n"
-        "Amount: {amount} {currency}\n\n"
-        "Manage your reminders in the Pay Tracker app."
+        "Amount: {amount} {currency}"
     ),
     ("1_day_after", "pl"): (
         "{bill_name} było płatne wczoraj ({due_date}) i nadal nie zostało opłacone.\n"
-        "Kwota: {amount} {currency}\n\n"
-        "Zarządzaj przypomnieniami w aplikacji Pay Tracker."
+        "Kwota: {amount} {currency}"
     ),
     ("1_day_after", "de"): (
         "{bill_name} war gestern fällig ({due_date}) und ist noch unbezahlt.\n"
-        "Betrag: {amount} {currency}\n\n"
-        "Verwalten Sie Ihre Erinnerungen in der Pay Tracker App."
+        "Betrag: {amount} {currency}"
     ),
 }
+
+
+def _deliver(
+    smtp_host: str,
+    smtp_port: int,
+    smtp_user: str | None,
+    smtp_password: str | None,
+    smtp_use_tls: bool,
+    from_addr: str,
+    to_addr: str,
+    subject: str,
+    body: str,
+    *,
+    html: bool = False,
+) -> None:
+    url = notify.smtp_url(
+        host=smtp_host,
+        port=smtp_port,
+        user=smtp_user,
+        password=smtp_password,
+        use_tls=smtp_use_tls,
+        from_addr=from_addr,
+        to_addr=to_addr,
+    )
+    notify.send(url, subject, body, html=html)
 
 
 def send_reminder_email(
@@ -118,32 +128,31 @@ def send_reminder_email(
     kind: str,
     language: str,
 ) -> None:
-    lang = language if (kind, language) in _SUBJECTS else "en"
-    ctx = {
-        "bill_name": bill_name,
-        "due_date": due_date.isoformat(),
-        "amount": amount,
-        "currency": currency,
-    }
-
-    msg = EmailMessage()
-    msg["From"] = from_addr
-    msg["To"] = to_addr
-    msg["Subject"] = _SUBJECTS[(kind, lang)].format(**ctx)
-    msg.set_content(_BODIES[(kind, lang)].format(**ctx))
-
-    with smtplib.SMTP(smtp_host, smtp_port) as smtp:
-        if smtp_use_tls:
-            smtp.starttls()
-        if smtp_user:
-            smtp.login(smtp_user, smtp_password or "")
-        smtp.send_message(msg)
+    subject, body = reminder_text(
+        bill_name=bill_name,
+        due_date=due_date,
+        amount=amount,
+        currency=currency,
+        kind=kind,
+        language=language,
+    )
+    _deliver(
+        smtp_host,
+        smtp_port,
+        smtp_user,
+        smtp_password,
+        smtp_use_tls,
+        from_addr,
+        to_addr,
+        subject,
+        body,
+    )
 
 
 _SUMMARY_SUBJECTS: dict[str, str] = {
-    "en": "Monthly summary for {month_label} — Pay Tracker",
-    "pl": "Miesięczne podsumowanie za {month_label} — Pay Tracker",
-    "de": "Monatliche Zusammenfassung für {month_label} — Pay Tracker",
+    "en": "Monthly summary for {month_label}",
+    "pl": "Miesięczne podsumowanie za {month_label}",
+    "de": "Monatliche Zusammenfassung für {month_label}",
 }
 
 _SUMMARY_HEADINGS: dict[str, dict[str, str]] = {
@@ -316,68 +325,6 @@ def _build_summary_html(
 </html>"""
 
 
-def _build_summary_plaintext(
-    month_label: str,
-    paid_rows: list[dict[str, Any]],
-    unpaid_rows: list[dict[str, Any]],
-    lang: str,
-) -> str:
-    h = _SUMMARY_HEADINGS.get(lang, _SUMMARY_HEADINGS["en"])
-
-    def fmt_amount(amount: Any, currency: str) -> str:
-        return f"{Decimal(str(amount)):.2f} {currency}"
-
-    lines = [h["intro"].format(month_label=month_label), ""]
-    lines.append(f"=== {h['paid_header']} ===")
-    if paid_rows:
-        for row in paid_rows:
-            expected = fmt_amount(row["amount"], row["currency"])
-            paid_actual = (
-                fmt_amount(row["paid_amount"], row["currency"])
-                if row.get("paid_amount")
-                else expected
-            )
-            mismatch = row.get("paid_amount") and Decimal(
-                str(row["paid_amount"])
-            ) != Decimal(str(row["amount"]))
-            paid_on = row.get("paid_at", "")
-            if paid_on and hasattr(paid_on, "strftime"):
-                paid_on = paid_on.strftime("%Y-%m-%d")
-            elif paid_on and "T" in str(paid_on):
-                paid_on = str(paid_on)[:10]
-            mismatch_note = f" ({h['expected']}: {expected})" if mismatch else ""
-            lines.append(
-                f"  {row['name']} | {row['due_date']} | {paid_actual}{mismatch_note} | {paid_on}"
-            )
-    else:
-        lines.append(f"  {h['nothing_paid']}")
-
-    lines += ["", f"=== {h['unpaid_header']} ==="]
-    if unpaid_rows:
-        for row in unpaid_rows:
-            lines.append(
-                f"  {row['name']} | {row['due_date']} | {fmt_amount(row['amount'], row['currency'])}"
-            )
-    else:
-        lines.append(f"  {h['nothing_unpaid']}")
-
-    if paid_rows or unpaid_rows:
-        currencies = {r["currency"] for r in paid_rows + unpaid_rows}
-        currency_label = next(iter(currencies), "")
-        total_paid = sum(
-            Decimal(str(r.get("paid_amount") or r["amount"])) for r in paid_rows
-        )
-        total_outstanding = sum(Decimal(str(r["amount"])) for r in unpaid_rows)
-        lines += [
-            "",
-            f"{h['total_paid']}: {total_paid:.2f} {currency_label}",
-            f"{h['total_outstanding']}: {total_outstanding:.2f} {currency_label}",
-        ]
-
-    lines += ["", h["footer"]]
-    return "\n".join(lines)
-
-
 _RESET_SUBJECTS: dict[str, str] = {
     "en": "Reset your Pay Tracker password",
     "pl": "Zresetuj hasło Pay Tracker",
@@ -412,6 +359,51 @@ _EXPIRES_LABELS: dict[str, str] = {
 }
 
 
+def reminder_text(
+    *,
+    bill_name: str,
+    due_date: date,
+    amount: Decimal,
+    currency: str,
+    kind: str,
+    language: str,
+) -> tuple[str, str]:
+    lang = language if (kind, language) in _SUBJECTS else "en"
+    ctx = {
+        "bill_name": bill_name,
+        "due_date": due_date.isoformat(),
+        "amount": amount,
+        "currency": currency,
+    }
+    return _SUBJECTS[(kind, lang)].format(**ctx), _BODIES[(kind, lang)].format(**ctx)
+
+
+def send_reminder_telegram(*, url: str, **text_kwargs: Any) -> None:
+    subject, body = reminder_text(**text_kwargs)
+    notify.send(url, subject, body)
+
+
+def send_summary_telegram(
+    *,
+    url: str,
+    month_label: str,
+    paid_rows: list[dict[str, Any]],
+    unpaid_rows: list[dict[str, Any]],
+    language: str,
+) -> None:
+    lang = language if language in _SUMMARY_SUBJECTS else "en"
+    lines = [f"✓ {r['name']}" for r in paid_rows]
+    lines += [
+        f"✗ {r['name']} — {r['amount']} {r['currency']} ({r['due_date']})"
+        for r in unpaid_rows
+    ]
+    notify.send(
+        url,
+        _SUMMARY_SUBJECTS[lang].format(month_label=month_label),
+        "\n".join(lines) or "—",
+    )
+
+
 def send_password_reset_email(
     *,
     smtp_host: str,
@@ -433,20 +425,19 @@ def send_password_reset_email(
     else:
         expires_label = "no expiry"
 
-    msg = EmailMessage()
-    msg["From"] = from_addr
-    msg["To"] = to_addr
-    msg["Subject"] = _RESET_SUBJECTS[lang]
-    msg.set_content(
-        _RESET_BODIES[lang].format(reset_url=reset_url, expires_label=expires_label)
+    subject = _RESET_SUBJECTS[lang]
+    body = _RESET_BODIES[lang].format(reset_url=reset_url, expires_label=expires_label)
+    _deliver(
+        smtp_host,
+        smtp_port,
+        smtp_user,
+        smtp_password,
+        smtp_use_tls,
+        from_addr,
+        to_addr,
+        subject,
+        body,
     )
-
-    with smtplib.SMTP(smtp_host, smtp_port) as smtp:
-        if smtp_use_tls:
-            smtp.starttls()
-        if smtp_user:
-            smtp.login(smtp_user, smtp_password or "")
-        smtp.send_message(msg)
 
 
 def send_monthly_summary_email(
@@ -465,19 +456,17 @@ def send_monthly_summary_email(
 ) -> None:
     lang = language if language in _SUMMARY_SUBJECTS else "en"
     subject = _SUMMARY_SUBJECTS[lang].format(month_label=month_label)
-    plain = _build_summary_plaintext(month_label, paid_rows, unpaid_rows, lang)
-    html = _build_summary_html(month_label, paid_rows, unpaid_rows, lang)
+    body = _build_summary_html(month_label, paid_rows, unpaid_rows, lang)
 
-    msg = EmailMessage()
-    msg["From"] = from_addr
-    msg["To"] = to_addr
-    msg["Subject"] = subject
-    msg.set_content(plain)
-    msg.add_alternative(html, subtype="html")
-
-    with smtplib.SMTP(smtp_host, smtp_port) as smtp:
-        if smtp_use_tls:
-            smtp.starttls()
-        if smtp_user:
-            smtp.login(smtp_user, smtp_password or "")
-        smtp.send_message(msg)
+    _deliver(
+        smtp_host,
+        smtp_port,
+        smtp_user,
+        smtp_password,
+        smtp_use_tls,
+        from_addr,
+        to_addr,
+        subject,
+        body,
+        html=True,
+    )

@@ -9,7 +9,8 @@ from app.core.config import Settings
 
 def test_default_jwt_secret_rejected_in_production():
     with pytest.raises(ValidationError):
-        Settings(environment="production")
+        # _env_file=None: a developer .env with a real JWT_SECRET must not mask the default
+        Settings(environment="production", _env_file=None)
 
 
 def test_short_jwt_secret_rejected_in_production():

@@ -97,7 +97,7 @@ Go to **Payments**. Use the month selector to browse any period. Click **Mark as
 
 ### 6. Set up email reminders (optional)
 
-Add SMTP credentials to `.env` (see the `# Reminders` section in `.env.example`), then restart. Go to **Settings → Email Notifications** to configure when reminders are sent and which timing windows to use (2 days before, 1 day before, on the day, 1 day after).
+Add SMTP credentials to `.env` (see the `# Reminders` section in `.env.example`), then restart (mail is delivered through [Apprise](https://github.com/caronc/apprise), which will also carry other channels later). Go to **Settings → Email Notifications** to configure when reminders are sent and which timing windows to use (2 days before, 1 day before, on the day, 1 day after).
 
 The settings page also shows the current server time (UTC) so you can set the send time relative to your timezone.
 

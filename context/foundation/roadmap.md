@@ -41,6 +41,8 @@ Pay Tracker replaces the household spreadsheet with a self-hostable web app: rec
 | I-01 | postgres-service-extract | (infra) PostgreSQL in its own Compose service | done |
 | S-18 | restore-safety-comparison | Current-vs-backup comparison in restore dialog | done |
 | S-19 | restore-auto-backup-safety-net | Server auto-snapshot before restore | done |
+| S-20 | apprise-smtp | Email delivery via Apprise (mailto://) instead of smtplib | done |
+| S-21 | telegram-notifications | Telegram reminders + monthly summary via Apprise, per-user chat id | done |
 
 Work shipped after this roadmap was last extended (per-user categories, currencies, extra languages, delete account, calendar view, demo image, e2e suite, CI/release pipeline) was done directly and is recorded in the PRD (FR-023+) and `archive/history.md`. New slices: add rows above using the same columns.
 

@@ -1,6 +1,7 @@
+import re
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 SupportedLanguage = Literal["en", "pl", "de", "es", "it", "fr", "zh"]
 
@@ -34,6 +35,35 @@ class UserProfileOut(BaseModel):
     notify_1_day_after: bool
     reminder_send_minute: int
     monthly_summary_enabled: bool
+    telegram_chat_id: str | None
+    telegram_bot_token_set: bool
+    telegram_bot_token_unreadable: bool
+    telegram_reminders_enabled: bool
+    telegram_notify_2_days_before: bool
+    telegram_notify_1_day_before: bool
+    telegram_notify_on_day: bool
+    telegram_notify_1_day_after: bool
+    telegram_send_minute: int
+    telegram_monthly_summary_enabled: bool
+    browser_notifications_enabled: bool
+
+
+def normalize_chat_id(v: str | None) -> str | None:
+    v = (v or "").strip()
+    if not v:
+        return None  # empty string clears the chat id
+    if not re.fullmatch(r"-?\d{1,20}", v):
+        raise ValueError("Telegram chat id must be a number (negative for groups)")
+    return v
+
+
+def normalize_bot_token(v: str | None) -> str | None:
+    v = (v or "").strip()
+    if not v:
+        return None
+    if not re.fullmatch(r"\d{5,}:[A-Za-z0-9_-]{20,}", v):
+        raise ValueError("Invalid Telegram bot token format")
+    return v
 
 
 class UserProfileUpdate(BaseModel):
@@ -47,6 +77,26 @@ class UserProfileUpdate(BaseModel):
     notify_1_day_after: bool | None = None
     reminder_send_minute: Annotated[int, Field(ge=0, le=1410)] | None = None
     monthly_summary_enabled: bool | None = None
+    telegram_chat_id: str | None = None
+    telegram_bot_token: str | None = None  # write-only; "" clears
+    telegram_reminders_enabled: bool | None = None
+    telegram_notify_2_days_before: bool | None = None
+    telegram_notify_1_day_before: bool | None = None
+    telegram_notify_on_day: bool | None = None
+    telegram_notify_1_day_after: bool | None = None
+    telegram_send_minute: Annotated[int, Field(ge=0, le=1410)] | None = None
+    telegram_monthly_summary_enabled: bool | None = None
+    browser_notifications_enabled: bool | None = None
+
+    @field_validator("telegram_chat_id")
+    @classmethod
+    def _chat_id(cls, v: str | None) -> str | None:
+        return normalize_chat_id(v)
+
+    @field_validator("telegram_bot_token")
+    @classmethod
+    def _bot_token(cls, v: str | None) -> str | None:
+        return normalize_bot_token(v)
 
 
 class ChangePasswordRequest(BaseModel):

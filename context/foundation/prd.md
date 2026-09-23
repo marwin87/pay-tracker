@@ -168,12 +168,13 @@ household finance manager does not need to check the dashboard proactively.
 
 - FR-011: User can download a full data backup of their own data in a portable
   machine-readable format. The backup is scoped to the authenticated user's templates and
-  instances only. Priority: must-have
+  instances only, plus the user's notification settings (email and Telegram schedules,
+  browser-notification switch, Telegram bot token and chat id). Priority: must-have
   > Socratic: Backup and spreadsheet export serve distinct purposes; both justified for v1.
 
 ### Reminders
 
-- FR-012: System sends email reminders for upcoming and overdue payments.
+- FR-012: System sends email reminders for upcoming and overdue payments. Outbound mail goes through Apprise; users may additionally receive the same reminders and the monthly summary on Telegram (each user connects their own bot: token stored encrypted, chat id; Telegram has its own on/off, timing windows, send time and monthly summary, independent of email — see `telegram-setup.md`).
   Priority: nice-to-have
   > Scoped to email-only delivery — browser push notifications deferred due to
   > implementation complexity. Email works in both deployment modes with appropriate mail
@@ -224,7 +225,7 @@ household finance manager does not need to check the dashboard proactively.
   payment date and note on Mark as Paid, confirmation before reverting.
 - FR-030: Archived bill templates can be restored to the active list.
 - FR-031: Settings page (tabs: profile, preferences, notifications, categories, backup/restore).
-- FR-032: Demo mode: pre-seeded demo account/image (`demo/`), notifications disabled.
+- FR-032: Demo mode: pre-seeded demo account/image (`demo/`), all notifications (email, Telegram, browser) disabled.
 
 ## Non-Functional Requirements
 

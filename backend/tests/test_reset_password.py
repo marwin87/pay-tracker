@@ -1,16 +1,15 @@
 """Integration tests for forgot-password / reset-password / smtp-status endpoints."""
 
 import hashlib
-import smtplib
+from app.services.notify import NotificationError
 from datetime import datetime, timedelta, timezone
 from unittest.mock import patch
 
-import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.orm import Session
 
 from app.models.reset_token import PasswordResetToken
-from tests.conftest import auth, register_and_login
+from tests.conftest import register_and_login
 
 
 def _token_hash(raw: str) -> str:
@@ -207,7 +206,7 @@ def test_forgot_password_smtp_failure_still_returns_200(
         patch("app.routers.auth.settings") as mock_settings,
         patch(
             "app.routers.auth.send_password_reset_email",
-            side_effect=smtplib.SMTPException("connection refused"),
+            side_effect=NotificationError("connection refused"),
         ),
     ):
         mock_settings.smtp_host = "smtp.example.com"

@@ -267,7 +267,9 @@
         "cancel": "取消",
         "confirm": "下载",
         "downloading": "正在下载…",
-        "error": "备份失败，请重试。"
+        "error": "备份失败，请重试。",
+        "telegramWarning": "备份已下载，但不包含你的 Telegram 机器人令牌：它已无法读取（服务器密钥已更改）。请在设置中重新输入令牌，然后重新下载备份。",
+        "ok": "确定"
     },
     "SnapshotRecoverySection": {
         "message": "系统已于 {date}（上次恢复操作前）保存了一份数据快照。",
@@ -368,6 +370,31 @@
             "toggle": "开启浏览器通知",
             "osHint": "没有看到通知？请检查您的操作系统通知设置（macOS：系统设置 → 通知）。",
             "blockedWarning": "浏览器通知已被阻止。请在浏览器或操作系统设置中启用。"
+        },
+        "telegramNotifications": {
+            "title": "Telegram 通知",
+            "description": "通过 Telegram 接收提醒。与电子邮件分开配置。",
+            "chatIdLabel": "Telegram 聊天 ID",
+            "chatIdPlaceholder": "例如 123456789",
+            "testButton": "发送测试消息",
+            "testSending": "发送中…",
+            "testSent": "测试消息已发送",
+            "invalidId": "聊天 ID 必须是数字（群组为负数）。",
+            "testFailed": "测试失败。请检查聊天 ID，并确认已先给机器人发过消息。",
+            "botTokenLabel": "机器人令牌",
+            "botTokenPlaceholder": "来自 @BotFather 的机器人令牌",
+            "botTokenSaved": "令牌已保存。输入新令牌可替换。",
+            "invalidToken": "机器人令牌格式无效。",
+            "remove": "移除 Telegram",
+            "helpTitle": "如何获取机器人令牌和聊天 ID？",
+            "helpStep1": "在 Telegram 中打开 @BotFather，发送 /newbot 并按提示操作，复制得到的令牌。",
+            "helpStep2": "打开你的新机器人，给它发送任意消息（例如 hi）。",
+            "helpStep3": "在浏览器中打开下面的地址（把 TOKEN 替换为你的令牌）：",
+            "helpStep4": "在结果中找到 \"chat\"，再找到 \"id\"，这个数字就是你的聊天 ID。把令牌和聊天 ID 粘贴到下方。",
+            "masterToggle": "启用 Telegram 通知",
+            "noneWarning": "请至少选择一个选项以接收 Telegram 提醒。",
+            "needCredentials": "请先在上方保存机器人令牌和聊天 ID，才能启用发送。",
+            "tokenUnreadable": "已保存的机器人令牌无法再读取（服务器密钥已更改）。请重新输入令牌并保存。"
         },
         "backup": {
             "title": "数据备份",

@@ -22,8 +22,15 @@ from app.models.bill import (
 from app.models.category import Category
 from app.models.restore_snapshot import RestoreSnapshot
 from app.models.user import User
-from app.schemas.bill import BackupPayload, ExportSummaryOut, RestoreSnapshotOut
+from app.schemas.bill import (
+    BackupChannelSchedule,
+    BackupPayload,
+    ExportSummaryOut,
+    RestoreSnapshotOut,
+)
 from app.services.categories import seed_default_categories
+from app.services.notify import decrypt_secret, encrypt_secret
+from app.services.reminder_job import EMAIL, TELEGRAM, Channel
 from app.services.recurrence import backfill_template_instances
 
 router = APIRouter(prefix="/export", tags=["export"])
@@ -229,6 +236,33 @@ def export_xlsx(
     )
 
 
+_WINDOW_FIELDS = (
+    "notify_2_days_before",
+    "notify_1_day_before",
+    "notify_on_day",
+    "notify_1_day_after",
+)
+
+
+def _schedule_out(user: User, ch: Channel) -> dict:
+    out = {
+        "enabled": getattr(user, ch.enabled),
+        "send_minute": getattr(user, ch.send_minute),
+        "monthly_summary_enabled": getattr(user, ch.summary_enabled),
+    }
+    for field, (_, user_attr, _) in zip(_WINDOW_FIELDS, ch.windows):
+        out[field] = getattr(user, user_attr)
+    return out
+
+
+def _apply_schedule(user: User, ch: Channel, s: BackupChannelSchedule) -> None:
+    setattr(user, ch.enabled, s.enabled)
+    setattr(user, ch.send_minute, s.send_minute)
+    setattr(user, ch.summary_enabled, s.monthly_summary_enabled)
+    for field, (_, user_attr, _) in zip(_WINDOW_FIELDS, ch.windows):
+        setattr(user, user_attr, getattr(s, field))
+
+
 def _build_backup_arrays(db: Session, user_id: int) -> dict:
     """Serialize a user's categories/bill_templates/payment_instances into the
     backup shape shared by GET /export/json and the pre-restore snapshot."""
@@ -245,7 +279,14 @@ def _build_backup_arrays(db: Session, user_id: int) -> dict:
         if template_ids
         else []
     )
+    user = db.get(User, user_id)
+    assert user is not None
     return {
+        "notifications": {
+            "email": _schedule_out(user, EMAIL),
+            "telegram": _schedule_out(user, TELEGRAM),
+            "browser_enabled": user.browser_notifications_enabled,
+        },
         "categories": [
             {
                 "id": c.id,
@@ -306,12 +347,21 @@ def export_json(
         "exported_at": datetime.now(timezone.utc).isoformat(),
         **_build_backup_arrays(db, me.id),
     }
+    # Not in _build_backup_arrays: that also feeds the DB-stored restore snapshot,
+    # which must never hold the bot token in plaintext.
+    token = decrypt_secret(me.telegram_bot_token) if me.telegram_bot_token else None
+    if token and me.telegram_chat_id:
+        payload["telegram"] = {"bot_token": token, "chat_id": me.telegram_chat_id}
+    headers = {
+        "Content-Disposition": f'attachment; filename="pay-tracker-backup-{datetime.now(timezone.utc).date()}.json"'
+    }
+    if me.telegram_bot_token_unreadable:
+        # Stored but undecryptable (JWT_SECRET changed): the backup can't carry it.
+        headers["X-Backup-Warning"] = "telegram-token-unreadable"
     return Response(
         content=json.dumps(payload, indent=2),
         media_type="application/json",
-        headers={
-            "Content-Disposition": f'attachment; filename="pay-tracker-backup-{datetime.now(timezone.utc).date()}.json"'
-        },
+        headers=headers,
     )
 
 
@@ -420,6 +470,17 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
         )
         db.add(instance_obj)
 
+    if backup.notifications:  # absent in older backups: keep current settings
+        user = db.get(User, user_id)
+        assert user is not None
+        n = backup.notifications
+        if n.email:
+            _apply_schedule(user, EMAIL, n.email)
+        if n.telegram:
+            _apply_schedule(user, TELEGRAM, n.telegram)
+        if n.browser_enabled is not None:
+            user.browser_notifications_enabled = n.browser_enabled
+
     return len(backup.bill_templates), len(backup.payment_instances)
 
 
@@ -473,6 +534,9 @@ def restore_json(
         db.add(RestoreSnapshot(user_id=me.id, payload=snapshot_payload))
 
     restored_templates, restored_instances = _apply_backup(db, me.id, backup)
+    if backup.telegram:  # absent in older backups: keep the user's current setup
+        me.telegram_bot_token = encrypt_secret(backup.telegram.bot_token)
+        me.telegram_chat_id = backup.telegram.chat_id
     # Single commit for snapshot write + destructive delete + re-insert: if any
     # of it raises, nothing above commits — do not split this into multiple
     # commits, it would break the "abort restore on snapshot failure" guarantee.

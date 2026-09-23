@@ -267,7 +267,9 @@
         "cancel": "Annuler",
         "confirm": "Télécharger",
         "downloading": "Téléchargement…",
-        "error": "Échec de la sauvegarde. Veuillez réessayer."
+        "error": "Échec de la sauvegarde. Veuillez réessayer.",
+        "telegramWarning": "Votre sauvegarde a été téléchargée, mais elle ne contient pas le jeton du bot Telegram : il n'est plus lisible (le secret du serveur a changé). Saisissez à nouveau le jeton dans les paramètres, puis téléchargez une nouvelle sauvegarde.",
+        "ok": "OK"
     },
     "SnapshotRecoverySection": {
         "message": "Un instantané de vos données a été enregistré le {date}, juste avant votre dernière restauration.",
@@ -368,6 +370,31 @@
             "toggle": "Activer les notifications du navigateur",
             "osHint": "Vous ne voyez pas les notifications ? Vérifiez les paramètres de notification de votre système (macOS : Réglages Système → Notifications).",
             "blockedWarning": "Les notifications du navigateur sont bloquées. Activez-les dans les paramètres de votre navigateur ou de votre système d'exploitation."
+        },
+        "telegramNotifications": {
+            "title": "Notifications Telegram",
+            "description": "Recevez les rappels sur Telegram. Configuration séparée de l'e-mail.",
+            "chatIdLabel": "ID de chat Telegram",
+            "chatIdPlaceholder": "p. ex. 123456789",
+            "testButton": "Envoyer un message de test",
+            "testSending": "Envoi…",
+            "testSent": "Message de test envoyé",
+            "invalidId": "L'ID de chat doit être un nombre (négatif pour les groupes).",
+            "testFailed": "Échec du test. Vérifiez l'ID de chat et que vous avez d'abord écrit au bot.",
+            "botTokenLabel": "Jeton du bot",
+            "botTokenPlaceholder": "Jeton du bot depuis @BotFather",
+            "botTokenSaved": "Jeton enregistré. Saisissez-en un nouveau pour le remplacer.",
+            "invalidToken": "Format de jeton de bot invalide.",
+            "remove": "Supprimer Telegram",
+            "helpTitle": "Comment obtenir le jeton du bot et l'ID du chat ?",
+            "helpStep1": "Dans Telegram, ouvrez @BotFather, envoyez /newbot et suivez les étapes. Copiez le jeton obtenu.",
+            "helpStep2": "Ouvrez votre nouveau bot et envoyez-lui un message quelconque (ex. salut).",
+            "helpStep3": "Ouvrez cette adresse dans votre navigateur (remplacez TOKEN par votre jeton) :",
+            "helpStep4": "Dans le résultat, cherchez \"chat\" puis \"id\". Ce nombre est votre ID de chat. Collez le jeton et l'ID de chat ci-dessous.",
+            "masterToggle": "Activer les notifications Telegram",
+            "noneWarning": "Sélectionnez au moins une option pour recevoir les rappels Telegram.",
+            "needCredentials": "Enregistrez ci-dessus le jeton du bot et l'ID du chat pour activer l'envoi.",
+            "tokenUnreadable": "Le jeton du bot enregistré n'est plus lisible (le secret du serveur a changé). Saisissez à nouveau le jeton et enregistrez."
         },
         "backup": {
             "title": "Sauvegarde des données",

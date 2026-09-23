@@ -3,20 +3,25 @@
 import { Bell, BellOff } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useNotifications } from "@/hooks/useNotifications";
+import type { UserProfile } from "@/lib/user-api";
 import { Switch } from "@/components/ui/Switch";
 import { Tile } from "./Tile";
 
 export function BrowserNotificationsTile({
+  profile,
   t,
   isCollapsed,
   onToggle,
 }: {
+  profile: UserProfile;
   t: ReturnType<typeof useTranslations>;
   isCollapsed?: boolean;
   onToggle?: () => void;
 }) {
   const tp = useTranslations("SettingsPage");
-  const { permission, isEnabled, requestPermission, setEnabled } = useNotifications();
+  const { permission, isEnabled, requestPermission, setEnabled } = useNotifications(
+    profile.browser_notifications_enabled,
+  );
 
   return (
     <Tile

@@ -1,7 +1,9 @@
 import { apiFetch, BASE_URL, extractApiError } from "./api";
 import { getCsrfToken } from "./auth";
 
-export async function downloadBackup(): Promise<void> {
+// `telegramTokenUnreadable`: the backup was made without the Telegram token because
+// the server can no longer decrypt it (JWT_SECRET changed).
+export async function downloadBackup(): Promise<{ telegramTokenUnreadable: boolean }> {
   const res = await fetch(`${BASE_URL}/export/json`, {
     credentials: "include",
   });
@@ -16,6 +18,10 @@ export async function downloadBackup(): Promise<void> {
   a.download = `pay-tracker-backup-${today}.json`;
   a.click();
   URL.revokeObjectURL(url);
+  return {
+    telegramTokenUnreadable:
+      res.headers.get("X-Backup-Warning") === "telegram-token-unreadable",
+  };
 }
 
 export async function restoreFromBackup(

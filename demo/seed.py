@@ -127,15 +127,19 @@ def configure_profile(session: requests.Session, token: str) -> None:
         f"{BASE_URL}/auth/me",
         headers={"Authorization": f"Bearer {token}"},
         json={
+            # Every notification channel off: the demo account must never send anything.
             "email_reminders_enabled": False,
             "monthly_summary_enabled": False,
+            "telegram_reminders_enabled": False,
+            "telegram_monthly_summary_enabled": False,
+            "browser_notifications_enabled": False,
             "enabled_languages": ["en", "pl", "es"],
         },
     )
     if r.status_code != 200:
         print(f"  Profile configuration failed ({r.status_code}): {r.text}")
         sys.exit(1)
-    print("  Notifications disabled, languages set to en/pl/es")
+    print("  All notifications (email, Telegram, browser) disabled, languages set to en/pl/es")
 
 
 def restore(session: requests.Session, token: str) -> None:

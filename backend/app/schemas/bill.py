@@ -1,7 +1,8 @@
 from datetime import date, datetime
 from decimal import Decimal
-from pydantic import BaseModel, Field, computed_field
+from pydantic import BaseModel, Field, computed_field, field_validator
 from app.models.bill import BillFrequency, PaymentStatus
+from app.schemas.auth import normalize_bot_token, normalize_chat_id
 from app.schemas.category import CategoryOut
 
 
@@ -115,7 +116,8 @@ class BackupTemplate(BaseModel):
 
 class BackupInstance(BaseModel):
     # Intentionally excluded from backup: reminder_sent_2_days_before,
-    # reminder_sent_on_day, email_sent_at — transient flags reset to False on restore.
+    # reminder_sent_on_day, telegram_sent_*, email_sent_at — transient flags reset
+    # to False on restore.
     id: int
     bill_id: int
     period: str
@@ -130,11 +132,55 @@ class BackupInstance(BaseModel):
     reminder_sent_overdue: bool = False
 
 
+class BackupTelegram(BaseModel):
+    """Plaintext on purpose: backups must restore on an instance with a different
+    JWT_SECRET, so the token cannot travel in its encrypted-at-rest form."""
+
+    bot_token: str
+    chat_id: str
+
+    @field_validator("bot_token")
+    @classmethod
+    def _token(cls, v: str) -> str:
+        token = normalize_bot_token(v)
+        if token is None:
+            raise ValueError("bot_token must not be empty")
+        return token
+
+    @field_validator("chat_id")
+    @classmethod
+    def _chat(cls, v: str) -> str:
+        chat_id = normalize_chat_id(v)
+        if chat_id is None:
+            raise ValueError("chat_id must not be empty")
+        return chat_id
+
+
+class BackupChannelSchedule(BaseModel):
+    """One channel's (email or telegram) reminder schedule."""
+
+    enabled: bool
+    notify_2_days_before: bool
+    notify_1_day_before: bool
+    notify_on_day: bool
+    notify_1_day_after: bool
+    send_minute: int = Field(ge=0, le=1410)
+    monthly_summary_enabled: bool
+
+
+class BackupNotifications(BaseModel):
+    email: BackupChannelSchedule | None = None
+    telegram: BackupChannelSchedule | None = None
+    browser_enabled: bool | None = None
+
+
 class BackupPayload(BaseModel):
     schema_version: int
     bill_templates: list[BackupTemplate]
     payment_instances: list[BackupInstance]
     categories: list[BackupCategory] = []
+    telegram: BackupTelegram | None = None
+    notifications: BackupNotifications | None = None
 
 
 class ExportSummaryOut(BaseModel):

@@ -557,3 +557,174 @@ def test_restore_pydantic_validation_error_returns_422(client):
         headers=auth(tok),
     )
     assert r.status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Telegram credentials in backups
+# ---------------------------------------------------------------------------
+
+_TG_TOKEN = "123456789:AAF3kxyz_-abcdefghij"  # pragma: allowlist secret
+
+
+def _set_telegram(client, tok, token=_TG_TOKEN, chat_id="42"):
+    r = client.patch(
+        "/auth/me",
+        json={"telegram_bot_token": token, "telegram_chat_id": chat_id},
+        headers=auth(tok),
+    )
+    assert r.status_code == 200, r.text
+
+
+def test_export_includes_telegram_credentials_in_plaintext(client):
+    tok = register_and_login(client, "tgexp@test.com")
+    assert "telegram" not in client.get("/export/json", headers=auth(tok)).json()
+
+    _set_telegram(client, tok)
+    body = client.get("/export/json", headers=auth(tok)).json()
+    assert body["telegram"] == {"bot_token": _TG_TOKEN, "chat_id": "42"}
+
+
+def test_restore_applies_telegram_credentials(client):
+    tok = register_and_login(client, "tgres@test.com")
+    payload = {
+        **_make_backup([], [], 4),
+        "telegram": {"bot_token": _TG_TOKEN, "chat_id": "77"},
+    }
+    assert _upload(client, tok, payload).status_code == 200
+
+    me = client.get("/auth/me", headers=auth(tok)).json()
+    assert me["telegram_bot_token_set"] is True and me["telegram_chat_id"] == "77"
+    # round-trips through export
+    assert client.get("/export/json", headers=auth(tok)).json()["telegram"] == {
+        "bot_token": _TG_TOKEN,
+        "chat_id": "77",
+    }
+
+
+def test_restore_without_telegram_keeps_current_credentials(client):
+    tok = register_and_login(client, "tgkeep@test.com")
+    _set_telegram(client, tok)
+    assert _upload(client, tok, _make_backup([], [], 4)).status_code == 200
+    me = client.get("/auth/me", headers=auth(tok)).json()
+    assert me["telegram_bot_token_set"] is True and me["telegram_chat_id"] == "42"
+
+
+def test_restore_rejects_malformed_telegram_section(client):
+    tok = register_and_login(client, "tgbad@test.com")
+    payload = {
+        **_make_backup([], [], 4),
+        "telegram": {"bot_token": "nope", "chat_id": "x"},
+    }
+    assert _upload(client, tok, payload).status_code == 422
+
+
+def test_snapshot_never_stores_bot_token(client, db_session):
+    from app.models.restore_snapshot import RestoreSnapshot
+
+    tok = register_and_login(client, "tgsnap@test.com")
+    _set_telegram(client, tok)
+    client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
+    assert _upload(client, tok, _make_backup([], [], 4)).status_code == 200
+
+    snap = db_session.query(RestoreSnapshot).one()
+    assert _TG_TOKEN not in json.dumps(snap.payload)
+
+
+# ---------------------------------------------------------------------------
+# Notification schedules in backups (email, Telegram, browser)
+# ---------------------------------------------------------------------------
+
+_SCHED = {
+    "enabled": False,
+    "notify_2_days_before": True,
+    "notify_1_day_before": False,
+    "notify_on_day": True,
+    "notify_1_day_after": True,
+    "send_minute": 600,
+    "monthly_summary_enabled": False,
+}
+
+
+def test_export_includes_both_schedules_and_browser_flag(client):
+    tok = register_and_login(client, "nsexp@test.com")
+    client.patch(
+        "/auth/me",
+        json={
+            "notify_on_day": True,
+            "reminder_send_minute": 90,
+            "telegram_notify_1_day_after": True,
+            "telegram_send_minute": 630,
+            "browser_notifications_enabled": True,
+        },
+        headers=auth(tok),
+    )
+    n = client.get("/export/json", headers=auth(tok)).json()["notifications"]
+    assert n["email"]["notify_on_day"] is True and n["email"]["send_minute"] == 90
+    assert n["telegram"]["notify_1_day_after"] is True
+    assert n["telegram"]["send_minute"] == 630
+    assert n["browser_enabled"] is True
+
+
+def test_restore_applies_each_schedule_independently(client):
+    tok = register_and_login(client, "nsres@test.com")
+    payload = {
+        **_make_backup([], [], 4),
+        "notifications": {
+            "email": _SCHED,
+            "telegram": {**_SCHED, "enabled": True, "send_minute": 780},
+            "browser_enabled": True,
+        },
+    }
+    assert _upload(client, tok, payload).status_code == 200
+
+    me = client.get("/auth/me", headers=auth(tok)).json()
+    assert me["email_reminders_enabled"] is False and me["reminder_send_minute"] == 600
+    assert me["notify_on_day"] is True and me["monthly_summary_enabled"] is False
+    assert (
+        me["telegram_reminders_enabled"] is True and me["telegram_send_minute"] == 780
+    )
+    assert me["telegram_notify_1_day_after"] is True
+    assert me["browser_notifications_enabled"] is True
+
+
+def test_restore_without_notifications_keeps_current_settings(client):
+    tok = register_and_login(client, "nskeep@test.com")
+    client.patch("/auth/me", json={"reminder_send_minute": 90}, headers=auth(tok))
+    assert _upload(client, tok, _make_backup([], [], 3)).status_code == 200
+    assert (
+        client.get("/auth/me", headers=auth(tok)).json()["reminder_send_minute"] == 90
+    )
+
+
+def test_restore_rejects_out_of_range_send_minute(client):
+    tok = register_and_login(client, "nsbad@test.com")
+    payload = {
+        **_make_backup([], [], 4),
+        "notifications": {"email": {**_SCHED, "send_minute": 5000}},
+    }
+    assert _upload(client, tok, payload).status_code == 422
+
+
+def test_snapshot_restore_reverts_notification_schedule(client):
+    tok = register_and_login(client, "nssnap@test.com")
+    client.post(
+        "/bills",
+        json={**_BILL, "category_id": category_id(client, tok)},
+        headers=auth(tok),
+    )
+    client.patch("/auth/me", json={"reminder_send_minute": 90}, headers=auth(tok))
+    payload = {**_make_backup([], [], 4), "notifications": {"email": _SCHED}}
+    assert _upload(client, tok, payload).status_code == 200
+    assert (
+        client.get("/auth/me", headers=auth(tok)).json()["reminder_send_minute"] == 600
+    )
+
+    r = client.post("/export/restore-snapshot", headers=auth(tok))
+    assert r.status_code == 200, r.text
+    assert (
+        client.get("/auth/me", headers=auth(tok)).json()["reminder_send_minute"] == 90
+    )

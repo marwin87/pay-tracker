@@ -2,6 +2,7 @@ import hashlib
 import logging
 import secrets
 from datetime import datetime, timedelta, timezone
+from typing import Literal
 
 _logger = logging.getLogger(__name__)
 
@@ -31,7 +32,12 @@ from app.schemas.auth import (
     UserProfileUpdate,
 )
 from app.services.email import send_password_reset_email
+from app.services.notify import NotificationError, encrypt_secret, telegram_url
+from app.services.notify import send as notify_send
 from app.services.reminder_job import (
+    EMAIL,
+    TELEGRAM,
+    Channel,
     send_monthly_summary_for_user,
     send_reminders_for_user,
 )
@@ -141,6 +147,9 @@ def update_me(
                 status_code=422,
                 detail="The active language must be one of the enabled languages",
             )
+    if "telegram_bot_token" in updates:
+        token = updates.pop("telegram_bot_token")
+        user.telegram_bot_token = encrypt_secret(token) if token else None
     for field, value in updates.items():
         setattr(user, field, value)
     db.commit()
@@ -176,30 +185,39 @@ def change_password(
     db.commit()
 
 
+def _channel_or_400(user: User, name: str) -> Channel:
+    if name == "telegram":
+        if not telegram_url(user):
+            raise HTTPException(status_code=400, detail="Telegram not configured")
+        return TELEGRAM
+    if settings.smtp_host is None:
+        raise HTTPException(status_code=400, detail="SMTP not configured")
+    return EMAIL
+
+
 @router.post("/send-notification-now", response_model=SendNotificationNowOut)
 def send_notification_now(
+    channel: Literal["email", "telegram"] = "email",
     user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ):
-    if settings.smtp_host is None:
-        raise HTTPException(status_code=400, detail="SMTP not configured")
-    if not user.email_reminders_enabled:
+    ch = _channel_or_400(user, channel)
+    if not getattr(user, ch.enabled):
         return SendNotificationNowOut(sent=0)
-    sent = send_reminders_for_user(db, user)
-    return SendNotificationNowOut(sent=sent)
+    return SendNotificationNowOut(sent=send_reminders_for_user(db, user, ch))
 
 
 @router.post("/send-monthly-summary-now", response_model=SendMonthlySummaryNowOut)
 def send_monthly_summary_now(
+    channel: Literal["email", "telegram"] = "email",
     user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ):
-    if settings.smtp_host is None:
-        raise HTTPException(status_code=400, detail="SMTP not configured")
-    if not user.email_reminders_enabled or not user.monthly_summary_enabled:
+    ch = _channel_or_400(user, channel)
+    if not getattr(user, ch.enabled) or not getattr(user, ch.summary_enabled):
         return SendMonthlySummaryNowOut(sent=False)
     current_month = datetime.now(timezone.utc).strftime("%Y-%m")
-    sent = send_monthly_summary_for_user(db, user, current_month)
+    sent = send_monthly_summary_for_user(db, user, current_month, ch)
     return SendMonthlySummaryNowOut(sent=sent)
 
 
@@ -228,6 +246,18 @@ def change_email(
 @router.get("/smtp-status", response_model=SmtpStatusResponse)
 def smtp_status():
     return SmtpStatusResponse(configured=settings.smtp_host is not None)
+
+
+@router.post("/send-telegram-test", response_model=MessageResponse)
+def send_telegram_test(user: User = Depends(current_user)):
+    url = telegram_url(user)
+    if url is None:
+        raise HTTPException(status_code=400, detail="Telegram not configured")
+    try:
+        notify_send(url, "Pay Tracker", "✅ Telegram notifications are working.")
+    except NotificationError:
+        raise HTTPException(status_code=502, detail="Telegram delivery failed")
+    return MessageResponse(message="sent")
 
 
 _FORGOT_PASSWORD_RESPONSE = MessageResponse(

@@ -267,7 +267,9 @@
         "cancel": "Anuluj",
         "confirm": "Pobierz",
         "downloading": "Pobieranie…",
-        "error": "Tworzenie kopii nie powiodło się. Spróbuj ponownie."
+        "error": "Tworzenie kopii nie powiodło się. Spróbuj ponownie.",
+        "telegramWarning": "Backup został pobrany, ale nie zawiera tokenu bota Telegram: nie można go już odczytać (zmienił się sekret serwera). Wpisz token ponownie w Ustawieniach i pobierz nowy backup.",
+        "ok": "OK"
     },
     "SnapshotRecoverySection": {
         "message": "Migawka Twoich danych została zapisana {date}, tuż przed ostatnim przywróceniem.",
@@ -364,6 +366,31 @@
             "toggle": "Włącz powiadomienia przeglądarki",
             "osHint": "Nie widzisz powiadomień? Sprawdź ustawienia powiadomień systemu (macOS: Ustawienia systemowe → Powiadomienia).",
             "blockedWarning": "Powiadomienia przeglądarki są zablokowane. Włącz je w ustawieniach przeglądarki lub systemu operacyjnego."
+        },
+        "telegramNotifications": {
+            "title": "Powiadomienia Telegram",
+            "description": "Otrzymuj przypomnienia na Telegramie. Konfiguracja niezależna od e-maila.",
+            "chatIdLabel": "ID czatu Telegram",
+            "chatIdPlaceholder": "np. 123456789",
+            "testButton": "Wyślij wiadomość testową",
+            "testSending": "Wysyłanie…",
+            "testSent": "Wiadomość testowa wysłana",
+            "invalidId": "ID czatu musi być liczbą (ujemną dla grup).",
+            "testFailed": "Test nie powiódł się. Sprawdź ID czatu i czy napisano wcześniej do bota.",
+            "botTokenLabel": "Token bota",
+            "botTokenPlaceholder": "Token bota z @BotFather",
+            "botTokenSaved": "Token zapisany. Wpisz nowy, aby go zastąpić.",
+            "invalidToken": "Nieprawidłowy format tokenu bota.",
+            "remove": "Usuń Telegram",
+            "helpTitle": "Jak zdobyć token bota i ID czatu?",
+            "helpStep1": "W Telegramie otwórz @BotFather, wyślij /newbot i przejdź kolejne kroki. Skopiuj otrzymany token.",
+            "helpStep2": "Otwórz swojego nowego bota i wyślij mu dowolną wiadomość (np. cześć).",
+            "helpStep3": "Otwórz w przeglądarce ten adres (zamień TOKEN na swój token):",
+            "helpStep4": "W wyniku znajdź \"chat\", a potem \"id\". Ta liczba to ID czatu. Wklej token i ID czatu poniżej.",
+            "masterToggle": "Włącz powiadomienia Telegram",
+            "noneWarning": "Zaznacz co najmniej jedną opcję, aby otrzymywać przypomnienia na Telegramie.",
+            "needCredentials": "Zapisz token bota i ID czatu powyżej, aby włączyć wysyłanie.",
+            "tokenUnreadable": "Zapisany token bota nie może już zostać odczytany (zmienił się sekret serwera). Wpisz token ponownie i zapisz."
         },
         "backup": {
             "title": "Kopia zapasowa",

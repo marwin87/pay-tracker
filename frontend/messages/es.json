@@ -267,7 +267,9 @@
         "cancel": "Cancelar",
         "confirm": "Descargar",
         "downloading": "Descargando…",
-        "error": "Error al crear la copia de seguridad. Inténtalo de nuevo."
+        "error": "Error al crear la copia de seguridad. Inténtalo de nuevo.",
+        "telegramWarning": "Tu copia de seguridad se descargó, pero no incluye el token del bot de Telegram: ya no se puede leer (cambió el secreto del servidor). Vuelve a introducir el token en Ajustes y descarga una copia nueva.",
+        "ok": "OK"
     },
     "SnapshotRecoverySection": {
         "message": "Se guardó una instantánea de tus datos el {date}, justo antes de tu última restauración.",
@@ -368,6 +370,31 @@
             "toggle": "Activar notificaciones del navegador",
             "osHint": "¿No ves las notificaciones? Comprueba la configuración de notificaciones del sistema (macOS: Ajustes del sistema → Notificaciones).",
             "blockedWarning": "Las notificaciones del navegador están bloqueadas. Actívalas en la configuración de tu navegador o sistema operativo."
+        },
+        "telegramNotifications": {
+            "title": "Notificaciones de Telegram",
+            "description": "Recibe recordatorios en Telegram. Se configura por separado del correo.",
+            "chatIdLabel": "ID de chat de Telegram",
+            "chatIdPlaceholder": "p. ej. 123456789",
+            "testButton": "Enviar mensaje de prueba",
+            "testSending": "Enviando…",
+            "testSent": "Mensaje de prueba enviado",
+            "invalidId": "El ID de chat debe ser un número (negativo para grupos).",
+            "testFailed": "La prueba falló. Comprueba el ID de chat y que hayas escrito antes al bot.",
+            "botTokenLabel": "Token del bot",
+            "botTokenPlaceholder": "Token del bot de @BotFather",
+            "botTokenSaved": "Token guardado. Introduce uno nuevo para reemplazarlo.",
+            "invalidToken": "Formato de token del bot no válido.",
+            "remove": "Quitar Telegram",
+            "helpTitle": "¿Cómo obtengo el token del bot y el ID del chat?",
+            "helpStep1": "En Telegram abre @BotFather, envía /newbot y sigue los pasos. Copia el token que recibas.",
+            "helpStep2": "Abre tu nuevo bot y envíale cualquier mensaje (p. ej. hola).",
+            "helpStep3": "Abre esta dirección en el navegador (sustituye TOKEN por tu token):",
+            "helpStep4": "En el resultado busca \"chat\" y luego \"id\". Ese número es tu ID de chat. Pega el token y el ID de chat abajo.",
+            "masterToggle": "Activar notificaciones de Telegram",
+            "noneWarning": "Selecciona al menos una opción para recibir recordatorios por Telegram.",
+            "needCredentials": "Guarda arriba el token del bot y el ID del chat para activar el envío.",
+            "tokenUnreadable": "El token del bot guardado ya no se puede leer (cambió el secreto del servidor). Introduce el token de nuevo y guarda."
         },
         "backup": {
             "title": "Copia de seguridad de datos",

@@ -6,7 +6,7 @@ import { HardDriveDownload, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { downloadBackup } from "@/lib/export-api";
 
-type State = "idle" | "confirming" | "downloading" | "error";
+type State = "idle" | "confirming" | "downloading" | "warning" | "error";
 
 export default function BackupButton({ label }: { label?: string } = {}) {
   const t = useTranslations("BackupButton");
@@ -15,8 +15,8 @@ export default function BackupButton({ label }: { label?: string } = {}) {
   async function handleConfirm() {
     setState("downloading");
     try {
-      await downloadBackup();
-      setState("idle");
+      const { telegramTokenUnreadable } = await downloadBackup();
+      setState(telegramTokenUnreadable ? "warning" : "idle");
     } catch {
       setState("error");
     }
@@ -37,7 +37,10 @@ export default function BackupButton({ label }: { label?: string } = {}) {
         {label && <span>{label}</span>}
       </button>
 
-      {(state === "confirming" || state === "downloading" || state === "error") &&
+      {(state === "confirming" ||
+        state === "downloading" ||
+        state === "warning" ||
+        state === "error") &&
         createPortal(
           <div
             className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm"
@@ -63,6 +66,20 @@ export default function BackupButton({ label }: { label?: string } = {}) {
               <p className="mb-6 text-sm text-slate-500 dark:text-slate-400">
                 {t("dialogDescription")}
               </p>
+              {state === "warning" ? (
+                <>
+                  <p className="mb-4 rounded-lg border border-yellow-200 bg-yellow-50 px-3 py-2 text-sm text-yellow-700 dark:border-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300">
+                    {t("telegramWarning")}
+                  </p>
+                  <button
+                    onClick={() => setState("idle")}
+                    autoFocus
+                    className="w-full rounded-lg border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700"
+                  >
+                    {t("ok")}
+                  </button>
+                </>
+              ) : (
               <div className="flex gap-3">
                 <button
                   onClick={() => setState("idle")}
@@ -87,6 +104,7 @@ export default function BackupButton({ label }: { label?: string } = {}) {
                   )}
                 </button>
               </div>
+              )}
               {state === "error" && (
                 <p className="mt-3 text-center text-sm text-red-600 dark:text-red-400">
                   {t("error")}

@@ -13,6 +13,17 @@ export interface UserProfile {
   notify_1_day_after: boolean;
   reminder_send_minute: number;
   monthly_summary_enabled: boolean;
+  telegram_chat_id: string | null;
+  telegram_bot_token_set: boolean;
+  telegram_bot_token_unreadable: boolean;
+  telegram_reminders_enabled: boolean;
+  telegram_notify_2_days_before: boolean;
+  telegram_notify_1_day_before: boolean;
+  telegram_notify_on_day: boolean;
+  telegram_notify_1_day_after: boolean;
+  telegram_send_minute: number;
+  telegram_monthly_summary_enabled: boolean;
+  browser_notifications_enabled: boolean;
 }
 
 export function fetchMe(): Promise<UserProfile> {
@@ -33,8 +44,17 @@ export function updateMe(
       | "notify_1_day_after"
       | "reminder_send_minute"
       | "monthly_summary_enabled"
+      | "telegram_chat_id"
+      | "telegram_reminders_enabled"
+      | "telegram_notify_2_days_before"
+      | "telegram_notify_1_day_before"
+      | "telegram_notify_on_day"
+      | "telegram_notify_1_day_after"
+      | "telegram_send_minute"
+      | "telegram_monthly_summary_enabled"
+      | "browser_notifications_enabled"
     >
-  >,
+  > & { telegram_bot_token?: string }, // write-only; "" clears
 ): Promise<UserProfile> {
   return apiFetch<UserProfile>("/auth/me", {
     method: "PATCH",
@@ -55,14 +75,24 @@ export function changePassword(
   });
 }
 
-export function sendNotificationNow(): Promise<{ sent: number }> {
-  return apiFetch<{ sent: number }>("/auth/send-notification-now", {
+export function sendNotificationNow(
+  channel: "email" | "telegram" = "email",
+): Promise<{ sent: number }> {
+  return apiFetch<{ sent: number }>(`/auth/send-notification-now?channel=${channel}`, {
     method: "POST",
   });
 }
 
-export function sendMonthlySummaryNow(): Promise<{ sent: boolean }> {
-  return apiFetch<{ sent: boolean }>("/auth/send-monthly-summary-now", {
+export function sendMonthlySummaryNow(
+  channel: "email" | "telegram" = "email",
+): Promise<{ sent: boolean }> {
+  return apiFetch<{ sent: boolean }>(`/auth/send-monthly-summary-now?channel=${channel}`, {
+    method: "POST",
+  });
+}
+
+export function sendTelegramTest(): Promise<{ message: string }> {
+  return apiFetch<{ message: string }>("/auth/send-telegram-test", {
     method: "POST",
   });
 }

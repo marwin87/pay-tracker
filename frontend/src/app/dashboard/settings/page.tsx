@@ -15,6 +15,7 @@ import { PasswordTile } from "@/components/settings/PasswordTile";
 import { CurrencyTile } from "@/components/settings/CurrencyTile";
 import { LanguagesTile } from "@/components/settings/LanguagesTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
+import { TelegramNotificationsTile } from "@/components/settings/TelegramNotificationsTile";
 import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificationsTile";
 import { CategoriesTile } from "@/components/settings/CategoriesTile";
 import { UnsavedChangesDialog } from "@/components/settings/UnsavedChangesDialog";
@@ -46,6 +47,7 @@ export default function SettingsPage() {
   const [profileDirty, setProfileDirty] = useState(false);
   const [currencyDirty, setCurrencyDirty] = useState(false);
   const [emailDirty, setEmailDirty] = useState(false);
+  const [telegramDirty, setTelegramDirty] = useState(false);
   const [passwordDirty, setPasswordDirty] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -55,11 +57,13 @@ export default function SettingsPage() {
   // Safe to read the URL in the initializer: nothing tab-related renders until the profile loads.
   const [activeTab, setActiveTab] = useState<TabKey>(tabFromUrl);
 
-  const isDirtyAny = profileDirty || currencyDirty || emailDirty || passwordDirty;
+  const isDirtyAny =
+    profileDirty || currencyDirty || emailDirty || telegramDirty || passwordDirty;
 
   const onProfileDirty = useCallback((d: boolean) => setProfileDirty(d), []);
   const onCurrencyDirty = useCallback((d: boolean) => setCurrencyDirty(d), []);
   const onEmailDirty = useCallback((d: boolean) => setEmailDirty(d), []);
+  const onTelegramDirty = useCallback((d: boolean) => setTelegramDirty(d), []);
   const onPasswordDirty = useCallback((d: boolean) => setPasswordDirty(d), []);
 
   function selectTab(tab: TabKey) {
@@ -223,7 +227,14 @@ export default function SettingsPage() {
           t={t}
         />
 
-        <BrowserNotificationsTile t={t} />
+        <TelegramNotificationsTile
+          profile={profile}
+          onProfileUpdate={setProfile}
+          onDirtyChange={onTelegramDirty}
+          t={t}
+        />
+
+        <BrowserNotificationsTile profile={profile} t={t} />
       </div>
 
       <div

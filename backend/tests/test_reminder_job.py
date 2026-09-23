@@ -1,6 +1,6 @@
 """Unit tests for app/services/reminder_job.py."""
 
-import smtplib
+from app.services.notify import NotificationError
 from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 from unittest.mock import patch
@@ -267,9 +267,7 @@ def test_opt_out_user_skips_email(
 def test_smtp_exception_does_not_flip_flag(
     mock_send, _mock_summary, db_session, db_sessionmaker
 ):
-    import smtplib
-
-    mock_send.side_effect = smtplib.SMTPException("connection refused")
+    mock_send.side_effect = NotificationError("connection refused")
 
     today = _today_utc()
     user = _make_user(db_session, notify_1_day_before=True)
@@ -365,7 +363,7 @@ def test_monthly_summary_returns_false_when_smtp_not_configured(db_session):
 
 @patch("app.services.reminder_job.send_monthly_summary_email")
 def test_monthly_summary_returns_false_on_smtp_error(mock_send, db_session):
-    mock_send.side_effect = smtplib.SMTPException("connection refused")
+    mock_send.side_effect = NotificationError("connection refused")
 
     today = _today_utc()
     user = _make_user(db_session)
@@ -389,7 +387,6 @@ def test_monthly_summary_idempotency_via_last_sent_flag(
     """Scheduler skips user whose monthly_summary_last_sent matches current month."""
     import calendar
     from datetime import datetime, timezone
-    from unittest.mock import MagicMock
 
     today = _today_utc()
     current_month = today.strftime("%Y-%m")
