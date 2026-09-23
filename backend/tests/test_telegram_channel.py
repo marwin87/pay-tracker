@@ -24,6 +24,7 @@ _TOKEN = "123456789:AAF3kxyz_-abcdefghij"  # pragma: allowlist secret
 def _with_telegram(user, *, send_minute=600, **windows):
     user.telegram_bot_token = encrypt_secret(_TOKEN)
     user.telegram_chat_id = "42"
+    user.telegram_reminders_enabled = True
     user.telegram_send_minute = send_minute
     # Telegram windows default off/1-day; make each test say what it wants.
     user.telegram_notify_1_day_before = False

@@ -98,6 +98,24 @@ def register_and_login(
     return r.json()["access_token"]
 
 
+def enable_notifications(client: TestClient, token: str) -> None:
+    """New users start with every notification off; turn on the email + telegram
+    reminders (1 day before) and monthly summaries."""
+    r = client.patch(
+        "/auth/me",
+        json={
+            "email_reminders_enabled": True,
+            "notify_1_day_before": True,
+            "monthly_summary_enabled": True,
+            "telegram_reminders_enabled": True,
+            "telegram_notify_1_day_before": True,
+            "telegram_monthly_summary_enabled": True,
+        },
+        headers={"Authorization": f"Bearer {token}"},
+    )
+    assert r.status_code == 200, r.text
+
+
 def auth(token: str) -> dict:
     return {"Authorization": f"Bearer {token}"}
 

@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from tests.conftest import auth, register_and_login
+from tests.conftest import auth, enable_notifications, register_and_login
 
 _PASSWORD = "pw123456"
 
@@ -90,7 +90,8 @@ def test_patch_me_disables_master_toggle_and_persists(client):
     """Disabling email_reminders_enabled persists to DB and is visible on GET /me."""
     token = register_and_login(client, "toggle_off@test.com", _PASSWORD)
 
-    # New users default to enabled=True
+    # New users default to disabled; enable first
+    enable_notifications(client, token)
     r = client.get("/auth/me", headers=auth(token))
     assert r.json()["email_reminders_enabled"] is True
 
@@ -286,6 +287,7 @@ def test_send_notification_calls_service_and_returns_count(client):
     from unittest.mock import patch
 
     token = register_and_login(client, "notif_ok@test.com", _PASSWORD)
+    enable_notifications(client, token)
     with (
         patch("app.routers.auth.settings") as mock_settings,
         patch("app.routers.auth.send_reminders_for_user", return_value=2) as mock_send,
@@ -346,6 +348,7 @@ def test_send_monthly_summary_calls_service(client):
     from unittest.mock import patch
 
     token = register_and_login(client, "summary_ok@test.com", _PASSWORD)
+    enable_notifications(client, token)
     with (
         patch("app.routers.auth.settings") as mock_settings,
         patch(
@@ -367,6 +370,7 @@ def test_send_monthly_summary_now_does_not_set_flag(client_db):
 
     client, db = client_db
     token = register_and_login(client, "summary_flag@test.com", _PASSWORD)
+    enable_notifications(client, token)
     with (
         patch("app.routers.auth.settings") as mock_settings,
         patch("app.routers.auth.send_monthly_summary_for_user", return_value=True),
@@ -452,8 +456,8 @@ def test_telegram_schedule_is_independent_of_email_schedule(client):
     assert body["telegram_notify_on_day"] is True
     assert body["telegram_send_minute"] == 600
     assert body["telegram_reminders_enabled"] is False
-    # email settings untouched
-    assert body["notify_on_day"] is False and body["notify_1_day_before"] is True
+    # email settings untouched (defaults: everything off)
+    assert body["notify_on_day"] is False and body["notify_1_day_before"] is False
     assert body["reminder_send_minute"] == 480
 
 
@@ -466,6 +470,7 @@ def test_send_now_telegram_channel_requires_credentials(client):
 
 def test_send_now_telegram_uses_telegram_channel(client):
     token = register_and_login(client, "tgnow2@test.com", _PASSWORD)
+    enable_notifications(client, token)
     client.patch(
         "/auth/me",
         json={"telegram_bot_token": _BOT_TOKEN, "telegram_chat_id": "42"},
@@ -545,3 +550,17 @@ def test_no_backup_warning_when_token_is_fine_or_absent(client):
         "X-Backup-Warning"
         not in client.get("/export/json", headers=auth(token)).headers
     )
+
+
+def test_new_user_has_all_notifications_disabled(client):
+    token = register_and_login(client, "nonotif@test.com")
+    me = client.get("/auth/me", headers=auth(token)).json()
+    flags = [k for k in me if k.startswith(("notify_", "telegram_notify_"))] + [
+        "email_reminders_enabled",
+        "telegram_reminders_enabled",
+        "monthly_summary_enabled",
+        "telegram_monthly_summary_enabled",
+        "browser_notifications_enabled",
+    ]
+    assert len(flags) >= 13
+    assert not [k for k in flags if me[k] is not False]

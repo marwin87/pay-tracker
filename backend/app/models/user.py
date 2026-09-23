@@ -39,13 +39,13 @@ class User(Base):
         String(10), nullable=True, default=None
     )
     email_reminders_enabled: Mapped[bool] = mapped_column(
-        Boolean, nullable=False, default=True, server_default="true"
+        Boolean, nullable=False, default=False, server_default="true"
     )
     notify_2_days_before: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
     )
     notify_1_day_before: Mapped[bool] = mapped_column(
-        Boolean, nullable=False, default=True, server_default="true"
+        Boolean, nullable=False, default=False, server_default="true"
     )
     notify_on_day: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
@@ -57,20 +57,20 @@ class User(Base):
         nullable=False, default=480, server_default="480"
     )
     monthly_summary_enabled: Mapped[bool] = mapped_column(
-        Boolean, nullable=False, default=True, server_default="true"
+        Boolean, nullable=False, default=False, server_default="true"
     )
     monthly_summary_last_sent: Mapped[str | None] = mapped_column(
         String(7), nullable=True, default=None, server_default="null"
     )
     # Telegram has its own schedule, independent of the email settings above.
     telegram_reminders_enabled: Mapped[bool] = mapped_column(
-        Boolean, nullable=False, default=True, server_default="true"
+        Boolean, nullable=False, default=False, server_default="true"
     )
     telegram_notify_2_days_before: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
     )
     telegram_notify_1_day_before: Mapped[bool] = mapped_column(
-        Boolean, nullable=False, default=True, server_default="true"
+        Boolean, nullable=False, default=False, server_default="true"
     )
     telegram_notify_on_day: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
@@ -82,7 +82,7 @@ class User(Base):
         nullable=False, default=480, server_default="480"
     )
     telegram_monthly_summary_enabled: Mapped[bool] = mapped_column(
-        Boolean, nullable=False, default=True, server_default="true"
+        Boolean, nullable=False, default=False, server_default="true"
     )
     telegram_monthly_summary_last_sent: Mapped[str | None] = mapped_column(
         String(7), nullable=True, default=None

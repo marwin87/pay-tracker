@@ -19,7 +19,7 @@ _KEYS = {
 }
 _ALL_KEYS = set().union(*_KEYS.values())
 _META = {"schema_version", "exported_by", "exported_at"}
-_TOKEN = "123456:ABCdefGHIjklMNOpqrsTUVwxyz"
+_TOKEN = "123456:ABCdefGHIjklMNOpqrsTUVwxyz"  # pragma: allowlist secret
 
 
 def _upload(client, tok, payload):
