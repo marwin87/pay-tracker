@@ -260,6 +260,58 @@ def test_patch_restore_does_not_restore_past_tombstones(client_db):
     assert db.get(PaymentInstance, future_inst.id).is_deleted is False  # restored
 
 
+# ---------------------------------------------------------------------------
+# GET /bills/payments amount suggestion (unpaid instances track template price)
+# ---------------------------------------------------------------------------
+
+
+def test_unpaid_instance_amount_follows_template_after_edit(client_db):
+    """Editing a bill's amount (no restore flag) must be reflected for
+    already-generated unpaid instances — this is what the Mark Paid dialog
+    prefills from."""
+    client, db = client_db
+    token = register_and_login(client, "u10@test.com")
+    bill_id = _create_bill(client, token, {"amount": "0"})
+    period = _current_period()
+    _insert_instance(db, bill_id, period, date.today(), amount="0")
+
+    r = client.patch(
+        f"/bills/{bill_id}",
+        json={"amount": "89.99"},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+
+    r = client.get(f"/bills/payments?month={period}", headers=auth(token))
+    assert r.status_code == 200
+    [payment] = r.json()
+    assert float(payment["amount"]) == pytest.approx(89.99)
+
+
+def test_paid_instance_amount_keeps_historical_snapshot(client_db):
+    """Once paid, an instance's amount is a historical record and must not
+    shift when the template's price changes afterwards."""
+    client, db = client_db
+    token = register_and_login(client, "u11@test.com")
+    bill_id = _create_bill(client, token, {"amount": "100.00"})
+    period = _current_period()
+    _insert_instance(
+        db, bill_id, period, date.today(), status=PaymentStatus.paid, amount="100.00"
+    )
+
+    r = client.patch(
+        f"/bills/{bill_id}",
+        json={"amount": "150.00"},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+
+    r = client.get(f"/bills/payments?month={period}", headers=auth(token))
+    assert r.status_code == 200
+    [payment] = r.json()
+    assert float(payment["amount"]) == pytest.approx(100.00)
+
+
 def test_patch_restore_cross_user_returns_403(client_db):
     """Cross-user PATCH with restore flag is blocked."""
     client, db = client_db

@@ -113,7 +113,7 @@ def send_monthly_summary_for_user(db: Session, user: User, month: str) -> bool:
                 {
                     "name": name,
                     "due_date": due_date,
-                    "amount": inst.amount,
+                    "amount": inst.template.amount if inst.template else inst.amount,
                     "currency": currency,
                 }
             )
@@ -365,7 +365,7 @@ def _send_and_flag(
             to_addr=user.email,
             bill_name=bill_name,
             due_date=instance.due_date,
-            amount=instance.amount,
+            amount=instance.template.amount if instance.template else instance.amount,
             currency=currency,
             kind=kind,
             language=language,

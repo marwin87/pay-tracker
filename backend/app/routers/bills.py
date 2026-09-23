@@ -40,14 +40,19 @@ def _to_out(
     *,
     override_status: PaymentStatus | None = None,
 ) -> PaymentInstanceOut:
+    status = override_status if override_status is not None else inst.status
+    # Unpaid instances always suggest the template's current price, not the
+    # snapshot taken at generation time, so editing a bill's amount is
+    # reflected immediately. Paid instances keep their historical amount.
+    amount = inst.template.amount if status != PaymentStatus.paid else inst.amount
     return PaymentInstanceOut.model_validate(
         {
             "id": inst.id,
             "bill_id": inst.bill_id,
             "period": inst.period,
             "due_date": inst.due_date,
-            "amount": inst.amount,
-            "status": override_status if override_status is not None else inst.status,
+            "amount": amount,
+            "status": status,
             "paid_at": inst.paid_at,
             "paid_amount": inst.paid_amount,
             "notes": inst.notes,
@@ -182,7 +187,7 @@ def mark_paid(
     instance.status = PaymentStatus.paid
     instance.paid_at = datetime.now(timezone.utc)
     instance.paid_amount = (
-        body.paid_amount if body.paid_amount is not None else instance.amount
+        body.paid_amount if body.paid_amount is not None else template.amount
     )
     if body.notes:
         instance.notes = body.notes
