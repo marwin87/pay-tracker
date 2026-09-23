@@ -6,25 +6,36 @@ This folder contains a seed script that populates Pay Tracker with realistic dem
 
 **User:** `demo@demo.com` / `demo1234`
 
-**9 bill templates** covering all frequencies:
+**11 categories** — the 9 defaults every user gets, plus 2 custom ones used to exercise category-specific edge cases:
 
-| Name | Category | Frequency | Amount |
-|---|---|---|---|
-| Rent | Housing | Monthly | €1,200.00 |
-| Electricity | Utilities | Every 2 months | €95.00 |
-| Internet | Utilities | Monthly | €39.99 |
-| Netflix | Entertainment | Monthly | €17.99 |
-| Car Insurance | Car | Annual | €680.00 |
-| Gym Membership | Health | Monthly | €45.00 |
-| Property Tax | Housing | Quarterly | €210.00 |
-| Spotify *(archived)* | Entertainment | Monthly | €10.99 |
-| Tyre Change | Car | One-off | €180.00 |
+| Category | Type | State |
+|---|---|---|
+| Streaming (Old) | custom | **archived** — still referenced by an active bill |
+| Side Hustle | custom | active |
 
-**17 payment instances** covering all statuses:
+**22 bill templates** covering all frequencies, plus these edge cases:
+
+| Name | Category | Frequency | Amount | Notes |
+|---|---|---|---|---|
+| Rent | Housing | Monthly | €1,200.00 | |
+| Electricity | Utilities | Every 2 months | €95.00 | |
+| Internet | Utilities | Monthly | €39.99 | |
+| Netflix | Subscriptions | Monthly | €17.99 | |
+| Car Insurance | Insurance | Annual | €680.00 | |
+| Gym Membership | Healthcare | Monthly | €45.00 | |
+| Property Tax | Housing | Quarterly | €210.00 | |
+| Spotify *(archived bill)* | Subscriptions | Monthly | €10.99 | |
+| Tyre Change | Transport | One-off | €180.00 | |
+| Old Music App | **Streaming (Old)** *(archived category)* | Monthly | €4.99 | bill stays active — category is what's archived |
+| Coworking Desk | **Side Hustle** *(custom category)* | Monthly | €120.00 | |
+| Newspaper Subscription | Subscriptions | Monthly | €12.00 | **paused** |
+
+**55 payment instances** covering all statuses:
 - **paid** — historical records with `paid_at` timestamps
-- **overdue** — Internet June 2026 (missed payment)
-- **upcoming** — July 2026 bills ready to be paid
-- One paid amount that differs from the template (Electricity — real-world invoice variance)
+- **overdue** — several bills with a missed payment
+- **upcoming** — future periods ready to be paid
+- Amounts that differ from the template (real-world invoice variance)
+- Two instances backdated to today's date so the app always has something due "now"
 
 ## Requirements
 
@@ -57,8 +68,8 @@ Go to [http://localhost:3010](http://localhost:3010) and log in with `demo@demo.
 
 ## Re-running
 
-Running the script again on the same account **wipes and re-seeds** — the restore endpoint replaces all existing data for that user. Safe to run multiple times.
+Running the script again on the same account **wipes and re-seeds** — the restore endpoint replaces all existing data for that user. Safe to run multiple times. If demo data is already present, the script skips the restore; force it with the export/restore API directly if you need to reapply an edited `seed_data.json` to an account that already has data.
 
 ## Editing the data
 
-All seed data lives in `demo/seed_data.json`. It follows the same backup format used by the app's export/restore feature (`schema_version: 3`). Edit the JSON directly and re-run the script to apply changes.
+All seed data lives in `demo/seed_data.json`. It follows the same backup format used by the app's export/restore feature (`schema_version: 4`), including an explicit `categories` array — bill templates reference categories by `category_id`. Edit the JSON directly and re-run the script to apply changes.

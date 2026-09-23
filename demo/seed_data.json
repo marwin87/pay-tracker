@@ -1,10 +1,10 @@
 {
-  "schema_version": 3,
+  "schema_version": 4,
   "bill_templates": [
     {
       "id": 1,
       "name": "Rent",
-      "category": "housing",
+      "category_id": 4,
       "frequency": "monthly",
       "amount": 1200.0,
       "currency": "EUR",
@@ -18,7 +18,7 @@
     {
       "id": 2,
       "name": "Property Tax",
-      "category": "housing",
+      "category_id": 4,
       "frequency": "quarterly",
       "amount": 210.0,
       "currency": "EUR",
@@ -32,7 +32,7 @@
     {
       "id": 3,
       "name": "Electricity",
-      "category": "utilities",
+      "category_id": 8,
       "frequency": "every_2_months",
       "amount": 95.0,
       "currency": "EUR",
@@ -46,7 +46,7 @@
     {
       "id": 4,
       "name": "Internet",
-      "category": "utilities",
+      "category_id": 8,
       "frequency": "monthly",
       "amount": 39.99,
       "currency": "EUR",
@@ -60,7 +60,7 @@
     {
       "id": 5,
       "name": "Gas",
-      "category": "utilities",
+      "category_id": 8,
       "frequency": "monthly",
       "amount": 45.0,
       "currency": "EUR",
@@ -74,7 +74,7 @@
     {
       "id": 6,
       "name": "Car Insurance",
-      "category": "insurance",
+      "category_id": 5,
       "frequency": "annual",
       "amount": 680.0,
       "currency": "EUR",
@@ -88,7 +88,7 @@
     {
       "id": 7,
       "name": "Home Insurance",
-      "category": "insurance",
+      "category_id": 5,
       "frequency": "annual",
       "amount": 320.0,
       "currency": "EUR",
@@ -102,7 +102,7 @@
     {
       "id": 8,
       "name": "Netflix",
-      "category": "subscriptions",
+      "category_id": 6,
       "frequency": "monthly",
       "amount": 17.99,
       "currency": "EUR",
@@ -116,7 +116,7 @@
     {
       "id": 9,
       "name": "Amazon Prime",
-      "category": "subscriptions",
+      "category_id": 6,
       "frequency": "annual",
       "amount": 89.99,
       "currency": "EUR",
@@ -130,7 +130,7 @@
     {
       "id": 10,
       "name": "Spotify",
-      "category": "subscriptions",
+      "category_id": 6,
       "frequency": "monthly",
       "amount": 10.99,
       "currency": "EUR",
@@ -144,7 +144,7 @@
     {
       "id": 11,
       "name": "Cinema Club",
-      "category": "entertainment",
+      "category_id": 2,
       "frequency": "monthly",
       "amount": 24.99,
       "currency": "EUR",
@@ -158,7 +158,7 @@
     {
       "id": 12,
       "name": "Monthly Bus Pass",
-      "category": "transport",
+      "category_id": 7,
       "frequency": "monthly",
       "amount": 55.0,
       "currency": "EUR",
@@ -172,7 +172,7 @@
     {
       "id": 13,
       "name": "Tyre Change",
-      "category": "transport",
+      "category_id": 7,
       "frequency": "one_off",
       "amount": 180.0,
       "currency": "EUR",
@@ -186,7 +186,7 @@
     {
       "id": 14,
       "name": "Gym Membership",
-      "category": "healthcare",
+      "category_id": 3,
       "frequency": "monthly",
       "amount": 45.0,
       "currency": "EUR",
@@ -200,7 +200,7 @@
     {
       "id": 15,
       "name": "Dental Checkup",
-      "category": "healthcare",
+      "category_id": 3,
       "frequency": "one_off",
       "amount": 250.0,
       "currency": "EUR",
@@ -214,7 +214,7 @@
     {
       "id": 16,
       "name": "Python Advanced Course",
-      "category": "education",
+      "category_id": 1,
       "frequency": "one_off",
       "amount": 149.0,
       "currency": "EUR",
@@ -228,7 +228,7 @@
     {
       "id": 17,
       "name": "Language School",
-      "category": "education",
+      "category_id": 1,
       "frequency": "monthly",
       "amount": 89.0,
       "currency": "EUR",
@@ -242,7 +242,7 @@
     {
       "id": 18,
       "name": "Pet Insurance",
-      "category": "other",
+      "category_id": 9,
       "frequency": "monthly",
       "amount": 35.0,
       "currency": "EUR",
@@ -256,7 +256,7 @@
     {
       "id": 19,
       "name": "Annual Donation",
-      "category": "other",
+      "category_id": 9,
       "frequency": "annual",
       "amount": 50.0,
       "currency": "EUR",
@@ -265,6 +265,48 @@
       "is_archived": false,
       "is_paused": false,
       "start_period": "2026-12",
+      "created_at": "2026-01-01T08:00:00+00:00"
+    },
+    {
+      "id": 20,
+      "name": "Old Music App",
+      "category_id": 10,
+      "frequency": "monthly",
+      "amount": 4.99,
+      "currency": "EUR",
+      "due_day": 12,
+      "notes": "Kept it for the offline downloads",
+      "is_archived": false,
+      "is_paused": false,
+      "start_period": "2026-02",
+      "created_at": "2026-02-01T08:00:00+00:00"
+    },
+    {
+      "id": 21,
+      "name": "Coworking Desk",
+      "category_id": 11,
+      "frequency": "monthly",
+      "amount": 120.0,
+      "currency": "EUR",
+      "due_day": 1,
+      "notes": "Hot desk, 2 days/week",
+      "is_archived": false,
+      "is_paused": false,
+      "start_period": "2026-01",
+      "created_at": "2026-01-01T08:00:00+00:00"
+    },
+    {
+      "id": 22,
+      "name": "Newspaper Subscription",
+      "category_id": 6,
+      "frequency": "monthly",
+      "amount": 12.0,
+      "currency": "EUR",
+      "due_day": 10,
+      "notes": "Paused while traveling",
+      "is_archived": false,
+      "is_paused": true,
+      "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     }
   ],
@@ -376,7 +418,7 @@
       "status": "paid",
       "paid_at": "2026-03-14T11:00:00+00:00",
       "paid_amount": 78.5,
-      "notes": "Lower than usual — mild winter",
+      "notes": "Lower than usual \u2014 mild winter",
       "created_at": "2026-03-01T08:00:00+00:00",
       "reminder_sent_upcoming": true,
       "reminder_sent_overdue": false
@@ -954,6 +996,191 @@
       "created_at": "2026-11-25T08:00:00+00:00",
       "reminder_sent_upcoming": false,
       "reminder_sent_overdue": false
+    },
+    {
+      "id": 2001,
+      "bill_id": 20,
+      "period": "2026-05",
+      "due_date": "2026-05-12",
+      "amount": 4.99,
+      "status": "paid",
+      "paid_at": "2026-05-12T09:00:00+00:00",
+      "paid_amount": 4.99,
+      "notes": null,
+      "created_at": "2026-05-01T08:00:00+00:00",
+      "reminder_sent_upcoming": true,
+      "reminder_sent_overdue": false
+    },
+    {
+      "id": 2002,
+      "bill_id": 20,
+      "period": "2026-06",
+      "due_date": "2026-06-12",
+      "amount": 4.99,
+      "status": "paid",
+      "paid_at": "2026-06-12T09:00:00+00:00",
+      "paid_amount": 4.99,
+      "notes": null,
+      "created_at": "2026-06-01T08:00:00+00:00",
+      "reminder_sent_upcoming": true,
+      "reminder_sent_overdue": false
+    },
+    {
+      "id": 2003,
+      "bill_id": 20,
+      "period": "2026-07",
+      "due_date": "2026-07-12",
+      "amount": 4.99,
+      "status": "upcoming",
+      "paid_at": null,
+      "paid_amount": null,
+      "notes": null,
+      "created_at": "2026-06-25T08:00:00+00:00",
+      "reminder_sent_upcoming": false,
+      "reminder_sent_overdue": false
+    },
+    {
+      "id": 2101,
+      "bill_id": 21,
+      "period": "2026-06",
+      "due_date": "2026-06-01",
+      "amount": 120.0,
+      "status": "paid",
+      "paid_at": "2026-06-01T08:30:00+00:00",
+      "paid_amount": 120.0,
+      "notes": null,
+      "created_at": "2026-05-25T08:00:00+00:00",
+      "reminder_sent_upcoming": true,
+      "reminder_sent_overdue": false
+    },
+    {
+      "id": 2102,
+      "bill_id": 21,
+      "period": "2026-07",
+      "due_date": "2026-07-01",
+      "amount": 120.0,
+      "status": "upcoming",
+      "paid_at": null,
+      "paid_amount": null,
+      "notes": null,
+      "created_at": "2026-06-25T08:00:00+00:00",
+      "reminder_sent_upcoming": false,
+      "reminder_sent_overdue": false
+    },
+    {
+      "id": 2201,
+      "bill_id": 22,
+      "period": "2026-03",
+      "due_date": "2026-03-10",
+      "amount": 12.0,
+      "status": "paid",
+      "paid_at": "2026-03-10T08:00:00+00:00",
+      "paid_amount": 12.0,
+      "notes": null,
+      "created_at": "2026-03-01T08:00:00+00:00",
+      "reminder_sent_upcoming": true,
+      "reminder_sent_overdue": false
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Education",
+      "slug": "education",
+      "color": "blue",
+      "sort_order": 0,
+      "is_default": true,
+      "is_archived": false
+    },
+    {
+      "id": 2,
+      "name": "Entertainment",
+      "slug": "entertainment",
+      "color": "purple",
+      "sort_order": 1,
+      "is_default": true,
+      "is_archived": false
+    },
+    {
+      "id": 3,
+      "name": "Healthcare",
+      "slug": "healthcare",
+      "color": "rose",
+      "sort_order": 2,
+      "is_default": true,
+      "is_archived": false
+    },
+    {
+      "id": 4,
+      "name": "Housing",
+      "slug": "housing",
+      "color": "orange",
+      "sort_order": 3,
+      "is_default": true,
+      "is_archived": false
+    },
+    {
+      "id": 5,
+      "name": "Insurance",
+      "slug": "insurance",
+      "color": "slate",
+      "sort_order": 4,
+      "is_default": true,
+      "is_archived": false
+    },
+    {
+      "id": 6,
+      "name": "Subscriptions",
+      "slug": "subscriptions",
+      "color": "violet",
+      "sort_order": 5,
+      "is_default": true,
+      "is_archived": false
+    },
+    {
+      "id": 7,
+      "name": "Transport",
+      "slug": "transport",
+      "color": "cyan",
+      "sort_order": 6,
+      "is_default": true,
+      "is_archived": false
+    },
+    {
+      "id": 8,
+      "name": "Utilities",
+      "slug": "utilities",
+      "color": "emerald",
+      "sort_order": 7,
+      "is_default": true,
+      "is_archived": false
+    },
+    {
+      "id": 9,
+      "name": "Other",
+      "slug": "other",
+      "color": "slate-light",
+      "sort_order": 8,
+      "is_default": true,
+      "is_archived": false
+    },
+    {
+      "id": 10,
+      "name": "Streaming (Old)",
+      "slug": null,
+      "color": "teal",
+      "sort_order": 9,
+      "is_default": false,
+      "is_archived": true
+    },
+    {
+      "id": 11,
+      "name": "Side Hustle",
+      "slug": null,
+      "color": "amber",
+      "sort_order": 10,
+      "is_default": false,
+      "is_archived": false
     }
   ]
 }
