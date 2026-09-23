@@ -7,6 +7,10 @@ const LOCALES: { value: Locale; flag: string; name: string }[] = [
   { value: "en", flag: "🇬🇧", name: "English" },
   { value: "pl", flag: "🇵🇱", name: "Polski" },
   { value: "de", flag: "🇩🇪", name: "Deutsch" },
+  { value: "es", flag: "🇪🇸", name: "Español" },
+  { value: "it", flag: "🇮🇹", name: "Italiano" },
+  { value: "fr", flag: "🇫🇷", name: "Français" },
+  { value: "zh", flag: "🇨🇳", name: "中文" },
 ];
 
 export default function LanguageToggle() {

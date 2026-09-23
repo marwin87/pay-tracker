@@ -2,6 +2,8 @@ from typing import Annotated, Literal
 
 from pydantic import BaseModel, EmailStr, Field
 
+SupportedLanguage = Literal["en", "pl", "de", "es", "it", "fr", "zh"]
+
 
 class RegisterRequest(BaseModel):
     email: EmailStr
@@ -23,7 +25,7 @@ class UserProfileOut(BaseModel):
 
     email: EmailStr
     language_preference: str | None
-    enabled_languages: list[Literal["en", "pl", "de"]]
+    enabled_languages: list[SupportedLanguage]
     default_currency: str | None
     email_reminders_enabled: bool
     notify_2_days_before: bool
@@ -35,8 +37,8 @@ class UserProfileOut(BaseModel):
 
 
 class UserProfileUpdate(BaseModel):
-    language_preference: Literal["en", "pl", "de"] | None = None
-    enabled_languages: list[Literal["en", "pl", "de"]] | None = None
+    language_preference: SupportedLanguage | None = None
+    enabled_languages: list[SupportedLanguage] | None = None
     default_currency: str | None = None
     email_reminders_enabled: bool | None = None
     notify_2_days_before: bool | None = None

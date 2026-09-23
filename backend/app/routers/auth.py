@@ -133,11 +133,13 @@ def update_me(
 ):
     # UserProfileUpdate is the security boundary — only fields declared there are patchable.
     updates = body.model_dump(exclude_unset=True)
-    if "enabled_languages" in updates:
+    if "enabled_languages" in updates or "language_preference" in updates:
         effective_lang = updates.get("language_preference", user.language_preference)
-        if effective_lang and effective_lang not in updates["enabled_languages"]:
+        effective_enabled = updates.get("enabled_languages", user.enabled_languages)
+        if effective_lang and effective_lang not in effective_enabled:
             raise HTTPException(
-                status_code=422, detail="Cannot disable the currently active language"
+                status_code=422,
+                detail="The active language must be one of the enabled languages",
             )
     for field, value in updates.items():
         setattr(user, field, value)

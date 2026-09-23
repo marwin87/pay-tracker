@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { PRESET_CURRENCIES } from "@/lib/currency";
+import { CURRENCY_NAMES, PRESET_CURRENCIES } from "@/lib/currency";
 
 type CurrencyOption = (typeof PRESET_CURRENCIES)[number] | "custom";
 
@@ -52,7 +52,7 @@ export default function CurrencyPicker({
         className={selectClassName}
       >
         {PRESET_CURRENCIES.map((c) => (
-          <option key={c} value={c}>{c}</option>
+          <option key={c} value={c}>{c} — {CURRENCY_NAMES[c]}</option>
         ))}
         <option value="custom">{customOption}</option>
       </select>

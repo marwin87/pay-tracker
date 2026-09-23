@@ -1,0 +1,418 @@
+{
+    "Auth": {
+        "loginSubtitle": "Connectez-vous à votre compte",
+        "registerSubtitle": "Créez votre compte",
+        "emailLabel": "Email",
+        "passwordLabel": "Mot de passe",
+        "passwordHint": "Minimum 8 caractères",
+        "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+        "requiredField": "Ce champ est obligatoire.",
+        "invalidEmail": "Veuillez saisir une adresse email valide.",
+        "signIn": "Se connecter",
+        "signingIn": "Connexion en cours…",
+        "loginFailed": "Échec de la connexion",
+        "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
+        "noAccount": "Pas de compte ?",
+        "register": "S'inscrire",
+        "createAccount": "Créer un compte",
+        "creatingAccount": "Création du compte…",
+        "registrationFailed": "Échec de l'inscription",
+        "emailAlreadyRegistered": "Cette adresse email est déjà enregistrée.",
+        "alreadyHaveAccount": "Vous avez déjà un compte ?",
+        "forgotPassword": "Mot de passe oublié ?",
+        "forgotPasswordTitle": "Réinitialisez votre mot de passe",
+        "forgotPasswordSubtitle": "Saisissez votre email et nous vous enverrons un lien de réinitialisation.",
+        "sendResetLink": "Envoyer le lien de réinitialisation",
+        "sendingResetLink": "Envoi en cours…",
+        "resetLinkSent": "Si cet email est enregistré, vous recevrez bientôt un lien de réinitialisation.",
+        "resetPasswordTitle": "Définissez un nouveau mot de passe",
+        "resetPasswordSubtitle": "Saisissez et confirmez votre nouveau mot de passe.",
+        "newPasswordLabel": "Nouveau mot de passe",
+        "confirmPasswordLabel": "Confirmer le nouveau mot de passe",
+        "passwordsDoNotMatch": "Les mots de passe ne correspondent pas",
+        "setPassword": "Définir le nouveau mot de passe",
+        "settingPassword": "Mise à jour…",
+        "invalidOrExpiredToken": "Ce lien a expiré ou n'est pas valide.",
+        "requestNewLink": "Demander un nouveau lien",
+        "forgotPasswordFailed": "Une erreur s'est produite. Veuillez réessayer."
+    },
+    "Common": {
+        "smtpNotConfigured": "L'email n'est pas configuré. Vérifiez la configuration SMTP."
+    },
+    "DashboardLayout": {
+        "payments": "Paiements",
+        "bills": "Factures",
+        "archived": "Archivées",
+        "settings": "Paramètres",
+        "logOut": "Se déconnecter",
+        "userMenu": "Menu utilisateur",
+        "signedInAs": "Connecté en tant que"
+    },
+    "Dashboard": {
+        "title": "Bienvenue sur Pay Tracker",
+        "subtitle": "Gérez les factures de votre foyer en un seul endroit.",
+        "paymentsTitle": "Paiements",
+        "paymentsDesc": "Consultez et marquez comme payées les factures de ce mois-ci",
+        "manageBillsTitle": "Gérer les factures",
+        "manageBillsDesc": "Créez, modifiez et suivez vos factures récurrentes",
+        "archivedBillsTitle": "Factures archivées",
+        "archivedBillsDesc": "Consultez les factures passées et l'historique des paiements",
+        "settingsTitle": "Paramètres",
+        "settingsDesc": "Gérez les notifications, la sauvegarde et les préférences"
+    },
+    "BillsPage": {
+        "title": "Vos factures",
+        "subtitle": "Gérez vos factures récurrentes et ponctuelles. Chaque facture génère automatiquement des rappels de paiement.",
+        "newBill": "Nouvelle facture",
+        "cancel": "Annuler",
+        "loadError": "Échec du chargement des factures.",
+        "noBillsYet": "Aucune facture pour le moment",
+        "addFirstBill": "Ajoutez votre première facture",
+        "viewArchive": "Factures archivées",
+        "noFilterResults": "Aucune facture ne correspond au filtre sélectionné",
+        "collapseAll": "Tout réduire",
+        "expandAll": "Tout développer"
+    },
+    "ArchivedBillsPage": {
+        "backToActive": "Factures actives",
+        "title": "Factures archivées",
+        "subtitle": "L'historique des paiements est conservé pour toutes les factures archivées.",
+        "loadError": "Échec du chargement des factures archivées.",
+        "noArchivedBills": "Aucune facture archivée",
+        "willAppearHere": "Les factures que vous archivez apparaîtront ici",
+        "noFilterResults": "Aucune facture archivée ne correspond au filtre sélectionné",
+        "archived": "Archivée",
+        "frequency": {
+            "monthly": "Mensuelle",
+            "every_2_months": "Tous les 2 mois",
+            "quarterly": "Trimestrielle",
+            "annual": "Annuelle",
+            "one_off": "Ponctuelle"
+        },
+        "collapseAll": "Tout réduire",
+        "expandAll": "Tout développer",
+        "restore": "Restaurer",
+        "restoreError": "Échec de la restauration de la facture."
+    },
+    "BillTemplateForm": {
+        "nameLabel": "Nom",
+        "namePlaceholder": "ex. Électricité",
+        "nameRequired": "Le nom est obligatoire.",
+        "amountLabel": "Montant",
+        "amountInvalid": "Saisissez un montant valide.",
+        "currencyAriaLabel": "Devise",
+        "customOption": "Personnalisé…",
+        "customCurrencyAriaLabel": "Code de devise personnalisé",
+        "customCurrencyPlaceholder": "ex. CHF",
+        "frequencyLabel": "Fréquence",
+        "frequency": {
+            "monthly": "Mensuelle",
+            "every_2_months": "Tous les 2 mois",
+            "quarterly": "Trimestrielle",
+            "annual": "Annuelle",
+            "one_off": "Ponctuelle"
+        },
+        "dueDateLabel": "Date d'échéance",
+        "startDateLabel": "Mois et jour de début",
+        "categoryLabel": "Catégorie",
+        "categoryRequired": "La catégorie est obligatoire.",
+        "notesLabel": "Notes",
+        "notesPlaceholder": "Notes facultatives",
+        "pauseRecurrence": "Suspendre la récurrence (aucune nouvelle occurrence créée)",
+        "cancel": "Annuler",
+        "save": "Enregistrer",
+        "saving": "Enregistrement…",
+        "saveFailed": "Échec de l'enregistrement."
+    },
+    "BillTemplateRow": {
+        "dueOn": "Échéance le",
+        "paused": "En pause",
+        "close": "Fermer",
+        "edit": "Modifier",
+        "archive": "Archiver",
+        "frequency": {
+            "monthly": "Mensuelle",
+            "every_2_months": "Tous les 2 mois",
+            "quarterly": "Trimestrielle",
+            "annual": "Annuelle",
+            "one_off": "Ponctuelle"
+        }
+    },
+    "RestoreDeletedDialog": {
+        "title": "Restaurer les paiements supprimés ?",
+        "description": "Certains paiements futurs pour « {name} » ont été supprimés précédemment. Les restaurer avec les valeurs mises à jour du modèle ?",
+        "restore": "Restaurer",
+        "skip": "Ignorer",
+        "restoring": "Restauration…"
+    },
+    "ArchiveConfirmDialog": {
+        "title": "Archiver « {billName} » ?",
+        "description": "Cette facture sera masquée de la liste active. L'historique des paiements est conservé et accessible depuis la vue des archives.",
+        "cancel": "Annuler",
+        "archive": "Archiver",
+        "archiving": "Archivage…"
+    },
+    "DeleteAccountDialog": {
+        "title": "Supprimer votre compte ?",
+        "description": "Cela supprime définitivement votre compte et tout ce qui y est lié : factures, catégories et historique des paiements. Cette action est irréversible.",
+        "cancel": "Annuler",
+        "confirm": "Supprimer le compte",
+        "deleting": "Suppression…"
+    },
+    "RestoreConfirmDialog": {
+        "title": "Restaurer « {billName} » ?",
+        "description": "Cette facture réapparaîtra dans la liste active et reprendra la génération des prochains paiements.",
+        "cancel": "Annuler",
+        "restore": "Restaurer",
+        "restoring": "Restauration…"
+    },
+    "Frequencies": {
+        "monthly": "Mensuelle",
+        "every_2_months": "Tous les 2 mois",
+        "quarterly": "Trimestrielle",
+        "annual": "Annuelle",
+        "one_off": "Ponctuelle"
+    },
+    "DayPicker": {
+        "placeholder": "Sélectionner un jour",
+        "selectedDay": "Jour {day}",
+        "heading": "Jour du mois",
+        "shortMonthWarning": "Certains mois comptent moins de jours — la facture tombera au dernier jour disponible."
+    },
+    "CategoryCombobox": {"placeholder": "ex. Charges"},
+    "PaymentsPage": {
+        "title": "Paiements",
+        "subtitle": "Suivez et marquez vos factures mois par mois.",
+        "loadError": "Échec du chargement des paiements.",
+        "noPayments": "Aucune facture pour ce mois",
+        "noFilterResults": "Aucun paiement ne correspond aux filtres sélectionnés",
+        "addBills": "Ajouter des factures →",
+        "pastMonth": "Passé",
+        "exportXlsx": "Export Excel",
+        "exportXlsxLoading": "Exportation…",
+        "exportXlsxError": "Échec de l'exportation. Veuillez réessayer.",
+        "collapseAll": "Tout réduire",
+        "expandAll": "Tout développer",
+        "summaryUpcoming": "à venir",
+        "summaryOverdueToday": "en retard aujourd'hui",
+        "summaryOverdue": "en retard",
+        "summaryPaid": "payées",
+        "calendarTitle": "Calendrier",
+        "clearDayFilter": "Effacer"
+    },
+    "PaymentRow": {
+        "status": {"upcoming": "À venir", "overdue": "En retard", "paid": "Payé"},
+        "dueToday": "Aujourd'hui",
+        "markAsPaid": "Marquer comme payé",
+        "revert": "Annuler le paiement",
+        "due": "Échéance",
+        "paidOn": "Payé le",
+        "amountMismatch": "Attendu <expTag>{expected}</expTag>, payé <paidTag>{paid}</paidTag>",
+        "delete": "Supprimer le paiement",
+        "paymentNote": "Note de paiement",
+        "emailNotification": "Notification par email",
+        "emailNotSent": "Notification par email non envoyée",
+        "emailSentOn": "Email envoyé"
+    },
+    "DeletePaymentDialog": {
+        "title": "Supprimer ce paiement ?",
+        "descriptionRecurring": "Cette entrée de paiement sera supprimée. La facture récurrente continuera de générer de futures entrées.",
+        "descriptionOneOff": "Cette entrée de paiement ponctuelle sera supprimée. Cette action est irréversible.",
+        "deleteFutureLabel": "Supprimer également toutes les entrées futures impayées pour cette facture",
+        "cancel": "Annuler",
+        "confirm": "Supprimer",
+        "deleting": "Suppression…",
+        "deleteFailed": "Échec de la suppression du paiement."
+    },
+    "RevertPaymentDialog": {
+        "title": "Annuler ce paiement ?",
+        "description": "Ce paiement sera de nouveau marqué comme impayé.",
+        "cancel": "Annuler",
+        "confirm": "Annuler le paiement",
+        "reverting": "Annulation…",
+        "revertFailed": "Échec de l'annulation du paiement."
+    },
+    "MarkPaidDialog": {
+        "title": "Marquer comme payé : {billName}",
+        "dateLabel": "Date de paiement",
+        "amountLabel": "Montant payé",
+        "notesLabel": "Notes (facultatif)",
+        "cancel": "Annuler",
+        "confirm": "Marquer comme payé",
+        "confirming": "Enregistrement…",
+        "saveFailed": "Échec de l'enregistrement du paiement."
+    },
+    "RestoreButton": {
+        "ariaLabel": "Restaurer depuis une sauvegarde",
+        "dialogTitle": "Restaurer depuis une sauvegarde",
+        "dialogDescription": "Cela remplacera définitivement toutes vos données actuelles par le contenu de « {filename} ». Cette action est irréversible.",
+        "cancel": "Annuler",
+        "confirm": "Remplacer mes données",
+        "restoring": "Restauration…",
+        "error": "Échec de la restauration. Vérifiez le fichier et réessayez.",
+        "fileTooLarge": "Fichier trop volumineux. Les fichiers de sauvegarde doivent faire moins de 10 Mo.",
+        "invalidFile": "Ce fichier ne ressemble pas à une sauvegarde valide.",
+        "currentLabel": "Actuel",
+        "backupLabel": "Sauvegarde",
+        "countsSummary": "{bills} factures, {payments} paiements",
+        "categoriesCount": "{categories} catégories",
+        "countsUnavailable": "indisponible",
+        "exportDateUnknown": "date d'exportation inconnue (ancien format de sauvegarde)",
+        "staleDataWarning": "Cette sauvegarde contient moins de factures et de paiements que vos données actuelles. La restauration supprimera définitivement la différence."
+    },
+    "BackupButton": {
+        "ariaLabel": "Télécharger la sauvegarde",
+        "dialogTitle": "Télécharger la sauvegarde",
+        "dialogDescription": "Cela téléchargera une copie complète de toutes les données de Pay Tracker — modèles de factures, historique des paiements et comptes utilisateurs. Conservez le fichier en lieu sûr.",
+        "cancel": "Annuler",
+        "confirm": "Télécharger",
+        "downloading": "Téléchargement…",
+        "error": "Échec de la sauvegarde. Veuillez réessayer."
+    },
+    "SnapshotRecoverySection": {
+        "message": "Un instantané de vos données a été enregistré le {date}, juste avant votre dernière restauration.",
+        "restoreButton": "Restaurer cet instantané",
+        "dialogTitle": "Restaurer cet instantané",
+        "dialogDescription": "Cela remplacera définitivement vos données actuelles par l'instantané pris avant votre dernière restauration. Cette action est irréversible.",
+        "cancel": "Annuler",
+        "confirm": "Restaurer",
+        "restoring": "Restauration…",
+        "error": "Échec de la restauration. Veuillez réessayer."
+    },
+    "ThemeToggle": {"ariaLabel": "Changer de thème"},
+    "LanguageToggle": {
+        "ariaLabel": "Changer de langue",
+        "label": "Langue :",
+        "name": "Français"
+    },
+    "NotificationToggle": {"paymentIncoming": "Paiement à venir"},
+    "EmailRemindersToggle": {
+        "enable": "Activer les rappels par email",
+        "disable": "Désactiver les rappels par email"
+    },
+    "SettingsPage": {
+        "pageTitle": "Paramètres",
+        "tabs": {
+            "account": "Compte",
+            "notifications": "Notifications",
+            "categories": "Catégories",
+            "data": "Données"
+        },
+        "unsavedTitle": "Modifications non enregistrées",
+        "unsavedDescription": "Vous avez des modifications non enregistrées. Quitter sans enregistrer ?",
+        "unsavedLeave": "Quitter",
+        "unsavedStay": "Rester",
+        "save": "Enregistrer",
+        "saving": "Enregistrement…",
+        "cancel": "Annuler",
+        "saveFailed": "Échec de l'enregistrement. Veuillez réessayer.",
+        "profile": {
+            "title": "Profil utilisateur",
+            "description": "Mettez à jour votre email et votre mot de passe de connexion.",
+            "currentEmailLabel": "Email actuel :",
+            "emailLabel": "Nouvelle adresse email",
+            "emailHint": "Saisissez une nouvelle adresse, puis confirmez avec votre mot de passe actuel.",
+            "emailPlaceholder": "nouveau@email.com",
+            "currentPasswordPlaceholder": "Saisissez le mot de passe actuel",
+            "newPasswordLabel": "Changer le mot de passe",
+            "passwordHint": "Saisissez votre mot de passe actuel, puis choisissez-en un nouveau.",
+            "newPasswordPlaceholder": "Nouveau mot de passe (min. 8 caractères)",
+            "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+            "wrongPassword": "Le mot de passe actuel est incorrect.",
+            "emailTaken": "Cette adresse email est déjà enregistrée.",
+            "emailAndPasswordRequired": "Veuillez saisir à la fois la nouvelle adresse email et votre mot de passe actuel."
+        },
+        "currency": {
+            "title": "Devise par défaut",
+            "description": "Utilisée pour présélectionner la devise lors de la création d'une nouvelle facture.",
+            "ariaLabel": "Devise",
+            "customOption": "Personnalisé…",
+            "customCurrencyAriaLabel": "Code de devise personnalisé",
+            "customCurrencyPlaceholder": "ex. CHF"
+        },
+        "languages": {
+            "title": "Langues",
+            "description": "Choisissez les langues qui apparaissent dans le sélecteur de langue.",
+            "activeSuffix": "(actuelle)"
+        },
+        "emailNotifications": {
+            "title": "Notifications par email",
+            "description": "Choisissez quand recevoir des rappels par email pour les factures à venir et en retard.",
+            "twoDaysBefore": "2 jours avant l'échéance",
+            "oneDayBefore": "1 jour avant l'échéance",
+            "onDay": "Le jour du paiement",
+            "oneDayAfter": "1 jour après l'échéance",
+            "noneWarning": "Sélectionnez au moins une option pour recevoir des rappels par email.",
+            "sendTimeLabel": "Heure d'envoi (UTC)",
+            "masterToggle": "Activer les notifications par email",
+            "sendNowButton": "Envoyer la notification maintenant",
+            "sendNowSending": "Envoi en cours...",
+            "sendNowSent": "{count} rappel(s) envoyé(s)",
+            "sendNowNoReminders": "Aucun rappel à venir à envoyer",
+            "monthlySummaryToggle": "Résumé mensuel (dernier jour du mois)",
+            "sendMonthlySummaryButton": "Envoyer le résumé mensuel",
+            "sendMonthlySummarySending": "Envoi en cours...",
+            "sendMonthlySummarySent": "Résumé mensuel envoyé",
+            "sendMonthlySummaryNoData": "Aucun paiement trouvé pour ce mois",
+            "serverTimeHint": "Les rappels sont envoyés selon l'heure du serveur (UTC). Heure actuelle du serveur : {time}."
+        },
+        "browserNotifications": {
+            "title": "Notifications du navigateur",
+            "description": "Soyez averti lorsqu'une facture arrive à échéance aujourd'hui.",
+            "enable": "Activer les notifications",
+            "toggle": "Activer les notifications du navigateur",
+            "osHint": "Vous ne voyez pas les notifications ? Vérifiez les paramètres de notification de votre système (macOS : Réglages Système → Notifications).",
+            "blockedWarning": "Les notifications du navigateur sont bloquées. Activez-les dans les paramètres de votre navigateur ou de votre système d'exploitation."
+        },
+        "backup": {
+            "title": "Sauvegarde des données",
+            "description": "Téléchargez une copie complète de toutes vos données Pay Tracker sous forme de fichier JSON."
+        },
+        "restore": {
+            "title": "Restaurer les données",
+            "description": "Remplacez toutes les données actuelles par un fichier de sauvegarde téléchargé précédemment."
+        },
+        "deleteAccount": {
+            "title": "Supprimer le compte",
+            "description": "Supprime définitivement votre compte et tout ce qui y est lié. Cette action est irréversible.",
+            "button": "Supprimer le compte",
+            "error": "Échec de la suppression du compte. Veuillez réessayer."
+        },
+        "categories": {
+            "title": "Catégories",
+            "description": "Ajoutez vos propres catégories ou renommez et recolorez celles par défaut.",
+            "loadError": "Impossible de charger les catégories. Veuillez réessayer.",
+            "nameRequired": "Le nom est obligatoire.",
+            "namePlaceholder": "ex. Loisirs",
+            "defaultBadge": "par défaut",
+            "archivedBadge": "archivée",
+            "edit": "Modifier",
+            "archive": "Archiver",
+            "unarchive": "Désarchiver",
+            "addNew": "+ Ajouter une catégorie"
+        }
+    },
+    "Categories": {
+        "housing": "Logement",
+        "utilities": "Charges",
+        "insurance": "Assurance",
+        "subscriptions": "Abonnements",
+        "entertainment": "Loisirs",
+        "transport": "Transport",
+        "healthcare": "Santé",
+        "education": "Éducation",
+        "other": "Autre",
+        "archivedSuffix": "(archivée)"
+    },
+    "Filters": {
+        "allCategories": "Toutes les catégories",
+        "allStatuses": "Tous les statuts",
+        "selectedCount": "{count} sélectionné(s)",
+        "filterBy": "Filtrer par",
+        "sortBy": "Trier par",
+        "sortCategoryAsc": "Catégorie A-Z",
+        "sortCategoryDesc": "Catégorie Z-A",
+        "sortPaidFirst": "Payées en premier",
+        "sortUnpaidFirst": "Impayées en premier"
+    }
+}

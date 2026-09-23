@@ -1,0 +1,418 @@
+{
+    "Auth": {
+        "loginSubtitle": "登录您的账户",
+        "registerSubtitle": "创建您的账户",
+        "emailLabel": "邮箱",
+        "passwordLabel": "密码",
+        "passwordHint": "至少 8 个字符",
+        "passwordTooShort": "密码必须至少包含 8 个字符",
+        "requiredField": "此字段为必填项。",
+        "invalidEmail": "请输入有效的邮箱地址。",
+        "signIn": "登录",
+        "signingIn": "正在登录…",
+        "loginFailed": "登录失败",
+        "sessionExpired": "您的会话已过期，请重新登录。",
+        "noAccount": "还没有账户？",
+        "register": "注册",
+        "createAccount": "创建账户",
+        "creatingAccount": "正在创建账户…",
+        "registrationFailed": "注册失败",
+        "emailAlreadyRegistered": "该邮箱已被注册。",
+        "alreadyHaveAccount": "已有账户？",
+        "forgotPassword": "忘记密码？",
+        "forgotPasswordTitle": "重置您的密码",
+        "forgotPasswordSubtitle": "输入您的邮箱，我们将发送重置链接给您。",
+        "sendResetLink": "发送重置链接",
+        "sendingResetLink": "正在发送…",
+        "resetLinkSent": "如果该邮箱已注册，您将很快收到重置链接。",
+        "resetPasswordTitle": "设置新密码",
+        "resetPasswordSubtitle": "输入并确认您的新密码。",
+        "newPasswordLabel": "新密码",
+        "confirmPasswordLabel": "确认新密码",
+        "passwordsDoNotMatch": "两次输入的密码不一致",
+        "setPassword": "设置新密码",
+        "settingPassword": "正在更新…",
+        "invalidOrExpiredToken": "此链接已过期或无效。",
+        "requestNewLink": "请求新链接",
+        "forgotPasswordFailed": "出现问题，请重试。"
+    },
+    "Common": {
+        "smtpNotConfigured": "邮件功能未配置，请检查 SMTP 设置。"
+    },
+    "DashboardLayout": {
+        "payments": "付款",
+        "bills": "账单",
+        "archived": "已归档",
+        "settings": "设置",
+        "logOut": "退出登录",
+        "userMenu": "用户菜单",
+        "signedInAs": "当前登录账户"
+    },
+    "Dashboard": {
+        "title": "欢迎使用 Pay Tracker",
+        "subtitle": "在一处集中管理您的家庭账单。",
+        "paymentsTitle": "付款",
+        "paymentsDesc": "查看并标记本月账单为已付款",
+        "manageBillsTitle": "管理账单",
+        "manageBillsDesc": "创建、编辑并跟踪您的周期性账单",
+        "archivedBillsTitle": "已归档账单",
+        "archivedBillsDesc": "查看历史账单和付款记录",
+        "settingsTitle": "设置",
+        "settingsDesc": "管理通知、备份和偏好设置"
+    },
+    "BillsPage": {
+        "title": "您的账单",
+        "subtitle": "管理您的周期性和一次性账单。每个账单会自动生成付款提醒。",
+        "newBill": "新建账单",
+        "cancel": "取消",
+        "loadError": "账单加载失败。",
+        "noBillsYet": "暂无账单",
+        "addFirstBill": "添加您的第一个账单",
+        "viewArchive": "已归档账单",
+        "noFilterResults": "没有符合所选筛选条件的账单",
+        "collapseAll": "全部折叠",
+        "expandAll": "全部展开"
+    },
+    "ArchivedBillsPage": {
+        "backToActive": "有效账单",
+        "title": "已归档账单",
+        "subtitle": "所有已归档账单的付款记录都会被保留。",
+        "loadError": "已归档账单加载失败。",
+        "noArchivedBills": "暂无已归档账单",
+        "willAppearHere": "您归档的账单将显示在此处",
+        "noFilterResults": "没有符合所选筛选条件的已归档账单",
+        "archived": "已归档",
+        "frequency": {
+            "monthly": "每月",
+            "every_2_months": "每 2 个月",
+            "quarterly": "每季度",
+            "annual": "每年",
+            "one_off": "一次性"
+        },
+        "collapseAll": "全部折叠",
+        "expandAll": "全部展开",
+        "restore": "恢复",
+        "restoreError": "账单恢复失败。"
+    },
+    "BillTemplateForm": {
+        "nameLabel": "名称",
+        "namePlaceholder": "例如：电费",
+        "nameRequired": "名称为必填项。",
+        "amountLabel": "金额",
+        "amountInvalid": "请输入有效金额。",
+        "currencyAriaLabel": "货币",
+        "customOption": "自定义…",
+        "customCurrencyAriaLabel": "自定义货币代码",
+        "customCurrencyPlaceholder": "例如：CHF",
+        "frequencyLabel": "频率",
+        "frequency": {
+            "monthly": "每月",
+            "every_2_months": "每 2 个月",
+            "quarterly": "每季度",
+            "annual": "每年",
+            "one_off": "一次性"
+        },
+        "dueDateLabel": "到期日",
+        "startDateLabel": "起始月份和日期",
+        "categoryLabel": "类别",
+        "categoryRequired": "类别为必填项。",
+        "notesLabel": "备注",
+        "notesPlaceholder": "可选备注",
+        "pauseRecurrence": "暂停周期性生成（不再创建新的付款记录）",
+        "cancel": "取消",
+        "save": "保存",
+        "saving": "正在保存…",
+        "saveFailed": "保存失败。"
+    },
+    "BillTemplateRow": {
+        "dueOn": "到期日：",
+        "paused": "已暂停",
+        "close": "关闭",
+        "edit": "编辑",
+        "archive": "归档",
+        "frequency": {
+            "monthly": "每月",
+            "every_2_months": "每 2 个月",
+            "quarterly": "每季度",
+            "annual": "每年",
+            "one_off": "一次性"
+        }
+    },
+    "RestoreDeletedDialog": {
+        "title": "恢复已删除的付款记录？",
+        "description": "“{name}”的部分未来付款记录此前已被删除。是否使用更新后的模板值恢复它们？",
+        "restore": "恢复",
+        "skip": "跳过",
+        "restoring": "正在恢复…"
+    },
+    "ArchiveConfirmDialog": {
+        "title": "归档“{billName}”？",
+        "description": "该账单将从有效列表中隐藏。付款记录会被保留，并可在已归档视图中查看。",
+        "cancel": "取消",
+        "archive": "归档",
+        "archiving": "正在归档…"
+    },
+    "DeleteAccountDialog": {
+        "title": "删除您的账户？",
+        "description": "此操作将永久删除您的账户及与之关联的所有内容——账单、类别和付款记录。此操作无法撤销。",
+        "cancel": "取消",
+        "confirm": "删除账户",
+        "deleting": "正在删除…"
+    },
+    "RestoreConfirmDialog": {
+        "title": "恢复“{billName}”？",
+        "description": "该账单将重新出现在有效列表中，并继续生成后续付款。",
+        "cancel": "取消",
+        "restore": "恢复",
+        "restoring": "正在恢复…"
+    },
+    "Frequencies": {
+        "monthly": "每月",
+        "every_2_months": "每 2 个月",
+        "quarterly": "每季度",
+        "annual": "每年",
+        "one_off": "一次性"
+    },
+    "DayPicker": {
+        "placeholder": "选择日期",
+        "selectedDay": "第 {day} 日",
+        "heading": "每月日期",
+        "shortMonthWarning": "部分月份天数较少——账单将落在该月的最后一天。"
+    },
+    "CategoryCombobox": {"placeholder": "例如：水电"},
+    "PaymentsPage": {
+        "title": "付款",
+        "subtitle": "按月跟踪并标记您的账单。",
+        "loadError": "付款记录加载失败。",
+        "noPayments": "本月暂无账单",
+        "noFilterResults": "没有符合所选筛选条件的付款记录",
+        "addBills": "添加账单 →",
+        "pastMonth": "已过去",
+        "exportXlsx": "导出 Excel",
+        "exportXlsxLoading": "正在导出…",
+        "exportXlsxError": "导出失败，请重试。",
+        "collapseAll": "全部折叠",
+        "expandAll": "全部展开",
+        "summaryUpcoming": "待付款",
+        "summaryOverdueToday": "今日逾期",
+        "summaryOverdue": "已逾期",
+        "summaryPaid": "已付款",
+        "calendarTitle": "日历",
+        "clearDayFilter": "清除"
+    },
+    "PaymentRow": {
+        "status": {"upcoming": "待付款", "overdue": "已逾期", "paid": "已付款"},
+        "dueToday": "今日",
+        "markAsPaid": "标记为已付款",
+        "revert": "撤销付款",
+        "due": "到期",
+        "paidOn": "付款日期",
+        "amountMismatch": "应付 <expTag>{expected}</expTag>，实付 <paidTag>{paid}</paidTag>",
+        "delete": "删除付款记录",
+        "paymentNote": "付款备注",
+        "emailNotification": "邮件通知",
+        "emailNotSent": "邮件通知未发送",
+        "emailSentOn": "邮件已发送"
+    },
+    "DeletePaymentDialog": {
+        "title": "删除此付款记录？",
+        "descriptionRecurring": "此付款记录将被删除。周期性账单将继续生成未来的记录。",
+        "descriptionOneOff": "此一次性付款记录将被删除。此操作无法撤销。",
+        "deleteFutureLabel": "同时删除此账单所有未来的未付款记录",
+        "cancel": "取消",
+        "confirm": "删除",
+        "deleting": "正在删除…",
+        "deleteFailed": "删除付款记录失败。"
+    },
+    "RevertPaymentDialog": {
+        "title": "撤销此付款？",
+        "description": "此付款将重新标记为未付款。",
+        "cancel": "取消",
+        "confirm": "撤销",
+        "reverting": "正在撤销…",
+        "revertFailed": "撤销付款失败。"
+    },
+    "MarkPaidDialog": {
+        "title": "标记为已付款：{billName}",
+        "dateLabel": "付款日期",
+        "amountLabel": "付款金额",
+        "notesLabel": "备注（可选）",
+        "cancel": "取消",
+        "confirm": "标记为已付款",
+        "confirming": "正在保存…",
+        "saveFailed": "记录付款失败。"
+    },
+    "RestoreButton": {
+        "ariaLabel": "从备份恢复",
+        "dialogTitle": "从备份恢复",
+        "dialogDescription": "此操作将用“{filename}”中的内容永久替换您当前的所有数据。此操作无法撤销。",
+        "cancel": "取消",
+        "confirm": "替换我的数据",
+        "restoring": "正在恢复…",
+        "error": "恢复失败，请检查文件后重试。",
+        "fileTooLarge": "文件过大。备份文件必须小于 10 MB。",
+        "invalidFile": "该文件看起来不是有效的备份文件。",
+        "currentLabel": "当前",
+        "backupLabel": "备份",
+        "countsSummary": "{bills} 个账单，{payments} 条付款记录",
+        "categoriesCount": "{categories} 个类别",
+        "countsUnavailable": "不可用",
+        "exportDateUnknown": "导出日期未知（旧版备份格式）",
+        "staleDataWarning": "此备份的账单和付款记录数量少于您当前的数据。恢复将永久删除差异部分。"
+    },
+    "BackupButton": {
+        "ariaLabel": "下载备份",
+        "dialogTitle": "下载备份",
+        "dialogDescription": "此操作将下载 Pay Tracker 全部数据的完整副本——账单模板、付款记录和用户账户。请妥善保存该文件。",
+        "cancel": "取消",
+        "confirm": "下载",
+        "downloading": "正在下载…",
+        "error": "备份失败，请重试。"
+    },
+    "SnapshotRecoverySection": {
+        "message": "系统已于 {date}（上次恢复操作前）保存了一份数据快照。",
+        "restoreButton": "恢复此快照",
+        "dialogTitle": "恢复此快照",
+        "dialogDescription": "此操作将用上次恢复操作前的快照永久替换您当前的数据。此操作无法撤销。",
+        "cancel": "取消",
+        "confirm": "恢复",
+        "restoring": "正在恢复…",
+        "error": "恢复失败，请重试。"
+    },
+    "ThemeToggle": {"ariaLabel": "切换主题"},
+    "LanguageToggle": {
+        "ariaLabel": "切换语言",
+        "label": "语言：",
+        "name": "中文"
+    },
+    "NotificationToggle": {"paymentIncoming": "即将付款"},
+    "EmailRemindersToggle": {
+        "enable": "开启邮件提醒",
+        "disable": "关闭邮件提醒"
+    },
+    "SettingsPage": {
+        "pageTitle": "设置",
+        "tabs": {
+            "account": "账户",
+            "notifications": "通知",
+            "categories": "类别",
+            "data": "数据"
+        },
+        "unsavedTitle": "有未保存的更改",
+        "unsavedDescription": "您有未保存的更改。是否在不保存的情况下离开？",
+        "unsavedLeave": "离开",
+        "unsavedStay": "留在此页",
+        "save": "保存",
+        "saving": "正在保存…",
+        "cancel": "取消",
+        "saveFailed": "保存失败，请重试。",
+        "profile": {
+            "title": "用户资料",
+            "description": "更新您的登录邮箱和密码。",
+            "currentEmailLabel": "当前邮箱：",
+            "emailLabel": "新邮箱地址",
+            "emailHint": "输入新地址，然后使用当前密码确认。",
+            "emailPlaceholder": "new@email.com",
+            "currentPasswordPlaceholder": "输入当前密码",
+            "newPasswordLabel": "修改密码",
+            "passwordHint": "输入当前密码，然后设置一个新密码。",
+            "newPasswordPlaceholder": "新密码（至少 8 个字符）",
+            "passwordTooShort": "密码必须至少包含 8 个字符。",
+            "wrongPassword": "当前密码不正确。",
+            "emailTaken": "该邮箱已被注册。",
+            "emailAndPasswordRequired": "请同时输入新邮箱地址和当前密码。"
+        },
+        "currency": {
+            "title": "默认货币",
+            "description": "用于在创建新账单时预先选择货币。",
+            "ariaLabel": "货币",
+            "customOption": "自定义…",
+            "customCurrencyAriaLabel": "自定义货币代码",
+            "customCurrencyPlaceholder": "例如：CHF"
+        },
+        "languages": {
+            "title": "语言",
+            "description": "选择在语言切换器中显示的语言。",
+            "activeSuffix": "（当前）"
+        },
+        "emailNotifications": {
+            "title": "邮件通知",
+            "description": "选择何时接收即将到期和已逾期账单的邮件提醒。",
+            "twoDaysBefore": "到期前 2 天",
+            "oneDayBefore": "到期前 1 天",
+            "onDay": "付款当天",
+            "oneDayAfter": "到期后 1 天",
+            "noneWarning": "请至少选择一个选项以接收邮件提醒。",
+            "sendTimeLabel": "发送时间（UTC）",
+            "masterToggle": "开启邮件通知",
+            "sendNowButton": "立即发送通知",
+            "sendNowSending": "正在发送…",
+            "sendNowSent": "已发送 {count} 条提醒",
+            "sendNowNoReminders": "暂无待发送的提醒",
+            "monthlySummaryToggle": "月度汇总（每月最后一天）",
+            "sendMonthlySummaryButton": "发送月度汇总",
+            "sendMonthlySummarySending": "正在发送…",
+            "sendMonthlySummarySent": "月度汇总已发送",
+            "sendMonthlySummaryNoData": "本月未找到付款记录",
+            "serverTimeHint": "提醒将按服务器时间（UTC）发送。当前服务器时间：{time}。"
+        },
+        "browserNotifications": {
+            "title": "浏览器通知",
+            "description": "当账单今日到期时收到提醒。",
+            "enable": "开启通知",
+            "toggle": "开启浏览器通知",
+            "osHint": "没有看到通知？请检查您的操作系统通知设置（macOS：系统设置 → 通知）。",
+            "blockedWarning": "浏览器通知已被阻止。请在浏览器或操作系统设置中启用。"
+        },
+        "backup": {
+            "title": "数据备份",
+            "description": "将您所有的 Pay Tracker 数据下载为一个完整的 JSON 文件副本。"
+        },
+        "restore": {
+            "title": "恢复数据",
+            "description": "用之前下载的备份文件替换所有当前数据。"
+        },
+        "deleteAccount": {
+            "title": "删除账户",
+            "description": "永久删除您的账户及与之关联的所有内容。此操作无法撤销。",
+            "button": "删除账户",
+            "error": "删除账户失败，请重试。"
+        },
+        "categories": {
+            "title": "类别",
+            "description": "添加您自己的类别，或重命名和重新着色默认类别。",
+            "loadError": "类别加载失败，请重试。",
+            "nameRequired": "名称为必填项。",
+            "namePlaceholder": "例如：爱好",
+            "defaultBadge": "默认",
+            "archivedBadge": "已归档",
+            "edit": "编辑",
+            "archive": "归档",
+            "unarchive": "取消归档",
+            "addNew": "+ 添加类别"
+        }
+    },
+    "Categories": {
+        "housing": "住房",
+        "utilities": "水电",
+        "insurance": "保险",
+        "subscriptions": "订阅",
+        "entertainment": "娱乐",
+        "transport": "交通",
+        "healthcare": "医疗",
+        "education": "教育",
+        "other": "其他",
+        "archivedSuffix": "（已归档）"
+    },
+    "Filters": {
+        "allCategories": "所有类别",
+        "allStatuses": "所有状态",
+        "selectedCount": "已选择 {count} 项",
+        "filterBy": "筛选方式",
+        "sortBy": "排序方式",
+        "sortCategoryAsc": "类别 A-Z",
+        "sortCategoryDesc": "类别 Z-A",
+        "sortPaidFirst": "已付款优先",
+        "sortUnpaidFirst": "未付款优先"
+    }
+}

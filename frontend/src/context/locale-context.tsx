@@ -14,22 +14,34 @@ import { fetchMe, updateMe } from "@/lib/user-api";
 import enMessages from "../../messages/en.json";
 import plMessages from "../../messages/pl.json";
 import deMessages from "../../messages/de.json";
+import esMessages from "../../messages/es.json";
+import itMessages from "../../messages/it.json";
+import frMessages from "../../messages/fr.json";
+import zhMessages from "../../messages/zh.json";
 
-export type Locale = "en" | "pl" | "de";
+export type Locale = "en" | "pl" | "de" | "es" | "it" | "fr" | "zh";
 
 const messagesMap: Record<Locale, typeof enMessages> = {
   en: enMessages,
   pl: plMessages,
   de: deMessages,
+  es: esMessages,
+  it: itMessages,
+  fr: frMessages,
+  zh: zhMessages,
 };
 
-const VALID_LOCALES: Locale[] = ["en", "pl", "de"];
+const VALID_LOCALES: Locale[] = ["en", "pl", "de", "es", "it", "fr", "zh"];
 
 function detectBrowserLocale(): Locale {
   if (typeof navigator === "undefined") return "en";
   const lang = navigator.language;
   if (lang.startsWith("pl")) return "pl";
   if (lang.startsWith("de")) return "de";
+  if (lang.startsWith("es")) return "es";
+  if (lang.startsWith("it")) return "it";
+  if (lang.startsWith("fr")) return "fr";
+  if (lang.startsWith("zh")) return "zh";
   return "en";
 }
 

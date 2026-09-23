@@ -1,0 +1,418 @@
+{
+    "Auth": {
+        "loginSubtitle": "Accedi al tuo account",
+        "registerSubtitle": "Crea il tuo account",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "passwordHint": "Minimo 8 caratteri",
+        "passwordTooShort": "La password deve contenere almeno 8 caratteri",
+        "requiredField": "Questo campo è obbligatorio.",
+        "invalidEmail": "Inserisci un indirizzo email valido.",
+        "signIn": "Accedi",
+        "signingIn": "Accesso in corso…",
+        "loginFailed": "Accesso non riuscito",
+        "sessionExpired": "La sessione è scaduta. Accedi di nuovo.",
+        "noAccount": "Non hai un account?",
+        "register": "Registrati",
+        "createAccount": "Crea account",
+        "creatingAccount": "Creazione account…",
+        "registrationFailed": "Registrazione non riuscita",
+        "emailAlreadyRegistered": "Questa email è già registrata.",
+        "alreadyHaveAccount": "Hai già un account?",
+        "forgotPassword": "Password dimenticata?",
+        "forgotPasswordTitle": "Reimposta la tua password",
+        "forgotPasswordSubtitle": "Inserisci la tua email e ti invieremo un link di reimpostazione.",
+        "sendResetLink": "Invia link di reimpostazione",
+        "sendingResetLink": "Invio in corso…",
+        "resetLinkSent": "Se quell'email è registrata, riceverai a breve un link di reimpostazione.",
+        "resetPasswordTitle": "Imposta una nuova password",
+        "resetPasswordSubtitle": "Inserisci e conferma la tua nuova password.",
+        "newPasswordLabel": "Nuova password",
+        "confirmPasswordLabel": "Conferma nuova password",
+        "passwordsDoNotMatch": "Le password non corrispondono",
+        "setPassword": "Imposta nuova password",
+        "settingPassword": "Aggiornamento…",
+        "invalidOrExpiredToken": "Questo link è scaduto o non è valido.",
+        "requestNewLink": "Richiedi un nuovo link",
+        "forgotPasswordFailed": "Qualcosa è andato storto. Riprova."
+    },
+    "Common": {
+        "smtpNotConfigured": "L'email non è configurata. Controlla la configurazione SMTP."
+    },
+    "DashboardLayout": {
+        "payments": "Pagamenti",
+        "bills": "Bollette",
+        "archived": "Archiviate",
+        "settings": "Impostazioni",
+        "logOut": "Esci",
+        "userMenu": "Menu utente",
+        "signedInAs": "Accesso effettuato come"
+    },
+    "Dashboard": {
+        "title": "Benvenuto in Pay Tracker",
+        "subtitle": "Gestisci le bollette di casa in un unico posto.",
+        "paymentsTitle": "Pagamenti",
+        "paymentsDesc": "Visualizza e segna come pagate le bollette di questo mese",
+        "manageBillsTitle": "Gestisci bollette",
+        "manageBillsDesc": "Crea, modifica e monitora le tue bollette ricorrenti",
+        "archivedBillsTitle": "Bollette archiviate",
+        "archivedBillsDesc": "Visualizza bollette passate e cronologia pagamenti",
+        "settingsTitle": "Impostazioni",
+        "settingsDesc": "Gestisci notifiche, backup e preferenze"
+    },
+    "BillsPage": {
+        "title": "Le tue bollette",
+        "subtitle": "Gestisci le tue bollette ricorrenti e una tantum. Ogni bolletta genera automaticamente i promemoria di pagamento.",
+        "newBill": "Nuova bolletta",
+        "cancel": "Annulla",
+        "loadError": "Impossibile caricare le bollette.",
+        "noBillsYet": "Nessuna bolletta ancora",
+        "addFirstBill": "Aggiungi la tua prima bolletta",
+        "viewArchive": "Bollette archiviate",
+        "noFilterResults": "Nessuna bolletta corrisponde al filtro selezionato",
+        "collapseAll": "Comprimi tutto",
+        "expandAll": "Espandi tutto"
+    },
+    "ArchivedBillsPage": {
+        "backToActive": "Bollette attive",
+        "title": "Bollette archiviate",
+        "subtitle": "La cronologia dei pagamenti è conservata per tutte le bollette archiviate.",
+        "loadError": "Impossibile caricare le bollette archiviate.",
+        "noArchivedBills": "Nessuna bolletta archiviata",
+        "willAppearHere": "Le bollette che archivi appariranno qui",
+        "noFilterResults": "Nessuna bolletta archiviata corrisponde al filtro selezionato",
+        "archived": "Archiviata",
+        "frequency": {
+            "monthly": "Mensile",
+            "every_2_months": "Ogni 2 mesi",
+            "quarterly": "Trimestrale",
+            "annual": "Annuale",
+            "one_off": "Una tantum"
+        },
+        "collapseAll": "Comprimi tutto",
+        "expandAll": "Espandi tutto",
+        "restore": "Ripristina",
+        "restoreError": "Impossibile ripristinare la bolletta."
+    },
+    "BillTemplateForm": {
+        "nameLabel": "Nome",
+        "namePlaceholder": "es. Elettricità",
+        "nameRequired": "Il nome è obbligatorio.",
+        "amountLabel": "Importo",
+        "amountInvalid": "Inserisci un importo valido.",
+        "currencyAriaLabel": "Valuta",
+        "customOption": "Personalizzato…",
+        "customCurrencyAriaLabel": "Codice valuta personalizzato",
+        "customCurrencyPlaceholder": "es. CHF",
+        "frequencyLabel": "Frequenza",
+        "frequency": {
+            "monthly": "Mensile",
+            "every_2_months": "Ogni 2 mesi",
+            "quarterly": "Trimestrale",
+            "annual": "Annuale",
+            "one_off": "Una tantum"
+        },
+        "dueDateLabel": "Data di scadenza",
+        "startDateLabel": "Mese e giorno di inizio",
+        "categoryLabel": "Categoria",
+        "categoryRequired": "La categoria è obbligatoria.",
+        "notesLabel": "Note",
+        "notesPlaceholder": "Note facoltative",
+        "pauseRecurrence": "Metti in pausa la ricorrenza (nessuna nuova occorrenza creata)",
+        "cancel": "Annulla",
+        "save": "Salva",
+        "saving": "Salvataggio…",
+        "saveFailed": "Salvataggio non riuscito."
+    },
+    "BillTemplateRow": {
+        "dueOn": "Scade il",
+        "paused": "In pausa",
+        "close": "Chiudi",
+        "edit": "Modifica",
+        "archive": "Archivia",
+        "frequency": {
+            "monthly": "Mensile",
+            "every_2_months": "Ogni 2 mesi",
+            "quarterly": "Trimestrale",
+            "annual": "Annuale",
+            "one_off": "Una tantum"
+        }
+    },
+    "RestoreDeletedDialog": {
+        "title": "Ripristinare i pagamenti eliminati?",
+        "description": "Alcuni pagamenti futuri per “{name}” sono stati eliminati in precedenza. Ripristinarli con i valori aggiornati del modello?",
+        "restore": "Ripristina",
+        "skip": "Salta",
+        "restoring": "Ripristino…"
+    },
+    "ArchiveConfirmDialog": {
+        "title": "Archiviare “{billName}”?",
+        "description": "Questa bolletta verrà nascosta dall'elenco attivo. La cronologia dei pagamenti viene conservata ed è accessibile dalla vista archiviate.",
+        "cancel": "Annulla",
+        "archive": "Archivia",
+        "archiving": "Archiviazione…"
+    },
+    "DeleteAccountDialog": {
+        "title": "Eliminare il tuo account?",
+        "description": "Questo eliminerà definitivamente il tuo account e tutto ciò che è collegato: bollette, categorie e cronologia pagamenti. Questa azione non può essere annullata.",
+        "cancel": "Annulla",
+        "confirm": "Elimina account",
+        "deleting": "Eliminazione…"
+    },
+    "RestoreConfirmDialog": {
+        "title": "Ripristinare “{billName}”?",
+        "description": "Questa bolletta ricomparirà nell'elenco attivo e riprenderà a generare i prossimi pagamenti.",
+        "cancel": "Annulla",
+        "restore": "Ripristina",
+        "restoring": "Ripristino…"
+    },
+    "Frequencies": {
+        "monthly": "Mensile",
+        "every_2_months": "Ogni 2 mesi",
+        "quarterly": "Trimestrale",
+        "annual": "Annuale",
+        "one_off": "Una tantum"
+    },
+    "DayPicker": {
+        "placeholder": "Seleziona giorno",
+        "selectedDay": "Giorno {day}",
+        "heading": "Giorno del mese",
+        "shortMonthWarning": "Alcuni mesi hanno meno giorni: la bolletta cadrà nell'ultimo giorno disponibile."
+    },
+    "CategoryCombobox": {"placeholder": "es. Utenze"},
+    "PaymentsPage": {
+        "title": "Pagamenti",
+        "subtitle": "Monitora e segna le tue bollette mese per mese.",
+        "loadError": "Impossibile caricare i pagamenti.",
+        "noPayments": "Nessuna bolletta per questo mese",
+        "noFilterResults": "Nessun pagamento corrisponde ai filtri selezionati",
+        "addBills": "Aggiungi bollette →",
+        "pastMonth": "Passato",
+        "exportXlsx": "Esporta in Excel",
+        "exportXlsxLoading": "Esportazione…",
+        "exportXlsxError": "Esportazione non riuscita. Riprova.",
+        "collapseAll": "Comprimi tutto",
+        "expandAll": "Espandi tutto",
+        "summaryUpcoming": "in arrivo",
+        "summaryOverdueToday": "scadute oggi",
+        "summaryOverdue": "scadute",
+        "summaryPaid": "pagate",
+        "calendarTitle": "Calendario",
+        "clearDayFilter": "Cancella"
+    },
+    "PaymentRow": {
+        "status": {"upcoming": "In arrivo", "overdue": "Scaduto", "paid": "Pagato"},
+        "dueToday": "Oggi",
+        "markAsPaid": "Segna come pagato",
+        "revert": "Annulla pagamento",
+        "due": "Scadenza",
+        "paidOn": "Pagato il",
+        "amountMismatch": "Previsto <expTag>{expected}</expTag>, pagato <paidTag>{paid}</paidTag>",
+        "delete": "Elimina pagamento",
+        "paymentNote": "Nota di pagamento",
+        "emailNotification": "Notifica email",
+        "emailNotSent": "Notifica email non inviata",
+        "emailSentOn": "Email inviata"
+    },
+    "DeletePaymentDialog": {
+        "title": "Eliminare questo pagamento?",
+        "descriptionRecurring": "Questa voce di pagamento verrà rimossa. La bolletta ricorrente continuerà a generare voci future.",
+        "descriptionOneOff": "Questa voce di pagamento una tantum verrà rimossa. Questa azione non può essere annullata.",
+        "deleteFutureLabel": "Elimina anche tutte le voci future non pagate per questa bolletta",
+        "cancel": "Annulla",
+        "confirm": "Elimina",
+        "deleting": "Eliminazione…",
+        "deleteFailed": "Impossibile eliminare il pagamento."
+    },
+    "RevertPaymentDialog": {
+        "title": "Annullare questo pagamento?",
+        "description": "Questo pagamento verrà nuovamente segnato come non pagato.",
+        "cancel": "Annulla",
+        "confirm": "Annulla pagamento",
+        "reverting": "Annullamento…",
+        "revertFailed": "Impossibile annullare il pagamento."
+    },
+    "MarkPaidDialog": {
+        "title": "Segna come pagato: {billName}",
+        "dateLabel": "Data di pagamento",
+        "amountLabel": "Importo pagato",
+        "notesLabel": "Note (facoltative)",
+        "cancel": "Annulla",
+        "confirm": "Segna come pagato",
+        "confirming": "Salvataggio…",
+        "saveFailed": "Impossibile registrare il pagamento."
+    },
+    "RestoreButton": {
+        "ariaLabel": "Ripristina da backup",
+        "dialogTitle": "Ripristina da backup",
+        "dialogDescription": "Questo sostituirà definitivamente tutti i tuoi dati attuali con il contenuto di “{filename}”. Questa azione non può essere annullata.",
+        "cancel": "Annulla",
+        "confirm": "Sostituisci i miei dati",
+        "restoring": "Ripristino…",
+        "error": "Ripristino non riuscito. Controlla il file e riprova.",
+        "fileTooLarge": "File troppo grande. I file di backup devono essere inferiori a 10 MB.",
+        "invalidFile": "Questo file non sembra un backup valido.",
+        "currentLabel": "Attuale",
+        "backupLabel": "Backup",
+        "countsSummary": "{bills} bollette, {payments} pagamenti",
+        "categoriesCount": "{categories} categorie",
+        "countsUnavailable": "non disponibile",
+        "exportDateUnknown": "data di esportazione sconosciuta (formato di backup precedente)",
+        "staleDataWarning": "Questo backup contiene meno bollette e pagamenti dei tuoi dati attuali. Il ripristino eliminerà definitivamente la differenza."
+    },
+    "BackupButton": {
+        "ariaLabel": "Scarica backup",
+        "dialogTitle": "Scarica backup",
+        "dialogDescription": "Questo scaricherà una copia completa di tutti i dati di Pay Tracker: modelli di bollette, cronologia pagamenti e account utente. Conserva il file in modo sicuro.",
+        "cancel": "Annulla",
+        "confirm": "Scarica",
+        "downloading": "Download in corso…",
+        "error": "Backup non riuscito. Riprova."
+    },
+    "SnapshotRecoverySection": {
+        "message": "Uno snapshot dei tuoi dati è stato salvato il {date}, appena prima dell'ultimo ripristino.",
+        "restoreButton": "Ripristina questo snapshot",
+        "dialogTitle": "Ripristina questo snapshot",
+        "dialogDescription": "Questo sostituirà definitivamente i tuoi dati attuali con lo snapshot creato prima dell'ultimo ripristino. Questa azione non può essere annullata.",
+        "cancel": "Annulla",
+        "confirm": "Ripristina",
+        "restoring": "Ripristino…",
+        "error": "Ripristino non riuscito. Riprova."
+    },
+    "ThemeToggle": {"ariaLabel": "Cambia tema"},
+    "LanguageToggle": {
+        "ariaLabel": "Cambia lingua",
+        "label": "Lingua:",
+        "name": "Italiano"
+    },
+    "NotificationToggle": {"paymentIncoming": "Pagamento in arrivo"},
+    "EmailRemindersToggle": {
+        "enable": "Attiva promemoria via email",
+        "disable": "Disattiva promemoria via email"
+    },
+    "SettingsPage": {
+        "pageTitle": "Impostazioni",
+        "tabs": {
+            "account": "Account",
+            "notifications": "Notifiche",
+            "categories": "Categorie",
+            "data": "Dati"
+        },
+        "unsavedTitle": "Modifiche non salvate",
+        "unsavedDescription": "Hai modifiche non salvate. Uscire senza salvare?",
+        "unsavedLeave": "Esci",
+        "unsavedStay": "Rimani",
+        "save": "Salva",
+        "saving": "Salvataggio…",
+        "cancel": "Annulla",
+        "saveFailed": "Salvataggio non riuscito. Riprova.",
+        "profile": {
+            "title": "Profilo utente",
+            "description": "Aggiorna la tua email e password di accesso.",
+            "currentEmailLabel": "Email attuale:",
+            "emailLabel": "Nuovo indirizzo email",
+            "emailHint": "Inserisci un nuovo indirizzo, quindi conferma con la password attuale.",
+            "emailPlaceholder": "nuovo@email.com",
+            "currentPasswordPlaceholder": "Inserisci la password attuale",
+            "newPasswordLabel": "Cambia password",
+            "passwordHint": "Inserisci la password attuale, quindi scegline una nuova.",
+            "newPasswordPlaceholder": "Nuova password (min. 8 caratteri)",
+            "passwordTooShort": "La password deve contenere almeno 8 caratteri.",
+            "wrongPassword": "La password attuale non è corretta.",
+            "emailTaken": "Quell'email è già registrata.",
+            "emailAndPasswordRequired": "Inserisci sia il nuovo indirizzo email sia la password attuale."
+        },
+        "currency": {
+            "title": "Valuta predefinita",
+            "description": "Usata per preselezionare la valuta quando crei una nuova bolletta.",
+            "ariaLabel": "Valuta",
+            "customOption": "Personalizzato…",
+            "customCurrencyAriaLabel": "Codice valuta personalizzato",
+            "customCurrencyPlaceholder": "es. CHF"
+        },
+        "languages": {
+            "title": "Lingue",
+            "description": "Scegli quali lingue compaiono nel selettore della lingua.",
+            "activeSuffix": "(attuale)"
+        },
+        "emailNotifications": {
+            "title": "Notifiche via email",
+            "description": "Scegli quando ricevere promemoria via email per bollette in scadenza e scadute.",
+            "twoDaysBefore": "2 giorni prima della scadenza",
+            "oneDayBefore": "1 giorno prima della scadenza",
+            "onDay": "Il giorno del pagamento",
+            "oneDayAfter": "1 giorno dopo la scadenza",
+            "noneWarning": "Seleziona almeno un'opzione per ricevere promemoria via email.",
+            "sendTimeLabel": "Orario di invio (UTC)",
+            "masterToggle": "Attiva notifiche via email",
+            "sendNowButton": "Invia notifica ora",
+            "sendNowSending": "Invio in corso...",
+            "sendNowSent": "{count} promemoria inviati",
+            "sendNowNoReminders": "Nessun promemoria in arrivo da inviare",
+            "monthlySummaryToggle": "Riepilogo mensile (ultimo giorno del mese)",
+            "sendMonthlySummaryButton": "Invia riepilogo mensile",
+            "sendMonthlySummarySending": "Invio in corso...",
+            "sendMonthlySummarySent": "Riepilogo mensile inviato",
+            "sendMonthlySummaryNoData": "Nessun pagamento trovato per questo mese",
+            "serverTimeHint": "I promemoria vengono inviati in base all'ora del server (UTC). Ora attuale del server: {time}."
+        },
+        "browserNotifications": {
+            "title": "Notifiche del browser",
+            "description": "Ricevi una notifica quando una bolletta scade oggi.",
+            "enable": "Attiva notifiche",
+            "toggle": "Attiva notifiche del browser",
+            "osHint": "Non vedi le notifiche? Controlla le impostazioni di notifica del sistema operativo (macOS: Impostazioni di sistema → Notifiche).",
+            "blockedWarning": "Le notifiche del browser sono bloccate. Attivale nelle impostazioni del browser o del sistema operativo."
+        },
+        "backup": {
+            "title": "Backup dei dati",
+            "description": "Scarica una copia completa di tutti i tuoi dati di Pay Tracker come file JSON."
+        },
+        "restore": {
+            "title": "Ripristina dati",
+            "description": "Sostituisci tutti i dati attuali con un file di backup scaricato in precedenza."
+        },
+        "deleteAccount": {
+            "title": "Elimina account",
+            "description": "Elimina definitivamente il tuo account e tutto ciò che è collegato. Questa azione non può essere annullata.",
+            "button": "Elimina account",
+            "error": "Impossibile eliminare l'account. Riprova."
+        },
+        "categories": {
+            "title": "Categorie",
+            "description": "Aggiungi le tue categorie o rinomina e ricolora quelle predefinite.",
+            "loadError": "Impossibile caricare le categorie. Riprova.",
+            "nameRequired": "Il nome è obbligatorio.",
+            "namePlaceholder": "es. Hobby",
+            "defaultBadge": "predefinita",
+            "archivedBadge": "archiviata",
+            "edit": "Modifica",
+            "archive": "Archivia",
+            "unarchive": "Ripristina dall'archivio",
+            "addNew": "+ Aggiungi categoria"
+        }
+    },
+    "Categories": {
+        "housing": "Casa",
+        "utilities": "Utenze",
+        "insurance": "Assicurazione",
+        "subscriptions": "Abbonamenti",
+        "entertainment": "Intrattenimento",
+        "transport": "Trasporti",
+        "healthcare": "Sanità",
+        "education": "Istruzione",
+        "other": "Altro",
+        "archivedSuffix": "(archiviata)"
+    },
+    "Filters": {
+        "allCategories": "Tutte le categorie",
+        "allStatuses": "Tutti gli stati",
+        "selectedCount": "{count} selezionati",
+        "filterBy": "Filtra per",
+        "sortBy": "Ordina per",
+        "sortCategoryAsc": "Categoria A-Z",
+        "sortCategoryDesc": "Categoria Z-A",
+        "sortPaidFirst": "Pagati prima",
+        "sortUnpaidFirst": "Non pagati prima"
+    }
+}

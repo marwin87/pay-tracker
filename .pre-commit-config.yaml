@@ -9,7 +9,7 @@ repos:
           - "--exclude-files"
           - "^context/"
           - "--exclude-files"
-          - "^frontend/messages/(en|pl|de)\\.json$"
+          - "^frontend/messages/.*\\.json$"
           - "--exclude-files"
           - "^backend/alembic/versions/"
 

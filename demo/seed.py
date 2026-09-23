@@ -122,16 +122,20 @@ def has_data(session: requests.Session, token: str) -> bool:
     return r.status_code == 200 and len(r.json()) > 0
 
 
-def disable_notifications(session: requests.Session, token: str) -> None:
+def configure_profile(session: requests.Session, token: str) -> None:
     r = session.patch(
         f"{BASE_URL}/auth/me",
         headers={"Authorization": f"Bearer {token}"},
-        json={"email_reminders_enabled": False, "monthly_summary_enabled": False},
+        json={
+            "email_reminders_enabled": False,
+            "monthly_summary_enabled": False,
+            "enabled_languages": ["en", "pl", "es"],
+        },
     )
     if r.status_code != 200:
-        print(f"  Disable notifications failed ({r.status_code}): {r.text}")
+        print(f"  Profile configuration failed ({r.status_code}): {r.text}")
         sys.exit(1)
-    print("  Notifications disabled")
+    print("  Notifications disabled, languages set to en/pl/es")
 
 
 def restore(session: requests.Session, token: str) -> None:
@@ -173,8 +177,8 @@ def main() -> None:
         print("3. Restoring seed data...")
         restore(session, token)
 
-        print("4. Disabling notifications...")
-        disable_notifications(session, token)
+        print("4. Configuring profile...")
+        configure_profile(session, token)
 
     print()
     print("Done. Log in at http://localhost:3010")

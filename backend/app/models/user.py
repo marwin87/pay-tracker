@@ -32,7 +32,7 @@ class User(Base):
     enabled_languages: Mapped[list[str]] = mapped_column(
         ARRAY(String(5)),
         nullable=False,
-        server_default="'{en,pl,de}'",
+        server_default="'{en,pl,de,es,it,fr,zh}'",
     )
     default_currency: Mapped[str | None] = mapped_column(
         String(10), nullable=True, default=None
