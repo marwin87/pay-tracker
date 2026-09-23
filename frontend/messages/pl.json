@@ -365,6 +365,7 @@
     "Filters": {
         "allCategories": "Wszystkie kategorie",
         "allStatuses": "Wszystkie statusy",
+        "selectedCount": "Wybrano: {count}",
         "filterBy": "Filtruj",
         "sortBy": "Sortuj",
         "sortCategoryAsc": "Kategorie A-Z",

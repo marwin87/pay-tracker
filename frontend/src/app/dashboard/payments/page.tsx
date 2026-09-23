@@ -9,7 +9,6 @@ import {
   fetchPayments,
   syncInstances,
   type PaymentInstanceOut,
-  type PaymentStatus,
 } from "@/lib/payments-api";
 import {
   categoryFilterLabel,
@@ -25,6 +24,7 @@ import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
 import RevertPaymentDialog from "@/components/payments/RevertPaymentDialog";
 import FilterSelect from "@/components/FilterSelect";
+import MultiSelectFilter from "@/components/MultiSelectFilter";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
@@ -215,8 +215,8 @@ function PaymentsPageInner() {
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
-  const [statusFilter, setStatusFilter] = useState<PaymentStatus | "all">("all");
-  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
+  const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
 
   const todayStr = getTodayStr();
 
@@ -226,27 +226,23 @@ function PaymentsPageInner() {
 
   const statusCategoryFiltered = instances.filter(
     (inst) =>
-      (statusFilter === "all" || inst.status === statusFilter) &&
-      (categoryFilter === "all" || String(inst.category.id) === categoryFilter),
+      (statusFilter.size === 0 || statusFilter.has(inst.status)) &&
+      (categoryFilter.size === 0 || categoryFilter.has(String(inst.category.id))),
   );
   const filteredInstances = statusCategoryFiltered.filter(
     (inst) => dayFilter === null || inst.due_date === dayFilter,
   );
 
   const statusOptions = [
-    { value: "all", label: tFilters("allStatuses") },
     { value: "upcoming", label: tRow("status.upcoming") },
     { value: "overdue", label: tRow("status.overdue") },
     { value: "paid", label: tRow("status.paid") },
   ];
 
-  const categoryOptions = [
-    { value: "all", label: tFilters("allCategories") },
-    ...distinctCategories(instances, (inst) => inst.category).map((cat) => ({
-      value: String(cat.id),
-      label: categoryFilterLabel(cat, tCategories),
-    })),
-  ];
+  const categoryOptions = distinctCategories(instances, (inst) => inst.category).map((cat) => ({
+    value: String(cat.id),
+    label: categoryFilterLabel(cat, tCategories),
+  }));
 
   const activeCategories = distinctCategories(filteredInstances, (inst) => inst.category);
   const activeCategoryKeys = activeCategories.map((cat) => String(cat.id));
@@ -486,17 +482,19 @@ function PaymentsPageInner() {
                 <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                   {tFilters("filterBy")}
                 </span>
-                <FilterSelect
-                  value={statusFilter}
-                  onChange={(v) => setStatusFilter(v as PaymentStatus | "all")}
+                <MultiSelectFilter
+                  selected={statusFilter}
+                  onChange={setStatusFilter}
                   options={statusOptions}
                   ariaLabel={tFilters("allStatuses")}
+                  allLabel={tFilters("allStatuses")}
                 />
-                <FilterSelect
-                  value={categoryFilter}
+                <MultiSelectFilter
+                  selected={categoryFilter}
                   onChange={setCategoryFilter}
                   options={categoryOptions}
                   ariaLabel={tFilters("allCategories")}
+                  allLabel={tFilters("allCategories")}
                 />
               </div>
               <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />

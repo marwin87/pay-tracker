@@ -373,6 +373,7 @@
     "Filters": {
         "allCategories": "Alle Kategorien",
         "allStatuses": "Alle Status",
+        "selectedCount": "{count} ausgewählt",
         "filterBy": "Filtern nach",
         "sortBy": "Sortieren nach",
         "sortCategoryAsc": "Kategorie A-Z",
