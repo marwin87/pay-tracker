@@ -104,7 +104,7 @@ export default function PaymentsCalendar({
               type="button"
               disabled={!hasBills}
               onClick={() => onSelectDay(dateStr)}
-              className={`relative flex h-8 flex-col items-center justify-center rounded-lg text-xs font-medium transition-all ${
+              className={`relative flex h-8 items-center justify-center rounded-lg text-xs font-medium transition-all ${
                 status
                   ? `${STATUS_TILE[status]} cursor-pointer hover:-translate-y-0.5 hover:shadow-sm`
                   : "cursor-default border border-slate-200 bg-white text-slate-400 dark:border-slate-700 dark:bg-slate-800/40 dark:text-slate-500"
@@ -118,7 +118,7 @@ export default function PaymentsCalendar({
             >
               {d}
               {dayInstances.length > 1 && (
-                <span className="absolute right-0 top-0 flex h-3 w-3 items-center justify-center rounded-full bg-white/80 text-[8px] font-semibold leading-none text-slate-600 dark:bg-slate-900/60 dark:text-slate-300">
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full border border-white bg-slate-600 px-0.5 text-[10px] font-bold leading-none text-white shadow-sm dark:border-slate-800 dark:bg-slate-300 dark:text-slate-800">
                   {dayInstances.length}
                 </span>
               )}
