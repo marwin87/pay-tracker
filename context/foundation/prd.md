@@ -166,10 +166,12 @@ household finance manager does not need to check the dashboard proactively.
   > Socratic: Both export and backup are must-have — spreadsheet export serves family
   > review; data backup enables portability between deployment modes.
 
-- FR-011: User can download a full data backup of their own data in a portable
-  machine-readable format. The backup is scoped to the authenticated user's templates and
-  instances only, plus the user's notification settings (email and Telegram schedules,
-  browser-notification switch, Telegram bot token and chat id). Priority: must-have
+- FR-011: User can download a backup of their own data in a portable machine-readable
+  format, choosing which sections to include (select/deselect all): bills and payments,
+  custom categories, email notification setup (schedule and browser switch), Telegram (bot
+  token, chat id, schedule), language settings, default currency. The backup is scoped to
+  the authenticated user. Restore applies whatever sections the file contains and leaves
+  the rest untouched. Priority: must-have
   > Socratic: Backup and spreadsheet export serve distinct purposes; both justified for v1.
 
 ### Reminders
@@ -226,6 +228,9 @@ household finance manager does not need to check the dashboard proactively.
 - FR-030: Archived bill templates can be restored to the active list.
 - FR-031: Settings page (tabs: profile, preferences, notifications, categories, backup/restore).
 - FR-032: Demo mode: pre-seeded demo account/image (`demo/`), all notifications (email, Telegram, browser) disabled.
+- FR-033: New accounts start with every notification (email, Telegram, browser, monthly
+  summaries, all timing windows) disabled; the user opts in from Settings.
+- FR-034: Password fields have a show/hide toggle that appears only once the field has text.
 
 ## Non-Functional Requirements
 

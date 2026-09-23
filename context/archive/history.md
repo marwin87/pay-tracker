@@ -217,3 +217,15 @@ Convention: `/10x-archive` still moves new changes into `context/archive/<date>-
 ## bootstrap-verification
 Scaffold of the Next.js starter (`next`, npm, confidence verified, path custom, self-host, GitHub Actions) into pay-tracker was verified OK on 2026-06-11.
 Follow-ups noted: review CLAUDE.md.scaffold/AGENTS.md, run npm audit (2 moderate), scaffold the FastAPI backend and docker-compose manually.
+
+## selective-backup (2026-09-23)
+**Outcome:** Backup export is selectable per section (`GET /export/json?sections=`: bills, categories, email, telegram, languages, currency) with select/deselect all in the dialog; restore applies whatever sections the file contains. Schema version 5 (2–4 still restore). Also: new users start with all notifications off, password toggle hidden while the field is empty, Telegram help expander restyled.
+**Key decisions:**
+- Absent section = untouched: bills/payments are wiped only if the file has them; categories-only files merge (match by slug, else name; never delete) to avoid breaking bills' FKs.
+- Bills exported without categories carry `category_name` so they map to a category by name, falling back to "other".
+- `browser_enabled` travels with the email option; Telegram option = token + chat id + schedule. Restore rejects an active language not in enabled languages.
+- Snapshot still full (adds preferences), written only when the file replaces bills.
+**Pitfalls/lessons:**
+- Flipping a model `default` broke tests that silently relied on it; added `enable_notifications` test helper. No migration needed (only Python-side defaults changed; existing users keep settings).
+- Test bot tokens need `# pragma: allowlist secret` (detect-secrets).
+**Files/areas:** backend/app/routers/export.py, schemas/bill.py, models/user.py, tests/test_backup_sections.py, frontend BackupButton/RestoreButton/PasswordInput, locale files.

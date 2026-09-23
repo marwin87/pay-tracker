@@ -85,17 +85,20 @@ unaffected and can be switched off independently.
 
 ## Backups
 
-The JSON backup (Settings → Backup) includes your Telegram bot token and chat id, so a restore
-brings Telegram reminders back (also on another instance). The token is stored **in plaintext in
+The JSON backup (Settings → Backup) lets you pick what to include. With the **Telegram** option
+ticked it contains your Telegram bot token, chat id and schedule, so a restore brings Telegram
+reminders back (also on another instance); leave it unticked and the token never enters the file. The token is stored **in plaintext in
 the backup file** — it has to be readable on an instance with a different `JWT_SECRET` — so keep
 backup files private, and `/revoke` the token in BotFather if a file leaks. Restoring a backup
 without a Telegram section (older backups, or Telegram not set up) leaves your current Telegram
 setup untouched. The automatic pre-restore snapshot never contains the token.
 
-The backup also carries your notification settings — the email schedule, the Telegram schedule and
-the browser-notification switch — so a restore brings those back too (and restoring from the
-automatic snapshot reverts them). Backups made before this existed simply leave your current
-settings untouched.
+The **Email notification setup** option carries the email schedule and the browser-notification
+switch (no SMTP data — SMTP is server config). A restore applies only the sections found in the
+file (restoring from the automatic snapshot reverts them). Backups made before this existed
+simply leave your current settings untouched.
+
+New accounts start with all notifications off; enable email/Telegram in Settings → Notifications.
 
 ## Troubleshooting
 
