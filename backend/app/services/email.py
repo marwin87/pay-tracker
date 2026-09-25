@@ -216,7 +216,8 @@ def _build_summary_html(
     h = _SUMMARY_HEADINGS.get(lang, _SUMMARY_HEADINGS["en"])
 
     def fmt_amount(amount: Any, currency: str) -> str:
-        return f"{Decimal(str(amount)):.2f} {currency}"
+        value = Decimal(str(amount))
+        return f"{value:.2f} {currency}" if value > 0 else "—"  # no amount set
 
     # Paid section rows
     paid_html = ""
@@ -375,12 +376,24 @@ def reminder_text(
         "amount": amount,
         "currency": currency,
     }
-    return _SUBJECTS[(kind, lang)].format(**ctx), _BODIES[(kind, lang)].format(**ctx)
+    subject = _SUBJECTS[(kind, lang)].format(**ctx)
+    body = _BODIES[(kind, lang)].format(**ctx)
+    if amount <= 0:  # bills without an amount: drop "(0.00 PLN)" and the Amount line
+        subject = subject.removesuffix(f" ({amount} {currency})")
+        body = body.rsplit("\n", 1)[0]
+    return subject, body
+
+
+_DUE_DATE_LABELS: dict[str, str] = {"en": "Due date", "pl": "Termin", "de": "Fällig am"}
 
 
 def send_reminder_telegram(*, url: str, **text_kwargs: Any) -> None:
-    subject, body = reminder_text(**text_kwargs)
-    notify.send(url, subject, body)
+    # The subject already names the bill, timing and amount; the body only adds
+    # the exact due date instead of repeating the same sentence (email keeps both).
+    subject, _ = reminder_text(**text_kwargs)
+    lang = text_kwargs["language"]
+    label = _DUE_DATE_LABELS.get(lang, _DUE_DATE_LABELS["en"])
+    notify.send(url, subject, f"{label}: {text_kwargs['due_date'].isoformat()}")
 
 
 def send_summary_telegram(
@@ -392,15 +405,20 @@ def send_summary_telegram(
     language: str,
 ) -> None:
     lang = language if language in _SUMMARY_SUBJECTS else "en"
-    lines = [f"✓ {r['name']}" for r in paid_rows]
+    lines = [f"✅ {r['name']}" for r in paid_rows]
+    # bills without an amount (0.00) show only the name and due date
     lines += [
-        f"✗ {r['name']} — {r['amount']} {r['currency']} ({r['due_date']})"
+        f"❌ {r['name']}"
+        + (f" — {r['amount']} {r['currency']}" if r["amount"] > 0 else "")
+        + f" ({r['due_date']})"
         for r in unpaid_rows
     ]
     notify.send(
         url,
         _SUMMARY_SUBJECTS[lang].format(month_label=month_label),
-        "\n".join(lines) or "—",
+        # Apprise strips leading whitespace, so a zero-width space on its own line
+        # is what keeps the blank line under the title.
+        "\u200b\n" + ("\n".join(lines) or "—"),
     )
 
 

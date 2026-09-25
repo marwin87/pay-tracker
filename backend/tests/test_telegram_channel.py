@@ -174,3 +174,99 @@ def test_bot_token_empty_means_clear():
 def test_send_minute_bounds():
     with pytest.raises(ValidationError):
         UserProfileUpdate(telegram_send_minute=1440)
+
+
+@patch("app.services.email.notify.send")
+def test_summary_telegram_uses_coloured_icons(send) -> None:
+    from decimal import Decimal
+
+    from app.services.email import send_summary_telegram
+
+    send_summary_telegram(
+        url="tgram://x/y",
+        month_label="2026-09",
+        paid_rows=[{"name": "Rent"}],
+        unpaid_rows=[
+            {"name": "Gas", "amount": Decimal("45.00"), "currency": "EUR", "due_date": "2026-09-20"},
+            {"name": "Aviva", "amount": Decimal("0.00"), "currency": "PLN", "due_date": "2026-09-25"},
+        ],
+        language="en",
+    )
+    body = send.call_args.args[2]
+    assert body.startswith("\u200b\n✅ Rent")  # blank line under the title
+    assert "❌ Gas — 45.00 EUR (2026-09-20)" in body
+    assert "❌ Aviva (2026-09-25)" in body  # zero amount hidden
+
+
+@patch("app.services.email.notify.send")
+def test_reminder_telegram_does_not_repeat_subject_in_body(send) -> None:
+    from datetime import date
+    from decimal import Decimal
+
+    from app.services.email import send_reminder_telegram
+
+    send_reminder_telegram(
+        url="tgram://x/y",
+        bill_name="Aviva",
+        due_date=date(2026, 9, 25),
+        amount=Decimal("12.50"),
+        currency="PLN",
+        kind="upcoming",
+        language="pl",
+    )
+    _, subject, body = send.call_args.args
+    assert subject == "Przypomnienie: Aviva płatne jutro (12.50 PLN)"
+    assert body == "Termin: 2026-09-25"
+
+
+@patch("app.services.email.notify.send")
+def test_reminder_telegram_hides_zero_amount(send) -> None:
+    from datetime import date
+    from decimal import Decimal
+
+    from app.services.email import send_reminder_telegram
+
+    send_reminder_telegram(
+        url="tgram://x/y",
+        bill_name="Aviva",
+        due_date=date(2026, 9, 25),
+        amount=Decimal("0.00"),
+        currency="PLN",
+        kind="upcoming",
+        language="pl",
+    )
+    _, subject, body = send.call_args.args
+    assert subject == "Przypomnienie: Aviva płatne jutro"
+    assert body == "Termin: 2026-09-25"
+
+
+def test_email_texts_hide_zero_amount() -> None:
+    from datetime import date
+    from decimal import Decimal
+
+    from app.services.email import _build_summary_html, reminder_text
+
+    kw = dict(
+        bill_name="Aviva", due_date=date(2026, 9, 25), currency="PLN",
+        kind="upcoming", language="en",
+    )
+    subject, body = reminder_text(amount=Decimal("0.00"), **kw)
+    assert subject == "Reminder: Aviva due tomorrow"
+    assert "0.00" not in body and "Amount" not in body
+    assert "2026-09-25" in body
+
+    subject, body = reminder_text(amount=Decimal("12.50"), **kw)
+    assert subject.endswith("(12.50 PLN)") and "Amount: 12.50 PLN" in body
+
+    out = _build_summary_html(
+        "Sept 2026",
+        [],
+        [
+            {"name": "Aviva", "amount": Decimal("0.00"), "currency": "PLN", "due_date": "2026-09-25"},
+            {"name": "Gas", "amount": Decimal("45.00"), "currency": "PLN", "due_date": "2026-09-20"},
+        ],
+        "en",
+    )
+    aviva_row = out.split("Aviva</td>")[1].split("</tr>")[0]
+    assert "—" in aviva_row and "0.00" not in aviva_row
+    assert "45.00 PLN</td>" in out
