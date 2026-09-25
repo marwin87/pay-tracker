@@ -740,9 +740,13 @@ def test_end_period_export_restore_and_snapshot(client):
     assert backup["bill_templates"][0]["end_period"] == "2099-06"
 
     # Backups written before the field existed restore with end_period = None
-    legacy = {**backup, "bill_templates": [
-        {k: v for k, v in t.items() if k != "end_period"} for t in backup["bill_templates"]
-    ]}
+    legacy = {
+        **backup,
+        "bill_templates": [
+            {k: v for k, v in t.items() if k != "end_period"}
+            for t in backup["bill_templates"]
+        ],
+    }
     assert _upload(client, tok, legacy).status_code == 200
     bills = client.get("/bills", headers=auth(tok)).json()
     assert bills[0]["end_period"] is None

@@ -187,8 +187,18 @@ def test_summary_telegram_uses_coloured_icons(send) -> None:
         month_label="2026-09",
         paid_rows=[{"name": "Rent"}],
         unpaid_rows=[
-            {"name": "Gas", "amount": Decimal("45.00"), "currency": "EUR", "due_date": "2026-09-20"},
-            {"name": "Insurance", "amount": Decimal("0.00"), "currency": "PLN", "due_date": "2026-09-25"},
+            {
+                "name": "Gas",
+                "amount": Decimal("45.00"),
+                "currency": "EUR",
+                "due_date": "2026-09-20",
+            },
+            {
+                "name": "Insurance",
+                "amount": Decimal("0.00"),
+                "currency": "PLN",
+                "due_date": "2026-09-25",
+            },
         ],
         language="en",
     )
@@ -247,8 +257,11 @@ def test_email_texts_hide_zero_amount() -> None:
     from app.services.email import _build_summary_html, reminder_text
 
     kw = dict(
-        bill_name="Insurance", due_date=date(2026, 9, 25), currency="PLN",
-        kind="upcoming", language="en",
+        bill_name="Insurance",
+        due_date=date(2026, 9, 25),
+        currency="PLN",
+        kind="upcoming",
+        language="en",
     )
     subject, body = reminder_text(amount=Decimal("0.00"), **kw)
     assert subject == "Reminder: Insurance due tomorrow"
@@ -262,8 +275,18 @@ def test_email_texts_hide_zero_amount() -> None:
         "Sept 2026",
         [],
         [
-            {"name": "Insurance", "amount": Decimal("0.00"), "currency": "PLN", "due_date": "2026-09-25"},
-            {"name": "Gas", "amount": Decimal("45.00"), "currency": "PLN", "due_date": "2026-09-20"},
+            {
+                "name": "Insurance",
+                "amount": Decimal("0.00"),
+                "currency": "PLN",
+                "due_date": "2026-09-25",
+            },
+            {
+                "name": "Gas",
+                "amount": Decimal("45.00"),
+                "currency": "PLN",
+                "due_date": "2026-09-20",
+            },
         ],
         "en",
     )

@@ -570,8 +570,7 @@ def test_end_period_stops_generation(db_session) -> None:
     ensure_current_period_instances(db_session, "2026-04", user.id)
     backfill_template_instances(db_session, bill, "2026-01", "2026-06")
     periods = sorted(
-        r.period
-        for r in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
+        r.period for r in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
     )
     assert periods == ["2026-01", "2026-02", "2026-03"]
 
@@ -589,8 +588,7 @@ def test_end_period_quarterly_not_on_schedule(db_session) -> None:
 
     backfill_template_instances(db_session, bill, "2026-01", "2027-12")
     periods = sorted(
-        r.period
-        for r in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
+        r.period for r in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
     )
     assert periods == ["2026-01", "2026-04", "2026-07", "2026-10"]
     # paying the Oct instalment: next would be 2027-01 > end → nothing
