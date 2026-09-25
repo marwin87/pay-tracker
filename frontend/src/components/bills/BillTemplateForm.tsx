@@ -125,7 +125,7 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
         category_id: categoryId as number,
         frequency,
         interval: effectiveInterval,
-        amount: amount.trim() || "0",
+        amount: amount.trim().replace(",", ".") || "0",
         currency: currency || "EUR",
         due_day: dueDay ? parseInt(dueDay, 10) : null,
         due_month: dueMonth ? parseInt(dueMonth, 10) : null,
