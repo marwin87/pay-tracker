@@ -188,14 +188,14 @@ def test_summary_telegram_uses_coloured_icons(send) -> None:
         paid_rows=[{"name": "Rent"}],
         unpaid_rows=[
             {"name": "Gas", "amount": Decimal("45.00"), "currency": "EUR", "due_date": "2026-09-20"},
-            {"name": "Aviva", "amount": Decimal("0.00"), "currency": "PLN", "due_date": "2026-09-25"},
+            {"name": "Insurance", "amount": Decimal("0.00"), "currency": "PLN", "due_date": "2026-09-25"},
         ],
         language="en",
     )
     body = send.call_args.args[2]
     assert body.startswith("\u200b\n✅ Rent")  # blank line under the title
     assert "❌ Gas — 45.00 EUR (2026-09-20)" in body
-    assert "❌ Aviva (2026-09-25)" in body  # zero amount hidden
+    assert "❌ Insurance (2026-09-25)" in body  # zero amount hidden
 
 
 @patch("app.services.email.notify.send")
@@ -207,16 +207,16 @@ def test_reminder_telegram_does_not_repeat_subject_in_body(send) -> None:
 
     send_reminder_telegram(
         url="tgram://x/y",
-        bill_name="Aviva",
+        bill_name="Insurance",
         due_date=date(2026, 9, 25),
         amount=Decimal("12.50"),
         currency="PLN",
         kind="upcoming",
-        language="pl",
+        language="en",
     )
     _, subject, body = send.call_args.args
-    assert subject == "Przypomnienie: Aviva płatne jutro (12.50 PLN)"
-    assert body == "Termin: 2026-09-25"
+    assert subject == "Reminder: Insurance due tomorrow (12.50 PLN)"
+    assert body == "Due date: 2026-09-25"
 
 
 @patch("app.services.email.notify.send")
@@ -228,16 +228,16 @@ def test_reminder_telegram_hides_zero_amount(send) -> None:
 
     send_reminder_telegram(
         url="tgram://x/y",
-        bill_name="Aviva",
+        bill_name="Insurance",
         due_date=date(2026, 9, 25),
         amount=Decimal("0.00"),
         currency="PLN",
         kind="upcoming",
-        language="pl",
+        language="en",
     )
     _, subject, body = send.call_args.args
-    assert subject == "Przypomnienie: Aviva płatne jutro"
-    assert body == "Termin: 2026-09-25"
+    assert subject == "Reminder: Insurance due tomorrow"
+    assert body == "Due date: 2026-09-25"
 
 
 def test_email_texts_hide_zero_amount() -> None:
@@ -247,11 +247,11 @@ def test_email_texts_hide_zero_amount() -> None:
     from app.services.email import _build_summary_html, reminder_text
 
     kw = dict(
-        bill_name="Aviva", due_date=date(2026, 9, 25), currency="PLN",
+        bill_name="Insurance", due_date=date(2026, 9, 25), currency="PLN",
         kind="upcoming", language="en",
     )
     subject, body = reminder_text(amount=Decimal("0.00"), **kw)
-    assert subject == "Reminder: Aviva due tomorrow"
+    assert subject == "Reminder: Insurance due tomorrow"
     assert "0.00" not in body and "Amount" not in body
     assert "2026-09-25" in body
 
@@ -262,11 +262,11 @@ def test_email_texts_hide_zero_amount() -> None:
         "Sept 2026",
         [],
         [
-            {"name": "Aviva", "amount": Decimal("0.00"), "currency": "PLN", "due_date": "2026-09-25"},
+            {"name": "Insurance", "amount": Decimal("0.00"), "currency": "PLN", "due_date": "2026-09-25"},
             {"name": "Gas", "amount": Decimal("45.00"), "currency": "PLN", "due_date": "2026-09-20"},
         ],
         "en",
     )
-    aviva_row = out.split("Aviva</td>")[1].split("</tr>")[0]
-    assert "—" in aviva_row and "0.00" not in aviva_row
+    insurance_row = out.split("Insurance</td>")[1].split("</tr>")[0]
+    assert "—" in insurance_row and "0.00" not in insurance_row
     assert "45.00 PLN</td>" in out
