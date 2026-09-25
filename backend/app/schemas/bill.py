@@ -144,7 +144,9 @@ class BackupTemplate(BaseModel):
     def _legacy_frequency(cls, data: object) -> object:
         # Pre-v6 backups: every_2_months / quarterly became monthly + interval.
         if isinstance(data, dict):
-            legacy = {"every_2_months": 2, "quarterly": 3}.get(data.get("frequency"))
+            legacy = {"every_2_months": 2, "quarterly": 3}.get(
+                str(data.get("frequency"))
+            )
             if legacy:
                 data = {**data, "frequency": "monthly", "interval": legacy}
         return data
