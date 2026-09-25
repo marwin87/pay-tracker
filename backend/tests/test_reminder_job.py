@@ -532,3 +532,27 @@ def test_master_toggle_off_skips_monthly_summary_scheduler(
         send_daily_reminders(db_sessionmaker, send_minute=480)
 
     mock_send.assert_not_called()
+
+
+@patch("app.services.reminder_job.send_monthly_summary_email")
+@patch("app.services.reminder_job.send_reminder_email")
+def test_reminder_uses_per_payment_amount_override(
+    mock_send, _mock_summary, db_session, db_sessionmaker
+):
+    """A payment with its own amount must be announced with that amount, not the bill's."""
+    user = _make_user(db_session, notify_1_day_before=True)
+    bill = _make_bill(db_session, user.id)  # template amount 99.99
+    _make_instance(
+        db_session,
+        bill.id,
+        due_date=_today_utc() + timedelta(days=1),
+        amount_override=Decimal("143.20"),
+    )
+    db_session.commit()
+
+    with patch("app.services.reminder_job.settings") as mock_settings:
+        _smtp_settings(mock_settings)
+        send_daily_reminders(db_sessionmaker, send_minute=480)
+
+    mock_send.assert_called_once()
+    assert mock_send.call_args.kwargs["amount"] == Decimal("143.20")

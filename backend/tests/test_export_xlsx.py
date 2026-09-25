@@ -169,3 +169,32 @@ def test_xlsx_defaults_to_english_for_unknown_lang(client):
     r = client.get(f"/export/xlsx?year={current_year}&lang=xx", headers=auth(tok))
     assert r.status_code == 200
     assert f"pay-tracker-en-{current_year}.xlsx" in r.headers["content-disposition"]
+
+
+def test_xlsx_shows_per_payment_amount_for_unpaid(client):
+    """An unpaid payment with its own amount appears in the export with that amount."""
+    tok = register_and_login(client, "xlsx_ovr@test.com")
+    today = date.today()
+    r = client.post(
+        "/bills",
+        json={**_BILL_A, "category_id": category_id(client, tok), "due_month": today.month},
+        headers=auth(tok),
+    )
+    assert r.status_code == 201
+    sync_payments(client, tok, month=today.strftime("%Y-%m"))
+    [inst] = client.get("/bills/payments", headers=auth(tok)).json()
+    r = client.patch(
+        f"/bills/payments/{inst['id']}", json={"amount": "143.20"}, headers=auth(tok)
+    )
+    assert r.status_code == 200
+
+    r = client.get(f"/export/xlsx?year={today.year}", headers=auth(tok))
+    wb = openpyxl.load_workbook(io.BytesIO(r.content))
+    period = today.strftime("%Y-%m")
+    rows = [
+        row
+        for ws in wb.worksheets
+        for row in ws.iter_rows(min_row=2, values_only=True)
+        if row[2] == period
+    ]
+    assert [row[4] for row in rows] == [143.2]  # columns: Bill, Category, Period, Due Date, Amount

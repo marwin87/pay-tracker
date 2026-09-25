@@ -140,17 +140,16 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
                 <span className="hidden sm:inline">{t("markAsPaid")}</span>
               </button>
             )}
-            {/* Edit / revert — visible for paid instances */}
-            {instance.status === "paid" && (
-              <button
-                onClick={() => onEdit(instance)}
-                title={t("edit")}
-                aria-label={t("edit")}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
-              >
-                <Pencil size={14} />
-              </button>
-            )}
+            {/* Edit — any status (unpaid: amount + note; paid: date, amount, note) */}
+            <button
+              onClick={() => onEdit(instance)}
+              title={t("edit")}
+              aria-label={t("edit")}
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
+            >
+              <Pencil size={14} />
+            </button>
+            {/* Revert — visible for paid instances */}
             {instance.status === "paid" && (
               <button
                 onClick={() => onRevert(instance)}
@@ -196,7 +195,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
           </div>
         </div>
         {/* Note — shown below when present */}
-        {instance.status === "paid" && instance.notes && (
+        {instance.notes && (
           <>
             <div className="border-t border-slate-200 dark:border-slate-700 mt-1 pt-1" />
             <div className="flex items-start gap-1.5 text-xs text-slate-500 dark:text-slate-400">

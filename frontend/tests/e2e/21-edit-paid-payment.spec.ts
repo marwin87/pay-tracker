@@ -54,3 +54,38 @@ test('editing a paid payment keeps it paid, saves new amount and note, survives 
   await expect(page.getByText(/Paid on/)).toBeVisible();
   await expect(page.getByText('second note')).not.toBeVisible();
 });
+
+test('editing an unpaid payment sets its own amount and note, then paying defaults to it', async ({ page }) => {
+  const billName = `E2E EditUnpaid ${Date.now()}`;
+
+  await loginNewUser(page);
+  await createBillViaApi(page, billName);
+  await syncPaymentsViaApi(page);
+
+  await page.goto('/dashboard/payments');
+  await expect(page.getByText(billName)).toBeVisible();
+
+  // Step: set this payment's own amount + a note before paying (no date field)
+  await page.getByLabel('Edit payment').click();
+  const dialog = page.getByRole('dialog');
+  await expect(dialog.getByLabel('Amount due')).toHaveValue('');
+  await dialog.getByLabel('Amount due').fill('143.20');
+  await dialog.getByLabel('Notes (optional)').fill('invoice 7');
+  await dialog.getByRole('button', { name: 'Save', exact: true }).click();
+  await expect(dialog).not.toBeVisible();
+
+  // Assert: shown as still unpaid, with the new amount and note — and it survives reload
+  await expect(page.getByText('143.20')).toBeVisible();
+  await expect(page.getByText('invoice 7')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Mark as Paid' })).toBeVisible();
+  await page.reload();
+  await expect(page.getByText('143.20')).toBeVisible();
+  await expect(page.getByText('invoice 7')).toBeVisible();
+
+  // Step: paying prefills the overridden amount and the note
+  await page.getByRole('button', { name: 'Mark as Paid' }).click();
+  await expect(dialog.getByLabel('Amount paid')).toHaveValue('143.20');
+  await expect(dialog.getByLabel('Notes (optional)')).toHaveValue('invoice 7');
+  await dialog.getByRole('button', { name: 'Mark as Paid' }).click();
+  await expect(page.getByText(/Paid on/)).toContainText('143.20');
+});

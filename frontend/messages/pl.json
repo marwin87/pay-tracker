@@ -224,6 +224,8 @@
     "MarkPaidDialog": {
         "title": "Oznacz jako opłacone: {billName}",
         "editTitle": "Edytuj płatność: {billName}",
+        "dueAmountLabel": "Kwota do zapłaty",
+        "amountHint": "Dotyczy tylko tej płatności. Zostaw puste, aby użyć kwoty z rachunku.",
         "save": "Zapisz",
         "dateLabel": "Data zapłaty",
         "amountLabel": "Zapłacona kwota",

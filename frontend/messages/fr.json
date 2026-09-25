@@ -224,6 +224,8 @@
     "MarkPaidDialog": {
         "title": "Marquer comme payé : {billName}",
         "editTitle": "Modifier le paiement : {billName}",
+        "dueAmountLabel": "Montant dû",
+        "amountHint": "Ne concerne que ce paiement. Laissez vide pour utiliser le montant de la facture.",
         "save": "Enregistrer",
         "dateLabel": "Date de paiement",
         "amountLabel": "Montant payé",

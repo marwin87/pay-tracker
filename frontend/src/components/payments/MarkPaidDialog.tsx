@@ -9,6 +9,8 @@ import PaymentDateCalendar, { toISODate } from "./PaymentDateCalendar";
 interface Props {
   instance: PaymentInstanceOut;
   isOpen: boolean;
+  /** "pay" marks it paid; "edit" changes a payment (paid or not) in place. */
+  mode?: "pay" | "edit";
   onClose: () => void;
   onConfirm: (updated: PaymentInstanceOut) => void;
 }
@@ -16,21 +18,31 @@ interface Props {
 export default function MarkPaidDialog({
   instance,
   isOpen,
+  mode = "pay",
   onClose,
   onConfirm,
 }: Props) {
   const t = useTranslations("MarkPaidDialog");
 
-  // A paid instance opens in edit mode, prefilled with what was recorded.
-  const isEdit = instance.status === "paid";
+  const isEdit = mode === "edit";
+  const isPaid = instance.status === "paid";
+  // Editing an unpaid payment: no date, and an empty amount means "use the
+  // bill's amount" (the placeholder shows it).
+  const editingUnpaid = isEdit && !isPaid;
 
   const [paidAmount, setPaidAmount] = useState(
-    (isEdit ? instance.paid_amount : instance.amount) ?? "",
+    (isEdit
+      ? isPaid
+        ? instance.paid_amount
+        : instance.amount_overridden
+          ? instance.amount
+          : ""
+      : instance.amount) ?? "",
   );
   const [paidDate, setPaidDate] = useState(
     toISODate(isEdit && instance.paid_at ? new Date(instance.paid_at) : new Date()),
   );
-  const [notes, setNotes] = useState(isEdit ? (instance.notes ?? "") : "");
+  const [notes, setNotes] = useState(instance.notes ?? "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const mounted = useRef(true);
@@ -42,9 +54,16 @@ export default function MarkPaidDialog({
     setIsSubmitting(true);
     setError(null);
     try {
-      const updated = isEdit
-        ? await updatePayment(instance.id, paidAmount || null, notes, paidDate)
-        : await markPaid(instance.id, paidAmount || null, notes || undefined, paidDate);
+      const amount = paidAmount === "" ? null : parseFloat(paidAmount);
+      const updated = !isEdit
+        ? await markPaid(instance.id, paidAmount || null, notes, paidDate)
+        : editingUnpaid
+          ? await updatePayment(instance.id, { amount, notes })
+          : await updatePayment(instance.id, {
+              paid_amount: amount,
+              notes,
+              paid_at: paidDate,
+            });
       onConfirm(updated);
     } catch (err) {
       if (!mounted.current) return;
@@ -73,19 +92,21 @@ export default function MarkPaidDialog({
           {t(isEdit ? "editTitle" : "title", { billName: instance.bill_name })}
         </h2>
 
-        <div className="mb-3">
-          <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
-            {t("dateLabel")}
-          </label>
-          <PaymentDateCalendar value={paidDate} onChange={setPaidDate} />
-        </div>
+        {!editingUnpaid && (
+          <div className="mb-3">
+            <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+              {t("dateLabel")}
+            </label>
+            <PaymentDateCalendar value={paidDate} onChange={setPaidDate} />
+          </div>
+        )}
 
         <div className="mb-3">
           <label
             htmlFor="paid-amount"
             className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300"
           >
-            {t("amountLabel")}
+            {t(editingUnpaid ? "dueAmountLabel" : "amountLabel")}
           </label>
           <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-100 dark:border-slate-600 dark:bg-slate-900/40 dark:focus-within:border-green-600">
             <input
@@ -94,6 +115,7 @@ export default function MarkPaidDialog({
               step="0.01"
               min="0"
               value={paidAmount}
+              placeholder={editingUnpaid ? instance.amount : undefined}
               onChange={(e) => setPaidAmount(e.target.value)}
               className="flex-1 bg-transparent text-sm text-slate-800 outline-none dark:text-slate-100"
             />
@@ -101,6 +123,11 @@ export default function MarkPaidDialog({
               {instance.currency}
             </span>
           </div>
+          {editingUnpaid && (
+            <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
+              {t("amountHint")}
+            </p>
+          )}
         </div>
 
         <div className="mb-5">

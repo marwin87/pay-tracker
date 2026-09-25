@@ -83,6 +83,7 @@ class PaymentInstanceOut(BaseModel):
     period: str
     due_date: date
     amount: Decimal
+    amount_overridden: bool = False  # amount set on this payment only
     status: PaymentStatus
     paid_at: datetime | None
     paid_amount: Decimal | None
@@ -103,8 +104,13 @@ class MarkPaidRequest(BaseModel):
 
 
 class PaymentInstanceUpdate(BaseModel):
-    """Edit an already-paid instance; only fields present in the body change."""
+    """Edit one payment; only fields present in the body change.
 
+    Paid: paid_amount / paid_at / notes. Unpaid: amount / notes, where amount
+    applies to this payment only (null clears it → follows the bill's amount).
+    """
+
+    amount: Decimal | None = Field(default=None, ge=0)
     paid_amount: Decimal | None = None
     notes: str | None = None  # sent as null/"" clears the note
     paid_at: date | None = None  # must not be future
@@ -172,6 +178,7 @@ class BackupInstance(BaseModel):
     status: PaymentStatus
     paid_at: str | None
     paid_amount: Decimal | None
+    amount_override: Decimal | None = None
     notes: str | None
     created_at: str
     reminder_sent_upcoming: bool = False

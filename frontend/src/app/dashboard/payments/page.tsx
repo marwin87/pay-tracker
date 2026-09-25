@@ -135,6 +135,7 @@ function PaymentsPageInner() {
     revertTarget,
     setRevertTarget,
   } = usePaymentActions();
+  const [editTarget, setEditTarget] = useState<PaymentInstanceOut | null>(null);
   const [instances, setInstances] = useState<PaymentInstanceOut[]>([]);
   const [loadedMonth, setLoadedMonth] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -199,6 +200,13 @@ function PaymentsPageInner() {
       prev.map((inst) => (inst.id === updated.id ? updated : inst)),
     );
     setDialogTarget(null);
+  }
+
+  function handleInstanceEdited(updated: PaymentInstanceOut) {
+    setInstances((prev) =>
+      prev.map((inst) => (inst.id === updated.id ? updated : inst)),
+    );
+    setEditTarget(null);
   }
 
   function handleInstanceDeleted(id: number) {
@@ -284,6 +292,15 @@ function PaymentsPageInner() {
           isOpen={true}
           onClose={() => setDialogTarget(null)}
           onConfirm={handleInstancePaid}
+        />
+      )}
+      {editTarget && (
+        <MarkPaidDialog
+          instance={editTarget}
+          isOpen={true}
+          mode="edit"
+          onClose={() => setEditTarget(null)}
+          onConfirm={handleInstanceEdited}
         />
       )}
       {deleteTarget && (
@@ -595,7 +612,7 @@ function PaymentsPageInner() {
                         onMarkPaid={setDialogTarget}
                         onDelete={setDeleteTarget}
                         onRevert={setRevertTarget}
-                        onEdit={setDialogTarget}
+                        onEdit={setEditTarget}
                       />
                     ))}
                   </div>

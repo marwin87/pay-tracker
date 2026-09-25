@@ -224,6 +224,8 @@
     "MarkPaidDialog": {
         "title": "Mark as Paid: {billName}",
         "editTitle": "Edit payment: {billName}",
+        "dueAmountLabel": "Amount due",
+        "amountHint": "Applies to this payment only. Leave empty to use the bill's amount.",
         "save": "Save",
         "dateLabel": "Date paid",
         "amountLabel": "Amount paid",

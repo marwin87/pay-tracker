@@ -228,6 +228,8 @@
     "MarkPaidDialog": {
         "title": "Als bezahlt markieren: {billName}",
         "editTitle": "Zahlung bearbeiten: {billName}",
+        "dueAmountLabel": "Fälliger Betrag",
+        "amountHint": "Gilt nur für diese Zahlung. Leer lassen, um den Betrag der Rechnung zu verwenden.",
         "save": "Speichern",
         "dateLabel": "Zahlungsdatum",
         "amountLabel": "Bezahlter Betrag",

@@ -173,7 +173,7 @@ def send_monthly_summary_for_user(
                 {
                     "name": name,
                     "due_date": due_date,
-                    "amount": inst.template.amount if inst.template else inst.amount,
+                    "amount": inst.current_amount if inst.template else inst.amount,
                     "currency": currency,
                 }
             )
@@ -384,7 +384,7 @@ def _send_and_flag(
     text: dict[str, Any] = dict(
         bill_name=bill_name,
         due_date=instance.due_date,
-        amount=instance.template.amount if instance.template else instance.amount,
+        amount=instance.current_amount if instance.template else instance.amount,
         currency=instance.template.currency if instance.template else "PLN",
         kind=kind,
         language=language,

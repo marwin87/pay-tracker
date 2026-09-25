@@ -229,7 +229,7 @@ def export_xlsx(
                 "Category": i.template.category.name,
                 "Period": i.period,
                 "Due Date": i.due_date.isoformat(),
-                "Amount": float(i.amount),
+                "Amount": float(i.current_amount),
                 "Currency": i.template.currency,
                 "Status": _STATUS_LABELS[lang].get(i.status, i.status),
                 "Paid Amount": float(i.paid_amount) if i.paid_amount else None,
@@ -376,6 +376,9 @@ def _build_backup_arrays(
                 "status": i.status,
                 "paid_at": i.paid_at.isoformat() if i.paid_at else None,
                 "paid_amount": float(i.paid_amount) if i.paid_amount else None,
+                "amount_override": (
+                    float(i.amount_override) if i.amount_override is not None else None
+                ),
                 "notes": i.notes,
                 "created_at": i.created_at.isoformat(),
                 "reminder_sent_upcoming": i.reminder_sent_upcoming,
@@ -555,6 +558,11 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
                 paid_at=datetime.fromisoformat(bi.paid_at) if bi.paid_at else None,
                 paid_amount=(
                     Decimal(str(bi.paid_amount)) if bi.paid_amount is not None else None
+                ),
+                amount_override=(
+                    Decimal(str(bi.amount_override))
+                    if bi.amount_override is not None
+                    else None
                 ),
                 notes=bi.notes,
                 reminder_sent_upcoming=bi.reminder_sent_upcoming,

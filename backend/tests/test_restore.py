@@ -791,3 +791,48 @@ def test_legacy_frequencies_map_to_monthly_interval(client):
         for t in client.get("/export/json", headers=auth(tok)).json()["bill_templates"]
     }
     assert got == {"Q": ("monthly", 3), "B": ("monthly", 2)}
+
+
+def test_amount_override_export_restore_and_snapshot(client):
+    tok = register_and_login(client, "ovr@test.com")
+    body = {**_BILL, "category_id": category_id(client, tok)}
+    assert client.post("/bills", json=body, headers=auth(tok)).status_code == 201
+    sync_payments(client, tok)
+    [inst] = client.get("/bills/payments", headers=auth(tok)).json()
+    r = client.patch(
+        f"/bills/payments/{inst['id']}",
+        json={"amount": "143.20", "notes": "invoice 7"},
+        headers=auth(tok),
+    )
+    assert r.status_code == 200
+
+    backup = client.get("/export/json", headers=auth(tok)).json()
+    assert backup["payment_instances"][0]["amount_override"] == 143.2
+
+    # Backups written before the field existed restore with no override
+    legacy = {
+        **backup,
+        "payment_instances": [
+            {k: v for k, v in i.items() if k != "amount_override"}
+            for i in backup["payment_instances"]
+        ],
+    }
+    assert _upload(client, tok, legacy).status_code == 200
+    [p] = client.get("/bills/payments", headers=auth(tok)).json()
+    assert p["amount_overridden"] is False and p["amount"] == "120.00"
+
+    # The snapshot taken by that restore still holds the override; undoing brings it back
+    assert client.post("/export/restore-snapshot", headers=auth(tok)).status_code == 200
+    [p] = client.get("/bills/payments", headers=auth(tok)).json()
+    assert p["amount_overridden"] is True and p["amount"] == "143.20"
+    assert p["notes"] == "invoice 7"
+
+    # Restoring a file that carries the field sets it, and a re-export is identical
+    assert _upload(client, tok, legacy).status_code == 200
+    assert _upload(client, tok, backup).status_code == 200
+    [p] = client.get("/bills/payments", headers=auth(tok)).json()
+    assert p["amount_overridden"] is True and p["amount"] == "143.20"
+    after = client.get("/export/json", headers=auth(tok)).json()
+    assert [_norm_instance(i) for i in after["payment_instances"]] == [
+        _norm_instance(i) for i in backup["payment_instances"]
+    ]

@@ -224,6 +224,8 @@
     "MarkPaidDialog": {
         "title": "Segna come pagato: {billName}",
         "editTitle": "Modifica pagamento: {billName}",
+        "dueAmountLabel": "Importo dovuto",
+        "amountHint": "Vale solo per questo pagamento. Lascia vuoto per usare l'importo della fattura.",
         "save": "Salva",
         "dateLabel": "Data di pagamento",
         "amountLabel": "Importo pagato",

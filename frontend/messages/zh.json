@@ -224,6 +224,8 @@
     "MarkPaidDialog": {
         "title": "标记为已付款：{billName}",
         "editTitle": "编辑付款：{billName}",
+        "dueAmountLabel": "应付金额",
+        "amountHint": "仅适用于本次付款。留空则使用账单金额。",
         "save": "保存",
         "dateLabel": "付款日期",
         "amountLabel": "付款金额",

@@ -96,6 +96,9 @@ class PaymentInstance(Base):
     )
     paid_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     paid_amount: Mapped[Decimal | None] = mapped_column(Numeric(12, 2))
+    # Per-payment amount set by the user (e.g. a known invoice); None = follow
+    # the template's amount. Never touches the template or other periods.
+    amount_override: Mapped[Decimal | None] = mapped_column(Numeric(12, 2))
     notes: Mapped[str | None] = mapped_column(Text)
     is_deleted: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
@@ -132,3 +135,13 @@ class PaymentInstance(Base):
     )
 
     template: Mapped["BillTemplate"] = relationship(back_populates="instances")
+
+    @property
+    def current_amount(self) -> Decimal:
+        """Amount expected for this payment: paid keeps its snapshot, unpaid
+        follows the per-payment override, else the template's current price."""
+        if self.status == PaymentStatus.paid:
+            return self.amount
+        if self.amount_override is not None:
+            return self.amount_override
+        return self.template.amount

@@ -38,16 +38,17 @@ def _check_category_ownership(db: Session, category_id: int, user_id: int) -> No
         raise HTTPException(status_code=403, detail="Not authorized")
 
 
-def _to_out(
-    inst: PaymentInstance,
-    *,
-    override_status: PaymentStatus | None = None,
-) -> PaymentInstanceOut:
-    status = override_status if override_status is not None else inst.status
-    # Unpaid instances always suggest the template's current price, not the
-    # snapshot taken at generation time, so editing a bill's amount is
-    # reflected immediately. Paid instances keep their historical amount.
-    amount = inst.template.amount if status != PaymentStatus.paid else inst.amount
+def _to_out(inst: PaymentInstance) -> PaymentInstanceOut:
+    # Dynamic overdue: reported in every response without writing to the DB.
+    status = (
+        PaymentStatus.overdue
+        if inst.status == PaymentStatus.upcoming and inst.due_date < date.today()
+        else inst.status
+    )
+    # Unpaid instances follow the per-payment override, else the template's
+    # current price (not the generation-time snapshot), so editing a bill's
+    # amount is reflected immediately. Paid instances keep their historical amount.
+    amount = inst.current_amount
     return PaymentInstanceOut.model_validate(
         {
             "id": inst.id,
@@ -55,6 +56,7 @@ def _to_out(
             "period": inst.period,
             "due_date": inst.due_date,
             "amount": amount,
+            "amount_overridden": inst.amount_override is not None,
             "status": status,
             "paid_at": inst.paid_at,
             "paid_amount": inst.paid_amount,
@@ -162,15 +164,7 @@ def list_payments(
         .all()
     )
 
-    result = []
-    for inst in instances:
-        # Dynamic overdue: override status in response without writing to DB
-        override = (
-            PaymentStatus.overdue
-            if inst.status == PaymentStatus.upcoming and inst.due_date < today
-            else None
-        )
-        result.append(_to_out(inst, override_status=override))
+    result = [_to_out(inst) for inst in instances]
     return result
 
 
@@ -196,6 +190,7 @@ def mark_paid(
         )
 
     now = datetime.now(timezone.utc)
+    expected = instance.current_amount  # before status flips to paid
     instance.status = PaymentStatus.paid
     instance.paid_at = (
         datetime.combine(body.paid_at, now.time(), tzinfo=timezone.utc)
@@ -203,10 +198,10 @@ def mark_paid(
         else now
     )
     instance.paid_amount = (
-        body.paid_amount if body.paid_amount is not None else template.amount
+        body.paid_amount if body.paid_amount is not None else expected
     )
-    if body.notes:
-        instance.notes = body.notes
+    if body.notes is not None:
+        instance.notes = body.notes or None
     db.commit()
 
     # auto-create next period instance unless template is paused
@@ -218,7 +213,7 @@ def mark_paid(
 
 
 @router.patch("/payments/{instance_id}", response_model=PaymentInstanceOut)
-def edit_paid_payment(
+def edit_payment(
     instance_id: int,
     body: PaymentInstanceUpdate,
     db: Session = Depends(get_db),
@@ -229,7 +224,15 @@ def edit_paid_payment(
         raise HTTPException(status_code=404, detail="Payment instance not found")
     if instance.template.user_id != me.id:
         raise HTTPException(status_code=403, detail="Not authorized")
-    if instance.status != PaymentStatus.paid:
+    sent = body.model_fields_set
+    is_paid = instance.status == PaymentStatus.paid
+    # Each state has its own editable fields; reject the other state's so a
+    # value is never silently dropped.
+    if is_paid and "amount" in sent:
+        raise HTTPException(
+            status_code=400, detail="Amount can only be edited before payment"
+        )
+    if not is_paid and sent & {"paid_amount", "paid_at"}:
         raise HTTPException(status_code=400, detail="Payment is not marked as paid")
     if body.paid_at is not None and body.paid_at > date.today():
         raise HTTPException(
@@ -242,7 +245,11 @@ def edit_paid_payment(
         )
     if body.paid_amount is not None:
         instance.paid_amount = body.paid_amount
-    if "notes" in body.model_fields_set:
+    if "amount" in sent:
+        # Per-payment only: the template and other periods are never touched.
+        instance.amount_override = body.amount
+        instance.amount = body.amount if body.amount is not None else instance.template.amount
+    if "notes" in sent:
         instance.notes = body.notes or None
     db.commit()
     db.refresh(instance)

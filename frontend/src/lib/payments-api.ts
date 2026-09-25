@@ -11,6 +11,7 @@ export interface PaymentInstanceOut {
   period: string;
   due_date: string;
   amount: string;
+  amount_overridden: boolean;
   status: PaymentStatus;
   paid_at: string | null;
   paid_amount: string | null;
@@ -53,19 +54,20 @@ export function markPaid(
   });
 }
 
+/** Edit one payment. Paid: paid_amount/paid_at/notes. Unpaid: amount/notes
+ *  (amount applies to this payment only; null → follow the bill's amount). */
 export function updatePayment(
   instanceId: number,
-  paidAmount: string | null,
-  notes: string,
-  paidAt: string, // "YYYY-MM-DD"
+  fields: {
+    amount?: number | null;
+    paid_amount?: number | null;
+    paid_at?: string; // "YYYY-MM-DD"
+    notes?: string;
+  },
 ): Promise<PaymentInstanceOut> {
   return apiFetch<PaymentInstanceOut>(`/bills/payments/${instanceId}`, {
     method: "PATCH",
-    body: JSON.stringify({
-      paid_amount: paidAmount ? parseFloat(paidAmount) : null,
-      notes,
-      paid_at: paidAt,
-    }),
+    body: JSON.stringify(fields),
   });
 }
 
