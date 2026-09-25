@@ -223,3 +223,17 @@ def test_create_bill_nonexistent_category_id_returns_404(client):
         "/bills", json=_bill(client, token, category_id=999999), headers=auth(token)
     )
     assert r.status_code == 404
+
+
+def test_end_period_before_start_rejected_and_valid_saved(client):
+    token = register_and_login(client, "endperiod@test.com")
+    r = client.post(
+        "/bills", json=_bill(client, token, end_period="2000-01"), headers=auth(token)
+    )
+    assert r.status_code == 422
+
+    r = client.post(
+        "/bills", json=_bill(client, token, end_period="2099-12"), headers=auth(token)
+    )
+    assert r.status_code == 201
+    assert r.json()["end_period"] == "2099-12"

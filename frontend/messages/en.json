@@ -120,6 +120,10 @@
         "categoryRequired": "Category is required.",
         "notesLabel": "Notes",
         "notesPlaceholder": "Optional notes",
+        "endPeriodLabel": "Last payment month (optional)",
+        "endPeriodLast": "Last payment: {month}.",
+        "endPeriodAdjusted": "Your cycle skips that month — the last payment will be in {month}.",
+        "endPeriodPaused": "This bill is paused — no payments are created while paused, and the end month does not move.",
         "pauseRecurrence": "Pause recurrence (no new instances created)",
         "cancel": "Cancel",
         "save": "Save",
@@ -205,6 +209,7 @@
     "PaymentRow": {
         "status": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
         "dueToday": "Today",
+        "lastPayment": "Last payment",
         "markAsPaid": "Mark as Paid",
         "revert": "Revert payment",
         "due": "Due",

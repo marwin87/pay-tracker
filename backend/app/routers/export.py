@@ -360,6 +360,7 @@ def _build_backup_arrays(
                 "is_archived": t.is_archived,
                 "is_paused": t.is_paused,
                 "start_period": t.start_period,
+                "end_period": t.end_period,
                 "created_at": t.created_at.isoformat(),
             }
             for t in templates
@@ -535,6 +536,7 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
                 is_archived=bt.is_archived,
                 is_paused=bt.is_paused,
                 start_period=bt.start_period,
+                end_period=bt.end_period,
                 user_id=user_id,
             )
             db.add(template_obj)

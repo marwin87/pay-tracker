@@ -29,6 +29,13 @@ def _next_period(period: str, frequency: BillFrequency) -> str:
     return f"{year:04d}-{month:02d}"
 
 
+def is_last_instance(template: BillTemplate, period: str) -> bool:
+    """True if no further instance follows `period` because end_period cuts the schedule."""
+    if not template.end_period or template.frequency == BillFrequency.one_off:
+        return False
+    return _next_period(period, template.frequency) > template.end_period
+
+
 def _due_date_for_period(period: str, due_day: int | None) -> date:
     year, month = map(int, period.split("-"))
     day = due_day or 1
@@ -47,6 +54,8 @@ def _bill_active_in_period(template: BillTemplate, period: str) -> bool:
     months_diff = (target_year - start_year) * 12 + (target_month - start_month)
 
     if months_diff < 0:
+        return False
+    if template.end_period and period > template.end_period:
         return False
 
     if template.frequency == BillFrequency.monthly:
@@ -154,6 +163,8 @@ def generate_next_instance(
         return None
 
     next_period = _next_period(paid_period, template.frequency)
+    if template.end_period and next_period > template.end_period:
+        return None
 
     # idempotent: skip if already exists
     existing = (

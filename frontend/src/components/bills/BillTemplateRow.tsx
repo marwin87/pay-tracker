@@ -154,6 +154,7 @@ export default function BillTemplateRow({
       {isExpanded && (
         <div className="rounded-b-xl border-t border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/40 p-5">
           <BillTemplateForm
+            startPeriod={template.start_period}
             initial={{
               name: template.name,
               category_id: template.category.id,
@@ -162,6 +163,7 @@ export default function BillTemplateRow({
               currency: template.currency,
               due_day: template.due_day,
               due_month: template.due_month,
+              end_period: template.end_period,
               notes: template.notes,
               is_paused: template.is_paused,
             }}

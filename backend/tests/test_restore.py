@@ -35,6 +35,7 @@ _BILL_ALPHA = {
     "due_day": 5,
     "notes": None,
     "is_paused": False,
+    "end_period": "2099-12",  # exercised by the round-trip test
 }
 
 _BILL_BETA = {
@@ -728,3 +729,29 @@ def test_snapshot_restore_reverts_notification_schedule(client):
     assert (
         client.get("/auth/me", headers=auth(tok)).json()["reminder_send_minute"] == 90
     )
+
+
+def test_end_period_export_restore_and_snapshot(client):
+    tok = register_and_login(client, "endp@test.com")
+    body = {**_BILL, "category_id": category_id(client, tok), "end_period": "2099-06"}
+    assert client.post("/bills", json=body, headers=auth(tok)).status_code == 201
+
+    backup = client.get("/export/json", headers=auth(tok)).json()
+    assert backup["bill_templates"][0]["end_period"] == "2099-06"
+
+    # Backups written before the field existed restore with end_period = None
+    legacy = {**backup, "bill_templates": [
+        {k: v for k, v in t.items() if k != "end_period"} for t in backup["bill_templates"]
+    ]}
+    assert _upload(client, tok, legacy).status_code == 200
+    bills = client.get("/bills", headers=auth(tok)).json()
+    assert bills[0]["end_period"] is None
+
+    # The snapshot taken by that restore still holds the end period; undoing brings it back
+    assert client.post("/export/restore-snapshot", headers=auth(tok)).status_code == 200
+    assert client.get("/bills", headers=auth(tok)).json()[0]["end_period"] == "2099-06"
+
+    # Restoring a file that carries the field sets it
+    assert _upload(client, tok, legacy).status_code == 200
+    assert _upload(client, tok, backup).status_code == 200
+    assert client.get("/bills", headers=auth(tok)).json()[0]["end_period"] == "2099-06"

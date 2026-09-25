@@ -5,6 +5,8 @@ from app.models.bill import BillFrequency, PaymentStatus
 from app.schemas.auth import normalize_bot_token, normalize_chat_id
 from app.schemas.category import CategoryOut
 
+_PERIOD_RE = r"^\d{4}-(0[1-9]|1[0-2])$"
+
 
 class BillTemplateCreate(BaseModel):
     name: str
@@ -14,6 +16,7 @@ class BillTemplateCreate(BaseModel):
     currency: str = "PLN"
     due_day: int | None = Field(None, ge=1, le=31)
     due_month: int | None = Field(None, ge=1, le=12)  # month for annual/one_off
+    end_period: str | None = Field(None, pattern=_PERIOD_RE)  # last recurring month
     notes: str | None = None
     is_paused: bool = False
 
@@ -26,6 +29,7 @@ class BillTemplateUpdate(BaseModel):
     currency: str | None = None
     due_day: int | None = Field(None, ge=1, le=31)
     due_month: int | None = Field(None, ge=1, le=12)  # month for annual/one_off
+    end_period: str | None = Field(None, pattern=_PERIOD_RE)  # null clears the end
     notes: str | None = None
     is_paused: bool | None = None
     recreate_deleted_future: bool = False  # transient control flag — not persisted
@@ -46,6 +50,7 @@ class BillTemplateOut(BaseModel):
     is_paused: bool
     created_at: datetime
     start_period: str | None = None
+    end_period: str | None = None
 
     @computed_field  # type: ignore[prop-decorator]
     @property
@@ -72,6 +77,7 @@ class PaymentInstanceOut(BaseModel):
     frequency: BillFrequency
     category: CategoryOut
     email_sent_at: datetime | None
+    is_last: bool = False  # final instalment of a fixed-term bill
 
 
 class MarkPaidRequest(BaseModel):
@@ -113,6 +119,7 @@ class BackupTemplate(BaseModel):
     is_archived: bool
     is_paused: bool
     start_period: str | None
+    end_period: str | None = None
     created_at: str
 
 

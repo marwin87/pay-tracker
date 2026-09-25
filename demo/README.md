@@ -15,7 +15,7 @@ All notifications are switched off for this account (email, Telegram, browser), 
 | Streaming (Old) | custom | **archived** — still referenced by an active bill |
 | Side Hustle | custom | active |
 
-**26 bill templates** covering all frequencies, plus these edge cases:
+**28 bill templates** covering all frequencies, plus these edge cases:
 
 | Name | Category | Frequency | Amount | Notes |
 |---|---|---|---|---|
@@ -30,7 +30,9 @@ All notifications are switched off for this account (email, Telegram, browser), 
 | Tyre Change | Transport | One-off | €180.00 | |
 | Old Music App | **Streaming (Old)** *(archived category)* | Monthly | €4.99 | bill stays active — category is what's archived |
 | Coworking Desk | **Side Hustle** *(custom category)* | Monthly | €120.00 | |
-| Newspaper Subscription | Subscriptions | Monthly | €12.00 | **paused** |
+| Newspaper Subscription | Subscriptions | Monthly | €12.00 | **paused**, with `end_period` 2026-12 (shows the pause warning on the end field) |
+| Laptop Installments | Other | Monthly | €89.99 | **fixed term** (`end_period` 2026-06) — all 6 instalments paid, no further payments generated |
+| Phone Installments | Other | Monthly | 129.00 PLN | **fixed term** (`end_period` 2026-12) — no payments generated after the last month |
 | Yoga Studio Membership *(archived bill)* | Healthcare | Monthly | €60.00 | |
 | Cloud Storage 2TB *(archived bill)* | Subscriptions | Monthly | €9.99 | |
 | Car Lease *(archived bill)* | Transport | Monthly | €310.00 | |
@@ -38,7 +40,7 @@ All notifications are switched off for this account (email, Telegram, browser), 
 
 5 bills are archived in total, spread across 4 categories, so the Archive page (`/dashboard/bills/archived`) has enough entries to exercise its category filter and sort.
 
-**68 payment instances** (from `seed_data.json`) covering all statuses:
+**80 payment instances** (from `seed_data.json`) covering all statuses:
 - **paid** — historical records with `paid_at` timestamps, across all four combinations of full/partial amount and with/without a note
 - **overdue** — several bills with a missed payment
 - **upcoming** — future periods ready to be paid

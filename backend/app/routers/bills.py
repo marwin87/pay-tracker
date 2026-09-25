@@ -22,6 +22,7 @@ from app.services.recurrence import (
     backfill_template_instances,
     ensure_current_period_instances,
     generate_next_instance,
+    is_last_instance,
 )
 
 router = APIRouter(prefix="/bills", tags=["bills"])
@@ -61,6 +62,7 @@ def _to_out(
             "frequency": inst.template.frequency,
             "category": CategoryOut.model_validate(inst.template.category),
             "email_sent_at": inst.email_sent_at,
+            "is_last": is_last_instance(inst.template, inst.period),
         }
     )
 
@@ -100,6 +102,8 @@ def create_bill(
         start_period = f"{now.year:04d}-{body.due_month:02d}"
     else:
         start_period = now.strftime("%Y-%m")
+    if body.end_period and body.end_period < start_period:
+        raise HTTPException(status_code=422, detail="end_period is before start")
     data = body.model_dump(exclude={"due_month"})
     bill = BillTemplate(**data, user_id=me.id, start_period=start_period)
     db.add(bill)
@@ -332,6 +336,9 @@ def update_bill(
         now = datetime.now(timezone.utc)
         year = now.year if due_month >= now.month else now.year + 1
         bill.start_period = f"{year:04d}-{due_month:02d}"
+
+    if bill.end_period and bill.start_period and bill.end_period < bill.start_period:
+        raise HTTPException(status_code=422, detail="end_period is before start")
 
     if due_day_changed:
         unpaid = (

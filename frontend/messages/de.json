@@ -120,6 +120,10 @@
         "categoryRequired": "Kategorie ist erforderlich.",
         "notesLabel": "Notizen",
         "notesPlaceholder": "Optionale Notizen",
+        "endPeriodLabel": "Letzter Zahlungsmonat (optional)",
+        "endPeriodLast": "Letzte Zahlung: {month}.",
+        "endPeriodAdjusted": "Der Zyklus überspringt diesen Monat – die letzte Zahlung ist im {month}.",
+        "endPeriodPaused": "Diese Rechnung ist pausiert – während der Pause werden keine Zahlungen erstellt, und der Endmonat verschiebt sich nicht.",
         "pauseRecurrence": "Wiederholung pausieren (keine neuen Instanzen)",
         "cancel": "Abbrechen",
         "save": "Speichern",
@@ -209,6 +213,7 @@
             "paid": "Bezahlt"
         },
         "dueToday": "Heute",
+        "lastPayment": "Letzte Rate",
         "markAsPaid": "Als bezahlt markieren",
         "revert": "Zahlung rückgängig machen",
         "due": "Fällig",

@@ -86,9 +86,16 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, r
     <div className={`rounded-xl border border-slate-200 px-4 py-3 shadow-sm dark:border-slate-700 transition-colors ${tileGradientClass()}`}>
       <div className="flex flex-col gap-0.5">
         {/* Name */}
-        <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">
-          {instance.bill_name}
-        </span>
+        <div className="flex items-center gap-2 min-w-0">
+          <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">
+            {instance.bill_name}
+          </span>
+          {instance.is_last && (
+            <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700 dark:bg-red-900/30 dark:text-red-400 shrink-0">
+              {t("lastPayment")}
+            </span>
+          )}
+        </div>
         {/* Amount */}
         {parseFloat(instance.amount) > 0 && (
           <span className="text-xs font-medium text-slate-600 dark:text-slate-300">

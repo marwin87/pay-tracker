@@ -120,6 +120,10 @@
         "categoryRequired": "La categoría es obligatoria.",
         "notesLabel": "Notas",
         "notesPlaceholder": "Notas opcionales",
+        "endPeriodLabel": "Último mes de pago (opcional)",
+        "endPeriodLast": "Último pago: {month}.",
+        "endPeriodAdjusted": "El ciclo omite ese mes: el último pago será en {month}.",
+        "endPeriodPaused": "Esta factura está en pausa: no se crean pagos mientras dure y el mes final no se desplaza.",
         "pauseRecurrence": "Pausar recurrencia (no se crean nuevas instancias)",
         "cancel": "Cancelar",
         "save": "Guardar",
@@ -205,6 +209,7 @@
     "PaymentRow": {
         "status": {"upcoming": "Próximo", "overdue": "Vencido", "paid": "Pagado"},
         "dueToday": "Hoy",
+        "lastPayment": "Último pago",
         "markAsPaid": "Marcar como pagado",
         "revert": "Revertir pago",
         "due": "Vence",

@@ -18,6 +18,7 @@ export interface PaymentInstanceOut {
   bill_name: string;
   currency: string;
   frequency: BillFrequency;
+  is_last: boolean;
   category: Category;
   email_sent_at: string | null;
 }

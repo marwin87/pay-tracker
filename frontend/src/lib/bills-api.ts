@@ -13,6 +13,7 @@ export interface BillTemplateOut {
   due_day: number | null;
   due_month: number | null;
   start_period: string | null;
+  end_period: string | null;
   notes: string | null;
   is_archived: boolean;
   is_paused: boolean;
@@ -27,6 +28,7 @@ export interface BillTemplateCreate {
   currency?: string;
   due_day?: number | null;
   due_month?: number | null;
+  end_period?: string | null;
   notes?: string | null;
   is_paused?: boolean;
 }

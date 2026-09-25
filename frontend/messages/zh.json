@@ -120,6 +120,10 @@
         "categoryRequired": "类别为必填项。",
         "notesLabel": "备注",
         "notesPlaceholder": "可选备注",
+        "endPeriodLabel": "最后付款月份（可选）",
+        "endPeriodLast": "最后一次付款：{month}。",
+        "endPeriodAdjusted": "周期会跳过该月份——最后一次付款在 {month}。",
+        "endPeriodPaused": "此账单已暂停——暂停期间不会创建付款，结束月份也不会顺延。",
         "pauseRecurrence": "暂停周期性生成（不再创建新的付款记录）",
         "cancel": "取消",
         "save": "保存",
@@ -205,6 +209,7 @@
     "PaymentRow": {
         "status": {"upcoming": "待付款", "overdue": "已逾期", "paid": "已付款"},
         "dueToday": "今日",
+        "lastPayment": "最后一期",
         "markAsPaid": "标记为已付款",
         "revert": "撤销付款",
         "due": "到期",

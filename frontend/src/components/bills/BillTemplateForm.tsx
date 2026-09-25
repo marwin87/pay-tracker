@@ -4,6 +4,7 @@ import { FormEvent, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import CategoryCombobox from "./CategoryCombobox";
 import MonthDayCalendar from "./MonthDayCalendar";
+import MonthYearPicker from "./MonthYearPicker";
 import CurrencyPicker from "@/components/CurrencyPicker";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { LOCALE_DEFAULT_CURRENCY } from "@/lib/currency";
@@ -15,9 +16,20 @@ const RECURRING_FREQUENCIES: BillFrequency[] = ["monthly", "every_2_months", "qu
 
 interface Props {
   initial?: Partial<BillTemplateCreate>;
+  startPeriod?: string | null; // saved start (YYYY-MM) when editing
   defaultCurrency?: string | null;
   onSave: (data: BillTemplateCreate) => Promise<void>;
   onCancel: () => void;
+}
+
+// Last scheduled payment on or before `end`, for a cycle of `step` months starting at `start`.
+function lastPayment(start: string, end: string, step: number) {
+  const [sy, sm] = start.split("-").map(Number);
+  const [ey, em] = end.split("-").map(Number);
+  const diff = (ey - sy) * 12 + (em - sm);
+  if (diff < 0) return null;
+  const total = sy * 12 + (sm - 1) + Math.floor(diff / step) * step;
+  return { year: Math.floor(total / 12), month: (total % 12) + 1, aligned: diff % step === 0 };
 }
 
 interface Errors {
@@ -32,7 +44,7 @@ const inputClass =
 
 const labelClass = "block text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500 mb-1.5";
 
-export default function BillTemplateForm({ initial, defaultCurrency, onSave, onCancel }: Props) {
+export default function BillTemplateForm({ initial, startPeriod, defaultCurrency, onSave, onCancel }: Props) {
   const t = useTranslations("BillTemplateForm");
   const locale = useLocale();
   const [name, setName] = useState(initial?.name ?? "");
@@ -51,6 +63,7 @@ export default function BillTemplateForm({ initial, defaultCurrency, onSave, onC
     initial?.due_month != null ? String(initial.due_month) : String(new Date().getMonth() + 1),
   );
   const [notes, setNotes] = useState(initial?.notes ?? "");
+  const [endPeriod, setEndPeriod] = useState(initial?.end_period ?? "");
   const [isPaused, setIsPaused] = useState(initial?.is_paused ?? false);
   const [errors, setErrors] = useState<Errors>({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
@@ -58,6 +71,15 @@ export default function BillTemplateForm({ initial, defaultCurrency, onSave, onC
   const [apiError, setApiError] = useState<string | null>(null);
 
   const isRecurring = RECURRING_FREQUENCIES.includes(frequency);
+
+  // Recurring bills anchor to the current year + chosen month on create (mirrors the backend).
+  const now = new Date();
+  const currentPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const effectiveStart =
+    startPeriod ?? `${now.getFullYear()}-${String(parseInt(dueMonth, 10) || now.getMonth() + 1).padStart(2, "0")}`;
+  const minEnd = effectiveStart > currentPeriod ? effectiveStart : currentPeriod;
+  const step = frequency === "quarterly" ? 3 : frequency === "every_2_months" ? 2 : 1;
+  const endHint = endPeriod ? lastPayment(effectiveStart, endPeriod, step) : null;
 
   function validate(fields: {
     name: string;
@@ -101,6 +123,7 @@ export default function BillTemplateForm({ initial, defaultCurrency, onSave, onC
         currency: currency || "EUR",
         due_day: dueDay ? parseInt(dueDay, 10) : null,
         due_month: dueMonth ? parseInt(dueMonth, 10) : null,
+        end_period: isRecurring ? endPeriod || null : null,
         notes: notes.trim() || null,
         is_paused: isPaused,
       };
@@ -184,16 +207,42 @@ export default function BillTemplateForm({ initial, defaultCurrency, onSave, onC
         </div>
       </div>
 
-      {/* Row 3: Date picker (calendar for all frequencies) */}
-      <div>
-        <label className={labelClass}>
-          {isRecurring ? t("startDateLabel") : t("dueDateLabel")}
-        </label>
-        <MonthDayCalendar
-          month={parseInt(dueMonth, 10) || new Date().getMonth() + 1}
-          day={parseInt(dueDay, 10) || new Date().getDate()}
-          onChange={(m, d) => { setDueMonth(String(m)); setDueDay(String(d)); }}
-        />
+      {/* Row 3: Start date + optional end month (fixed-term bills) */}
+      <div className={isRecurring ? "grid gap-4 sm:grid-cols-2" : ""}>
+        <div>
+          <label className={labelClass}>
+            {isRecurring ? t("startDateLabel") : t("dueDateLabel")}
+          </label>
+          <MonthDayCalendar
+            month={parseInt(dueMonth, 10) || new Date().getMonth() + 1}
+            day={parseInt(dueDay, 10) || new Date().getDate()}
+            onChange={(m, d) => { setDueMonth(String(m)); setDueDay(String(d)); }}
+          />
+        </div>
+        {isRecurring && (
+          <div>
+            <label htmlFor="bill-end-period" className={labelClass}>{t("endPeriodLabel")}</label>
+            <MonthYearPicker id="bill-end-period" value={endPeriod} min={minEnd} onChange={setEndPeriod} />
+            {endHint && (
+              <p
+                className={`mt-1.5 text-xs ${
+                  endHint.aligned
+                    ? "text-slate-500 dark:text-slate-400"
+                    : "text-amber-600 dark:text-amber-400"
+                }`}
+              >
+                {t(endHint.aligned ? "endPeriodLast" : "endPeriodAdjusted", {
+                  month: new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
+                    new Date(endHint.year, endHint.month - 1, 1),
+                  ),
+                })}
+              </p>
+            )}
+            {endPeriod && isPaused && (
+              <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400">{t("endPeriodPaused")}</p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Row 4: Category + Notes */}

@@ -93,12 +93,13 @@ def _stub(
 ) -> types.SimpleNamespace:
     """Lightweight BillTemplate stub for pure-function tests.
 
-    Only populates the three attributes _bill_active_in_period reads:
-    frequency, start_period, created_at.
+    Only populates the attributes _bill_active_in_period reads:
+    frequency, start_period, end_period, created_at.
     """
     return types.SimpleNamespace(
         frequency=frequency,
         start_period=start_period,
+        end_period=None,
         created_at=created_at or datetime(2026, 1, 1, tzinfo=timezone.utc),
     )
 
@@ -172,6 +173,7 @@ def _make_bill(
     start_period: str = "2026-01",
     is_paused: bool = False,
     is_archived: bool = False,
+    end_period: str | None = None,
 ) -> BillTemplate:
     category = (
         db.query(Category)
@@ -185,6 +187,7 @@ def _make_bill(
         currency="PLN",
         due_day=due_day,
         start_period=start_period,
+        end_period=end_period,
         is_paused=is_paused,
         is_archived=is_archived,
         category_id=category.id,
@@ -549,3 +552,69 @@ def test_backfill_skips_inactive_periods_for_quarterly(db_session) -> None:
         for row in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
     }
     assert periods == {"2026-01", "2026-04"}
+
+
+# ── end_period ───────────────────────────────────────────────────────────────
+
+
+def test_end_period_stops_generation(db_session) -> None:
+    user = _make_user(db_session, "end@test.com")
+    bill = _make_bill(db_session, user.id, start_period="2026-01", end_period="2026-03")
+
+    assert _bill_active_in_period(bill, "2026-03") is True
+    assert _bill_active_in_period(bill, "2026-04") is False
+    # last installment paid → nothing after it
+    assert generate_next_instance(db_session, bill, "2026-03") is None
+    assert generate_next_instance(db_session, bill, "2026-02").period == "2026-03"
+
+    ensure_current_period_instances(db_session, "2026-04", user.id)
+    backfill_template_instances(db_session, bill, "2026-01", "2026-06")
+    periods = sorted(
+        r.period
+        for r in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
+    )
+    assert periods == ["2026-01", "2026-02", "2026-03"]
+
+
+def test_end_period_quarterly_not_on_schedule(db_session) -> None:
+    """End month between two quarterly occurrences: last payment is the last one before it."""
+    user = _make_user(db_session, "endq@test.com")
+    bill = _make_bill(
+        db_session,
+        user.id,
+        frequency=BillFrequency.quarterly,
+        start_period="2026-01",
+        end_period="2026-11",
+    )
+
+    backfill_template_instances(db_session, bill, "2026-01", "2027-12")
+    periods = sorted(
+        r.period
+        for r in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
+    )
+    assert periods == ["2026-01", "2026-04", "2026-07", "2026-10"]
+    # paying the Oct instalment: next would be 2027-01 > end → nothing
+    assert generate_next_instance(db_session, bill, "2026-10") is None
+    # paying Jul: next (Oct) is still within the end
+    assert generate_next_instance(db_session, bill, "2026-07").period == "2026-10"
+
+
+def test_is_last_instance(db_session) -> None:
+    from app.services.recurrence import is_last_instance
+
+    user = _make_user(db_session, "last@test.com")
+    open_ended = _make_bill(db_session, user.id)
+    monthly = _make_bill(db_session, user.id, end_period="2026-03")
+    quarterly = _make_bill(
+        db_session,
+        user.id,
+        frequency=BillFrequency.quarterly,
+        start_period="2026-01",
+        end_period="2026-11",
+    )
+    assert is_last_instance(open_ended, "2026-03") is False
+    assert is_last_instance(monthly, "2026-02") is False
+    assert is_last_instance(monthly, "2026-03") is True
+    # quarterly: Oct is the last scheduled before the Nov end
+    assert is_last_instance(quarterly, "2026-07") is False
+    assert is_last_instance(quarterly, "2026-10") is True

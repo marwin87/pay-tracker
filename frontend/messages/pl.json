@@ -120,6 +120,10 @@
         "categoryRequired": "Kategoria jest wymagana.",
         "notesLabel": "Notatki",
         "notesPlaceholder": "Opcjonalne notatki",
+        "endPeriodLabel": "Ostatni miesiąc płatności (opcjonalnie)",
+        "endPeriodLast": "Ostatnia płatność: {month}.",
+        "endPeriodAdjusted": "Cykl pomija ten miesiąc — ostatnia płatność będzie w {month}.",
+        "endPeriodPaused": "Rachunek jest wstrzymany — w trakcie pauzy nie powstają płatności, a miesiąc końca się nie przesuwa.",
         "pauseRecurrence": "Wstrzymaj cykl (brak nowych instancji)",
         "cancel": "Anuluj",
         "save": "Zapisz",
@@ -205,6 +209,7 @@
     "PaymentRow": {
         "status": {"upcoming": "Nadchodzące", "overdue": "Zaległe", "paid": "Opłacone"},
         "dueToday": "Dzisiaj",
+        "lastPayment": "Ostatnia rata",
         "markAsPaid": "Oznacz jako opłacone",
         "revert": "Cofnij płatność",
         "due": "Termin",
