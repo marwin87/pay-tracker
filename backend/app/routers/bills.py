@@ -248,7 +248,9 @@ def edit_payment(
     if "amount" in sent:
         # Per-payment only: the template and other periods are never touched.
         instance.amount_override = body.amount
-        instance.amount = body.amount if body.amount is not None else instance.template.amount
+        instance.amount = (
+            body.amount if body.amount is not None else instance.template.amount
+        )
     if "notes" in sent:
         instance.notes = body.notes or None
     db.commit()

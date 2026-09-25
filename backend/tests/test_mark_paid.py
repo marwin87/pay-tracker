@@ -151,7 +151,9 @@ def test_unpaid_amount_override_is_per_payment_and_survives_bill_edit(client_db)
     # Template is untouched, and a later template price change does not
     # replace this payment's amount.
     assert client.get(f"/bills", headers=auth(token)).json()[0]["amount"] == "120.00"
-    r = client.patch(f"/bills/{bill_id}", json={"amount": "200.00"}, headers=auth(token))
+    r = client.patch(
+        f"/bills/{bill_id}", json={"amount": "200.00"}, headers=auth(token)
+    )
     assert r.status_code == 200
     inst = _amounts(client, token, bill_id)
     assert inst["amount"] == "143.20"

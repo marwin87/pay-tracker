@@ -177,7 +177,11 @@ def test_xlsx_shows_per_payment_amount_for_unpaid(client):
     today = date.today()
     r = client.post(
         "/bills",
-        json={**_BILL_A, "category_id": category_id(client, tok), "due_month": today.month},
+        json={
+            **_BILL_A,
+            "category_id": category_id(client, tok),
+            "due_month": today.month,
+        },
         headers=auth(tok),
     )
     assert r.status_code == 201
@@ -197,4 +201,6 @@ def test_xlsx_shows_per_payment_amount_for_unpaid(client):
         for row in ws.iter_rows(min_row=2, values_only=True)
         if row[2] == period
     ]
-    assert [row[4] for row in rows] == [143.2]  # columns: Bill, Category, Period, Due Date, Amount
+    assert [row[4] for row in rows] == [
+        143.2
+    ]  # columns: Bill, Category, Period, Due Date, Amount
