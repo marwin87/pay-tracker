@@ -193,6 +193,7 @@
         "lastPayment": "最后一期",
         "markAsPaid": "标记为已付款",
         "revert": "撤销付款",
+        "edit": "编辑付款",
         "due": "到期",
         "paidOn": "付款日期",
         "amountMismatch": "应付 <expTag>{expected}</expTag>，实付 <paidTag>{paid}</paidTag>",
@@ -222,6 +223,8 @@
     },
     "MarkPaidDialog": {
         "title": "标记为已付款：{billName}",
+        "editTitle": "编辑付款：{billName}",
+        "save": "保存",
         "dateLabel": "付款日期",
         "amountLabel": "付款金额",
         "notesLabel": "备注（可选）",

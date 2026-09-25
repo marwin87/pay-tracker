@@ -197,6 +197,7 @@
         "lastPayment": "Letzte Rate",
         "markAsPaid": "Als bezahlt markieren",
         "revert": "Zahlung rückgängig machen",
+        "edit": "Zahlung bearbeiten",
         "due": "Fällig",
         "paidOn": "Bezahlt am",
         "amountMismatch": "Erwartet <expTag>{expected}</expTag>, bezahlt <paidTag>{paid}</paidTag>",
@@ -226,6 +227,8 @@
     },
     "MarkPaidDialog": {
         "title": "Als bezahlt markieren: {billName}",
+        "editTitle": "Zahlung bearbeiten: {billName}",
+        "save": "Speichern",
         "dateLabel": "Zahlungsdatum",
         "amountLabel": "Bezahlter Betrag",
         "notesLabel": "Notizen (optional)",

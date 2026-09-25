@@ -193,6 +193,7 @@
         "lastPayment": "Ostatnia rata",
         "markAsPaid": "Oznacz jako opłacone",
         "revert": "Cofnij płatność",
+        "edit": "Edytuj płatność",
         "due": "Termin",
         "paidOn": "Opłacono",
         "amountMismatch": "Oczekiwano <expTag>{expected}</expTag>, zapłacono <paidTag>{paid}</paidTag>",
@@ -222,6 +223,8 @@
     },
     "MarkPaidDialog": {
         "title": "Oznacz jako opłacone: {billName}",
+        "editTitle": "Edytuj płatność: {billName}",
+        "save": "Zapisz",
         "dateLabel": "Data zapłaty",
         "amountLabel": "Zapłacona kwota",
         "notesLabel": "Notatki (opcjonalnie)",

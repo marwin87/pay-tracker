@@ -72,3 +72,63 @@ def test_mark_paid_with_future_date_rejected(client_db):
         headers=auth(token),
     )
     assert r.status_code == 400
+
+
+def _paid_instance(client: TestClient, token: str) -> int:
+    instance_id = _instance_id(client, token, _create_bill(client, token))
+    r = client.post(
+        f"/bills/payments/{instance_id}/pay",
+        json={"paid_amount": "100.00", "notes": "first"},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+    return instance_id
+
+
+def test_edit_paid_payment_updates_and_clears_notes(client_db):
+    client, db = client_db
+    token = register_and_login(client, "ep1@test.com")
+    instance_id = _paid_instance(client, token)
+
+    r = client.patch(
+        f"/bills/payments/{instance_id}",
+        json={"paid_amount": "99.50", "notes": "changed"},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+    assert r.json()["paid_amount"] == "99.50"
+    assert r.json()["notes"] == "changed"
+    assert r.json()["status"] == "paid"
+
+    r = client.patch(
+        f"/bills/payments/{instance_id}", json={"notes": ""}, headers=auth(token)
+    )
+    assert r.json()["notes"] is None
+    assert r.json()["paid_amount"] == "99.50"
+
+
+def test_edit_unpaid_payment_rejected(client_db):
+    client, db = client_db
+    token = register_and_login(client, "ep2@test.com")
+    instance_id = _instance_id(client, token, _create_bill(client, token))
+    r = client.patch(
+        f"/bills/payments/{instance_id}", json={"notes": "x"}, headers=auth(token)
+    )
+    assert r.status_code == 400
+
+
+def test_edit_paid_payment_future_date_and_other_user(client_db):
+    client, db = client_db
+    token = register_and_login(client, "ep3@test.com")
+    instance_id = _paid_instance(client, token)
+    future = (date.today() + timedelta(days=2)).isoformat()
+    r = client.patch(
+        f"/bills/payments/{instance_id}", json={"paid_at": future}, headers=auth(token)
+    )
+    assert r.status_code == 400
+
+    other = register_and_login(client, "ep4@test.com")
+    r = client.patch(
+        f"/bills/payments/{instance_id}", json={"notes": "x"}, headers=auth(other)
+    )
+    assert r.status_code == 403

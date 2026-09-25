@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { AlertCircle, AtSign, CheckCircle, MessageSquare, RotateCcw, Trash2 } from "lucide-react";
+import { AlertCircle, AtSign, CheckCircle, MessageSquare, Pencil, Undo2, Trash2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import type { PaymentInstanceOut } from "@/lib/payments-api";
 
@@ -18,11 +18,12 @@ interface Props {
   onMarkPaid: (instance: PaymentInstanceOut) => void;
   onDelete: (instance: PaymentInstanceOut) => void;
   onRevert: (instance: PaymentInstanceOut) => void;
+  onEdit: (instance: PaymentInstanceOut) => void;
   /** True for past months — hides the Mark as Paid button. */
   readOnly?: boolean;
 }
 
-export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, readOnly = false }: Props) {
+export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, onEdit, readOnly = false }: Props) {
   const t = useTranslations("PaymentRow");
   const locale = useLocale();
   const [emailOpen, setEmailOpen] = useState(false);
@@ -139,7 +140,17 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, r
                 <span className="hidden sm:inline">{t("markAsPaid")}</span>
               </button>
             )}
-            {/* Revert — visible for paid instances */}
+            {/* Edit / revert — visible for paid instances */}
+            {instance.status === "paid" && (
+              <button
+                onClick={() => onEdit(instance)}
+                title={t("edit")}
+                aria-label={t("edit")}
+                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
+              >
+                <Pencil size={14} />
+              </button>
+            )}
             {instance.status === "paid" && (
               <button
                 onClick={() => onRevert(instance)}
@@ -147,7 +158,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, r
                 aria-label={t("revert")}
                 className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
               >
-                <RotateCcw size={14} />
+                <Undo2 size={14} />
               </button>
             )}
             <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />

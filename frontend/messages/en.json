@@ -193,6 +193,7 @@
         "lastPayment": "Last payment",
         "markAsPaid": "Mark as Paid",
         "revert": "Revert payment",
+        "edit": "Edit payment",
         "due": "Due",
         "paidOn": "Paid on",
         "amountMismatch": "Expected <expTag>{expected}</expTag>, paid <paidTag>{paid}</paidTag>",
@@ -222,6 +223,8 @@
     },
     "MarkPaidDialog": {
         "title": "Mark as Paid: {billName}",
+        "editTitle": "Edit payment: {billName}",
+        "save": "Save",
         "dateLabel": "Date paid",
         "amountLabel": "Amount paid",
         "notesLabel": "Notes (optional)",

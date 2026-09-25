@@ -53,6 +53,22 @@ export function markPaid(
   });
 }
 
+export function updatePayment(
+  instanceId: number,
+  paidAmount: string | null,
+  notes: string,
+  paidAt: string, // "YYYY-MM-DD"
+): Promise<PaymentInstanceOut> {
+  return apiFetch<PaymentInstanceOut>(`/bills/payments/${instanceId}`, {
+    method: "PATCH",
+    body: JSON.stringify({
+      paid_amount: paidAmount ? parseFloat(paidAmount) : null,
+      notes,
+      paid_at: paidAt,
+    }),
+  });
+}
+
 export function deletePayment(instanceId: number, deleteFuture = false): Promise<void> {
   const url = `/bills/payments/${instanceId}${deleteFuture ? "?delete_future=true" : ""}`;
   return apiFetch<void>(url, { method: "DELETE" });

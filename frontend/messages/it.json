@@ -193,6 +193,7 @@
         "lastPayment": "Ultima rata",
         "markAsPaid": "Segna come pagato",
         "revert": "Annulla pagamento",
+        "edit": "Modifica pagamento",
         "due": "Scadenza",
         "paidOn": "Pagato il",
         "amountMismatch": "Previsto <expTag>{expected}</expTag>, pagato <paidTag>{paid}</paidTag>",
@@ -222,6 +223,8 @@
     },
     "MarkPaidDialog": {
         "title": "Segna come pagato: {billName}",
+        "editTitle": "Modifica pagamento: {billName}",
+        "save": "Salva",
         "dateLabel": "Data di pagamento",
         "amountLabel": "Importo pagato",
         "notesLabel": "Note (facoltative)",

@@ -595,6 +595,7 @@ function PaymentsPageInner() {
                         onMarkPaid={setDialogTarget}
                         onDelete={setDeleteTarget}
                         onRevert={setRevertTarget}
+                        onEdit={setDialogTarget}
                       />
                     ))}
                   </div>

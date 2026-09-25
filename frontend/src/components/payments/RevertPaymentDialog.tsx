@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { RotateCcw } from "lucide-react";
+import { Undo2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { revertPay, type PaymentInstanceOut } from "@/lib/payments-api";
 
@@ -49,7 +49,7 @@ export default function RevertPaymentDialog({
         className="w-full max-w-sm rounded-2xl border border-slate-200 bg-white p-6 shadow-xl dark:bg-slate-800 dark:border-slate-700"
       >
         <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
-          <RotateCcw size={22} />
+          <Undo2 size={22} />
         </div>
 
         <h2

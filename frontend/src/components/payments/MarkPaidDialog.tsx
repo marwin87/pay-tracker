@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { markPaid, type PaymentInstanceOut } from "@/lib/payments-api";
+import { markPaid, updatePayment, type PaymentInstanceOut } from "@/lib/payments-api";
 import PaymentDateCalendar, { toISODate } from "./PaymentDateCalendar";
 
 interface Props {
@@ -21,9 +21,16 @@ export default function MarkPaidDialog({
 }: Props) {
   const t = useTranslations("MarkPaidDialog");
 
-  const [paidAmount, setPaidAmount] = useState(instance.amount ?? "");
-  const [paidDate, setPaidDate] = useState(toISODate(new Date()));
-  const [notes, setNotes] = useState("");
+  // A paid instance opens in edit mode, prefilled with what was recorded.
+  const isEdit = instance.status === "paid";
+
+  const [paidAmount, setPaidAmount] = useState(
+    (isEdit ? instance.paid_amount : instance.amount) ?? "",
+  );
+  const [paidDate, setPaidDate] = useState(
+    toISODate(isEdit && instance.paid_at ? new Date(instance.paid_at) : new Date()),
+  );
+  const [notes, setNotes] = useState(isEdit ? (instance.notes ?? "") : "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const mounted = useRef(true);
@@ -35,7 +42,9 @@ export default function MarkPaidDialog({
     setIsSubmitting(true);
     setError(null);
     try {
-      const updated = await markPaid(instance.id, paidAmount || null, notes || undefined, paidDate);
+      const updated = isEdit
+        ? await updatePayment(instance.id, paidAmount || null, notes, paidDate)
+        : await markPaid(instance.id, paidAmount || null, notes || undefined, paidDate);
       onConfirm(updated);
     } catch (err) {
       if (!mounted.current) return;
@@ -61,7 +70,7 @@ export default function MarkPaidDialog({
           id="mark-paid-dialog-title"
           className="mb-4 text-lg font-semibold text-slate-800 dark:text-slate-100"
         >
-          {t("title", { billName: instance.bill_name })}
+          {t(isEdit ? "editTitle" : "title", { billName: instance.bill_name })}
         </h2>
 
         <div className="mb-3">
@@ -129,7 +138,7 @@ export default function MarkPaidDialog({
             disabled={isSubmitting}
             className="flex-1 rounded-lg border border-emerald-200 bg-white py-2.5 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
           >
-            {isSubmitting ? t("confirming") : t("confirm")}
+            {isSubmitting ? t("confirming") : t(isEdit ? "save" : "confirm")}
           </button>
         </div>
       </div>

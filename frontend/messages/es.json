@@ -193,6 +193,7 @@
         "lastPayment": "Último pago",
         "markAsPaid": "Marcar como pagado",
         "revert": "Revertir pago",
+        "edit": "Editar pago",
         "due": "Vence",
         "paidOn": "Pagado el",
         "amountMismatch": "Esperado <expTag>{expected}</expTag>, pagado <paidTag>{paid}</paidTag>",
@@ -222,6 +223,8 @@
     },
     "MarkPaidDialog": {
         "title": "Marcar como pagado: {billName}",
+        "editTitle": "Editar pago: {billName}",
+        "save": "Guardar",
         "dateLabel": "Fecha de pago",
         "amountLabel": "Importe pagado",
         "notesLabel": "Notas (opcional)",

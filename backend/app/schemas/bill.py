@@ -102,6 +102,14 @@ class MarkPaidRequest(BaseModel):
     paid_at: date | None = None  # defaults to now() when None; must not be future
 
 
+class PaymentInstanceUpdate(BaseModel):
+    """Edit an already-paid instance; only fields present in the body change."""
+
+    paid_amount: Decimal | None = None
+    notes: str | None = None  # sent as null/"" clears the note
+    paid_at: date | None = None  # must not be future
+
+
 class HasDeletedFutureOut(BaseModel):
     has_deleted_future: bool
 

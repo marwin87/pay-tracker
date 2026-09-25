@@ -16,6 +16,7 @@ from app.schemas.bill import (
     HasDeletedFutureOut,
     MarkPaidRequest,
     PaymentInstanceOut,
+    PaymentInstanceUpdate,
 )
 from app.schemas.category import CategoryOut
 from app.services.recurrence import (
@@ -212,6 +213,38 @@ def mark_paid(
     if not template.is_paused:
         generate_next_instance(db, template, instance.period)
 
+    db.refresh(instance)
+    return _to_out(instance)
+
+
+@router.patch("/payments/{instance_id}", response_model=PaymentInstanceOut)
+def edit_paid_payment(
+    instance_id: int,
+    body: PaymentInstanceUpdate,
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    instance = db.get(PaymentInstance, instance_id)
+    if not instance:
+        raise HTTPException(status_code=404, detail="Payment instance not found")
+    if instance.template.user_id != me.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    if instance.status != PaymentStatus.paid:
+        raise HTTPException(status_code=400, detail="Payment is not marked as paid")
+    if body.paid_at is not None and body.paid_at > date.today():
+        raise HTTPException(
+            status_code=400, detail="Payment date cannot be in the future"
+        )
+
+    if body.paid_at is not None:
+        instance.paid_at = datetime.combine(
+            body.paid_at, datetime.now(timezone.utc).time(), tzinfo=timezone.utc
+        )
+    if body.paid_amount is not None:
+        instance.paid_amount = body.paid_amount
+    if "notes" in body.model_fields_set:
+        instance.notes = body.notes or None
+    db.commit()
     db.refresh(instance)
     return _to_out(instance)
 
