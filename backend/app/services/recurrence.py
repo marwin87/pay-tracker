@@ -7,33 +7,26 @@ from sqlalchemy.orm import Session
 from app.models.bill import BillFrequency, BillTemplate, PaymentInstance, PaymentStatus
 
 
-def _next_period(period: str, frequency: BillFrequency) -> str:
+def _step_months(frequency: BillFrequency, interval: int) -> int:
+    if frequency == BillFrequency.one_off:
+        return 0  # never advances
+    return interval * (12 if frequency == BillFrequency.annual else 1)
+
+
+def _next_period(period: str, frequency: BillFrequency, interval: int = 1) -> str:
     year, month = map(int, period.split("-"))
-    if frequency == BillFrequency.monthly:
-        month += 1
-        if month > 12:
-            month = 1
-            year += 1
-    elif frequency == BillFrequency.every_2_months:
-        month += 2
-        while month > 12:
-            month -= 12
-            year += 1
-    elif frequency == BillFrequency.quarterly:
-        month += 3
-        while month > 12:
-            month -= 12
-            year += 1
-    elif frequency == BillFrequency.annual:
-        year += 1
-    return f"{year:04d}-{month:02d}"
+    index = year * 12 + (month - 1) + _step_months(frequency, interval)
+    return f"{index // 12:04d}-{index % 12 + 1:02d}"
 
 
 def is_last_instance(template: BillTemplate, period: str) -> bool:
     """True if no further instance follows `period` because end_period cuts the schedule."""
     if not template.end_period or template.frequency == BillFrequency.one_off:
         return False
-    return _next_period(period, template.frequency) > template.end_period
+    return (
+        _next_period(period, template.frequency, template.interval)
+        > template.end_period
+    )
 
 
 def _due_date_for_period(period: str, due_day: int | None) -> date:
@@ -58,16 +51,9 @@ def _bill_active_in_period(template: BillTemplate, period: str) -> bool:
     if template.end_period and period > template.end_period:
         return False
 
-    if template.frequency == BillFrequency.monthly:
-        return True
-    if template.frequency == BillFrequency.every_2_months:
-        return months_diff % 2 == 0
-    if template.frequency == BillFrequency.quarterly:
-        return months_diff % 3 == 0
-    if template.frequency == BillFrequency.annual:
-        return months_diff % 12 == 0
-
-    return False
+    if template.frequency == BillFrequency.one_off:
+        return False
+    return months_diff % _step_months(template.frequency, template.interval) == 0
 
 
 def backfill_template_instances(
@@ -162,7 +148,7 @@ def generate_next_instance(
     if template.frequency == BillFrequency.one_off:
         return None
 
-    next_period = _next_period(paid_period, template.frequency)
+    next_period = _next_period(paid_period, template.frequency, template.interval)
     if template.end_period and next_period > template.end_period:
         return None
 

@@ -84,13 +84,6 @@
         "willAppearHere": "Le bollette che archivi appariranno qui",
         "noFilterResults": "Nessuna bolletta archiviata corrisponde al filtro selezionato",
         "archived": "Archiviata",
-        "frequency": {
-            "monthly": "Mensile",
-            "every_2_months": "Ogni 2 mesi",
-            "quarterly": "Trimestrale",
-            "annual": "Annuale",
-            "one_off": "Una tantum"
-        },
         "collapseAll": "Comprimi tutto",
         "expandAll": "Espandi tutto",
         "restore": "Ripristina",
@@ -107,13 +100,7 @@
         "customCurrencyAriaLabel": "Codice valuta personalizzato",
         "customCurrencyPlaceholder": "es. CHF",
         "frequencyLabel": "Frequenza",
-        "frequency": {
-            "monthly": "Mensile",
-            "every_2_months": "Ogni 2 mesi",
-            "quarterly": "Trimestrale",
-            "annual": "Annuale",
-            "one_off": "Una tantum"
-        },
+        "intervalLabel": "Ripeti ogni",
         "dueDateLabel": "Data di scadenza",
         "startDateLabel": "Mese e giorno di inizio",
         "categoryLabel": "Categoria",
@@ -135,14 +122,7 @@
         "paused": "In pausa",
         "close": "Chiudi",
         "edit": "Modifica",
-        "archive": "Archivia",
-        "frequency": {
-            "monthly": "Mensile",
-            "every_2_months": "Ogni 2 mesi",
-            "quarterly": "Trimestrale",
-            "annual": "Annuale",
-            "one_off": "Una tantum"
-        }
+        "archive": "Archivia"
     },
     "RestoreDeletedDialog": {
         "title": "Ripristinare i pagamenti eliminati?",
@@ -174,10 +154,11 @@
     },
     "Frequencies": {
         "monthly": "Mensile",
-        "every_2_months": "Ogni 2 mesi",
-        "quarterly": "Trimestrale",
         "annual": "Annuale",
-        "one_off": "Una tantum"
+        "one_off": "Una tantum",
+        "every": "Ogni {period}",
+        "months": "{count, plural, one {# mese} other {# mesi}}",
+        "years": "{count, plural, one {# anno} other {# anni}}"
     },
     "DayPicker": {
         "placeholder": "Seleziona giorno",

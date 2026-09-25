@@ -84,13 +84,6 @@
         "willAppearHere": "Las facturas que archives aparecerán aquí",
         "noFilterResults": "Ninguna factura archivada coincide con el filtro seleccionado",
         "archived": "Archivada",
-        "frequency": {
-            "monthly": "Mensual",
-            "every_2_months": "Cada 2 meses",
-            "quarterly": "Trimestral",
-            "annual": "Anual",
-            "one_off": "Puntual"
-        },
         "collapseAll": "Contraer todo",
         "expandAll": "Expandir todo",
         "restore": "Restaurar",
@@ -107,13 +100,7 @@
         "customCurrencyAriaLabel": "Código de moneda personalizado",
         "customCurrencyPlaceholder": "p. ej. CHF",
         "frequencyLabel": "Frecuencia",
-        "frequency": {
-            "monthly": "Mensual",
-            "every_2_months": "Cada 2 meses",
-            "quarterly": "Trimestral",
-            "annual": "Anual",
-            "one_off": "Puntual"
-        },
+        "intervalLabel": "Repetir cada",
         "dueDateLabel": "Fecha de vencimiento",
         "startDateLabel": "Mes y día de inicio",
         "categoryLabel": "Categoría",
@@ -135,14 +122,7 @@
         "paused": "Pausada",
         "close": "Cerrar",
         "edit": "Editar",
-        "archive": "Archivar",
-        "frequency": {
-            "monthly": "Mensual",
-            "every_2_months": "Cada 2 meses",
-            "quarterly": "Trimestral",
-            "annual": "Anual",
-            "one_off": "Puntual"
-        }
+        "archive": "Archivar"
     },
     "RestoreDeletedDialog": {
         "title": "¿Restaurar pagos eliminados?",
@@ -174,10 +154,11 @@
     },
     "Frequencies": {
         "monthly": "Mensual",
-        "every_2_months": "Cada 2 meses",
-        "quarterly": "Trimestral",
         "annual": "Anual",
-        "one_off": "Puntual"
+        "one_off": "Puntual",
+        "every": "Cada {period}",
+        "months": "{count, plural, one {# mes} other {# meses}}",
+        "years": "{count, plural, one {# año} other {# años}}"
     },
     "DayPicker": {
         "placeholder": "Selecciona un día",

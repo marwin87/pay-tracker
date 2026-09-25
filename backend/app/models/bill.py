@@ -27,8 +27,6 @@ if TYPE_CHECKING:
 
 class BillFrequency(str, Enum):
     monthly = "monthly"
-    every_2_months = "every_2_months"
-    quarterly = "quarterly"
     annual = "annual"
     one_off = "one_off"
 
@@ -48,6 +46,10 @@ class BillTemplate(Base):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))
     frequency: Mapped[BillFrequency] = mapped_column(String(20), nullable=False)
+    # Step size in months (monthly) or years (annual); always 1 for one_off.
+    interval: Mapped[int] = mapped_column(
+        Integer, nullable=False, default=1, server_default="1"
+    )
     amount: Mapped[Decimal] = mapped_column(Numeric(12, 2), nullable=False)
     currency: Mapped[str] = mapped_column(String(10), nullable=False, default="PLN")
     due_day: Mapped[int | None] = mapped_column(

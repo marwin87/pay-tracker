@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Archive, ArchiveRestore, ChevronRight, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useFrequencyLabel } from "@/lib/frequency";
 import { fetchBills, unarchiveBill, type BillTemplateOut } from "@/lib/bills-api";
 import {
   categoryFilterLabel,
@@ -22,6 +23,7 @@ const CATEGORY_SORT_OPTIONS: CategorySortOrder[] = ["az", "za"];
 
 export default function ArchivedBillsPage() {
   const t = useTranslations("ArchivedBillsPage");
+  const frequencyLabel = useFrequencyLabel();
   const tCategories = useTranslations("Categories");
   const tFilters = useTranslations("Filters");
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
@@ -227,7 +229,7 @@ export default function ArchivedBillsPage() {
                             {tmpl.amount} {tmpl.currency}
                           </span>
                           <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
-                            {t(`frequency.${tmpl.frequency}` as never) ?? tmpl.frequency}
+                            {frequencyLabel(tmpl.frequency, tmpl.interval)}
                           </span>
                         </div>
                       </div>

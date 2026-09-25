@@ -84,13 +84,6 @@
         "willAppearHere": "Les factures que vous archivez apparaîtront ici",
         "noFilterResults": "Aucune facture archivée ne correspond au filtre sélectionné",
         "archived": "Archivée",
-        "frequency": {
-            "monthly": "Mensuelle",
-            "every_2_months": "Tous les 2 mois",
-            "quarterly": "Trimestrielle",
-            "annual": "Annuelle",
-            "one_off": "Ponctuelle"
-        },
         "collapseAll": "Tout réduire",
         "expandAll": "Tout développer",
         "restore": "Restaurer",
@@ -107,13 +100,7 @@
         "customCurrencyAriaLabel": "Code de devise personnalisé",
         "customCurrencyPlaceholder": "ex. CHF",
         "frequencyLabel": "Fréquence",
-        "frequency": {
-            "monthly": "Mensuelle",
-            "every_2_months": "Tous les 2 mois",
-            "quarterly": "Trimestrielle",
-            "annual": "Annuelle",
-            "one_off": "Ponctuelle"
-        },
+        "intervalLabel": "Répéter tous les",
         "dueDateLabel": "Date d'échéance",
         "startDateLabel": "Mois et jour de début",
         "categoryLabel": "Catégorie",
@@ -135,14 +122,7 @@
         "paused": "En pause",
         "close": "Fermer",
         "edit": "Modifier",
-        "archive": "Archiver",
-        "frequency": {
-            "monthly": "Mensuelle",
-            "every_2_months": "Tous les 2 mois",
-            "quarterly": "Trimestrielle",
-            "annual": "Annuelle",
-            "one_off": "Ponctuelle"
-        }
+        "archive": "Archiver"
     },
     "RestoreDeletedDialog": {
         "title": "Restaurer les paiements supprimés ?",
@@ -174,10 +154,11 @@
     },
     "Frequencies": {
         "monthly": "Mensuelle",
-        "every_2_months": "Tous les 2 mois",
-        "quarterly": "Trimestrielle",
         "annual": "Annuelle",
-        "one_off": "Ponctuelle"
+        "one_off": "Ponctuelle",
+        "every": "Tous les {period}",
+        "months": "{count, plural, one {# mois} other {# mois}}",
+        "years": "{count, plural, one {# an} other {# ans}}"
     },
     "DayPicker": {
         "placeholder": "Sélectionner un jour",

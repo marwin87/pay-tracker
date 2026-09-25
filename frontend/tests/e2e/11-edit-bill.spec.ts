@@ -29,7 +29,8 @@ test('editing a bill persists amount, category, frequency, due day and pause', a
   await page.getByRole('option', { name: 'Housing' }).click();
 
   // Step: cycle
-  await page.getByRole('button', { name: 'Quarterly' }).click();
+  await page.locator('#bill-interval').click();
+  await page.getByRole('option', { name: '3 months' }).click();
 
   // Step: due day — the trigger shows the current "month day" (due_month defaults to now)
   const monthName = new Intl.DateTimeFormat('en', { month: 'long' }).format(new Date());
@@ -44,7 +45,7 @@ test('editing a bill persists amount, category, frequency, due day and pause', a
 
   // Assert: every edited field is reflected on the collapsed row
   await expect(page.getByText('150.00 PLN')).toBeVisible();
-  await expect(page.getByText('Quarterly')).toBeVisible();
+  await expect(page.getByText('Every 3 months')).toBeVisible();
   await expect(page.getByText('Paused')).toBeVisible();
   await expect(page.getByText(/Due on/)).toContainText('20');
 

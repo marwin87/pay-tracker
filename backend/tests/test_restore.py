@@ -451,7 +451,7 @@ def test_v4_backup_round_trips_categories(client):
     assert r.status_code == 201
 
     backup = client.get("/export/json", headers=auth(tok)).json()
-    assert backup["schema_version"] == 5
+    assert backup["schema_version"] == 6
     assert any(c["name"] == "Hobbies" for c in backup["categories"])
 
     r = _upload(client, tok, backup)
@@ -759,3 +759,35 @@ def test_end_period_export_restore_and_snapshot(client):
     assert _upload(client, tok, legacy).status_code == 200
     assert _upload(client, tok, backup).status_code == 200
     assert client.get("/bills", headers=auth(tok)).json()[0]["end_period"] == "2099-06"
+
+
+def test_legacy_frequencies_map_to_monthly_interval(client):
+    """Pre-v6 backups: quarterly -> monthly/3, every_2_months -> monthly/2."""
+    tok = register_and_login(client, "legacy_freq@test.com")
+    templates = [
+        {
+            **_BILL,
+            "id": 1,
+            "name": "Q",
+            "frequency": "quarterly",
+            "is_archived": False,
+            "start_period": "2026-01",
+            "created_at": "2026-01-01T00:00:00+00:00",
+        },
+        {
+            **_BILL2,
+            "id": 2,
+            "name": "B",
+            "frequency": "every_2_months",
+            "is_archived": False,
+            "start_period": "2026-01",
+            "created_at": "2026-01-01T00:00:00+00:00",
+        },
+    ]
+    r = _upload(client, tok, _make_backup(templates, [], schema_version=5))
+    assert r.status_code == 200, r.text
+    got = {
+        t["name"]: (t["frequency"], t["interval"])
+        for t in client.get("/export/json", headers=auth(tok)).json()["bill_templates"]
+    }
+    assert got == {"Q": ("monthly", 3), "B": ("monthly", 2)}

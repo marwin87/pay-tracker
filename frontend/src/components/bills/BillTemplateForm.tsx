@@ -7,12 +7,13 @@ import MonthDayCalendar from "./MonthDayCalendar";
 import MonthYearPicker from "./MonthYearPicker";
 import CurrencyPicker from "@/components/CurrencyPicker";
 import { Checkbox } from "@/components/ui/Checkbox";
+import Dropdown from "@/components/ui/Dropdown";
 import { LOCALE_DEFAULT_CURRENCY } from "@/lib/currency";
 import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
 
-const FREQUENCY_VALUES: BillFrequency[] = ["monthly", "every_2_months", "quarterly", "annual", "one_off"];
+const FREQUENCY_VALUES: BillFrequency[] = ["monthly", "annual", "one_off"];
 
-const RECURRING_FREQUENCIES: BillFrequency[] = ["monthly", "every_2_months", "quarterly"];
+const RECURRING_FREQUENCIES: BillFrequency[] = ["monthly"];
 
 interface Props {
   initial?: Partial<BillTemplateCreate>;
@@ -46,12 +47,14 @@ const labelClass = "block text-xs font-semibold uppercase tracking-wide text-sla
 
 export default function BillTemplateForm({ initial, startPeriod, defaultCurrency, onSave, onCancel }: Props) {
   const t = useTranslations("BillTemplateForm");
+  const tFreq = useTranslations("Frequencies");
   const locale = useLocale();
   const [name, setName] = useState(initial?.name ?? "");
   const [categoryId, setCategoryId] = useState<number | "">(initial?.category_id ?? "");
   const [frequency, setFrequency] = useState<BillFrequency>(
     initial?.frequency ?? "monthly",
   );
+  const [interval, setIntervalValue] = useState(initial?.interval ?? 1);
   const [amount, setAmount] = useState(initial?.amount ?? "");
   const initialCurrency =
     initial?.currency ?? defaultCurrency ?? LOCALE_DEFAULT_CURRENCY[locale] ?? "EUR";
@@ -78,7 +81,9 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
   const effectiveStart =
     startPeriod ?? `${now.getFullYear()}-${String(parseInt(dueMonth, 10) || now.getMonth() + 1).padStart(2, "0")}`;
   const minEnd = effectiveStart > currentPeriod ? effectiveStart : currentPeriod;
-  const step = frequency === "quarterly" ? 3 : frequency === "every_2_months" ? 2 : 1;
+  const maxInterval = frequency === "annual" ? 5 : 12;
+  const effectiveInterval = frequency === "one_off" ? 1 : Math.min(interval, maxInterval);
+  const step = effectiveInterval * (frequency === "annual" ? 12 : 1);
   const endHint = endPeriod ? lastPayment(effectiveStart, endPeriod, step) : null;
 
   function validate(fields: {
@@ -119,6 +124,7 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
         name: name.trim(),
         category_id: categoryId as number,
         frequency,
+        interval: effectiveInterval,
         amount: amount.trim() || "0",
         currency: currency || "EUR",
         due_day: dueDay ? parseInt(dueDay, 10) : null,
@@ -201,10 +207,28 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
                   : "border-slate-200 bg-white text-slate-600 hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:text-emerald-400"
               }`}
             >
-              {t(`frequency.${v}` as never)}
+              {tFreq(v)}
             </button>
           ))}
         </div>
+        {frequency !== "one_off" && (
+          <div className="mt-3 flex items-center gap-2">
+            <label htmlFor="bill-interval" className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              {t("intervalLabel")}
+            </label>
+            <Dropdown
+              id="bill-interval"
+              variant="pill"
+              scrollable
+              value={String(effectiveInterval)}
+              onChange={(v) => setIntervalValue(Number(v))}
+              options={Array.from({ length: maxInterval }, (_, i) => ({
+                value: String(i + 1),
+                label: tFreq(frequency === "annual" ? "years" : "months", { count: i + 1 }),
+              }))}
+            />
+          </div>
+        )}
       </div>
 
       {/* Row 3: Start date + optional end month (fixed-term bills) */}

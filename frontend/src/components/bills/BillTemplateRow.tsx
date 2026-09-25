@@ -13,6 +13,7 @@ import { useLocale, useTranslations } from "next-intl";
 import BillTemplateForm from "./BillTemplateForm";
 import type { BillTemplateOut, BillTemplateUpdate } from "@/lib/bills-api";
 import { categoryBorderClass } from "@/lib/categories";
+import { useFrequencyLabel } from "@/lib/frequency";
 
 interface Props {
   template: BillTemplateOut;
@@ -56,6 +57,7 @@ export default function BillTemplateRow({
   onArchive,
 }: Props) {
   const t = useTranslations("BillTemplateRow");
+  const frequencyLabel = useFrequencyLabel();
   const locale = useLocale();
   const [actionsOpen, setActionsOpen] = useState(false);
 
@@ -95,7 +97,7 @@ export default function BillTemplateRow({
               {template.amount} {template.currency}
             </span>
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
-              {t(`frequency.${template.frequency}` as never) ?? template.frequency}
+              {frequencyLabel(template.frequency, template.interval)}
             </span>
             {dueLabel && (
               <span className="text-xs text-slate-400 dark:text-slate-500">
@@ -159,6 +161,7 @@ export default function BillTemplateRow({
               name: template.name,
               category_id: template.category.id,
               frequency: template.frequency,
+              interval: template.interval,
               amount: template.amount,
               currency: template.currency,
               due_day: template.due_day,

@@ -353,6 +353,7 @@ def _build_backup_arrays(
                 "category_id": t.category_id,
                 "category_name": t.category.name,
                 "frequency": t.frequency,
+                "interval": t.interval,
                 "amount": float(t.amount),
                 "currency": t.currency,
                 "due_day": t.due_day,
@@ -392,7 +393,7 @@ def export_json(
     me: User = Depends(current_user),
 ):
     payload = {
-        "schema_version": 5,
+        "schema_version": 6,
         "exported_by": me.email,
         "exported_at": datetime.now(timezone.utc).isoformat(),
         **_build_backup_arrays(db, me.id, sections),
@@ -529,6 +530,7 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
                 name=bt.name,
                 category_id=category_id,
                 frequency=BillFrequency(bt.frequency),
+                interval=bt.interval,
                 amount=Decimal(str(bt.amount)),
                 currency=bt.currency,
                 due_day=bt.due_day,
@@ -607,7 +609,7 @@ def restore_json(
     except json.JSONDecodeError:
         raise HTTPException(status_code=422, detail="Invalid JSON")
 
-    if raw.get("schema_version") not in {2, 3, 4, 5}:
+    if raw.get("schema_version") not in {2, 3, 4, 5, 6}:
         raise HTTPException(status_code=422, detail="Unsupported schema version")
 
     try:
@@ -632,7 +634,7 @@ def restore_json(
     )
     if has_existing_bills and backup.bill_templates is not None:
         snapshot_payload = {
-            "schema_version": 5,
+            "schema_version": 6,
             **_build_backup_arrays(db, me.id),
         }
         db.query(RestoreSnapshot).filter(RestoreSnapshot.user_id == me.id).delete(

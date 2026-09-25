@@ -256,7 +256,7 @@ Two distinct rules compose this behavior:
    (due date is in the future and unpaid), `overdue` (due date has passed and unpaid), or
    `paid`. This classification drives the dashboard display and email reminder triggers.
 
-2. **Recurrence automation:** Given a bill template's recurrence schedule (its frequency
+2. **Recurrence automation:** Given a bill template's recurrence schedule (its frequency and interval — monthly every 1–12 months, annual every 1–5 years —
    and scheduled due day within the month) and a payment instance that has been marked
    paid, the system derives the next period's due date and creates a new instance for that
    period — unless the template's paused flag is set. The output is a new payment instance

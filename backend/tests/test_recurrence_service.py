@@ -40,31 +40,37 @@ from app.services.recurrence import (
 
 
 @pytest.mark.parametrize(
-    "period,frequency,expected",
+    "period,frequency,interval,expected",
     [
         # monthly — standard and year rollover
-        ("2026-01", BillFrequency.monthly, "2026-02"),
-        ("2026-12", BillFrequency.monthly, "2027-01"),
-        # every_2_months — rollover cases
-        ("2026-11", BillFrequency.every_2_months, "2027-01"),
-        ("2026-12", BillFrequency.every_2_months, "2027-02"),
-        # quarterly — rollover cases
-        ("2026-01", BillFrequency.quarterly, "2026-04"),
-        ("2026-10", BillFrequency.quarterly, "2027-01"),
-        ("2026-11", BillFrequency.quarterly, "2027-02"),
-        ("2026-12", BillFrequency.quarterly, "2027-03"),
-        # annual — standard and December
-        ("2026-06", BillFrequency.annual, "2027-06"),
-        ("2026-12", BillFrequency.annual, "2027-12"),
+        ("2026-01", BillFrequency.monthly, 1, "2026-02"),
+        ("2026-12", BillFrequency.monthly, 1, "2027-01"),
+        # monthly/2 — rollover cases
+        ("2026-11", BillFrequency.monthly, 2, "2027-01"),
+        ("2026-12", BillFrequency.monthly, 2, "2027-02"),
+        # monthly/3 (quarterly) — rollover cases
+        ("2026-01", BillFrequency.monthly, 3, "2026-04"),
+        ("2026-10", BillFrequency.monthly, 3, "2027-01"),
+        ("2026-12", BillFrequency.monthly, 3, "2027-03"),
+        # monthly/4 and /6 — year rollover
+        ("2026-09", BillFrequency.monthly, 4, "2027-01"),
+        ("2026-12", BillFrequency.monthly, 4, "2027-04"),
+        ("2026-07", BillFrequency.monthly, 6, "2027-01"),
+        ("2026-12", BillFrequency.monthly, 12, "2027-12"),
+        # annual — standard, December, multi-year
+        ("2026-06", BillFrequency.annual, 1, "2027-06"),
+        ("2026-12", BillFrequency.annual, 1, "2027-12"),
+        ("2026-06", BillFrequency.annual, 2, "2028-06"),
         # one_off invariant: same period returned unchanged.
-        # The guard in generate_next_instance (line 105-106) prevents this
-        # path from being reached in production — this test documents the
-        # invariant so removing that guard produces a visible failure.
-        ("2026-06", BillFrequency.one_off, "2026-06"),
+        # The guard in generate_next_instance prevents this path from being
+        # reached in production — this test documents the invariant.
+        ("2026-06", BillFrequency.one_off, 1, "2026-06"),
     ],
 )
-def test_next_period(period: str, frequency: BillFrequency, expected: str) -> None:
-    assert _next_period(period, frequency) == expected
+def test_next_period(
+    period: str, frequency: BillFrequency, interval: int, expected: str
+) -> None:
+    assert _next_period(period, frequency, interval) == expected
 
 
 @pytest.mark.parametrize(
@@ -90,6 +96,7 @@ def _stub(
     frequency: BillFrequency,
     start_period: str | None,
     created_at: datetime | None = None,
+    interval: int = 1,
 ) -> types.SimpleNamespace:
     """Lightweight BillTemplate stub for pure-function tests.
 
@@ -98,6 +105,7 @@ def _stub(
     """
     return types.SimpleNamespace(
         frequency=frequency,
+        interval=interval,
         start_period=start_period,
         end_period=None,
         created_at=created_at or datetime(2026, 1, 1, tzinfo=timezone.utc),
@@ -105,33 +113,41 @@ def _stub(
 
 
 @pytest.mark.parametrize(
-    "frequency,start_period,target_period,expected",
+    "frequency,interval,start_period,target_period,expected",
     [
         # monthly — active from anchor onward, inactive before it
-        (BillFrequency.monthly, "2026-01", "2026-06", True),
-        (BillFrequency.monthly, "2026-06", "2026-01", False),  # before anchor
-        # quarterly — active at anchor, at multiples of 3, inactive otherwise
-        (BillFrequency.quarterly, "2026-01", "2026-01", True),  # 0 months offset
-        (BillFrequency.quarterly, "2026-01", "2026-04", True),  # +3 months
-        (BillFrequency.quarterly, "2026-01", "2026-02", False),  # +1 month
-        (BillFrequency.quarterly, "2026-01", "2025-12", False),  # before anchor
-        # every_2_months
-        (BillFrequency.every_2_months, "2026-01", "2026-03", True),  # +2 months
-        (BillFrequency.every_2_months, "2026-01", "2026-02", False),  # +1 month
+        (BillFrequency.monthly, 1, "2026-01", "2026-06", True),
+        (BillFrequency.monthly, 1, "2026-06", "2026-01", False),  # before anchor
+        # monthly/3 — active at anchor and multiples of 3, inactive otherwise
+        (BillFrequency.monthly, 3, "2026-01", "2026-01", True),
+        (BillFrequency.monthly, 3, "2026-01", "2026-04", True),
+        (BillFrequency.monthly, 3, "2026-01", "2026-02", False),
+        (BillFrequency.monthly, 3, "2026-01", "2025-12", False),  # before anchor
+        # monthly/2
+        (BillFrequency.monthly, 2, "2026-01", "2026-03", True),
+        (BillFrequency.monthly, 2, "2026-01", "2026-02", False),
+        # monthly/4 and /6 — across the year boundary
+        (BillFrequency.monthly, 4, "2026-11", "2027-03", True),
+        (BillFrequency.monthly, 4, "2026-11", "2027-02", False),
+        (BillFrequency.monthly, 6, "2026-08", "2027-02", True),
+        (BillFrequency.monthly, 6, "2026-08", "2027-01", False),
         # annual
-        (BillFrequency.annual, "2026-06", "2027-06", True),  # +12 months
-        (BillFrequency.annual, "2026-06", "2027-05", False),  # +11 months
-        # one_off: always inactive (fallthrough → False)
-        (BillFrequency.one_off, "2026-01", "2026-01", False),
+        (BillFrequency.annual, 1, "2026-06", "2027-06", True),
+        (BillFrequency.annual, 1, "2026-06", "2027-05", False),
+        (BillFrequency.annual, 2, "2026-06", "2027-06", False),  # off-year
+        (BillFrequency.annual, 2, "2026-06", "2028-06", True),
+        # one_off: always inactive
+        (BillFrequency.one_off, 1, "2026-01", "2026-01", False),
     ],
 )
 def test_bill_active_in_period(
     frequency: BillFrequency,
+    interval: int,
     start_period: str,
     target_period: str,
     expected: bool,
 ) -> None:
-    template = _stub(frequency, start_period)
+    template = _stub(frequency, start_period, interval=interval)
     assert _bill_active_in_period(template, target_period) == expected
 
 
@@ -142,9 +158,10 @@ def test_bill_active_in_period_created_at_fallback() -> None:
     predate the start_period column.  created_at=2026-01-15 → anchor "2026-01".
     """
     template = _stub(
-        BillFrequency.quarterly,
+        BillFrequency.monthly,
         start_period=None,
         created_at=datetime(2026, 1, 15, tzinfo=timezone.utc),
+        interval=3,
     )
     # +3 months from anchor "2026-01" → active
     assert _bill_active_in_period(template, "2026-04") is True
@@ -168,6 +185,7 @@ def _make_bill(
     user_id: int,
     *,
     frequency: BillFrequency = BillFrequency.monthly,
+    interval: int = 1,
     due_day: int = 15,
     amount: Decimal = Decimal("100.00"),
     start_period: str = "2026-01",
@@ -183,6 +201,7 @@ def _make_bill(
     bill = BillTemplate(
         name="Test Bill",
         frequency=frequency,
+        interval=interval,
         amount=amount,
         currency="PLN",
         due_day=due_day,
@@ -410,9 +429,13 @@ def test_ensure_skips_one_off_template(db_session) -> None:
 
 def test_ensure_skips_inactive_period(db_session) -> None:
     user = _make_user(db_session)
-    # Quarterly from "2026-01": active in 2026-01, 2026-04, 2026-07 ...
+    # Every 3 months from "2026-01": active in 2026-01, 2026-04, 2026-07 ...
     _make_bill(
-        db_session, user.id, frequency=BillFrequency.quarterly, start_period="2026-01"
+        db_session,
+        user.id,
+        frequency=BillFrequency.monthly,
+        interval=3,
+        start_period="2026-01",
     )
     user_id = user.id
     db_session.commit()
@@ -540,7 +563,8 @@ def test_backfill_skips_inactive_periods_for_quarterly(db_session) -> None:
     bill = _make_bill(
         db_session,
         user.id,
-        frequency=BillFrequency.quarterly,
+        frequency=BillFrequency.monthly,
+        interval=3,
         start_period="2026-01",
     )
     db_session.commit()
@@ -581,7 +605,8 @@ def test_end_period_quarterly_not_on_schedule(db_session) -> None:
     bill = _make_bill(
         db_session,
         user.id,
-        frequency=BillFrequency.quarterly,
+        frequency=BillFrequency.monthly,
+        interval=3,
         start_period="2026-01",
         end_period="2026-11",
     )
@@ -606,7 +631,8 @@ def test_is_last_instance(db_session) -> None:
     quarterly = _make_bill(
         db_session,
         user.id,
-        frequency=BillFrequency.quarterly,
+        frequency=BillFrequency.monthly,
+        interval=3,
         start_period="2026-01",
         end_period="2026-11",
     )
@@ -616,3 +642,22 @@ def test_is_last_instance(db_session) -> None:
     # quarterly: Oct is the last scheduled before the Nov end
     assert is_last_instance(quarterly, "2026-07") is False
     assert is_last_instance(quarterly, "2026-10") is True
+
+
+def test_end_period_interval_4_not_on_schedule(db_session) -> None:
+    """Every 4 months from 2026-01, end 2026-11: 01, 05, 09 — next (2027-01) is past end."""
+    user = _make_user(db_session, "end4@test.com")
+    bill = _make_bill(
+        db_session,
+        user.id,
+        interval=4,
+        start_period="2026-01",
+        end_period="2026-11",
+    )
+    backfill_template_instances(db_session, bill, "2026-01", "2027-12")
+    periods = sorted(
+        r.period for r in db_session.query(PaymentInstance).filter_by(bill_id=bill.id)
+    )
+    assert periods == ["2026-01", "2026-05", "2026-09"]
+    assert generate_next_instance(db_session, bill, "2026-09") is None
+    assert generate_next_instance(db_session, bill, "2026-05").period == "2026-09"

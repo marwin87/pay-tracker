@@ -84,13 +84,6 @@
         "willAppearHere": "Bills you archive will appear here",
         "noFilterResults": "No archived bills match the selected filter",
         "archived": "Archived",
-        "frequency": {
-            "monthly": "Monthly",
-            "every_2_months": "Every 2 months",
-            "quarterly": "Quarterly",
-            "annual": "Annual",
-            "one_off": "One-off"
-        },
         "collapseAll": "Collapse all",
         "expandAll": "Expand all",
         "restore": "Restore",
@@ -107,13 +100,7 @@
         "customCurrencyAriaLabel": "Custom currency code",
         "customCurrencyPlaceholder": "e.g. CHF",
         "frequencyLabel": "Frequency",
-        "frequency": {
-            "monthly": "Monthly",
-            "every_2_months": "Every 2 months",
-            "quarterly": "Quarterly",
-            "annual": "Annual",
-            "one_off": "One-off"
-        },
+        "intervalLabel": "Repeat every",
         "dueDateLabel": "Due date",
         "startDateLabel": "Starting month & day",
         "categoryLabel": "Category",
@@ -135,14 +122,7 @@
         "paused": "Paused",
         "close": "Close",
         "edit": "Edit",
-        "archive": "Archive",
-        "frequency": {
-            "monthly": "Monthly",
-            "every_2_months": "Every 2 months",
-            "quarterly": "Quarterly",
-            "annual": "Annual",
-            "one_off": "One-off"
-        }
+        "archive": "Archive"
     },
     "RestoreDeletedDialog": {
         "title": "Restore deleted payments?",
@@ -174,10 +154,11 @@
     },
     "Frequencies": {
         "monthly": "Monthly",
-        "every_2_months": "Every 2 months",
-        "quarterly": "Quarterly",
         "annual": "Annual",
-        "one_off": "One-off"
+        "one_off": "One-off",
+        "every": "Every {period}",
+        "months": "{count, plural, one {# month} other {# months}}",
+        "years": "{count, plural, one {# year} other {# years}}"
     },
     "DayPicker": {
         "placeholder": "Select day",

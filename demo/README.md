@@ -20,12 +20,12 @@ All notifications are switched off for this account (email, Telegram, browser), 
 | Name | Category | Frequency | Amount | Notes |
 |---|---|---|---|---|
 | Rent | Housing | Monthly | €1,200.00 | |
-| Electricity | Utilities | Every 2 months | €95.00 | |
+| Electricity | Utilities | Monthly, every 2 months | €95.00 | |
 | Internet | Utilities | Monthly | €39.99 | |
 | Netflix | Subscriptions | Monthly | €17.99 | |
 | Car Insurance | Insurance | Annual | €680.00 | |
 | Gym Membership | Healthcare | Monthly | €45.00 | |
-| Property Tax | Housing | Quarterly | €210.00 | |
+| Property Tax | Housing | Monthly, every 3 months | €210.00 | |
 | Spotify *(archived bill)* | Subscriptions | Monthly | €10.99 | |
 | Tyre Change | Transport | One-off | €180.00 | |
 | Old Music App | **Streaming (Old)** *(archived category)* | Monthly | €4.99 | bill stays active — category is what's archived |

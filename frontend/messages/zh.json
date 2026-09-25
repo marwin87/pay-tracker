@@ -84,13 +84,6 @@
         "willAppearHere": "您归档的账单将显示在此处",
         "noFilterResults": "没有符合所选筛选条件的已归档账单",
         "archived": "已归档",
-        "frequency": {
-            "monthly": "每月",
-            "every_2_months": "每 2 个月",
-            "quarterly": "每季度",
-            "annual": "每年",
-            "one_off": "一次性"
-        },
         "collapseAll": "全部折叠",
         "expandAll": "全部展开",
         "restore": "恢复",
@@ -107,13 +100,7 @@
         "customCurrencyAriaLabel": "自定义货币代码",
         "customCurrencyPlaceholder": "例如：CHF",
         "frequencyLabel": "频率",
-        "frequency": {
-            "monthly": "每月",
-            "every_2_months": "每 2 个月",
-            "quarterly": "每季度",
-            "annual": "每年",
-            "one_off": "一次性"
-        },
+        "intervalLabel": "重复间隔",
         "dueDateLabel": "到期日",
         "startDateLabel": "起始月份和日期",
         "categoryLabel": "类别",
@@ -135,14 +122,7 @@
         "paused": "已暂停",
         "close": "关闭",
         "edit": "编辑",
-        "archive": "归档",
-        "frequency": {
-            "monthly": "每月",
-            "every_2_months": "每 2 个月",
-            "quarterly": "每季度",
-            "annual": "每年",
-            "one_off": "一次性"
-        }
+        "archive": "归档"
     },
     "RestoreDeletedDialog": {
         "title": "恢复已删除的付款记录？",
@@ -174,10 +154,11 @@
     },
     "Frequencies": {
         "monthly": "每月",
-        "every_2_months": "每 2 个月",
-        "quarterly": "每季度",
         "annual": "每年",
-        "one_off": "一次性"
+        "one_off": "一次性",
+        "every": "每 {period}",
+        "months": "{count, plural, other {# 个月}}",
+        "years": "{count, plural, other {# 年}}"
     },
     "DayPicker": {
         "placeholder": "选择日期",

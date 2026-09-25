@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
-from pydantic import BaseModel, Field, computed_field, field_validator
+from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 from app.models.bill import BillFrequency, PaymentStatus
 from app.schemas.auth import normalize_bot_token, normalize_chat_id
 from app.schemas.category import CategoryOut
@@ -8,10 +8,18 @@ from app.schemas.category import CategoryOut
 _PERIOD_RE = r"^\d{4}-(0[1-9]|1[0-2])$"
 
 
+def check_interval(frequency: BillFrequency, interval: int) -> None:
+    """monthly: 1-12 months, annual: 1-5 years, one_off: always 1."""
+    limit = {BillFrequency.annual: 5, BillFrequency.one_off: 1}.get(frequency, 12)
+    if interval > limit:
+        raise ValueError(f"interval must be <= {limit} for {frequency.value}")
+
+
 class BillTemplateCreate(BaseModel):
     name: str
     category_id: int
     frequency: BillFrequency
+    interval: int = Field(1, ge=1, le=12)
     amount: Decimal = Decimal("0")
     currency: str = "PLN"
     due_day: int | None = Field(None, ge=1, le=31)
@@ -20,11 +28,17 @@ class BillTemplateCreate(BaseModel):
     notes: str | None = None
     is_paused: bool = False
 
+    @model_validator(mode="after")
+    def _interval_fits_frequency(self) -> "BillTemplateCreate":
+        check_interval(self.frequency, self.interval)
+        return self
+
 
 class BillTemplateUpdate(BaseModel):
     name: str | None = None
     category_id: int | None = None
     frequency: BillFrequency | None = None
+    interval: int | None = Field(None, ge=1, le=12)
     amount: Decimal | None = None
     currency: str | None = None
     due_day: int | None = Field(None, ge=1, le=31)
@@ -42,6 +56,7 @@ class BillTemplateOut(BaseModel):
     name: str
     category: CategoryOut
     frequency: BillFrequency
+    interval: int
     amount: Decimal
     currency: str
     due_day: int | None
@@ -75,6 +90,7 @@ class PaymentInstanceOut(BaseModel):
     bill_name: str
     currency: str
     frequency: BillFrequency
+    interval: int = 1
     category: CategoryOut
     email_sent_at: datetime | None
     is_last: bool = False  # final instalment of a fixed-term bill
@@ -112,6 +128,7 @@ class BackupTemplate(BaseModel):
     # Lets bills restored without a `categories` section find a category by name.
     category_name: str | None = None
     frequency: BillFrequency
+    interval: int = 1
     amount: Decimal
     currency: str
     due_day: int | None
@@ -121,6 +138,16 @@ class BackupTemplate(BaseModel):
     start_period: str | None
     end_period: str | None = None
     created_at: str
+
+    @model_validator(mode="before")
+    @classmethod
+    def _legacy_frequency(cls, data: object) -> object:
+        # Pre-v6 backups: every_2_months / quarterly became monthly + interval.
+        if isinstance(data, dict):
+            legacy = {"every_2_months": 2, "quarterly": 3}.get(data.get("frequency"))
+            if legacy:
+                data = {**data, "frequency": "monthly", "interval": legacy}
+        return data
 
 
 class BackupInstance(BaseModel):

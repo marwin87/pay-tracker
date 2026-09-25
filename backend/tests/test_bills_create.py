@@ -237,3 +237,37 @@ def test_end_period_before_start_rejected_and_valid_saved(client):
     )
     assert r.status_code == 201
     assert r.json()["end_period"] == "2099-12"
+
+
+@pytest.mark.parametrize(
+    "frequency,interval,ok",
+    [
+        ("monthly", 1, True),
+        ("monthly", 12, True),
+        ("monthly", 13, False),
+        ("monthly", 0, False),
+        ("annual", 5, True),
+        ("annual", 6, False),
+        ("one_off", 1, True),
+        ("one_off", 2, False),
+    ],
+)
+def test_create_bill_interval_limits(client, frequency, interval, ok):
+    token = register_and_login(client, f"iv_{frequency}_{interval}@test.com")
+    payload = _bill(client, token, frequency=frequency, interval=interval, due_day=None)
+    r = client.post("/bills", json=payload, headers=auth(token))
+    assert (r.status_code == 201) == ok, r.text
+    if ok:
+        assert r.json()["interval"] == interval
+
+
+def test_patch_bill_interval_validated_against_frequency(client):
+    token = register_and_login(client, "iv_patch@test.com")
+    r = client.post("/bills", json=_bill(client, token), headers=auth(token))
+    bill_id = r.json()["id"]
+    r = client.patch(f"/bills/{bill_id}", json={"interval": 4}, headers=auth(token))
+    assert r.status_code == 200 and r.json()["interval"] == 4
+    r = client.patch(
+        f"/bills/{bill_id}", json={"frequency": "one_off"}, headers=auth(token)
+    )
+    assert r.status_code == 422

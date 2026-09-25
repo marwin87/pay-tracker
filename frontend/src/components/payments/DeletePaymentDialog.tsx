@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useFrequencyLabel } from "@/lib/frequency";
 import { deletePayment, type PaymentInstanceOut } from "@/lib/payments-api";
 import { Checkbox } from "@/components/ui/Checkbox";
 
@@ -20,7 +21,7 @@ export default function DeletePaymentDialog({
   onDeleted,
 }: Props) {
   const t = useTranslations("DeletePaymentDialog");
-  const tFreq = useTranslations("Frequencies");
+  const frequencyLabel = useFrequencyLabel();
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteFuture, setDeleteFuture] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +31,6 @@ export default function DeletePaymentDialog({
   if (!isOpen) return null;
 
   const isRecurring = instance.frequency !== "one_off";
-  const frequencyLabel = tFreq(instance.frequency as Parameters<typeof tFreq>[0]);
 
   async function handleConfirm() {
     setIsDeleting(true);
@@ -68,7 +68,7 @@ export default function DeletePaymentDialog({
         <p className="mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
           {instance.bill_name}
           <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-slate-700 dark:text-slate-400">
-            {frequencyLabel}
+            {frequencyLabel(instance.frequency, instance.interval)}
           </span>
         </p>
 

@@ -9,6 +9,7 @@ from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
 from app.models.category import Category
 from app.models.user import User
 from app.schemas.bill import (
+    check_interval,
     BillTemplateCreate,
     BillTemplateOut,
     BillTemplateUpdate,
@@ -60,6 +61,7 @@ def _to_out(
             "bill_name": inst.template.name,
             "currency": inst.template.currency,
             "frequency": inst.template.frequency,
+            "interval": inst.template.interval,
             "category": CategoryOut.model_validate(inst.template.category),
             "email_sent_at": inst.email_sent_at,
             "is_last": is_last_instance(inst.template, inst.period),
@@ -87,7 +89,7 @@ def create_bill(
 ):
     from app.models.bill import BillFrequency as BF
 
-    RECURRING = (BF.monthly, BF.every_2_months, BF.quarterly)
+    RECURRING = (BF.monthly,)
 
     _check_category_ownership(db, body.category_id, me.id)
 
@@ -326,6 +328,8 @@ def update_bill(
     due_month = updates.pop("due_month", None)
     if "category_id" in updates:
         _check_category_ownership(db, updates["category_id"], me.id)
+    if updates.get("interval") is None:
+        updates.pop("interval", None)
     due_day_changed = "due_day" in updates and updates["due_day"] != bill.due_day
     for field, value in updates.items():
         setattr(bill, field, value)
@@ -339,6 +343,11 @@ def update_bill(
 
     if bill.end_period and bill.start_period and bill.end_period < bill.start_period:
         raise HTTPException(status_code=422, detail="end_period is before start")
+
+    try:
+        check_interval(bill.frequency, bill.interval)
+    except ValueError as e:
+        raise HTTPException(status_code=422, detail=str(e))
 
     if due_day_changed:
         unpaid = (

@@ -68,14 +68,15 @@ test('paying the last instalment of a fixed-term bill creates no further payment
   );
 });
 
-test('quarterly bill warns when the end month is off its schedule', async ({ page }) => {
+test('every-3-months bill warns when the end month is off its schedule', async ({ page }) => {
   const now = new Date();
   test.skip(now.getMonth() === 11, 'needs a month after the current one in the same year');
 
   await loginNewUser(page);
   await page.goto('/dashboard/bills');
   await page.getByRole('button', { name: 'New Bill' }).click();
-  await page.getByRole('button', { name: 'Quarterly' }).click();
+  await page.locator('#bill-interval').click();
+  await page.getByRole('option', { name: '3 months' }).click();
 
   // End = the month after the start (default start = current month) → not on a 3-month cycle
   await page.getByLabel('Last payment month (optional)').click();

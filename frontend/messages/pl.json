@@ -84,13 +84,6 @@
         "willAppearHere": "Tutaj pojawią się zarchiwizowane rachunki",
         "noFilterResults": "Brak zarchiwizowanych rachunków pasujących do wybranego filtra",
         "archived": "Zarchiwizowany",
-        "frequency": {
-            "monthly": "Miesięcznie",
-            "every_2_months": "Co 2 miesiące",
-            "quarterly": "Kwartalnie",
-            "annual": "Rocznie",
-            "one_off": "Jednorazowo"
-        },
         "collapseAll": "Zwiń wszystko",
         "expandAll": "Rozwiń wszystko",
         "restore": "Przywróć",
@@ -107,13 +100,7 @@
         "customCurrencyAriaLabel": "Kod waluty niestandardowej",
         "customCurrencyPlaceholder": "np. CHF",
         "frequencyLabel": "Częstotliwość",
-        "frequency": {
-            "monthly": "Miesięcznie",
-            "every_2_months": "Co 2 miesiące",
-            "quarterly": "Kwartalnie",
-            "annual": "Rocznie",
-            "one_off": "Jednorazowo"
-        },
+        "intervalLabel": "Powtarzaj co",
         "dueDateLabel": "Termin płatności",
         "startDateLabel": "Miesiąc i dzień rozpoczęcia",
         "categoryLabel": "Kategoria",
@@ -135,14 +122,7 @@
         "paused": "Wstrzymany",
         "close": "Zamknij",
         "edit": "Edytuj",
-        "archive": "Archiwizuj",
-        "frequency": {
-            "monthly": "Miesięcznie",
-            "every_2_months": "Co 2 miesiące",
-            "quarterly": "Kwartalnie",
-            "annual": "Rocznie",
-            "one_off": "Jednorazowo"
-        }
+        "archive": "Archiwizuj"
     },
     "RestoreDeletedDialog": {
         "title": "Przywrócić usunięte płatności?",
@@ -174,10 +154,11 @@
     },
     "Frequencies": {
         "monthly": "Miesięcznie",
-        "every_2_months": "Co 2 miesiące",
-        "quarterly": "Kwartalnie",
         "annual": "Rocznie",
-        "one_off": "Jednorazowo"
+        "one_off": "Jednorazowo",
+        "every": "Co {period}",
+        "months": "{count, plural, one {# miesiąc} few {# miesiące} many {# miesięcy} other {# miesiąca}}",
+        "years": "{count, plural, one {# rok} few {# lata} many {# lat} other {# roku}}"
     },
     "DayPicker": {
         "placeholder": "Wybierz dzień",
