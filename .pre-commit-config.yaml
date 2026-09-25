@@ -1,3 +1,5 @@
+default_install_hook_types: [pre-commit]
+
 repos:
   - repo: https://github.com/Yelp/detect-secrets
     rev: v1.5.0
@@ -18,3 +20,21 @@ repos:
     hooks:
       - id: conventional-pre-commit
         stages: [commit-msg]
+
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: bash -c 'if [ "$(uname)" = "Darwin" ]; then arch -arm64 uv run --directory backend mypy app; else uv run --directory backend mypy app; fi'
+        language: system
+        pass_filenames: false
+        files: ^backend/
+        stages: [pre-commit]
+
+      - id: pytest
+        name: pytest
+        entry: bash -c 'if [ "$(uname)" = "Darwin" ]; then arch -arm64 uv run --directory backend pytest -q; else uv run --directory backend pytest -q; fi'
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
