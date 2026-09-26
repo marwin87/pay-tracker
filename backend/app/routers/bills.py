@@ -17,6 +17,7 @@ from app.schemas.bill import (
     MarkPaidRequest,
     PaymentInstanceOut,
     PaymentInstanceUpdate,
+    TrendPointOut,
 )
 from app.schemas.category import CategoryOut
 from app.services.recurrence import (
@@ -26,6 +27,7 @@ from app.services.recurrence import (
     generate_next_instance,
     is_last_instance,
 )
+from app.services.trend import payment_trend
 
 router = APIRouter(prefix="/bills", tags=["bills"])
 
@@ -166,6 +168,16 @@ def list_payments(
 
     result = [_to_out(inst) for inst in instances]
     return result
+
+
+@router.get("/payments/trend", response_model=list[TrendPointOut])
+def payments_trend(
+    month: str | None = Query(default=None, pattern=r"^\d{4}-(0[1-9]|1[0-2])$"),
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    """Paid vs unpaid totals per currency for the 12 months ending at `month`."""
+    return payment_trend(db, me.id, month or date.today().strftime("%Y-%m"))
 
 
 @router.post("/payments/{instance_id}/pay", response_model=PaymentInstanceOut)

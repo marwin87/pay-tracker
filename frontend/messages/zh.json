@@ -42,6 +42,7 @@
         "hidePassword": "隐藏密码"
     },
     "DashboardLayout": {
+        "dashboard": "仪表盘",
         "payments": "付款",
         "bills": "账单",
         "archived": "已归档",
@@ -53,14 +54,39 @@
     "Dashboard": {
         "title": "欢迎使用 Pay Tracker",
         "subtitle": "在一处集中管理您的家庭账单。",
-        "paymentsTitle": "付款",
-        "paymentsDesc": "查看并标记本月账单为已付款",
-        "manageBillsTitle": "管理账单",
-        "manageBillsDesc": "创建、编辑并跟踪您的周期性账单",
-        "archivedBillsTitle": "已归档账单",
-        "archivedBillsDesc": "查看历史账单和付款记录",
-        "settingsTitle": "设置",
-        "settingsDesc": "管理通知、备份和偏好设置"
+        "summary": {
+            "paid": "已付",
+            "overdue": "已逾期",
+            "upcoming": "待付",
+            "counts": "已付 {paid} / {total}",
+            "empty": "本月此币种暂无付款。",
+            "of": "共 {total}",
+            "paidLabel": "已付款",
+            "barLabel": "已付 {percent}%",
+            "bills": "{count, plural, other {# 笔账单}}",
+            "remaining": "仍需支付",
+            "loadError": "无法加载概览，请重试。",
+            "loading": "正在加载概览",
+            "currency": "币种"
+        },
+        "categories": {
+            "title": "按类别",
+            "empty": "本月此币种暂无付款。",
+            "chartLabel": "按类别的支出",
+            "thisMonth": "本月",
+            "paidOf": "已付 {paid} / {total}"
+        },
+        "trend": {
+            "title": "最近 12 个月",
+            "empty": "此币种暂无付款记录。",
+            "chartLabel": "每月付款",
+            "paid": "已付",
+            "unpaid": "待付",
+            "average": "平均 {amount}",
+            "detail": "已付 {paid}，待付 {unpaid}",
+            "above": "高于平均 {amount}",
+            "below": "低于平均 {amount}"
+        }
     },
     "BillsPage": {
         "title": "您的账单",

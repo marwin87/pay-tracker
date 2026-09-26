@@ -42,6 +42,7 @@
         "hidePassword": "Nascondi password"
     },
     "DashboardLayout": {
+        "dashboard": "Dashboard",
         "payments": "Pagamenti",
         "bills": "Bollette",
         "archived": "Archiviate",
@@ -53,14 +54,39 @@
     "Dashboard": {
         "title": "Benvenuto in Pay Tracker",
         "subtitle": "Gestisci le bollette di casa in un unico posto.",
-        "paymentsTitle": "Pagamenti",
-        "paymentsDesc": "Visualizza e segna come pagate le bollette di questo mese",
-        "manageBillsTitle": "Gestisci bollette",
-        "manageBillsDesc": "Crea, modifica e monitora le tue bollette ricorrenti",
-        "archivedBillsTitle": "Bollette archiviate",
-        "archivedBillsDesc": "Visualizza bollette passate e cronologia pagamenti",
-        "settingsTitle": "Impostazioni",
-        "settingsDesc": "Gestisci notifiche, backup e preferenze"
+        "summary": {
+            "paid": "Pagato",
+            "overdue": "Scaduto",
+            "upcoming": "In arrivo",
+            "counts": "{paid} di {total} pagate",
+            "empty": "Nessun pagamento questo mese in questa valuta.",
+            "of": "di {total}",
+            "paidLabel": "pagato finora",
+            "barLabel": "{percent}% pagato",
+            "bills": "{count, plural, one {# bolletta} other {# bollette}}",
+            "remaining": "Ancora da pagare",
+            "loadError": "Impossibile caricare il riepilogo. Riprova.",
+            "loading": "Caricamento del riepilogo",
+            "currency": "Valuta"
+        },
+        "categories": {
+            "title": "Per categoria",
+            "empty": "Nessun pagamento questo mese in questa valuta.",
+            "chartLabel": "Spese per categoria",
+            "thisMonth": "questo mese",
+            "paidOf": "pagato {paid} di {total}"
+        },
+        "trend": {
+            "title": "Ultimi 12 mesi",
+            "empty": "Ancora nessuno storico dei pagamenti in questa valuta.",
+            "chartLabel": "Pagamenti mensili",
+            "paid": "Pagato",
+            "unpaid": "Da pagare",
+            "average": "media {amount}",
+            "detail": "pagato {paid}, da pagare {unpaid}",
+            "above": "{amount} sopra la media",
+            "below": "{amount} sotto la media"
+        }
     },
     "BillsPage": {
         "title": "Le tue bollette",

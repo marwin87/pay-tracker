@@ -97,6 +97,13 @@ class PaymentInstanceOut(BaseModel):
     is_last: bool = False  # final instalment of a fixed-term bill
 
 
+class TrendPointOut(BaseModel):
+    period: str
+    currency: str
+    paid: Decimal
+    unpaid: Decimal
+
+
 class MarkPaidRequest(BaseModel):
     paid_amount: Decimal | None = None  # defaults to template amount when None
     notes: str | None = None

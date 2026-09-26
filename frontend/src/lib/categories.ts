@@ -55,6 +55,27 @@ export const CATEGORY_COLOR_SWATCH: Record<CategoryColor, string> = {
   pink: "bg-pink-400 dark:bg-pink-500",
 };
 
+// Stroke classes for SVG charts (donut segments); same hues as the swatches above.
+export const CATEGORY_COLOR_STROKE: Record<CategoryColor, string> = {
+  blue: "stroke-blue-400 dark:stroke-blue-500",
+  purple: "stroke-purple-400 dark:stroke-purple-500",
+  rose: "stroke-rose-400 dark:stroke-rose-500",
+  orange: "stroke-orange-400 dark:stroke-orange-500",
+  slate: "stroke-slate-400 dark:stroke-slate-500",
+  violet: "stroke-violet-400 dark:stroke-violet-500",
+  cyan: "stroke-cyan-500 dark:stroke-cyan-400",
+  emerald: "stroke-emerald-400 dark:stroke-emerald-500",
+  "slate-light": "stroke-slate-300 dark:stroke-slate-600",
+  amber: "stroke-amber-400 dark:stroke-amber-500",
+  teal: "stroke-teal-400 dark:stroke-teal-500",
+  indigo: "stroke-indigo-400 dark:stroke-indigo-500",
+  pink: "stroke-pink-400 dark:stroke-pink-500",
+};
+
+export function categoryStrokeClass(color: string): string {
+  return CATEGORY_COLOR_STROKE[color as CategoryColor] ?? CATEGORY_COLOR_STROKE[FALLBACK_COLOR];
+}
+
 export function categoryBorderClass(color: string): string {
   return CATEGORY_COLOR_BORDER[color as CategoryColor] ?? CATEGORY_COLOR_BORDER[FALLBACK_COLOR];
 }

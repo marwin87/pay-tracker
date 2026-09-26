@@ -42,6 +42,7 @@
         "hidePassword": "Passwort verbergen"
     },
     "DashboardLayout": {
+        "dashboard": "Übersicht",
         "payments": "Zahlungen",
         "bills": "Rechnungen",
         "archived": "Archiv",
@@ -53,14 +54,39 @@
     "Dashboard": {
         "title": "Willkommen bei Pay Tracker",
         "subtitle": "Verwalten Sie Ihre Haushaltsrechnungen an einem Ort.",
-        "paymentsTitle": "Zahlungen",
-        "paymentsDesc": "Rechnungen dieses Monats anzeigen und als bezahlt markieren",
-        "manageBillsTitle": "Rechnungen verwalten",
-        "manageBillsDesc": "Erstellen, bearbeiten und verfolgen Sie Ihre wiederkehrenden Rechnungen",
-        "archivedBillsTitle": "Archivierte Rechnungen",
-        "archivedBillsDesc": "Vergangene Rechnungen und Zahlungshistorie anzeigen",
-        "settingsTitle": "Einstellungen",
-        "settingsDesc": "Benachrichtigungen, Backup und Einstellungen verwalten"
+        "summary": {
+            "paid": "Bezahlt",
+            "overdue": "Überfällig",
+            "upcoming": "Anstehend",
+            "counts": "{paid} von {total} bezahlt",
+            "empty": "Keine Zahlungen in diesem Monat in dieser Währung.",
+            "of": "von {total}",
+            "paidLabel": "bisher bezahlt",
+            "barLabel": "{percent} % bezahlt",
+            "bills": "{count, plural, one {# Rechnung} other {# Rechnungen}}",
+            "remaining": "Noch zu zahlen",
+            "loadError": "Die Übersicht konnte nicht geladen werden. Bitte erneut versuchen.",
+            "loading": "Übersicht wird geladen",
+            "currency": "Währung"
+        },
+        "categories": {
+            "title": "Nach Kategorie",
+            "empty": "Keine Zahlungen in diesem Monat in dieser Währung.",
+            "chartLabel": "Ausgaben nach Kategorie",
+            "thisMonth": "diesen Monat",
+            "paidOf": "{paid} von {total} bezahlt"
+        },
+        "trend": {
+            "title": "Letzte 12 Monate",
+            "empty": "Noch kein Zahlungsverlauf in dieser Währung.",
+            "chartLabel": "Monatliche Zahlungen",
+            "paid": "Bezahlt",
+            "unpaid": "Noch zu zahlen",
+            "average": "Durchschnitt {amount}",
+            "detail": "bezahlt {paid}, offen {unpaid}",
+            "above": "{amount} über dem Durchschnitt",
+            "below": "{amount} unter dem Durchschnitt"
+        }
     },
     "BillsPage": {
         "title": "Ihre Rechnungen",

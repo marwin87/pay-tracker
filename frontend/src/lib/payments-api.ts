@@ -25,6 +25,19 @@ export interface PaymentInstanceOut {
   email_sent_at: string | null;
 }
 
+/** Paid / unpaid totals for one currency in one month (never mixed across currencies). */
+export interface TrendPoint {
+  period: string;
+  currency: string;
+  paid: string;
+  unpaid: string;
+}
+
+/** Totals for the 12 months ending at `month` ("YYYY-MM"); months without payments are absent. */
+export function fetchTrend(month: string): Promise<TrendPoint[]> {
+  return apiFetch<TrendPoint[]>(`/bills/payments/trend?month=${encodeURIComponent(month)}`);
+}
+
 export function syncInstances(month: string): Promise<void> {
   return apiFetch<void>(`/bills/sync-instances?month=${encodeURIComponent(month)}`, {
     method: "POST",

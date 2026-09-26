@@ -42,6 +42,7 @@
         "hidePassword": "Masquer le mot de passe"
     },
     "DashboardLayout": {
+        "dashboard": "Tableau de bord",
         "payments": "Paiements",
         "bills": "Factures",
         "archived": "Archivées",
@@ -53,14 +54,39 @@
     "Dashboard": {
         "title": "Bienvenue sur Pay Tracker",
         "subtitle": "Gérez les factures de votre foyer en un seul endroit.",
-        "paymentsTitle": "Paiements",
-        "paymentsDesc": "Consultez et marquez comme payées les factures de ce mois-ci",
-        "manageBillsTitle": "Gérer les factures",
-        "manageBillsDesc": "Créez, modifiez et suivez vos factures récurrentes",
-        "archivedBillsTitle": "Factures archivées",
-        "archivedBillsDesc": "Consultez les factures passées et l'historique des paiements",
-        "settingsTitle": "Paramètres",
-        "settingsDesc": "Gérez les notifications, la sauvegarde et les préférences"
+        "summary": {
+            "paid": "Payé",
+            "overdue": "En retard",
+            "upcoming": "À venir",
+            "counts": "{paid} sur {total} payées",
+            "empty": "Aucun paiement ce mois-ci dans cette devise.",
+            "of": "sur {total}",
+            "paidLabel": "payé jusqu'ici",
+            "barLabel": "{percent} % payé",
+            "bills": "{count, plural, one {# facture} many {# factures} other {# factures}}",
+            "remaining": "Reste à payer",
+            "loadError": "Impossible de charger le résumé. Veuillez réessayer.",
+            "loading": "Chargement du résumé",
+            "currency": "Devise"
+        },
+        "categories": {
+            "title": "Par catégorie",
+            "empty": "Aucun paiement ce mois-ci dans cette devise.",
+            "chartLabel": "Dépenses par catégorie",
+            "thisMonth": "ce mois-ci",
+            "paidOf": "payé {paid} sur {total}"
+        },
+        "trend": {
+            "title": "12 derniers mois",
+            "empty": "Pas encore d'historique de paiements dans cette devise.",
+            "chartLabel": "Paiements mensuels",
+            "paid": "Payé",
+            "unpaid": "À payer",
+            "average": "moyenne {amount}",
+            "detail": "payé {paid}, à payer {unpaid}",
+            "above": "{amount} au-dessus de la moyenne",
+            "below": "{amount} en dessous de la moyenne"
+        }
     },
     "BillsPage": {
         "title": "Vos factures",

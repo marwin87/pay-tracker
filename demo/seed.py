@@ -3,6 +3,7 @@
 
 import json
 import os
+import random
 import sys
 from datetime import date, timedelta
 from pathlib import Path
@@ -102,6 +103,26 @@ def inject_current_month_cases(data: dict) -> dict:
             "paid_amount": 19.99, "notes": "Group discount applied", "created_at": created_at,
             "reminder_sent_upcoming": True, "reminder_sent_overdue": False,
         },
+        # Multi-currency: Bus Pass (PLN) overdue, Property Tax (PLN) upcoming,
+        # Old Music App (USD) overdue, so every currency chip on the dashboard has data.
+        {
+            "id": 9007, "bill_id": 12, "period": period, "due_date": day(8),
+            "amount": 55.0, "status": "overdue", "paid_at": None,
+            "paid_amount": None, "notes": None, "created_at": created_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": True,
+        },
+        {
+            "id": 9008, "bill_id": 2, "period": period, "due_date": today_iso,
+            "amount": 210.0, "status": "upcoming", "paid_at": None,
+            "paid_amount": None, "notes": None, "created_at": created_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": False,
+        },
+        {
+            "id": 9009, "bill_id": 20, "period": period, "due_date": day(7),
+            "amount": 4.99, "status": "overdue", "paid_at": None,
+            "paid_amount": None, "notes": None, "created_at": created_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": True,
+        },
     ]
 
     # Remove any static instance that would collide on (bill_id, period)
@@ -111,6 +132,65 @@ def inject_current_month_cases(data: dict) -> dict:
         if (inst["bill_id"], inst["period"]) not in current_month_keys
     ]
     data["payment_instances"].extend(current_month_cases)
+    return data
+
+
+# (bill_id, base amount, due day, spread): monthly bills in four currencies.
+# spread > 0 makes the amount vary month to month (utilities), so trend bars aren't flat.
+HISTORY_MONTHLY = [
+    (1, 1200.0, 1, 0.0),    # Rent, EUR
+    (3, 95.0, 15, 0.25),    # Electricity, EUR
+    (5, 45.0, 20, 0.30),    # Gas, EUR
+    (14, 45.0, 1, 0.0),     # Gym, EUR
+    (12, 55.0, 1, 0.0),     # Bus Pass, PLN
+    (17, 89.0, 3, 0.0),     # Language School, PLN
+    (21, 120.0, 1, 0.0),    # Coworking, PLN
+    (8, 17.99, 22, 0.0),    # Netflix, USD
+    (20, 4.99, 12, 0.0),    # Old Music App, USD
+    (25, 310.0, 1, 0.0),    # Car Lease, CHF (bill archived now, was active then)
+]
+# One-off yearly bills: (bill_id, amount, due day, months back). Car Insurance is the GBP one.
+HISTORY_ANNUAL = [(6, 680.0, 1, 7), (7, 320.0, 1, 4)]
+
+
+def inject_history(data: dict) -> dict:
+    """Fill the 11 months before today with paid instances in EUR/PLN/USD/CHF/GBP so
+    the dashboard trend chart is populated relative to whenever the script runs.
+    Only fills gaps: a static instance for the same (bill_id, period) is kept, so
+    the hand-written edge cases (overdue, partial, notes) survive."""
+    today = date.today()
+    rng = random.Random(42)  # deterministic: re-seeding gives the same chart
+    taken = {(i["bill_id"], i["period"]) for i in data["payment_instances"]}
+    next_id = 8000
+
+    def month_back(n: int) -> tuple[int, int]:
+        idx = today.year * 12 + today.month - 1 - n
+        return idx // 12, idx % 12 + 1
+
+    def add(bill_id: int, amount: float, due_day: int, n: int) -> None:
+        nonlocal next_id
+        y, m = month_back(n)
+        period = f"{y}-{m:02d}"
+        if (bill_id, period) in taken:
+            return
+        due = date(y, m, min(due_day, 28))
+        paid_at = f"{(due - timedelta(days=1)).isoformat()}T09:00:00+00:00"
+        data["payment_instances"].append({
+            "id": next_id, "bill_id": bill_id, "period": period,
+            "due_date": due.isoformat(), "amount": amount, "status": "paid",
+            "paid_at": paid_at, "paid_amount": amount, "notes": None,
+            "created_at": paid_at,
+            "reminder_sent_upcoming": True, "reminder_sent_overdue": False,
+        })
+        next_id += 1
+        taken.add((bill_id, period))
+
+    for n in range(1, 12):
+        for bill_id, base, due_day, spread in HISTORY_MONTHLY:
+            amount = round(base * (1 + rng.uniform(-spread, spread)), 2)
+            add(bill_id, amount, due_day, n)
+    for bill_id, amount, due_day, n in HISTORY_ANNUAL:
+        add(bill_id, amount, due_day, n)
     return data
 
 
@@ -134,12 +214,13 @@ def configure_profile(session: requests.Session, token: str) -> None:
             "telegram_monthly_summary_enabled": False,
             "browser_notifications_enabled": False,
             "enabled_languages": ["en", "pl", "es"],
+            "default_currency": "EUR",
         },
     )
     if r.status_code != 200:
         print(f"  Profile configuration failed ({r.status_code}): {r.text}")
         sys.exit(1)
-    print("  All notifications (email, Telegram, browser) disabled, languages set to en/pl/es")
+    print("  All notifications (email, Telegram, browser) disabled, languages set to en/pl/es, default currency EUR")
 
 
 def restore(session: requests.Session, token: str) -> None:
@@ -148,6 +229,7 @@ def restore(session: requests.Session, token: str) -> None:
         return
     data = json.loads(DATA_FILE.read_text())
     data = inject_current_month_cases(data)
+    data = inject_history(data)
     payload = json.dumps(data)
     r = session.post(
         f"{BASE_URL}/export/restore",

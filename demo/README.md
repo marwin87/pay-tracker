@@ -40,13 +40,15 @@ All notifications are switched off for this account (email, Telegram, browser), 
 
 5 bills are archived in total, spread across 4 categories, so the Archive page (`/dashboard/bills/archived`) has enough entries to exercise its category filter and sort.
 
-**80 payment instances** (from `seed_data.json`) covering all statuses:
+**80 payment instances** in `seed_data.json` (164 after the seed script adds the generated ones below) covering all statuses:
 - **paid** — historical records with `paid_at` timestamps, across all four combinations of full/partial amount and with/without a note
 - **overdue** — several bills with a missed payment
 - **upcoming** — future periods ready to be paid
 - Amounts that differ from the template (real-world invoice variance)
 
-**Plus 6 instances generated for the current month at seed time** (`inject_current_month_cases` in `seed.py`), since the static rows above are dated in fixed 2026 months that won't generally line up with whatever "today" is when you run the script. Whichever month the Payments page opens to by default, it shows every case at a glance: upcoming (due today), overdue, paid full amount with/without a note, and paid partial amount with/without a note.
+**Plus multi-currency history generated at seed time** (`inject_history` in `seed.py`): the 11 months before today get paid instances in EUR, PLN, USD and CHF (plus GBP/EUR annual insurance in single months), with varying utility amounts, so the dashboard's 12-month trend and currency chips have data whichever day you run the script. It only fills gaps: static rows for the same bill and month are kept. The account's default currency is set to EUR.
+
+**Plus 9 instances generated for the current month at seed time** (`inject_current_month_cases` in `seed.py`), since the static rows above are dated in fixed 2026 months that won't generally line up with whatever "today" is when you run the script. Whichever month the Payments page opens to by default, it shows every case at a glance: upcoming (due today), overdue, paid full amount with/without a note, and paid partial amount with/without a note.
 
 ## Requirements
 
@@ -79,7 +81,7 @@ Go to [http://localhost:3010](http://localhost:3010) and log in with `demo@demo.
 
 ## Re-running
 
-Running the script again on the same account **wipes and re-seeds** — the restore endpoint replaces all existing data for that user. Safe to run multiple times. If demo data is already present, the script skips the restore; force it with the export/restore API directly if you need to reapply an edited `seed_data.json` to an account that already has data.
+Running the script again on the same account **wipes and re-seeds** — the restore endpoint replaces all existing data for that user. Safe to run multiple times. If demo data is already present, the script skips the restore (to get the newest generated data run `docker compose down -v` first); force it with the export/restore API directly if you need to reapply an edited `seed_data.json` to an account that already has data.
 
 ## Editing the data
 

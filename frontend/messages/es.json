@@ -42,6 +42,7 @@
         "hidePassword": "Ocultar contraseña"
     },
     "DashboardLayout": {
+        "dashboard": "Panel",
         "payments": "Pagos",
         "bills": "Facturas",
         "archived": "Archivadas",
@@ -53,14 +54,39 @@
     "Dashboard": {
         "title": "Bienvenido a Pay Tracker",
         "subtitle": "Gestiona las facturas de tu hogar en un solo lugar.",
-        "paymentsTitle": "Pagos",
-        "paymentsDesc": "Consulta y marca como pagadas las facturas de este mes",
-        "manageBillsTitle": "Gestionar facturas",
-        "manageBillsDesc": "Crea, edita y realiza el seguimiento de tus facturas recurrentes",
-        "archivedBillsTitle": "Facturas archivadas",
-        "archivedBillsDesc": "Consulta facturas pasadas e historial de pagos",
-        "settingsTitle": "Ajustes",
-        "settingsDesc": "Gestiona notificaciones, copias de seguridad y preferencias"
+        "summary": {
+            "paid": "Pagado",
+            "overdue": "Vencido",
+            "upcoming": "Próximo",
+            "counts": "{paid} de {total} pagados",
+            "empty": "No hay pagos este mes en esta moneda.",
+            "of": "de {total}",
+            "paidLabel": "pagado hasta ahora",
+            "barLabel": "{percent} % pagado",
+            "bills": "{count, plural, one {# recibo} many {# recibos} other {# recibos}}",
+            "remaining": "Falta por pagar",
+            "loadError": "No se pudo cargar el resumen. Inténtalo de nuevo.",
+            "loading": "Cargando resumen",
+            "currency": "Moneda"
+        },
+        "categories": {
+            "title": "Por categoría",
+            "empty": "No hay pagos este mes en esta moneda.",
+            "chartLabel": "Gasto por categoría",
+            "thisMonth": "este mes",
+            "paidOf": "pagado {paid} de {total}"
+        },
+        "trend": {
+            "title": "Últimos 12 meses",
+            "empty": "Aún no hay historial de pagos en esta moneda.",
+            "chartLabel": "Pagos mensuales",
+            "paid": "Pagado",
+            "unpaid": "Por pagar",
+            "average": "media {amount}",
+            "detail": "pagado {paid}, por pagar {unpaid}",
+            "above": "{amount} por encima de la media",
+            "below": "{amount} por debajo de la media"
+        }
     },
     "BillsPage": {
         "title": "Tus facturas",

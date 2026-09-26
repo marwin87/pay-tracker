@@ -92,6 +92,7 @@ export async function createBillViaApi(
   page: Page,
   name: string,
   categoryId?: number,
+  opts: { currency?: string; amount?: string } = {},
 ): Promise<number> {
   const category_id = categoryId ?? (await categoryIdBySlug(page, 'utilities'));
   const res = await page.request.post(`${API}/bills`, {
@@ -99,8 +100,8 @@ export async function createBillViaApi(
       name,
       category_id,
       frequency: 'monthly',
-      amount: '99.99',
-      currency: 'PLN',
+      amount: opts.amount ?? '99.99',
+      currency: opts.currency ?? 'PLN',
       due_day: 15,
       is_paused: false,
     },

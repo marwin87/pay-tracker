@@ -42,6 +42,7 @@
         "hidePassword": "Ukryj hasło"
     },
     "DashboardLayout": {
+        "dashboard": "Pulpit",
         "payments": "Płatności",
         "bills": "Rachunki",
         "archived": "Archiwum",
@@ -53,14 +54,39 @@
     "Dashboard": {
         "title": "Witaj w Pay Tracker",
         "subtitle": "Zarządzaj rachunkami domowymi w jednym miejscu.",
-        "paymentsTitle": "Płatności",
-        "paymentsDesc": "Przeglądaj i oznaczaj rachunki z tego miesiąca jako opłacone",
-        "manageBillsTitle": "Zarządzaj rachunkami",
-        "manageBillsDesc": "Twórz, edytuj i śledź swoje cykliczne rachunki",
-        "archivedBillsTitle": "Zarchiwizowane rachunki",
-        "archivedBillsDesc": "Przeglądaj historię płatności",
-        "settingsTitle": "Ustawienia",
-        "settingsDesc": "Zarządzaj powiadomieniami, kopią zapasową i preferencjami"
+        "summary": {
+            "paid": "Zapłacone",
+            "overdue": "Po terminie",
+            "upcoming": "Przed nami",
+            "counts": "{paid} z {total} zapłaconych",
+            "empty": "Brak płatności w tym miesiącu w tej walucie.",
+            "of": "z {total}",
+            "paidLabel": "zapłacono dotychczas",
+            "barLabel": "{percent}% zapłacone",
+            "bills": "{count, plural, one {# rachunek} few {# rachunki} many {# rachunków} other {# rachunku}}",
+            "remaining": "Do zapłaty jeszcze",
+            "loadError": "Nie udało się wczytać podsumowania. Spróbuj ponownie.",
+            "loading": "Wczytywanie podsumowania",
+            "currency": "Waluta"
+        },
+        "categories": {
+            "title": "Wg kategorii",
+            "empty": "Brak płatności w tym miesiącu w tej walucie.",
+            "chartLabel": "Wydatki wg kategorii",
+            "thisMonth": "w tym miesiącu",
+            "paidOf": "zapłacono {paid} z {total}"
+        },
+        "trend": {
+            "title": "Ostatnie 12 miesięcy",
+            "empty": "Brak historii płatności w tej walucie.",
+            "chartLabel": "Płatności miesięczne",
+            "paid": "Zapłacone",
+            "unpaid": "Do zapłaty",
+            "average": "średnia {amount}",
+            "detail": "zapłacono {paid}, do zapłaty {unpaid}",
+            "above": "{amount} powyżej średniej",
+            "below": "{amount} poniżej średniej"
+        }
     },
     "BillsPage": {
         "title": "Twoje rachunki",

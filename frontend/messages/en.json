@@ -42,6 +42,7 @@
         "hidePassword": "Hide password"
     },
     "DashboardLayout": {
+        "dashboard": "Dashboard",
         "payments": "Payments",
         "bills": "Bills",
         "archived": "Archived",
@@ -53,14 +54,39 @@
     "Dashboard": {
         "title": "Welcome to Pay Tracker",
         "subtitle": "Manage your household bills in one place.",
-        "paymentsTitle": "Payments",
-        "paymentsDesc": "View and mark this month's bills as paid",
-        "manageBillsTitle": "Manage Bills",
-        "manageBillsDesc": "Create, edit, and track your recurring bills",
-        "archivedBillsTitle": "Archived Bills",
-        "archivedBillsDesc": "View past bills and payment history",
-        "settingsTitle": "Settings",
-        "settingsDesc": "Manage notifications, backup, and preferences"
+        "summary": {
+            "paid": "Paid",
+            "overdue": "Overdue",
+            "upcoming": "Upcoming",
+            "counts": "{paid} of {total} paid",
+            "empty": "No payments this month in this currency.",
+            "of": "of {total}",
+            "paidLabel": "paid so far",
+            "barLabel": "{percent}% paid",
+            "bills": "{count, plural, one {# bill} other {# bills}}",
+            "remaining": "Still to pay",
+            "loadError": "Couldn't load the summary. Please try again.",
+            "loading": "Loading summary",
+            "currency": "Currency"
+        },
+        "categories": {
+            "title": "By category",
+            "empty": "No payments this month in this currency.",
+            "chartLabel": "Spending by category",
+            "thisMonth": "this month",
+            "paidOf": "paid {paid} of {total}"
+        },
+        "trend": {
+            "title": "Last 12 months",
+            "empty": "No payment history in this currency yet.",
+            "chartLabel": "Monthly payments",
+            "paid": "Paid",
+            "unpaid": "Still to pay",
+            "average": "average {amount}",
+            "detail": "paid {paid}, to pay {unpaid}",
+            "above": "{amount} above average",
+            "below": "{amount} below average"
+        }
     },
     "BillsPage": {
         "title": "Your Bills",
