@@ -13,6 +13,22 @@ import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
 import { MENU_ROW_CLASS } from "@/components/menuRow";
 
+// Full class strings so Tailwind can see them; picked per user by hashing the email.
+const AVATAR_PALETTES = [
+  { grad: "from-green-500 to-teal-500", shadow: "shadow-teal-500/30" },
+  { grad: "from-blue-500 to-indigo-500", shadow: "shadow-indigo-500/30" },
+  { grad: "from-violet-500 to-fuchsia-500", shadow: "shadow-fuchsia-500/30" },
+  { grad: "from-orange-500 to-rose-500", shadow: "shadow-rose-500/30" },
+  { grad: "from-sky-500 to-cyan-500", shadow: "shadow-cyan-500/30" },
+  { grad: "from-amber-500 to-orange-500", shadow: "shadow-orange-500/30" },
+];
+
+function avatarPalette(email: string | null | undefined) {
+  let h = 0;
+  for (const c of email ?? "") h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return AVATAR_PALETTES[h % AVATAR_PALETTES.length];
+}
+
 const NAV_ITEMS = [
   { href: "/dashboard", labelKey: "dashboard" as const, icon: LayoutGrid, exact: true },
   { href: "/dashboard/payments", labelKey: "payments" as const, icon: CalendarCheck, exact: false },
@@ -81,6 +97,7 @@ export default function DashboardLayout({
   if (!isAuthenticated) return null;
 
   const initials = userEmail ? userEmail[0].toUpperCase() : "?";
+  const palette = avatarPalette(userEmail);
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -126,10 +143,8 @@ export default function DashboardLayout({
               <button
                 onClick={() => setUserMenuOpen((o) => !o)}
                 aria-label={t("userMenu")}
-                className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white shadow-sm transition-all ${
-                  userMenuOpen
-                    ? "bg-green-800 dark:bg-green-500"
-                    : "bg-green-700 hover:bg-green-800 dark:bg-green-600 dark:hover:bg-green-500"
+                className={`flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br ${palette.grad} text-sm font-bold text-white shadow-md ${palette.shadow} transition-all hover:scale-110 dark:border-slate-800 ${
+                  userMenuOpen ? "scale-110 shadow-lg" : ""
                 }`}
               >
                 {initials}
@@ -189,7 +204,7 @@ export default function DashboardLayout({
                   {/* Signed-in email header */}
                   {userEmail && (
                     <div className="mb-2 flex items-center gap-2.5 rounded-lg bg-slate-50 px-3 py-2 dark:bg-slate-700/50">
-                      <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-700 text-xs font-bold text-white dark:bg-green-600">
+                      <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${palette.grad} text-xs font-bold text-white shadow-sm`}>
                         {initials}
                       </div>
                       <span className="truncate text-sm text-slate-600 dark:text-slate-300">{userEmail}</span>
