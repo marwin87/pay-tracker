@@ -311,11 +311,17 @@
         "restoring": "Ripristino…",
         "error": "Ripristino non riuscito. Riprova."
     },
-    "ThemeToggle": {"ariaLabel": "Cambia tema"},
+    "ThemeToggle": {
+        "ariaLabel": "Cambia tema",
+        "label": "Tema",
+        "dark": "Scuro",
+        "light": "Chiaro"
+    },
     "LanguageToggle": {
         "ariaLabel": "Cambia lingua",
         "label": "Lingua:",
-        "name": "Italiano"
+        "name": "Italiano",
+        "title": "Lingua"
     },
     "NotificationToggle": {"paymentIncoming": "Pagamento in arrivo"},
     "EmailRemindersToggle": {

@@ -311,11 +311,17 @@
         "restoring": "Restaurando…",
         "error": "Error al restaurar. Inténtalo de nuevo."
     },
-    "ThemeToggle": {"ariaLabel": "Cambiar tema"},
+    "ThemeToggle": {
+        "ariaLabel": "Cambiar tema",
+        "label": "Tema",
+        "dark": "Oscuro",
+        "light": "Claro"
+    },
     "LanguageToggle": {
         "ariaLabel": "Cambiar idioma",
         "label": "Idioma:",
-        "name": "Español"
+        "name": "Español",
+        "title": "Idioma"
     },
     "NotificationToggle": {"paymentIncoming": "Pago próximo"},
     "EmailRemindersToggle": {

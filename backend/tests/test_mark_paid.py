@@ -1,6 +1,6 @@
 """Tests for POST /bills/payments/{id}/pay — the `paid_at` date override."""
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 from fastapi.testclient import TestClient
 
@@ -41,7 +41,9 @@ def test_mark_paid_without_date_uses_today(client_db):
 
     r = client.post(f"/bills/payments/{instance_id}/pay", json={}, headers=auth(token))
     assert r.status_code == 200
-    assert r.json()["paid_at"].startswith(date.today().isoformat())
+    # The API stamps paid_at in UTC, so compare against the UTC date, not the
+    # machine's local one (they differ for a few hours around midnight).
+    assert r.json()["paid_at"].startswith(datetime.now(timezone.utc).date().isoformat())
 
 
 def test_mark_paid_with_past_date_is_recorded(client_db):
@@ -60,12 +62,32 @@ def test_mark_paid_with_past_date_is_recorded(client_db):
     assert r.json()["paid_at"].startswith(past)
 
 
+def _utc_today() -> date:
+    return datetime.now(timezone.utc).date()
+
+
+def test_mark_paid_accepts_tomorrow_for_clients_ahead_of_utc(client_db):
+    """A client in UTC+ just after local midnight sends a date one day ahead of UTC."""
+    client, db = client_db
+    token = register_and_login(client, "mp3b@test.com")
+    instance_id = _instance_id(client, token, _create_bill(client, token))
+    tomorrow = (_utc_today() + timedelta(days=1)).isoformat()
+
+    r = client.post(
+        f"/bills/payments/{instance_id}/pay",
+        json={"paid_at": tomorrow},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+    assert r.json()["paid_at"].startswith(tomorrow)
+
+
 def test_mark_paid_with_future_date_rejected(client_db):
     client, db = client_db
     token = register_and_login(client, "mp3@test.com")
     bill_id = _create_bill(client, token)
     instance_id = _instance_id(client, token, bill_id)
-    future = (date.today() + timedelta(days=1)).isoformat()
+    future = (_utc_today() + timedelta(days=2)).isoformat()
 
     r = client.post(
         f"/bills/payments/{instance_id}/pay",
@@ -112,7 +134,7 @@ def test_edit_paid_payment_future_date_and_other_user(client_db):
     client, db = client_db
     token = register_and_login(client, "ep3@test.com")
     instance_id = _paid_instance(client, token)
-    future = (date.today() + timedelta(days=2)).isoformat()
+    future = (_utc_today() + timedelta(days=2)).isoformat()
     r = client.patch(
         f"/bills/payments/{instance_id}", json={"paid_at": future}, headers=auth(token)
     )

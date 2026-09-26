@@ -11,14 +11,18 @@ import { getAuthToken } from "@/lib/auth";
 import { fetchMe } from "@/lib/user-api";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
+import { MENU_ROW_CLASS } from "@/components/menuRow";
 
 const NAV_ITEMS = [
   { href: "/dashboard", labelKey: "dashboard" as const, icon: LayoutGrid, exact: true },
   { href: "/dashboard/payments", labelKey: "payments" as const, icon: CalendarCheck, exact: false },
   { href: "/dashboard/bills", labelKey: "bills" as const, icon: ClipboardPen, exact: true },
   { href: "/dashboard/bills/archived", labelKey: "archived" as const, icon: Archive, exact: false },
-  { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings, exact: false },
 ];
+
+// Settings lives in the avatar menu on desktop and in the hamburger menu on mobile.
+const SETTINGS_ITEM = { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings, exact: false };
+const MOBILE_NAV_ITEMS = [...NAV_ITEMS, SETTINGS_ITEM];
 
 export default function DashboardLayout({
   children,
@@ -117,9 +121,6 @@ export default function DashboardLayout({
 
           {/* Desktop right side */}
           <div className="hidden md:flex items-center gap-1 ml-auto">
-            <LanguageToggle />
-            <ThemeToggle />
-
             {/* Avatar + dropdown */}
             <div className="relative" ref={userMenuRef}>
               <button
@@ -145,7 +146,18 @@ export default function DashboardLayout({
                       {userEmail}
                     </p>
                   </div>
-                  <div className="p-2">
+                  <div className="flex flex-col gap-0.5 p-2">
+                    <Link
+                      href={SETTINGS_ITEM.href}
+                      onClick={() => setUserMenuOpen(false)}
+                      className={MENU_ROW_CLASS}
+                    >
+                      <Settings size={15} />
+                      {t(SETTINGS_ITEM.labelKey)}
+                    </Link>
+                    <ThemeToggle />
+                    <LanguageToggle />
+                    <div className="my-1 border-t border-slate-100 dark:border-slate-700" />
                     <button
                       onClick={() => { setUserMenuOpen(false); logout(); }}
                       className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
@@ -161,7 +173,6 @@ export default function DashboardLayout({
 
           {/* Mobile: utility icons + hamburger */}
           <div className="flex md:hidden items-center gap-1 ml-auto">
-            <LanguageToggle />
             <button
               onClick={() => setMenuOpen((o) => !o)}
               aria-label="Toggle menu"
@@ -185,7 +196,7 @@ export default function DashboardLayout({
                     </div>
                   )}
 
-                  {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
+                  {MOBILE_NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
                     const active = pathname === href || (!exact && pathname.startsWith(href + "/"));
                     return (
                       <Link
@@ -204,11 +215,12 @@ export default function DashboardLayout({
                     );
                   })}
 
-                  <div className="flex items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-700 mt-1">
+                  <div className="mt-1 flex flex-col gap-0.5 border-t border-slate-100 pt-1 dark:border-slate-700">
                     <ThemeToggle />
+                    <LanguageToggle />
                     <button
                       onClick={() => { setMenuOpen(false); logout(); }}
-                      className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-red-800 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                     >
                       <LogOut size={15} />
                       {t("logOut")}

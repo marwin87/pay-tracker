@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { Sun, Moon } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { MENU_ROW_CLASS } from "@/components/menuRow";
 
+/** Menu row (avatar menu / mobile menu) that flips light/dark on click. */
 export default function ThemeToggle() {
   const t = useTranslations("ThemeToggle");
   const [dark, setDark] = useState(
@@ -18,12 +20,17 @@ export default function ThemeToggle() {
 
   return (
     <button
+      type="button"
       onClick={toggle}
       aria-label={t("ariaLabel")}
       suppressHydrationWarning
-      className="rounded-lg border border-slate-200 bg-white p-2 text-slate-500 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+      className={MENU_ROW_CLASS}
     >
-      {dark ? <Sun size={18} /> : <Moon size={18} />}
+      {dark ? <Moon size={15} /> : <Sun size={15} />}
+      <span suppressHydrationWarning>{t("label")}</span>
+      <span suppressHydrationWarning className="ml-auto text-xs font-normal text-slate-400 dark:text-slate-500">
+        {dark ? t("dark") : t("light")}
+      </span>
     </button>
   );
 }

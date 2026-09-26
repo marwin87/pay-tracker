@@ -311,11 +311,17 @@
         "restoring": "Restauration…",
         "error": "Échec de la restauration. Veuillez réessayer."
     },
-    "ThemeToggle": {"ariaLabel": "Changer de thème"},
+    "ThemeToggle": {
+        "ariaLabel": "Changer de thème",
+        "label": "Thème",
+        "dark": "Sombre",
+        "light": "Clair"
+    },
     "LanguageToggle": {
         "ariaLabel": "Changer de langue",
         "label": "Langue :",
-        "name": "Français"
+        "name": "Français",
+        "title": "Langue"
     },
     "NotificationToggle": {"paymentIncoming": "Paiement à venir"},
     "EmailRemindersToggle": {

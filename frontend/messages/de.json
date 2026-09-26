@@ -315,11 +315,17 @@
         "restoring": "Wird wiederhergestellt…",
         "error": "Wiederherstellung fehlgeschlagen. Bitte erneut versuchen."
     },
-    "ThemeToggle": {"ariaLabel": "Design umschalten"},
+    "ThemeToggle": {
+        "ariaLabel": "Design umschalten",
+        "label": "Design",
+        "dark": "Dunkel",
+        "light": "Hell"
+    },
     "LanguageToggle": {
         "ariaLabel": "Sprache wechseln",
         "label": "Sprache:",
-        "name": "Deutsch"
+        "name": "Deutsch",
+        "title": "Sprache"
     },
     "NotificationToggle": {"paymentIncoming": "Zahlung ausstehend"},
     "EmailRemindersToggle": {

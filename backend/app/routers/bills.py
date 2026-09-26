@@ -1,4 +1,4 @@
-from datetime import date, datetime, timezone
+from datetime import date, datetime, time, timedelta, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session, selectinload
@@ -38,6 +38,24 @@ def _check_category_ownership(db: Session, category_id: int, user_id: int) -> No
         raise HTTPException(status_code=404, detail="Category not found")
     if category.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized")
+
+
+def _reject_future_paid_at(paid_at: date | None) -> None:
+    """The client sends its own local date, which can be one day ahead of UTC
+    (any UTC+ timezone shortly after local midnight), so allow tomorrow (UTC)."""
+    if paid_at is not None and paid_at > (
+        datetime.now(timezone.utc).date() + timedelta(days=1)
+    ):
+        raise HTTPException(
+            status_code=400, detail="Payment date cannot be in the future"
+        )
+
+
+def _paid_at_datetime(day: date) -> datetime:
+    """A picked calendar day as noon UTC, so it shows as that same day in every
+    timezone from UTC-12 to UTC+11 (a "now" time-of-day could land on the next
+    local day, or in the future, and shift the date on the next edit)."""
+    return datetime.combine(day, time(12), tzinfo=timezone.utc)
 
 
 def _to_out(inst: PaymentInstance) -> PaymentInstanceOut:
@@ -196,18 +214,13 @@ def mark_paid(
     )  # read before commit; expire_on_commit would force a lazy re-load after
     if template.user_id != me.id:
         raise HTTPException(status_code=403, detail="Not authorized")
-    if body.paid_at is not None and body.paid_at > date.today():
-        raise HTTPException(
-            status_code=400, detail="Payment date cannot be in the future"
-        )
+    _reject_future_paid_at(body.paid_at)
 
     now = datetime.now(timezone.utc)
     expected = instance.current_amount  # before status flips to paid
     instance.status = PaymentStatus.paid
     instance.paid_at = (
-        datetime.combine(body.paid_at, now.time(), tzinfo=timezone.utc)
-        if body.paid_at is not None
-        else now
+        _paid_at_datetime(body.paid_at) if body.paid_at is not None else now
     )
     instance.paid_amount = (
         body.paid_amount if body.paid_amount is not None else expected
@@ -246,15 +259,10 @@ def edit_payment(
         )
     if not is_paid and sent & {"paid_amount", "paid_at"}:
         raise HTTPException(status_code=400, detail="Payment is not marked as paid")
-    if body.paid_at is not None and body.paid_at > date.today():
-        raise HTTPException(
-            status_code=400, detail="Payment date cannot be in the future"
-        )
+    _reject_future_paid_at(body.paid_at)
 
     if body.paid_at is not None:
-        instance.paid_at = datetime.combine(
-            body.paid_at, datetime.now(timezone.utc).time(), tzinfo=timezone.utc
-        )
+        instance.paid_at = _paid_at_datetime(body.paid_at)
     if body.paid_amount is not None:
         instance.paid_amount = body.paid_amount
     if "amount" in sent:

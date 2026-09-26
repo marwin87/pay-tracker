@@ -311,8 +311,18 @@
         "restoring": "Przywracanie…",
         "error": "Przywracanie nie powiodło się. Spróbuj ponownie."
     },
-    "ThemeToggle": {"ariaLabel": "Przełącz motyw"},
-    "LanguageToggle": {"ariaLabel": "Zmień język", "label": "Język:", "name": "Polski"},
+    "ThemeToggle": {
+        "ariaLabel": "Przełącz motyw",
+        "label": "Motyw",
+        "dark": "Ciemny",
+        "light": "Jasny"
+    },
+    "LanguageToggle": {
+        "ariaLabel": "Zmień język",
+        "label": "Język:",
+        "name": "Polski",
+        "title": "Język"
+    },
     "NotificationToggle": {"paymentIncoming": "Nadchodząca płatność"},
     "EmailRemindersToggle": {
         "enable": "Włącz przypomnienia e-mail",

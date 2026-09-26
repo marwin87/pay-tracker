@@ -34,12 +34,14 @@ test('switching language to Polski applies immediately and persists after reload
   await page.goto('/dashboard/payments');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 
-  // Step: switch via the nav language toggle (rendered twice: desktop + mobile)
-  await page.getByRole('button', { name: 'Switch language' }).first().click();
+  // Step: switch via the language row in the avatar menu
+  await page.getByRole('button', { name: 'User menu' }).click();
+  await page.getByRole('button', { name: 'Switch language' }).click();
   await page.getByRole('option', { name: /Polski/ }).click();
 
-  // Assert: applied immediately
+  // Assert: applied immediately, and the menu stays open so the change is visible
   await expect(page.locator('html')).toHaveAttribute('lang', 'pl');
+  await expect(page.getByRole('option', { name: /Polski/ })).toHaveAttribute('aria-selected', 'true');
 
   // Assert: saved on the account — survives a reload and a different page
   await page.reload();
@@ -48,7 +50,8 @@ test('switching language to Polski applies immediately and persists after reload
   await expect(page.locator('html')).toHaveAttribute('lang', 'pl');
 
   // Step: switch back to English
-  await page.getByRole('button', { name: /Switch language|Zmień język/ }).first().click();
+  await page.getByRole('button', { name: /User menu|Menu użytkownika/ }).click();
+  await page.getByRole('button', { name: /Switch language|Zmień język/ }).click();
   await page.getByRole('option', { name: /English/ }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 });

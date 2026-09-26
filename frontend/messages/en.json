@@ -311,11 +311,17 @@
         "restoring": "Restoring…",
         "error": "Restore failed. Please try again."
     },
-    "ThemeToggle": {"ariaLabel": "Toggle theme"},
+    "ThemeToggle": {
+        "ariaLabel": "Toggle theme",
+        "label": "Theme",
+        "dark": "Dark",
+        "light": "Light"
+    },
     "LanguageToggle": {
         "ariaLabel": "Switch language",
         "label": "Language:",
-        "name": "English"
+        "name": "English",
+        "title": "Language"
     },
     "NotificationToggle": {"paymentIncoming": "Payment incoming"},
     "EmailRemindersToggle": {

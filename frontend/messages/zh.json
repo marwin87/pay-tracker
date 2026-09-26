@@ -311,11 +311,17 @@
         "restoring": "正在恢复…",
         "error": "恢复失败，请重试。"
     },
-    "ThemeToggle": {"ariaLabel": "切换主题"},
+    "ThemeToggle": {
+        "ariaLabel": "切换主题",
+        "label": "主题",
+        "dark": "深色",
+        "light": "浅色"
+    },
     "LanguageToggle": {
         "ariaLabel": "切换语言",
         "label": "语言：",
-        "name": "中文"
+        "name": "中文",
+        "title": "语言"
     },
     "NotificationToggle": {"paymentIncoming": "即将付款"},
     "EmailRemindersToggle": {
