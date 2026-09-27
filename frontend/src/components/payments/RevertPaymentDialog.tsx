@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Undo2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { revertPay, type PaymentInstanceOut } from "@/lib/payments-api";
@@ -39,7 +40,7 @@ export default function RevertPaymentDialog({
     }
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
       <div
         role="dialog"
@@ -90,6 +91,7 @@ export default function RevertPaymentDialog({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useFrequencyLabel } from "@/lib/frequency";
@@ -45,7 +46,7 @@ export default function DeletePaymentDialog({
     }
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
       <div
         role="dialog"
@@ -114,6 +115,7 @@ export default function DeletePaymentDialog({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

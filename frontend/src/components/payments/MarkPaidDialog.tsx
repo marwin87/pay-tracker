@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { markPaid, updatePayment, type PaymentInstanceOut } from "@/lib/payments-api";
@@ -72,7 +73,7 @@ export default function MarkPaidDialog({
     }
   }
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 backdrop-blur-sm">
       <div
         role="dialog"
@@ -169,6 +170,7 @@ export default function MarkPaidDialog({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
