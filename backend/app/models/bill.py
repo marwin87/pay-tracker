@@ -44,7 +44,9 @@ class BillTemplate(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
-    category_id: Mapped[int] = mapped_column(ForeignKey("categories.id"))
+    category_id: Mapped[int] = mapped_column(
+        ForeignKey("categories.id", ondelete="RESTRICT")
+    )
     frequency: Mapped[BillFrequency] = mapped_column(String(20), nullable=False)
     # Step size in months (monthly) or years (annual); always 1 for one_off.
     interval: Mapped[int] = mapped_column(
@@ -64,7 +66,7 @@ class BillTemplate(Base):
     start_period: Mapped[str | None] = mapped_column(String(7))
     # Last period (YYYY-MM, inclusive) to generate instances for; NULL = open-ended.
     end_period: Mapped[str | None] = mapped_column(String(7))
-    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=lambda: datetime.now(timezone.utc)
     )
@@ -86,7 +88,7 @@ class PaymentInstance(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     bill_id: Mapped[int] = mapped_column(
-        ForeignKey("bill_templates.id"), nullable=False
+        ForeignKey("bill_templates.id", ondelete="RESTRICT"), nullable=False
     )
     period: Mapped[str] = mapped_column(String(7), nullable=False)  # "YYYY-MM"
     due_date: Mapped[date] = mapped_column(Date, nullable=False)
