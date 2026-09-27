@@ -174,6 +174,7 @@ export default function DashboardLayout({
                     <LanguageToggle />
                     <div className="my-1 border-t border-slate-100 dark:border-slate-700" />
                     <button
+                      data-logout-trigger
                       onClick={() => { setUserMenuOpen(false); logout(); }}
                       className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                     >
@@ -234,6 +235,7 @@ export default function DashboardLayout({
                     <ThemeToggle />
                     <LanguageToggle />
                     <button
+                      data-logout-trigger
                       onClick={() => { setMenuOpen(false); logout(); }}
                       className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                     >

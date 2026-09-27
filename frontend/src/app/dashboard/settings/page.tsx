@@ -6,6 +6,7 @@ import { HardDriveDownload, HardDriveUpload, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { deleteAccount, fetchMe, UserProfile } from "@/lib/user-api";
 import { notifyAuthChange } from "@/lib/auth-store";
+import { useAuth } from "@/context/auth-context";
 import BackupButton from "@/components/BackupButton";
 import RestoreButton from "@/components/RestoreButton";
 import SnapshotRecoverySection from "@/components/SnapshotRecoverySection";
@@ -42,6 +43,7 @@ function tabFromUrl(): TabKey {
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
   const router = useRouter();
+  const { logout } = useAuth();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [profileDirty, setProfileDirty] = useState(false);
@@ -50,6 +52,7 @@ export default function SettingsPage() {
   const [telegramDirty, setTelegramDirty] = useState(false);
   const [passwordDirty, setPasswordDirty] = useState(false);
   const [pendingHref, setPendingHref] = useState<string | null>(null);
+  const [pendingLogout, setPendingLogout] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -91,7 +94,14 @@ export default function SettingsPage() {
   const handleNavClick = useCallback(
     (e: MouseEvent) => {
       if (!isDirtyAny) return;
-      const anchor = (e.target as Element).closest("a[href]");
+      const target = e.target as Element;
+      if (target.closest("[data-logout-trigger]")) {
+        e.preventDefault();
+        e.stopPropagation();
+        setPendingLogout(true);
+        return;
+      }
+      const anchor = target.closest("a[href]");
       if (!anchor) return;
       const href = anchor.getAttribute("href");
       if (!href || href.startsWith("http") || href.startsWith("#") || href.startsWith("mailto:"))
@@ -108,6 +118,11 @@ export default function SettingsPage() {
   }, [handleNavClick]);
 
   function confirmLeave() {
+    if (pendingLogout) {
+      setPendingLogout(false);
+      logout();
+      return;
+    }
     if (pendingHref) {
       setPendingHref(null);
       router.push(pendingHref);
@@ -274,10 +289,13 @@ export default function SettingsPage() {
         </Tile>
       </div>
 
-      {pendingHref && (
+      {(pendingHref || pendingLogout) && (
         <UnsavedChangesDialog
           onLeave={confirmLeave}
-          onStay={() => setPendingHref(null)}
+          onStay={() => {
+            setPendingHref(null);
+            setPendingLogout(false);
+          }}
           t={t}
         />
       )}
