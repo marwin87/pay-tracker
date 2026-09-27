@@ -2,6 +2,23 @@
 
 Notable changes to Pay Tracker, release by release.
 
+## v1.2.0 (Not released yet)
+
+### Features
+
+- Dropdown menus and the category filter's checkbox list can now be navigated with the keyboard: arrow keys, Home and End move through options, matching the accessibility semantics they already advertised
+
+### Security
+
+- Backend, frontend and demo-seed containers now run as non-root users
+
+### Fixes
+
+- Settings page now warns about unsaved changes before logging out, not just before following a link
+- `/server-time` and backup-restore endpoints now return typed, schema-validated responses instead of raw JSON objects
+- Payment dialogs (mark as paid, delete, revert) now render through the same portal-to-body pattern as every other dialog, instead of inline in the page
+- Corrected foreign-key metadata on bill templates and payment instances to match the database's actual cascade behavior, closing a drift between the test schema and production
+
 ## v1.1.0
 
 ### Features

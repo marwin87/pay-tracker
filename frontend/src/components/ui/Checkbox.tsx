@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import type { ReactNode } from "react";
+import type { ReactNode, Ref } from "react";
 
 type CheckboxColor = "green" | "red";
 type CheckboxSize = "sm" | "md";
@@ -23,22 +23,27 @@ interface CheckboxMarkProps {
   disabled?: boolean;
   color?: CheckboxColor;
   size?: CheckboxSize;
+  ref?: Ref<HTMLInputElement>;
 }
 
 /** The bare checkbox control (hidden native input + custom visual box). Use
  * this directly when the surrounding label/text layout doesn't fit the
- * convenience `Checkbox` wrapper below (see MultiSelectFilter.tsx). */
+ * convenience `Checkbox` wrapper below (see MultiSelectFilter.tsx). `ref`
+ * (React 19: a plain prop, no forwardRef needed) exposes the native input
+ * so a parent list can drive focus for keyboard navigation. */
 export function CheckboxMark({
   checked,
   onChange,
   disabled,
   color = "green",
   size = "md",
+  ref,
 }: CheckboxMarkProps) {
   const { box, icon } = SIZE_CLASS[size];
   return (
     <span className={`relative inline-flex shrink-0 ${box}`}>
       <input
+        ref={ref}
         type="checkbox"
         checked={checked}
         onChange={(e) => onChange(e.target.checked)}

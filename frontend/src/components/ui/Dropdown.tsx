@@ -51,6 +51,7 @@ export default function Dropdown<T extends string>({
 }: Props<T>) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   useEffect(() => {
     if (!open) return;
@@ -60,7 +61,25 @@ export default function Dropdown<T extends string>({
       }
     }
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      const isArrow = e.key === "ArrowDown" || e.key === "ArrowUp";
+      const isEdge = e.key === "Home" || e.key === "End";
+      if (!isArrow && !isEdge) return;
+      e.preventDefault();
+      const count = options.length;
+      if (count === 0) return;
+      const current = optionRefs.current.findIndex(
+        (el) => el === document.activeElement,
+      );
+      let next: number;
+      if (e.key === "Home") next = 0;
+      else if (e.key === "End") next = count - 1;
+      else if (e.key === "ArrowDown") next = current < 0 ? 0 : (current + 1) % count;
+      else next = current < 0 ? count - 1 : (current - 1 + count) % count;
+      optionRefs.current[next]?.focus();
     }
     document.addEventListener("mousedown", handleClick);
     document.addEventListener("keydown", handleKeyDown);
@@ -68,6 +87,23 @@ export default function Dropdown<T extends string>({
       document.removeEventListener("mousedown", handleClick);
       document.removeEventListener("keydown", handleKeyDown);
     };
+  }, [open, options.length]);
+
+  // Move focus into the listbox when it opens: the selected option, or the first.
+  // Reads options/value from refs (not deps) so a parent re-render while open
+  // doesn't yank focus away from whatever option arrow-key nav has reached.
+  const latestOptions = useRef(options);
+  const latestValue = useRef(value);
+  useEffect(() => {
+    latestOptions.current = options;
+    latestValue.current = value;
+  });
+  useEffect(() => {
+    if (!open) return;
+    const selectedIndex = latestOptions.current.findIndex(
+      (o) => o.value === latestValue.current,
+    );
+    optionRefs.current[selectedIndex < 0 ? 0 : selectedIndex]?.focus();
   }, [open]);
 
   const selected = options.find((o) => o.value === value);
@@ -100,9 +136,10 @@ export default function Dropdown<T extends string>({
           className="absolute z-20 mt-1.5 min-w-full w-max max-w-xs rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg dark:border-slate-600 dark:bg-slate-800"
         >
           <div className={scrollable ? "max-h-64 overflow-y-auto" : undefined}>
-            {options.map((opt) => (
+            {options.map((opt, i) => (
               <button
                 key={opt.value}
+                ref={(el) => { optionRefs.current[i] = el; }}
                 type="button"
                 role="option"
                 aria-selected={opt.value === value}

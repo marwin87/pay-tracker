@@ -24,6 +24,7 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const optionRefs = useRef<(HTMLInputElement | null)[]>([]);
   const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
 
   useEffect(() => {
@@ -36,7 +37,25 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
         setOpen(false);
     }
     function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      const isArrow = e.key === "ArrowDown" || e.key === "ArrowUp";
+      const isEdge = e.key === "Home" || e.key === "End";
+      if (!isArrow && !isEdge) return;
+      e.preventDefault();
+      const count = options.length;
+      if (count === 0) return;
+      const current = optionRefs.current.findIndex(
+        (el) => el === document.activeElement,
+      );
+      let next: number;
+      if (e.key === "Home") next = 0;
+      else if (e.key === "End") next = count - 1;
+      else if (e.key === "ArrowDown") next = current < 0 ? 0 : (current + 1) % count;
+      else next = current < 0 ? count - 1 : (current - 1 + count) % count;
+      optionRefs.current[next]?.focus();
     }
     document.addEventListener("mousedown", onMouseDown);
     document.addEventListener("keydown", onKeyDown);
@@ -44,6 +63,12 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
       document.removeEventListener("mousedown", onMouseDown);
       document.removeEventListener("keydown", onKeyDown);
     };
+  }, [open, options.length]);
+
+  // Move focus into the popup when it opens, like a single-select Dropdown does.
+  useEffect(() => {
+    if (!open) return;
+    optionRefs.current[0]?.focus();
   }, [open]);
 
   function toggle(value: string) {
@@ -95,12 +120,13 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
           style={popupStyle}
           className="max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800"
         >
-          {options.map((opt) => (
+          {options.map((opt, i) => (
             <label
               key={opt.value}
               className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-xs text-slate-700 hover:bg-green-50 hover:text-green-800 dark:text-slate-300 dark:hover:bg-green-900/30 dark:hover:text-green-300"
             >
               <CheckboxMark
+                ref={(el) => { optionRefs.current[i] = el; }}
                 size="sm"
                 checked={selected.has(opt.value)}
                 onChange={() => toggle(opt.value)}
