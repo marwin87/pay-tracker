@@ -1,29 +1,39 @@
-# Pay Tracker
+# <img src="frontend/public/pt-logo.png" width="32" alt="Pay Tracker logo" valign="middle"> Pay Tracker
 
 A self-hosted household bill tracking PWA. Define your recurring bills once, then each month's payment instances are generated automatically. Mark bills paid from any device — phone, tablet, or desktop.
 
 No third-party data sharing. No subscription. Runs locally with Docker Compose or in the cloud. Each user's data is fully isolated.
 
 
-## Preview
+<p align="center">
+  <a href="demo/public/dashboard.png">
+    <img src="demo/public/dashboard.png" width="180" alt="Dashboard">
+  </a>
+  <a href="demo/public/payments_light.png">
+    <img src="demo/public/payments_light.png" width="180" alt="Payments light">
+  </a>
+  <a href="demo/public/payments_dark.png">
+    <img src="demo/public/payments_dark.png" width="180" alt="Payments dark">
+  </a>
+  <a href="demo/public/bills.png">
+    <img src="demo/public/bills.png" width="180" alt="Bills">
+  </a>
+  <a href="demo/public/settings.png">
+    <img src="demo/public/settings.png" width="180" alt="Settings">
+  </a>
+</p>
 
-| Payments (light) | Payments (dark) |
-|---|---|
-| <img src="demo/public/payments_light.png" width="350"> | <img src="demo/public/payments_dark.png" width="350"> |
 
-| Bills | Settings |
-|---|---|
-| <img src="demo/public/bills.png" width="350"> | <img src="demo/public/settings.png" width="350"> |
+## 📋 What it does
 
-
-## What it does
-
-- **Bill templates** — define a bill once: name, category, amount, currency, recurrence frequency, due day of month. Pay Tracker generates payment instances automatically each period.
+- **Bill templates** — define a bill once: name, category, amount, currency, due day of month, and how often it repeats: monthly (every 1–12 months), annual (every 1–5 years) or one-off. Optionally set an end month to stop a recurring bill after its last installment. Pay Tracker generates payment instances automatically each period.
+- **Dashboard** — month summary, a category donut and a 12-month trend at a glance.
 - **Archive bills** — archive a bill you no longer need to hide it from the active list; its payment history stays intact and stays accessible from the Archive page. Restore an archived bill any time to bring it back to the active list and resume generating payments.
 - **Category grouping** — bills and payments are grouped under category headers. Every account starts with 9 defaults (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other); add your own, rename or recolor any of them, or archive ones you no longer use from Settings. Category is required on every bill. Archiving a category hides it from the "new bill" picker but doesn't touch bills already using it — they keep working and stay filterable, just flagged as archived.
-- **Payment tracking** — view upcoming, overdue, and paid bills for any month, grouped by category. Mark as paid with an optional amount override and note. Revert if you made a mistake.
+- **Payment tracking** — view upcoming, overdue, and paid bills for any month, grouped by category. Mark as paid with an optional amount override and note. Edit the amount, date and note of any payment afterwards, or revert if you made a mistake.
 - **Email reminders** — optional, off by default for new accounts. Configure SMTP credentials and a send time (30-minute precision) and the app emails you before or after each bill's due date.
 - **Monthly summary email** — optional. On the last day of each month, receive a full summary of what was paid (amount due vs. paid, date) and what was missed, with totals. Toggle it in Settings → Email Notifications. A "Send monthly summary now" button lets you request the current month's snapshot on demand.
+- **Browser notifications** — optional. Get a desktop/mobile notification when a bill is due today (Settings → Browser Notifications).
 - **Email sent indicator** — each payment row shows an `@` icon: gray if no reminder has been sent, amber if one was sent. Click it to see the exact timestamp.
 - **Telegram reminders** — optional. Per-user bot token and chat ID, own schedule and monthly summary, independent of email. See `context/foundation/telegram-setup.md`.
 - **Export & backup** — download payment history as `.xlsx` (one sheet per month) or a JSON backup where you choose what to include (bills & payments, custom categories, email setup, Telegram, languages, default currency; select/deselect all). Restore applies whatever the file contains.
@@ -33,7 +43,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Installable as PWA** — works offline-first on mobile and desktop.
 
 
-## Quick start without cloning
+## 🚀 Quick start without cloning
 
 Pull the published images from GitHub Container Registry and run the app with just two files — no repo clone required.
 
@@ -63,7 +73,7 @@ docker compose -f docker-compose.prod.yml --profile demo up -d
 Pin a specific released version instead of the latest one by setting `PAY_TRACKER_VERSION` (e.g. `PAY_TRACKER_VERSION=1.1.0 docker compose -f docker-compose.prod.yml up -d`).
 
 
-## Getting started
+## 🏁 Getting started
 
 The steps below build the images from source — use this if you're developing Pay Tracker or want to run unreleased changes. If you just want to run the app, see [Quick start without cloning](#quick-start-without-cloning) above.
 
@@ -90,7 +100,7 @@ Open http://localhost:3010 and register. Each account is isolated — register s
 
 ### 4. Add your first bill
 
-Go to **Bills → New Bill**. Fill in the name, category, amount, frequency, and due day of month. Save it — Pay Tracker will generate this month's payment instance automatically.
+Go to **Bills → New Bill**. Fill in the name, category, amount, frequency (monthly/annual + interval), and due day of month. Save it — Pay Tracker will generate this month's payment instance automatically.
 
 ### 5. Track payments
 
@@ -98,19 +108,21 @@ Go to **Payments**. Use the month selector to browse any period. Click **Mark as
 
 ### 6. Set up email reminders (optional)
 
-Add SMTP credentials to `.env` (see the `# Reminders` section in `.env.example`), then restart (mail is delivered through [Apprise](https://github.com/caronc/apprise), which will also carry other channels later). Go to **Settings → Email Notifications** to configure when reminders are sent and which timing windows to use (2 days before, 1 day before, on the day, 1 day after).
+Add SMTP credentials to `.env` (see the `# Reminders` section in `.env.example`), then restart (mail is delivered through [Apprise](https://github.com/caronc/apprise), which will also carry other channels later). Open the avatar menu (top right) → **Settings → Email Notifications** to configure when reminders are sent and which timing windows to use (2 days before, 1 day before, on the day, 1 day after).
 
 The settings page also shows the current server time (UTC) so you can set the send time relative to your timezone.
 
 
-## Environment variables
+## ⚙️ Environment variables
 
 | Variable | Required | Description |
 | --- | --- | --- |
 | `ENVIRONMENT` | no (default: `development`) | Set to `production` for any real deployment — enables the `Secure` cookie flag, rejects a weak/default `JWT_SECRET`, and disables `/docs`, `/redoc`, `/openapi.json` |
 | `JWT_SECRET` | yes | JWT signing secret — use a long random string |
+| `ACCESS_TOKEN_EXPIRE_MINUTES` | no | Login session lifetime in minutes (default: 60) |
 | `DATABASE_URL` | yes | PostgreSQL connection string |
 | `NEXT_PUBLIC_API_URL` | yes | Backend URL as seen by the browser. **Baked in at frontend build time**, not read at container startup — only takes effect when building the frontend yourself (`docker compose up --build`, see [Getting started](#getting-started)). The pre-built images used in [Quick start without cloning](#quick-start-without-cloning) always ship with this set to `http://localhost:8010`, since it's baked in once at release time before any deployment's real domain is known |
+| `NEXT_PUBLIC_SESSION_HEARTBEAT_SECONDS` | no | Seconds between session-expiry checks on an idle open tab (default: 180). Build-time, like `NEXT_PUBLIC_API_URL` |
 | `SMTP_HOST` | no | SMTP server for email reminders |
 | `SMTP_PORT` | no | SMTP port (default: 587) |
 | `SMTP_USER` | no | SMTP login |
@@ -123,7 +135,7 @@ The settings page also shows the current server time (UTC) so you can set the se
 Copy `.env.example` to `.env`. Never commit `.env`.
 
 
-## Stack
+## 🧱 Stack
 
 - **Frontend:** Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, next-intl
 - **Backend:** FastAPI, Python 3.13, SQLAlchemy 2.0, Alembic, Pydantic v2
@@ -131,7 +143,7 @@ Copy `.env.example` to `.env`. Never commit `.env`.
 - **Runtime:** Docker Compose
 
 
-## Development commands
+## 🛠️ Development commands
 
 ```bash
 # Start everything
@@ -159,7 +171,7 @@ docker compose exec backend uv run alembic revision --autogenerate -m "describe 
 > **Migration note:** Always read the generated migration file before applying — autogenerate can miss new columns. For renames, write `add_column` + `UPDATE` + `drop_column` manually instead of relying on `alter_column(new_column_name=...)`.
 
 
-## Installing as a PWA
+## 📲 Installing as a PWA
 
 - **Chrome / Brave (desktop):** install icon (⊕) in the address bar, or browser menu → Install Pay Tracker
 - **Android:** browser menu (⋮) → Add to Home screen
@@ -168,7 +180,7 @@ docker compose exec backend uv run alembic revision --autogenerate -m "describe 
 Requires HTTPS in production. Localhost works as an exception in most browsers.
 
 
-## Export & backup
+## 💾 Export & backup
 
 - **XLSX** — Payments page → Export Excel. One sheet per month, all columns.
 - **JSON backup** — Settings → Data → Download Backup. Tick the sections to include (bills & payments, custom categories, email notification setup, Telegram, language settings, default currency) or use select/deselect all. Scoped to your account. The Telegram option writes the bot token in plaintext, so keep such files private.
