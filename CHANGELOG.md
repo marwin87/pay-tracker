@@ -6,6 +6,7 @@ Notable changes to Pay Tracker, release by release.
 
 ### Features
 
+- Search bills and payments by name on the Payments, Bills, and Archived Bills pages
 - Dropdown menus and the category filter's checkbox list can now be navigated with the keyboard: arrow keys, Home and End move through options, matching the accessibility semantics they already advertised
 
 ### Security
@@ -19,7 +20,7 @@ Notable changes to Pay Tracker, release by release.
 - Payment dialogs (mark as paid, delete, revert) now render through the same portal-to-body pattern as every other dialog, instead of inline in the page
 - Corrected foreign-key metadata on bill templates and payment instances to match the database's actual cascade behavior, closing a drift between the test schema and production
 
-## v1.1.0
+## v1.1.0 — 27-09-2026
 
 ### Features
 
@@ -60,7 +61,7 @@ Notable changes to Pay Tracker, release by release.
 - Consistent button, checkbox, and dropdown styling; action buttons aligned to ghost/outline style
 - Localized auth error messages
 
-## v1.0.2 — 2026-07-20
+## v1.0.2 — 20-07-2026
 
 ### Features
 
@@ -74,13 +75,13 @@ Notable changes to Pay Tracker, release by release.
 - Frontend arm64 image built on a native runner instead of QEMU
 - CI: added mypy type-checking and dependency vulnerability audits
 
-## v1.0.1 — 2026-07-01
+## v1.0.1 — 01-07-2026
 
 ### Fixes
 
 - Release images are now built for both amd64 and arm64
 
-## v1.0.0 — 2026-07-01
+## v1.0.0 — 01-07-2026
 
 First release.
 

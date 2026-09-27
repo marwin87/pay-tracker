@@ -192,7 +192,9 @@
         "heading": "Giorno del mese",
         "shortMonthWarning": "Alcuni mesi hanno meno giorni: la bolletta cadrà nell'ultimo giorno disponibile."
     },
-    "CategoryCombobox": {"placeholder": "es. Utenze"},
+    "CategoryCombobox": {
+        "placeholder": "es. Utenze"
+    },
     "PaymentsPage": {
         "title": "Pagamenti",
         "subtitle": "Monitora e segna le tue bollette mese per mese.",
@@ -214,7 +216,11 @@
         "clearDayFilter": "Cancella"
     },
     "PaymentRow": {
-        "status": {"upcoming": "In arrivo", "overdue": "Scaduto", "paid": "Pagato"},
+        "status": {
+            "upcoming": "In arrivo",
+            "overdue": "Scaduto",
+            "paid": "Pagato"
+        },
         "dueToday": "Oggi",
         "lastPayment": "Ultima rata",
         "markAsPaid": "Segna come pagato",
@@ -323,7 +329,9 @@
         "name": "Italiano",
         "title": "Lingua"
     },
-    "NotificationToggle": {"paymentIncoming": "Pagamento in arrivo"},
+    "NotificationToggle": {
+        "paymentIncoming": "Pagamento in arrivo"
+    },
     "EmailRemindersToggle": {
         "enable": "Attiva promemoria via email",
         "disable": "Disattiva promemoria via email"
@@ -481,6 +489,7 @@
         "sortCategoryAsc": "Categoria A-Z",
         "sortCategoryDesc": "Categoria Z-A",
         "sortPaidFirst": "Pagati prima",
-        "sortUnpaidFirst": "Non pagati prima"
+        "sortUnpaidFirst": "Non pagati prima",
+        "searchPlaceholder": "Cerca per nome…"
     }
 }

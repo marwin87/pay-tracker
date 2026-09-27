@@ -192,7 +192,9 @@
         "heading": "Día del mes",
         "shortMonthWarning": "Algunos meses tienen menos días — la factura caerá en el último día disponible."
     },
-    "CategoryCombobox": {"placeholder": "p. ej. Servicios"},
+    "CategoryCombobox": {
+        "placeholder": "p. ej. Servicios"
+    },
     "PaymentsPage": {
         "title": "Pagos",
         "subtitle": "Controla y marca tus facturas mes a mes.",
@@ -214,7 +216,11 @@
         "clearDayFilter": "Borrar"
     },
     "PaymentRow": {
-        "status": {"upcoming": "Próximo", "overdue": "Vencido", "paid": "Pagado"},
+        "status": {
+            "upcoming": "Próximo",
+            "overdue": "Vencido",
+            "paid": "Pagado"
+        },
         "dueToday": "Hoy",
         "lastPayment": "Último pago",
         "markAsPaid": "Marcar como pagado",
@@ -323,7 +329,9 @@
         "name": "Español",
         "title": "Idioma"
     },
-    "NotificationToggle": {"paymentIncoming": "Pago próximo"},
+    "NotificationToggle": {
+        "paymentIncoming": "Pago próximo"
+    },
     "EmailRemindersToggle": {
         "enable": "Activar recordatorios por correo",
         "disable": "Desactivar recordatorios por correo"
@@ -481,6 +489,7 @@
         "sortCategoryAsc": "Categoría A-Z",
         "sortCategoryDesc": "Categoría Z-A",
         "sortPaidFirst": "Pagados primero",
-        "sortUnpaidFirst": "No pagados primero"
+        "sortUnpaidFirst": "No pagados primero",
+        "searchPlaceholder": "Buscar por nombre…"
     }
 }

@@ -192,7 +192,9 @@
         "heading": "Jour du mois",
         "shortMonthWarning": "Certains mois comptent moins de jours — la facture tombera au dernier jour disponible."
     },
-    "CategoryCombobox": {"placeholder": "ex. Charges"},
+    "CategoryCombobox": {
+        "placeholder": "ex. Charges"
+    },
     "PaymentsPage": {
         "title": "Paiements",
         "subtitle": "Suivez et marquez vos factures mois par mois.",
@@ -214,7 +216,11 @@
         "clearDayFilter": "Effacer"
     },
     "PaymentRow": {
-        "status": {"upcoming": "À venir", "overdue": "En retard", "paid": "Payé"},
+        "status": {
+            "upcoming": "À venir",
+            "overdue": "En retard",
+            "paid": "Payé"
+        },
         "dueToday": "Aujourd'hui",
         "lastPayment": "Dernier paiement",
         "markAsPaid": "Marquer comme payé",
@@ -323,7 +329,9 @@
         "name": "Français",
         "title": "Langue"
     },
-    "NotificationToggle": {"paymentIncoming": "Paiement à venir"},
+    "NotificationToggle": {
+        "paymentIncoming": "Paiement à venir"
+    },
     "EmailRemindersToggle": {
         "enable": "Activer les rappels par email",
         "disable": "Désactiver les rappels par email"
@@ -481,6 +489,7 @@
         "sortCategoryAsc": "Catégorie A-Z",
         "sortCategoryDesc": "Catégorie Z-A",
         "sortPaidFirst": "Payées en premier",
-        "sortUnpaidFirst": "Impayées en premier"
+        "sortUnpaidFirst": "Impayées en premier",
+        "searchPlaceholder": "Rechercher par nom…"
     }
 }

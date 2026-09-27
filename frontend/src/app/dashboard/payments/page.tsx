@@ -25,6 +25,7 @@ import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
 import RevertPaymentDialog from "@/components/payments/RevertPaymentDialog";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
+import SearchInput from "@/components/SearchInput";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
@@ -225,6 +226,7 @@ function PaymentsPageInner() {
 
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
 
   const todayStr = getTodayStr();
 
@@ -237,9 +239,12 @@ function PaymentsPageInner() {
       (statusFilter.size === 0 || statusFilter.has(inst.status)) &&
       (categoryFilter.size === 0 || categoryFilter.has(String(inst.category.id))),
   );
-  const filteredInstances = statusCategoryFiltered.filter(
-    (inst) => dayFilter === null || inst.due_date === dayFilter,
-  );
+  const filteredInstances = statusCategoryFiltered
+    .filter((inst) => dayFilter === null || inst.due_date === dayFilter)
+    .filter(
+      (inst) =>
+        !searchQuery || inst.bill_name.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
 
   const statusOptions = [
     { value: "upcoming", label: tRow("status.upcoming") },
@@ -458,22 +463,33 @@ function PaymentsPageInner() {
 
       {/* Selected month header */}
       <div className="mb-4 pb-5 border-b border-slate-200 dark:border-slate-700">
-        <div className="flex items-center gap-2">
-          <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-            {(() => {
-              const label = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
-                new Date(
-                  parseInt(selectedMonth.split("-")[0]),
-                  parseInt(selectedMonth.split("-")[1]) - 1,
-                ),
-              );
-              return label.charAt(0).toUpperCase() + label.slice(1);
-            })()}
-          </h2>
-          {isReadOnly && (
-            <span className="rounded-md px-1.5 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400">
-              {t("pastMonth")}
-            </span>
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
+              {(() => {
+                const label = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
+                  new Date(
+                    parseInt(selectedMonth.split("-")[0]),
+                    parseInt(selectedMonth.split("-")[1]) - 1,
+                  ),
+                );
+                return label.charAt(0).toUpperCase() + label.slice(1);
+              })()}
+            </h2>
+            {isReadOnly && (
+              <span className="rounded-md px-1.5 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+                {t("pastMonth")}
+              </span>
+            )}
+          </div>
+          {!loading && !loadError && (
+            <button
+              onClick={allCollapsed ? expandAll : collapseAll}
+              className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
+            >
+              <ChevronsUpDown size={13} />
+              {allCollapsed ? t("expandAll") : t("collapseAll")}
+            </button>
           )}
         </div>
         {!loading && !loadError && (
@@ -494,46 +510,45 @@ function PaymentsPageInner() {
                 }}
               />
             )}
-            <div className="flex flex-wrap items-center justify-end gap-3">
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                  {tFilters("filterBy")}
-                </span>
-                <MultiSelectFilter
-                  selected={statusFilter}
-                  onChange={setStatusFilter}
-                  options={statusOptions}
-                  ariaLabel={tFilters("allStatuses")}
-                  allLabel={tFilters("allStatuses")}
-                />
-                <MultiSelectFilter
-                  selected={categoryFilter}
-                  onChange={setCategoryFilter}
-                  options={categoryOptions}
-                  ariaLabel={tFilters("allCategories")}
-                  allLabel={tFilters("allCategories")}
-                />
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <SearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder={tFilters("searchPlaceholder")}
+              />
+              <div className="flex flex-wrap items-center justify-end gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                    {tFilters("filterBy")}
+                  </span>
+                  <MultiSelectFilter
+                    selected={statusFilter}
+                    onChange={setStatusFilter}
+                    options={statusOptions}
+                    ariaLabel={tFilters("allStatuses")}
+                    allLabel={tFilters("allStatuses")}
+                  />
+                  <MultiSelectFilter
+                    selected={categoryFilter}
+                    onChange={setCategoryFilter}
+                    options={categoryOptions}
+                    ariaLabel={tFilters("allCategories")}
+                    allLabel={tFilters("allCategories")}
+                  />
+                </div>
+                <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                    {tFilters("sortBy")}
+                  </span>
+                  <FilterSelect
+                    value={sortOption}
+                    onChange={(v) => setSortOption(v as PaymentSortOption)}
+                    options={sortOptions}
+                    ariaLabel={tFilters("sortBy")}
+                  />
+                </div>
               </div>
-              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                  {tFilters("sortBy")}
-                </span>
-                <FilterSelect
-                  value={sortOption}
-                  onChange={(v) => setSortOption(v as PaymentSortOption)}
-                  options={sortOptions}
-                  ariaLabel={tFilters("sortBy")}
-                />
-              </div>
-              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
-              <button
-                onClick={allCollapsed ? expandAll : collapseAll}
-                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
-              >
-                <ChevronsUpDown size={13} />
-                {allCollapsed ? t("expandAll") : t("collapseAll")}
-              </button>
             </div>
           </div>
         )}

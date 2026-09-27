@@ -192,7 +192,9 @@
         "heading": "每月日期",
         "shortMonthWarning": "部分月份天数较少——账单将落在该月的最后一天。"
     },
-    "CategoryCombobox": {"placeholder": "例如：水电"},
+    "CategoryCombobox": {
+        "placeholder": "例如：水电"
+    },
     "PaymentsPage": {
         "title": "付款",
         "subtitle": "按月跟踪并标记您的账单。",
@@ -214,7 +216,11 @@
         "clearDayFilter": "清除"
     },
     "PaymentRow": {
-        "status": {"upcoming": "待付款", "overdue": "已逾期", "paid": "已付款"},
+        "status": {
+            "upcoming": "待付款",
+            "overdue": "已逾期",
+            "paid": "已付款"
+        },
         "dueToday": "今日",
         "lastPayment": "最后一期",
         "markAsPaid": "标记为已付款",
@@ -323,7 +329,9 @@
         "name": "中文",
         "title": "语言"
     },
-    "NotificationToggle": {"paymentIncoming": "即将付款"},
+    "NotificationToggle": {
+        "paymentIncoming": "即将付款"
+    },
     "EmailRemindersToggle": {
         "enable": "开启邮件提醒",
         "disable": "关闭邮件提醒"
@@ -481,6 +489,7 @@
         "sortCategoryAsc": "类别 A-Z",
         "sortCategoryDesc": "类别 Z-A",
         "sortPaidFirst": "已付款优先",
-        "sortUnpaidFirst": "未付款优先"
+        "sortUnpaidFirst": "未付款优先",
+        "searchPlaceholder": "按名称搜索…"
     }
 }

@@ -192,7 +192,9 @@
         "heading": "Day of month",
         "shortMonthWarning": "Some months have fewer days — the bill will fall on the last available day."
     },
-    "CategoryCombobox": {"placeholder": "e.g. Utilities"},
+    "CategoryCombobox": {
+        "placeholder": "e.g. Utilities"
+    },
     "PaymentsPage": {
         "title": "Payments",
         "subtitle": "Track and mark your bills month by month.",
@@ -214,7 +216,11 @@
         "clearDayFilter": "Clear"
     },
     "PaymentRow": {
-        "status": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
+        "status": {
+            "upcoming": "Upcoming",
+            "overdue": "Overdue",
+            "paid": "Paid"
+        },
         "dueToday": "Today",
         "lastPayment": "Last payment",
         "markAsPaid": "Mark as Paid",
@@ -323,7 +329,9 @@
         "name": "English",
         "title": "Language"
     },
-    "NotificationToggle": {"paymentIncoming": "Payment incoming"},
+    "NotificationToggle": {
+        "paymentIncoming": "Payment incoming"
+    },
     "EmailRemindersToggle": {
         "enable": "Enable email reminders",
         "disable": "Disable email reminders"
@@ -481,6 +489,7 @@
         "sortCategoryAsc": "Category A-Z",
         "sortCategoryDesc": "Category Z-A",
         "sortPaidFirst": "Paid first",
-        "sortUnpaidFirst": "Unpaid first"
+        "sortUnpaidFirst": "Unpaid first",
+        "searchPlaceholder": "Search by name…"
     }
 }

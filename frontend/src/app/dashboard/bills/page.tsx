@@ -27,6 +27,7 @@ import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
 import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
+import SearchInput from "@/components/SearchInput";
 import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
@@ -47,16 +48,18 @@ export default function BillsPage() {
   const [restoreTarget, setRestoreTarget] = useState<{ id: number; name: string; data: BillTemplateUpdate } | null>(null);
   const [restoring, setRestoring] = useState(false);
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
+  const [searchQuery, setSearchQuery] = useState("");
   const [defaultCurrency, setDefaultCurrency] = useState<string | null>(null);
 
   useEffect(() => {
     fetchMe().then((p) => setDefaultCurrency(p.default_currency)).catch(() => {});
   }, []);
 
-  const filteredTemplates =
-    categoryFilter.size === 0
-      ? templates
-      : templates.filter((tmpl) => categoryFilter.has(String(tmpl.category.id)));
+  const filteredTemplates = templates
+    .filter((tmpl) => categoryFilter.size === 0 || categoryFilter.has(String(tmpl.category.id)))
+    .filter(
+      (tmpl) => !searchQuery || tmpl.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    );
 
   const categoryOptions = distinctCategories(templates, (tmpl) => tmpl.category).map((cat) => ({
     value: String(cat.id),
@@ -213,58 +216,60 @@ export default function BillsPage() {
         <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           {t("subtitle")}
         </p>
-        <div className="mt-3 flex items-center justify-between gap-2">
-          <button
-            onClick={() => toggleExpand("new")}
-            className="flex items-center gap-2 rounded-lg border border-green-200 bg-white px-4 py-2 text-sm font-medium text-green-700 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-800 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
-          >
-            <Plus size={16} />
-            {expandedId === "new" ? t("cancel") : t("newBill")}
-          </button>
-          <div className="flex flex-wrap items-center gap-3">
-            {templates.length > 0 && (
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                  {tFilters("filterBy")}
-                </span>
-                <MultiSelectFilter
-                  selected={categoryFilter}
-                  onChange={setCategoryFilter}
-                  options={categoryOptions}
-                  ariaLabel={tFilters("allCategories")}
-                  allLabel={tFilters("allCategories")}
-                />
-              </div>
-            )}
-            {templates.length > 0 && (
-              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
-            )}
-            {templates.length > 0 && (
-              <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                  {tFilters("sortBy")}
-                </span>
-                <FilterSelect
-                  value={sortOption}
-                  onChange={(v) => setSortOption(v as CategorySortOrder)}
-                  options={sortOptions}
-                  ariaLabel={tFilters("sortBy")}
-                />
-              </div>
-            )}
-            {templates.length > 0 && (
-              <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
-            )}
+        <div className="mt-3 flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-2">
+            <button
+              onClick={() => toggleExpand("new")}
+              className="flex items-center gap-2 rounded-lg border border-green-200 bg-white px-4 py-2 text-sm font-medium text-green-700 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-800 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
+            >
+              <Plus size={16} />
+              {expandedId === "new" ? t("cancel") : t("newBill")}
+            </button>
             {templates.length > 0 && (
               <button
                 onClick={allCollapsed ? expandAll : collapseAll}
-                className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
+                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
               >
                 <ChevronsUpDown size={13} />
                 {allCollapsed ? t("expandAll") : t("collapseAll")}
               </button>
             )}
           </div>
+          {templates.length > 0 && (
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <SearchInput
+                value={searchQuery}
+                onChange={setSearchQuery}
+                placeholder={tFilters("searchPlaceholder")}
+              />
+              <div className="flex flex-wrap items-center justify-end gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                    {tFilters("filterBy")}
+                  </span>
+                  <MultiSelectFilter
+                    selected={categoryFilter}
+                    onChange={setCategoryFilter}
+                    options={categoryOptions}
+                    ariaLabel={tFilters("allCategories")}
+                    allLabel={tFilters("allCategories")}
+                  />
+                </div>
+                <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                    {tFilters("sortBy")}
+                  </span>
+                  <FilterSelect
+                    value={sortOption}
+                    onChange={(v) => setSortOption(v as CategorySortOrder)}
+                    options={sortOptions}
+                    ariaLabel={tFilters("sortBy")}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

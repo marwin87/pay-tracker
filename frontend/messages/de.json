@@ -192,7 +192,9 @@
         "heading": "Tag des Monats",
         "shortMonthWarning": "Manche Monate haben weniger Tage — die Rechnung fällt dann auf den letzten verfügbaren Tag."
     },
-    "CategoryCombobox": {"placeholder": "z. B. Nebenkosten"},
+    "CategoryCombobox": {
+        "placeholder": "z. B. Nebenkosten"
+    },
     "PaymentsPage": {
         "title": "Zahlungen",
         "subtitle": "Verfolgen und markieren Sie Ihre Rechnungen Monat für Monat.",
@@ -327,7 +329,9 @@
         "name": "Deutsch",
         "title": "Sprache"
     },
-    "NotificationToggle": {"paymentIncoming": "Zahlung ausstehend"},
+    "NotificationToggle": {
+        "paymentIncoming": "Zahlung ausstehend"
+    },
     "EmailRemindersToggle": {
         "enable": "E-Mail-Erinnerungen aktivieren",
         "disable": "E-Mail-Erinnerungen deaktivieren"
@@ -485,6 +489,7 @@
         "sortCategoryAsc": "Kategorie A-Z",
         "sortCategoryDesc": "Kategorie Z-A",
         "sortPaidFirst": "Bezahlt zuerst",
-        "sortUnpaidFirst": "Unbezahlt zuerst"
+        "sortUnpaidFirst": "Unbezahlt zuerst",
+        "searchPlaceholder": "Nach Name suchen…"
     }
 }

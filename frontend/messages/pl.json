@@ -192,7 +192,9 @@
         "heading": "Dzień miesiąca",
         "shortMonthWarning": "Niektóre miesiące mają mniej dni — rachunek przypadnie na ostatni dostępny dzień."
     },
-    "CategoryCombobox": {"placeholder": "np. Media"},
+    "CategoryCombobox": {
+        "placeholder": "np. Media"
+    },
     "PaymentsPage": {
         "title": "Płatności",
         "subtitle": "Śledź i oznaczaj swoje rachunki miesiąc po miesiącu.",
@@ -214,7 +216,11 @@
         "clearDayFilter": "Wyczyść"
     },
     "PaymentRow": {
-        "status": {"upcoming": "Nadchodzące", "overdue": "Zaległe", "paid": "Opłacone"},
+        "status": {
+            "upcoming": "Nadchodzące",
+            "overdue": "Zaległe",
+            "paid": "Opłacone"
+        },
         "dueToday": "Dzisiaj",
         "lastPayment": "Ostatnia rata",
         "markAsPaid": "Oznacz jako opłacone",
@@ -323,7 +329,9 @@
         "name": "Polski",
         "title": "Język"
     },
-    "NotificationToggle": {"paymentIncoming": "Nadchodząca płatność"},
+    "NotificationToggle": {
+        "paymentIncoming": "Nadchodząca płatność"
+    },
     "EmailRemindersToggle": {
         "enable": "Włącz przypomnienia e-mail",
         "disable": "Wyłącz przypomnienia e-mail"
@@ -481,6 +489,7 @@
         "sortCategoryAsc": "Kategorie A-Z",
         "sortCategoryDesc": "Kategorie Z-A",
         "sortPaidFirst": "Najpierw opłacone",
-        "sortUnpaidFirst": "Najpierw nieopłacone"
+        "sortUnpaidFirst": "Najpierw nieopłacone",
+        "searchPlaceholder": "Szukaj po nazwie…"
     }
 }
