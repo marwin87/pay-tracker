@@ -28,6 +28,7 @@ from app.schemas.bill import (
     BackupChannelSchedule,
     BackupPayload,
     ExportSummaryOut,
+    RestoreResultOut,
     RestoreSnapshotOut,
 )
 from app.services.categories import seed_default_categories
@@ -599,7 +600,7 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
     return len(templates_in or []), len(backup.payment_instances or [])
 
 
-@router.post("/restore")
+@router.post("/restore", response_model=RestoreResultOut)
 def restore_json(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -659,10 +660,9 @@ def restore_json(
     # commits, it would break the "abort restore on snapshot failure" guarantee.
     db.commit()
 
-    return {
-        "restored_templates": restored_templates,
-        "restored_instances": restored_instances,
-    }
+    return RestoreResultOut(
+        restored_templates=restored_templates, restored_instances=restored_instances
+    )
 
 
 def _active_snapshot(db: Session, user_id: int) -> RestoreSnapshot | None:
@@ -692,7 +692,7 @@ def last_snapshot(
     return RestoreSnapshotOut(created_at=snapshot.created_at)
 
 
-@router.post("/restore-snapshot")
+@router.post("/restore-snapshot", response_model=RestoreResultOut)
 def restore_from_snapshot(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
@@ -706,7 +706,6 @@ def restore_from_snapshot(
     db.delete(snapshot)
     db.commit()
 
-    return {
-        "restored_templates": restored_templates,
-        "restored_instances": restored_instances,
-    }
+    return RestoreResultOut(
+        restored_templates=restored_templates, restored_instances=restored_instances
+    )

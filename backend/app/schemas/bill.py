@@ -265,3 +265,8 @@ class ExportSummaryOut(BaseModel):
 
 class RestoreSnapshotOut(BaseModel):
     created_at: datetime
+
+
+class RestoreResultOut(BaseModel):
+    restored_templates: int
+    restored_instances: int

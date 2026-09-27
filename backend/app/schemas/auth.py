@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 from typing import Annotated, Literal
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
@@ -115,6 +116,10 @@ class SendNotificationNowOut(BaseModel):
 
 class SendMonthlySummaryNowOut(BaseModel):
     sent: bool
+
+
+class ServerTimeOut(BaseModel):
+    server_time: datetime
 
 
 class ForgotPasswordRequest(BaseModel):

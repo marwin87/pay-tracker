@@ -26,6 +26,7 @@ from app.schemas.auth import (
     ResetPasswordRequest,
     SendMonthlySummaryNowOut,
     SendNotificationNowOut,
+    ServerTimeOut,
     SmtpStatusResponse,
     TokenResponse,
     UserProfileOut,
@@ -221,9 +222,9 @@ def send_monthly_summary_now(
     return SendMonthlySummaryNowOut(sent=sent)
 
 
-@router.get("/server-time")
+@router.get("/server-time", response_model=ServerTimeOut)
 def server_time(_: User = Depends(current_user)):
-    return {"server_time": datetime.now(timezone.utc).isoformat()}
+    return ServerTimeOut(server_time=datetime.now(timezone.utc))
 
 
 @router.patch("/change-email", response_model=UserProfileOut)
