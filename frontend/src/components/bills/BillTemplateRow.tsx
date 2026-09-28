@@ -10,10 +10,12 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
+import { useLocale as useAppLocale } from "@/context/locale-context";
 import BillTemplateForm from "./BillTemplateForm";
 import type { BillTemplateOut, BillTemplateUpdate } from "@/lib/bills-api";
 import { categoryBorderClass } from "@/lib/categories";
 import { useFrequencyLabel } from "@/lib/frequency";
+import { formatAmount } from "@/lib/summary";
 
 interface Props {
   template: BillTemplateOut;
@@ -59,6 +61,7 @@ export default function BillTemplateRow({
   const t = useTranslations("BillTemplateRow");
   const frequencyLabel = useFrequencyLabel();
   const locale = useLocale();
+  const { decimalSeparator } = useAppLocale();
   const [actionsOpen, setActionsOpen] = useState(false);
 
   const dueLabel = formatDueLabel(template, locale);
@@ -94,7 +97,7 @@ export default function BillTemplateRow({
           {/* Line 2: amount · frequency · due */}
           <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
             <span className="text-xs font-medium text-slate-600 dark:text-slate-300">
-              {template.amount} {template.currency}
+              {formatAmount(template.amount, decimalSeparator)} {template.currency}
             </span>
             <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
               {frequencyLabel(template.frequency, template.interval)}

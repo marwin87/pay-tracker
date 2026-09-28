@@ -29,6 +29,7 @@ class UserProfileOut(BaseModel):
     language_preference: str | None
     enabled_languages: list[SupportedLanguage]
     default_currency: str | None
+    decimal_separator: Literal[".", ","]
     email_reminders_enabled: bool
     notify_2_days_before: bool
     notify_1_day_before: bool
@@ -71,6 +72,7 @@ class UserProfileUpdate(BaseModel):
     language_preference: SupportedLanguage | None = None
     enabled_languages: list[SupportedLanguage] | None = None
     default_currency: str | None = None
+    decimal_separator: Literal[".", ","] | None = None
     email_reminders_enabled: bool | None = None
     notify_2_days_before: bool | None = None
     notify_1_day_before: bool | None = None

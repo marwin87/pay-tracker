@@ -83,6 +83,7 @@ def test_export_default_is_full(client):
         "language_preference": "de",
         "enabled_languages": ["en", "de"],
         "default_currency": "EUR",
+        "decimal_separator": ".",
     }
     assert body["telegram"]["bot_token"] == _TOKEN
     assert set(body["notifications"]) == {"email", "telegram", "browser_enabled"}
@@ -104,7 +105,8 @@ def test_export_prefs_sections_are_independent(client):
         "enabled_languages",
     }
     assert set(_export(client, tok, ["currency"])["preferences"]) == {
-        "default_currency"
+        "default_currency",
+        "decimal_separator",
     }
 
 
@@ -163,6 +165,18 @@ def test_currency_only_restore_leaves_everything_else(client):
     assert me["default_currency"] == "GBP"
     assert me["language_preference"] == "de"
     assert me["telegram_chat_id"] == "42"
+    assert len(_bills(client, tok)) == 1
+
+
+def test_decimal_separator_only_restore_leaves_everything_else(client):
+    tok = register_and_login(client, "sep@test.com")
+    _seed(client, tok)
+    payload = {"schema_version": 6, "preferences": {"decimal_separator": ","}}
+    assert _upload(client, tok, payload).status_code == 200
+    me = _me(client, tok)
+    assert me["decimal_separator"] == ","
+    assert me["default_currency"] == "EUR"
+    assert me["language_preference"] == "de"
     assert len(_bills(client, tok)) == 1
 
 
@@ -245,10 +259,14 @@ def test_snapshot_undo_restores_preferences(client):
         "schema_version": 5,
         "bill_templates": [],
         "payment_instances": [],
-        "preferences": {"default_currency": "JPY"},
+        "preferences": {"default_currency": "JPY", "decimal_separator": ","},
     }
     assert _upload(client, tok, payload).status_code == 200
-    assert _me(client, tok)["default_currency"] == "JPY"
+    me = _me(client, tok)
+    assert me["default_currency"] == "JPY"
+    assert me["decimal_separator"] == ","
     assert client.post("/export/restore-snapshot", headers=auth(tok)).status_code == 200
-    assert _me(client, tok)["default_currency"] == "EUR"
+    me = _me(client, tok)
+    assert me["default_currency"] == "EUR"
+    assert me["decimal_separator"] == "."
     assert len(_bills(client, tok)) == 1

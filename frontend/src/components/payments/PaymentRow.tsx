@@ -3,7 +3,9 @@
 import { useState, useRef, useEffect } from "react";
 import { AlertCircle, AtSign, CheckCircle, MessageSquare, Pencil, Undo2, Trash2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
+import { useLocale as useAppLocale } from "@/context/locale-context";
 import type { PaymentInstanceOut } from "@/lib/payments-api";
+import { formatAmount } from "@/lib/summary";
 
 const STATUS_STYLES: Record<string, string> = {
   upcoming:
@@ -26,6 +28,7 @@ interface Props {
 export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, onEdit, readOnly = false }: Props) {
   const t = useTranslations("PaymentRow");
   const locale = useLocale();
+  const { decimalSeparator } = useAppLocale();
   const [emailOpen, setEmailOpen] = useState(false);
   const emailRef = useRef<HTMLDivElement>(null);
 
@@ -100,7 +103,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
         {/* Amount */}
         {parseFloat(instance.amount) > 0 && (
           <span className="text-xs font-medium text-slate-600 dark:text-slate-300">
-            {instance.amount} {instance.currency}
+            {formatAmount(instance.amount, decimalSeparator)} {instance.currency}
           </span>
         )}
         {/* Due date + status (left) — actions (right) */}
@@ -114,7 +117,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
               <span className="text-emerald-600 dark:text-emerald-400 truncate">
                 {t("paidOn")} {paidAtFormatted}
                 {instance.paid_amount != null && parseFloat(instance.paid_amount) > 0 && (
-                  <> · {instance.paid_amount} {instance.currency}</>
+                  <> · {formatAmount(instance.paid_amount, decimalSeparator)} {instance.currency}</>
                 )}
               </span>
             ) : isDueToday && instance.status === "upcoming" ? (
@@ -210,8 +213,8 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
             <AlertCircle size={12} className="shrink-0 text-amber-500 dark:text-amber-400" />
             <span>
               {t.rich("amountMismatch", {
-                expected: `${instance.amount} ${instance.currency}`,
-                paid: `${instance.paid_amount} ${instance.currency}`,
+                expected: `${formatAmount(instance.amount, decimalSeparator)} ${instance.currency}`,
+                paid: `${formatAmount(instance.paid_amount ?? "0", decimalSeparator)} ${instance.currency}`,
                 expTag: (chunks) => <strong className="font-semibold text-slate-800 dark:text-slate-100">{chunks}</strong>,
                 paidTag: (chunks) => <strong className="font-semibold text-amber-600 dark:text-amber-400">{chunks}</strong>,
               })}

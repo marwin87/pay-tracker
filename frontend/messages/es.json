@@ -260,6 +260,7 @@
     "MarkPaidDialog": {
         "title": "Marcar como pagado: {billName}",
         "editTitle": "Editar pago: {billName}",
+        "amountInvalid": "Introduce un importe válido.",
         "dueAmountLabel": "Importe a pagar",
         "amountHint": "Solo afecta a este pago. Déjalo vacío para usar el importe de la factura.",
         "dueDateLabel": "Fecha de vencimiento",
@@ -309,7 +310,7 @@
             "email": "Notificaciones por correo",
             "telegram": "Telegram (token del bot y recordatorios)",
             "languages": "Ajustes de idioma",
-            "currency": "Moneda predeterminada"
+            "currency": "Moneda y formato numérico"
         }
     },
     "SnapshotRecoverySection": {
@@ -386,6 +387,12 @@
             "customOption": "Personalizado…",
             "customCurrencyAriaLabel": "Código de moneda personalizado",
             "customCurrencyPlaceholder": "p. ej. CHF"
+        },
+        "decimalSeparator": {
+            "title": "Separador decimal",
+            "description": "Elige cómo se muestran los precios.",
+            "period": "Punto (.)",
+            "comma": "Coma (,)"
         },
         "languages": {
             "title": "Idiomas",

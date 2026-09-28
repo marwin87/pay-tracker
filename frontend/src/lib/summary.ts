@@ -67,11 +67,33 @@ export function pickCurrency(
   return currencies[0] ?? null;
 }
 
-export function formatMoney(value: number, currency: string, locale: string): string {
+/** Formats a raw two-decimal amount string/number with the user's chosen decimal separator. */
+export function formatAmount(raw: string | number, separator: "." | ","): string {
+  const n = typeof raw === "string" ? parseFloat(raw) : raw;
+  return n.toFixed(2).replace(".", separator);
+}
+
+/** Currency-formats the exact value (2 decimals, never rounded to a whole unit —
+ * dashboard totals must reflect the real amount) with the user's chosen decimal
+ * separator. Grouping is off, matching formatAmount elsewhere: with only one
+ * separator character on screen, there's no ambiguity about which one it is. */
+export function formatMoney(
+  value: number,
+  currency: string,
+  locale: string,
+  decimalSeparator: "." | ",",
+): string {
   try {
-    return new Intl.NumberFormat(locale, { style: "currency", currency, maximumFractionDigits: 0 }).format(value);
+    const parts = new Intl.NumberFormat(locale, {
+      style: "currency",
+      currency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      useGrouping: false,
+    }).formatToParts(value);
+    return parts.map((p) => (p.type === "decimal" ? decimalSeparator : p.value)).join("");
   } catch {
-    return `${Math.round(value)} ${currency}`; // custom code Intl doesn't know
+    return `${formatAmount(value, decimalSeparator)} ${currency}`; // custom code Intl doesn't know
   }
 }
 

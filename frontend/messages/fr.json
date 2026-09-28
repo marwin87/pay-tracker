@@ -260,6 +260,7 @@
     "MarkPaidDialog": {
         "title": "Marquer comme payé : {billName}",
         "editTitle": "Modifier le paiement : {billName}",
+        "amountInvalid": "Saisissez un montant valide.",
         "dueAmountLabel": "Montant dû",
         "amountHint": "Ne concerne que ce paiement. Laissez vide pour utiliser le montant de la facture.",
         "dueDateLabel": "Date d'échéance",
@@ -309,7 +310,7 @@
             "email": "Notifications e-mail",
             "telegram": "Telegram (jeton du bot et rappels)",
             "languages": "Paramètres de langue",
-            "currency": "Devise par défaut"
+            "currency": "Devise et format numérique"
         }
     },
     "SnapshotRecoverySection": {
@@ -386,6 +387,12 @@
             "customOption": "Personnalisé…",
             "customCurrencyAriaLabel": "Code de devise personnalisé",
             "customCurrencyPlaceholder": "ex. CHF"
+        },
+        "decimalSeparator": {
+            "title": "Séparateur décimal",
+            "description": "Choisissez comment les prix sont affichés.",
+            "period": "Point (.)",
+            "comma": "Virgule (,)"
         },
         "languages": {
             "title": "Langues",

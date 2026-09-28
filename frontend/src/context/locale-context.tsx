@@ -45,11 +45,15 @@ function detectBrowserLocale(): Locale {
   return "en";
 }
 
+export type DecimalSeparator = "." | ",";
+
 interface LocaleContextValue {
   locale: Locale;
   setLocale: (l: Locale) => void;
   enabledLocales: Locale[];
   setEnabledLocales: (langs: Locale[]) => void;
+  decimalSeparator: DecimalSeparator;
+  setDecimalSeparator: (s: DecimalSeparator) => void;
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -58,6 +62,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
   const [locale, setLocaleState] = useState<Locale>(detectBrowserLocale);
   const [enabledLocales, setEnabledLocalesState] = useState<Locale[]>(VALID_LOCALES);
+  const [decimalSeparator, setDecimalSeparatorState] = useState<DecimalSeparator>(".");
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -78,6 +83,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
           VALID_LOCALES.includes(l as Locale),
         );
         setEnabledLocalesState(enabled.length ? enabled : VALID_LOCALES);
+        setDecimalSeparatorState(profile.decimal_separator);
       })
       .catch(() => {});
     return () => {
@@ -113,9 +119,28 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
     [isAuthenticated],
   );
 
+  const setDecimalSeparator = useCallback(
+    (s: DecimalSeparator) => {
+      setDecimalSeparatorState(s);
+      if (isAuthenticated) {
+        updateMe({ decimal_separator: s }).catch(() => {
+          // persist failure is non-fatal
+        });
+      }
+    },
+    [isAuthenticated],
+  );
+
   return (
     <LocaleContext.Provider
-      value={{ locale, setLocale, enabledLocales, setEnabledLocales }}
+      value={{
+        locale,
+        setLocale,
+        enabledLocales,
+        setEnabledLocales,
+        decimalSeparator,
+        setDecimalSeparator,
+      }}
     >
       <NextIntlClientProvider locale={locale} messages={messagesMap[locale]}>
         {children}

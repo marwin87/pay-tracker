@@ -260,6 +260,7 @@
     "MarkPaidDialog": {
         "title": "Als bezahlt markieren: {billName}",
         "editTitle": "Zahlung bearbeiten: {billName}",
+        "amountInvalid": "Bitte einen gültigen Betrag eingeben.",
         "dueAmountLabel": "Fälliger Betrag",
         "amountHint": "Gilt nur für diese Zahlung. Leer lassen, um den Betrag der Rechnung zu verwenden.",
         "dueDateLabel": "Fälligkeitsdatum",
@@ -309,7 +310,7 @@
             "email": "E-Mail-Benachrichtigungen",
             "telegram": "Telegram (Bot-Token & Erinnerungen)",
             "languages": "Spracheinstellungen",
-            "currency": "Standardwährung"
+            "currency": "Währung & Zahlenformat"
         }
     },
     "SnapshotRecoverySection": {
@@ -386,6 +387,12 @@
             "customOption": "Andere…",
             "customCurrencyAriaLabel": "Benutzerdefinierter Währungscode",
             "customCurrencyPlaceholder": "z. B. CHF"
+        },
+        "decimalSeparator": {
+            "title": "Dezimaltrennzeichen",
+            "description": "Legt fest, wie Preise angezeigt werden.",
+            "period": "Punkt (.)",
+            "comma": "Komma (,)"
         },
         "languages": {
             "title": "Sprachen",

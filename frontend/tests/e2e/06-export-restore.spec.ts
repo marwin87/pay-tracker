@@ -161,7 +161,7 @@ test('backup dialog: select/deselect all drives a partial export', async ({ page
   // Deselect all disables the download; selecting one section re-enables it.
   await dialog.getByRole('button', { name: 'Deselect all' }).click();
   await expect(dialog.getByRole('button', { name: 'Download', exact: true })).toBeDisabled();
-  await dialog.getByRole('checkbox', { name: 'Default currency' }).check();
+  await dialog.getByRole('checkbox', { name: 'Currency & number format' }).check({ force: true });
 
   const [request] = await Promise.all([
     page.waitForRequest((r) => r.url().includes('/export/json')),

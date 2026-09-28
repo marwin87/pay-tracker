@@ -202,5 +202,46 @@ def test_xlsx_shows_per_payment_amount_for_unpaid(client):
         if row[2] == period
     ]
     assert [row[4] for row in rows] == [
-        143.2
+        "143.20"
     ]  # columns: Bill, Category, Period, Due Date, Amount
+
+
+def test_xlsx_amount_uses_chosen_decimal_separator_and_is_text(client):
+    """Amount/Paid Amount cells follow the user's decimal_separator preference and
+    are written as Text (not Number) cells, so Excel never reflows the separator.
+
+    A Number-cell + locale-tagged-format approach was tried instead (to avoid
+    Excel's "stored as text" warning) but doesn't actually control the rendered
+    decimal glyph — that's driven by the opening machine's own regional settings
+    regardless of any locale tag — confirmed broken in real, non-US-locale Excel."""
+    tok = register_and_login(client, "xlsx_sep@test.com")
+    r = client.patch("/auth/me", json={"decimal_separator": ","}, headers=auth(tok))
+    assert r.status_code == 200
+
+    today = date.today()
+    r = client.post(
+        "/bills",
+        json={
+            **_BILL_A,
+            "category_id": category_id(client, tok),
+            "due_month": today.month,
+        },
+        headers=auth(tok),
+    )
+    assert r.status_code == 201
+    sync_payments(client, tok, month=today.strftime("%Y-%m"))
+
+    r = client.get(f"/export/xlsx?year={today.year}", headers=auth(tok))
+    assert r.status_code == 200
+    wb = openpyxl.load_workbook(io.BytesIO(r.content))
+    period = today.strftime("%Y-%m")
+    cells = [
+        cell
+        for ws in wb.worksheets
+        for row in ws.iter_rows(min_row=2)
+        if row[2].value == period
+        for cell in [row[4]]
+    ]
+    assert [c.value for c in cells] == ["100,00"]
+    assert all(c.data_type == "s" for c in cells)  # "s" = string, never a Number cell
+    assert all(c.number_format == "@" for c in cells)

@@ -6,43 +6,37 @@ Notable changes to Pay Tracker, release by release.
 
 ### Features
 
-- Search bills and payments by name on the Payments, Bills, and Archived Bills pages
-- Dropdown menus and the category filter's checkbox list can now be navigated with the keyboard: arrow keys, Home and
-  End move through options, matching the accessibility semantics they already advertised
-- Unpaid payments can now have their due date edited for that instance only, via the existing edit-payment dialog
-- Redesigned all auth screens (login, register, forgot-password, reset-password)
-- Unified the whole app's look with the new auth screens: warmer background, two-tone nav wordmark, and every
-  dialog/form's primary action is now a solid button (Cancel/secondary actions stay outline)
-- XLSX export now opens on the current month's tab, auto-sizes columns to their content, and colors the Status column
-  (matching the app's status colors) plus a left-border accent on the Category column (matching each category's color)
+- Decimal separator preference (period or comma) for displayed prices
+- Excel export amounts follow the chosen decimal separator
+- XLSX export opens on the current month, auto-sizes columns, colors Status and Category
+- Search bills and payments by name on Payments, Bills, and Archived Bills
+- Keyboard navigation for dropdowns and the category filter checklist
+- Unpaid payments' due date can be edited per instance
+- Redesigned all auth screens (login, register, forgot/reset password)
+- Unified app look: warmer background, two-tone nav wordmark, solid primary buttons
 
 ### Security
 
-- Backend, frontend and demo-seed containers now run as non-root users
+- Backend, frontend, and demo-seed containers now run as non-root users
 
 ### License
 
-- Starting with this release, Pay Tracker is no longer MIT-licensed: non-commercial use, modification and redistribution
-  remain free with attribution, but commercial use now requires the copyright holder's written permission. All releases
-  up to and including v1.1.0 stay MIT. See [LICENSE](LICENSE).
+- Pay Tracker is no longer MIT-licensed; commercial use now requires permission. See [LICENSE](LICENSE)
 
 ### Fixes
 
-- Settings page now warns about unsaved changes before logging out, not just before following a link
-- `/server-time` and backup-restore endpoints now return typed, schema-validated responses instead of raw JSON objects
-- Payment dialogs (mark as paid, delete, revert) now render through the same portal-to-body pattern as every other
-  dialog, instead of inline in the page
-- Corrected foreign-key metadata on bill templates and payment instances to match the database's actual cascade
-  behavior, closing a drift between the test schema and production
-- Search field is full width on mobile (Payments, Bills, Archive)
-- Settings page: mobile now uses a per-section accordion instead of a horizontally-scrolling tab strip
-- Category color picker separates unused colors from already-used ones and labels each group; palette expanded with more
-  distinct colors
-- "Add category" button and the unsaved-changes / archive-bill dialogs restyled to match the rest of the app (previously
-  solid-red buttons with no dark-mode support)
-- Save/Cancel button order made consistent everywhere (Cancel always first)
-- Category expanders on Payments/Bills/Archive now reset to expanded on every login instead of remembering a previous
-  session's state
+- Settings warns about unsaved changes before logout, not just navigation
+- Settings uses a mobile accordion instead of a scrolling tab strip
+- Backup dialog sections grouped under Settings-matching headings
+- Category color picker separates used and unused colors, palette expanded
+- Restyled "Add category" and confirmation dialogs to match the app
+- Search field is full width on mobile
+- Category expanders reset to expanded on every login
+- Dashboard totals no longer rounded to whole currency units
+- `/server-time` and backup-restore endpoints return typed responses
+- Fixed foreign-key metadata drift on bill templates and payment instances
+- Payment dialogs render through the shared modal portal
+- Save/Cancel button order made consistent everywhere
 
 ## v1.1.0 — 27-09-2026
 

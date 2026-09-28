@@ -14,6 +14,7 @@ import { Tile, TILE_STYLES, type TileColor } from "@/components/settings/Tile";
 import { ProfileTile } from "@/components/settings/ProfileTile";
 import { PasswordTile } from "@/components/settings/PasswordTile";
 import { CurrencyTile } from "@/components/settings/CurrencyTile";
+import { DecimalSeparatorTile } from "@/components/settings/DecimalSeparatorTile";
 import { LanguagesTile } from "@/components/settings/LanguagesTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
 import { TelegramNotificationsTile } from "@/components/settings/TelegramNotificationsTile";
@@ -288,6 +289,7 @@ export default function SettingsPage() {
           onDirtyChange={onCurrencyDirty}
           t={t}
         />
+        <DecimalSeparatorTile t={t} />
         <LanguagesTile t={t} />
       </div>
 

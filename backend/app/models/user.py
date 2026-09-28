@@ -38,6 +38,9 @@ class User(Base):
     default_currency: Mapped[str | None] = mapped_column(
         String(10), nullable=True, default=None
     )
+    decimal_separator: Mapped[str] = mapped_column(
+        String(1), nullable=False, default=".", server_default="."
+    )
     email_reminders_enabled: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="true"
     )

@@ -260,6 +260,7 @@
     "MarkPaidDialog": {
         "title": "标记为已付款：{billName}",
         "editTitle": "编辑付款：{billName}",
+        "amountInvalid": "请输入有效金额。",
         "dueAmountLabel": "应付金额",
         "amountHint": "仅适用于本次付款。留空则使用账单金额。",
         "dueDateLabel": "到期日期",
@@ -309,7 +310,7 @@
             "email": "电子邮件通知设置",
             "telegram": "Telegram（机器人令牌和提醒）",
             "languages": "语言设置",
-            "currency": "默认货币"
+            "currency": "货币和数字格式"
         }
     },
     "SnapshotRecoverySection": {
@@ -386,6 +387,12 @@
             "customOption": "自定义…",
             "customCurrencyAriaLabel": "自定义货币代码",
             "customCurrencyPlaceholder": "例如：CHF"
+        },
+        "decimalSeparator": {
+            "title": "小数分隔符",
+            "description": "选择价格的显示方式。",
+            "period": "句点 (.)",
+            "comma": "逗号 (,)"
         },
         "languages": {
             "title": "语言",

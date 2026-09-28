@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useLocale } from "@/context/locale-context";
 import { markPaid, updatePayment, type PaymentInstanceOut } from "@/lib/payments-api";
+import { formatAmount } from "@/lib/summary";
 import PaymentDateCalendar, { toISODate } from "./PaymentDateCalendar";
 
 interface Props {
@@ -24,6 +26,7 @@ export default function MarkPaidDialog({
   onConfirm,
 }: Props) {
   const t = useTranslations("MarkPaidDialog");
+  const { decimalSeparator } = useLocale();
 
   const isEdit = mode === "edit";
   const isPaid = instance.status === "paid";
@@ -31,15 +34,17 @@ export default function MarkPaidDialog({
   // bill's amount" (the placeholder shows it).
   const editingUnpaid = isEdit && !isPaid;
 
-  const [paidAmount, setPaidAmount] = useState(
-    (isEdit
-      ? isPaid
-        ? instance.paid_amount
-        : instance.amount_overridden
-          ? instance.amount
-          : ""
-      : instance.amount) ?? "",
-  );
+  const [paidAmount, setPaidAmount] = useState(() => {
+    const raw =
+      (isEdit
+        ? isPaid
+          ? instance.paid_amount
+          : instance.amount_overridden
+            ? instance.amount
+            : ""
+        : instance.amount) ?? "";
+    return raw ? formatAmount(raw, decimalSeparator) : "";
+  });
   const [paidDate, setPaidDate] = useState(
     toISODate(isEdit && instance.paid_at ? new Date(instance.paid_at) : new Date()),
   );
@@ -47,6 +52,10 @@ export default function MarkPaidDialog({
   const [notes, setNotes] = useState(instance.notes ?? "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const amountValid =
+    paidAmount === "" ||
+    (!isNaN(Number(paidAmount.replace(",", "."))) && Number(paidAmount.replace(",", ".")) >= 0);
   const mounted = useRef(true);
   useEffect(() => () => { mounted.current = false; }, []);
 
@@ -56,9 +65,10 @@ export default function MarkPaidDialog({
     setIsSubmitting(true);
     setError(null);
     try {
-      const amount = paidAmount === "" ? null : parseFloat(paidAmount);
+      const normalized = paidAmount === "" ? null : paidAmount.replace(",", ".");
+      const amount = normalized === null ? null : parseFloat(normalized);
       const updated = !isEdit
-        ? await markPaid(instance.id, paidAmount || null, notes, paidDate)
+        ? await markPaid(instance.id, normalized, notes, paidDate)
         : editingUnpaid
           ? await updatePayment(instance.id, { amount, notes, due_date: dueDate })
           : await updatePayment(instance.id, {
@@ -129,11 +139,9 @@ export default function MarkPaidDialog({
           <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 focus-within:border-green-500 focus-within:ring-2 focus-within:ring-green-100 dark:border-slate-600 dark:bg-slate-900/40 dark:focus-within:border-green-600">
             <input
               id="paid-amount"
-              type="number"
-              step="0.01"
-              min="0"
+              inputMode="decimal"
               value={paidAmount}
-              placeholder={editingUnpaid ? instance.amount : undefined}
+              placeholder={editingUnpaid ? formatAmount(instance.amount, decimalSeparator) : undefined}
               onChange={(e) => setPaidAmount(e.target.value)}
               className="flex-1 bg-transparent text-sm text-slate-800 outline-none dark:text-slate-100"
             />
@@ -141,6 +149,9 @@ export default function MarkPaidDialog({
               {instance.currency}
             </span>
           </div>
+          {!amountValid && (
+            <p className="mt-1.5 text-xs text-red-500">{t("amountInvalid")}</p>
+          )}
           {editingUnpaid && (
             <p className="mt-1.5 text-xs text-slate-500 dark:text-slate-400">
               {t("amountHint")}
@@ -180,7 +191,7 @@ export default function MarkPaidDialog({
           </button>
           <button
             onClick={handleConfirm}
-            disabled={isSubmitting}
+            disabled={isSubmitting || !amountValid}
             className="flex-1 rounded-lg border border-transparent bg-emerald-600 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-emerald-700 disabled:opacity-50"
           >
             {isSubmitting ? t("confirming") : t(isEdit ? "save" : "confirm")}

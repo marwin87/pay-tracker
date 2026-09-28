@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { useLocale as useAppLocale } from "@/context/locale-context";
 import CategoryCombobox from "./CategoryCombobox";
 import MonthDayCalendar from "./MonthDayCalendar";
 import MonthYearPicker from "./MonthYearPicker";
@@ -9,6 +10,7 @@ import CurrencyPicker from "@/components/CurrencyPicker";
 import { Checkbox } from "@/components/ui/Checkbox";
 import Dropdown from "@/components/ui/Dropdown";
 import { LOCALE_DEFAULT_CURRENCY } from "@/lib/currency";
+import { formatAmount } from "@/lib/summary";
 import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
 import { btnSaveClass, btnCancelClass } from "@/components/ui/formButtonClasses";
 
@@ -50,13 +52,16 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
   const t = useTranslations("BillTemplateForm");
   const tFreq = useTranslations("Frequencies");
   const locale = useLocale();
+  const { decimalSeparator } = useAppLocale();
   const [name, setName] = useState(initial?.name ?? "");
   const [categoryId, setCategoryId] = useState<number | "">(initial?.category_id ?? "");
   const [frequency, setFrequency] = useState<BillFrequency>(
     initial?.frequency ?? "monthly",
   );
   const [interval, setIntervalValue] = useState(initial?.interval ?? 1);
-  const [amount, setAmount] = useState(initial?.amount ?? "");
+  const [amount, setAmount] = useState(
+    initial?.amount ? formatAmount(initial.amount, decimalSeparator) : "",
+  );
   const initialCurrency =
     initial?.currency ?? defaultCurrency ?? LOCALE_DEFAULT_CURRENCY[locale] ?? "EUR";
   const [currency, setCurrency] = useState(initialCurrency);
@@ -172,7 +177,7 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
             id="bill-amount"
             value={amount}
             onChange={(e) => handleAmountChange(e.target.value)}
-            placeholder="0.00"
+            placeholder={formatAmount(0, decimalSeparator)}
             inputMode="decimal"
             className={inputClass}
           />

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations, useLocale } from "next-intl";
+import { useLocale as useAppLocale } from "@/context/locale-context";
 import { formatMoney, type MonthSummary } from "@/lib/summary";
 
 interface Props {
@@ -15,7 +16,8 @@ export const CARD_CLASS =
 export default function MonthSummaryCard({ summary, currency, monthLabel }: Props) {
   const t = useTranslations("Dashboard.summary");
   const locale = useLocale();
-  const money = (v: number) => formatMoney(v, currency, locale);
+  const { decimalSeparator } = useAppLocale();
+  const money = (v: number) => formatMoney(v, currency, locale, decimalSeparator);
   const total = summary.paid + summary.overdue + summary.upcoming;
   const pct = (v: number) => (total ? (v / total) * 100 : 0);
   const count = summary.paidCount + summary.overdueCount + summary.upcomingCount;

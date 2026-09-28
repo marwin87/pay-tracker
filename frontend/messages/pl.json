@@ -260,6 +260,7 @@
     "MarkPaidDialog": {
         "title": "Oznacz jako opłacone: {billName}",
         "editTitle": "Edytuj płatność: {billName}",
+        "amountInvalid": "Podaj prawidłową kwotę.",
         "dueAmountLabel": "Kwota do zapłaty",
         "amountHint": "Dotyczy tylko tej płatności. Zostaw puste, aby użyć kwoty z rachunku.",
         "dueDateLabel": "Termin płatności",
@@ -309,7 +310,7 @@
             "email": "Powiadomienia e-mail",
             "telegram": "Telegram (token bota i przypomnienia)",
             "languages": "Ustawienia języków",
-            "currency": "Domyślna waluta"
+            "currency": "Waluta i format liczb"
         }
     },
     "SnapshotRecoverySection": {
@@ -386,6 +387,12 @@
             "customOption": "Inna…",
             "customCurrencyAriaLabel": "Kod waluty niestandardowej",
             "customCurrencyPlaceholder": "np. CHF"
+        },
+        "decimalSeparator": {
+            "title": "Separator dziesiętny",
+            "description": "Wybierz, jak wyświetlane są ceny.",
+            "period": "Kropka (.)",
+            "comma": "Przecinek (,)"
         },
         "languages": {
             "title": "Języki",

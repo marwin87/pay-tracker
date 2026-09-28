@@ -158,11 +158,16 @@ _STATUS_COL_IDX = _COLUMNS.index("Status") + 1
 _CATEGORY_COL_IDX = _COLUMNS.index("Category") + 1
 _MAX_COL_WIDTH = 40
 
-# The app always shows amounts with a period (raw Decimal strings from the API,
-# never locale-reformatted). "0.00" alone still renders with Excel's regional
-# decimal separator (comma under a Polish locale) — the "[$-409]" locale tag
-# pins the format to en-US so the period shows regardless of the user's Excel locale.
-_AMOUNT_NUMBER_FORMAT = "[$-409]0.00"
+# Amount/Paid Amount are written as Text cells (not Number) using the user's chosen
+# decimal_separator, so the value renders identically regardless of the opening
+# machine's regional Excel locale. A "[$-LCID]0.00" Number format was tried instead
+# (to avoid Excel's "stored as text" warning) but the locale tag does NOT actually
+# control which glyph a plain numeric placeholder renders with — that's driven by
+# the opening machine's own regional settings regardless of any locale tag — so a
+# Polish-locale Excel showed a comma no matter which format was applied. Confirmed
+# working as Text; do not switch back without verifying in a real, non-US-locale
+# Excel first.
+_AMOUNT_TEXT_FORMAT = "@"
 _AMOUNT_COL_IDXS = {_COLUMNS.index("Amount") + 1, _COLUMNS.index("Paid Amount") + 1}
 
 # Mirrors CATEGORY_COLOR_BORDER's light-mode shades in frontend/src/lib/categories.ts —
@@ -274,10 +279,14 @@ def export_xlsx(
                 "Category": i.template.category.name,
                 "Period": i.period,
                 "Due Date": i.due_date.isoformat(),
-                "Amount": float(i.current_amount),
+                "Amount": f"{i.current_amount:.2f}".replace(".", me.decimal_separator),
                 "Currency": i.template.currency,
                 "Status": _STATUS_LABELS[lang].get(i.status, i.status),
-                "Paid Amount": float(i.paid_amount) if i.paid_amount else None,
+                "Paid Amount": (
+                    f"{i.paid_amount:.2f}".replace(".", me.decimal_separator)
+                    if i.paid_amount
+                    else None
+                ),
                 "Paid At": i.paid_at.date().isoformat() if i.paid_at else None,
                 "Notes": i.notes,
                 "_status_key": i.status,
@@ -330,7 +339,7 @@ def export_xlsx(
 
                 for amount_col_idx in _AMOUNT_COL_IDXS:
                     ws.cell(row=row_idx, column=amount_col_idx).number_format = (
-                        _AMOUNT_NUMBER_FORMAT
+                        _AMOUNT_TEXT_FORMAT
                     )
 
         today = date.today()
@@ -400,6 +409,7 @@ def _build_backup_arrays(
         prefs["enabled_languages"] = list(user.enabled_languages)
     if "currency" in sections:
         prefs["default_currency"] = user.default_currency
+        prefs["decimal_separator"] = user.decimal_separator
     if prefs:
         out["preferences"] = prefs
 
@@ -672,6 +682,8 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
                 user.enabled_languages = p.enabled_languages
             if p.default_currency is not None:
                 user.default_currency = p.default_currency
+            if p.decimal_separator is not None:
+                user.decimal_separator = p.decimal_separator
             if (
                 user.language_preference
                 and user.language_preference not in user.enabled_languages

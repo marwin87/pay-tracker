@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { useLocale as useAppLocale } from "@/context/locale-context";
 import { categoryLabel, categoryStrokeClass, CATEGORY_COLOR_SWATCH, type CategoryColor } from "@/lib/categories";
 import { formatMoney, type CategoryTotal } from "@/lib/summary";
 import { CARD_CLASS } from "./MonthSummaryCard";
@@ -14,8 +15,9 @@ export default function CategoryDonut({ rows, currency }: { rows: CategoryTotal[
   const t = useTranslations("Dashboard.categories");
   const tCat = useTranslations("Categories");
   const locale = useLocale();
+  const { decimalSeparator } = useAppLocale();
   const [selectedId, setSelectedId] = useState<number | null>(null);
-  const money = (v: number) => formatMoney(v, currency, locale);
+  const money = (v: number) => formatMoney(v, currency, locale, decimalSeparator);
 
   const total = rows.reduce((s, r) => s + r.total, 0);
   const selected = rows.find((r) => r.category.id === selectedId) ?? null;

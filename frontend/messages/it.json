@@ -260,6 +260,7 @@
     "MarkPaidDialog": {
         "title": "Segna come pagato: {billName}",
         "editTitle": "Modifica pagamento: {billName}",
+        "amountInvalid": "Inserisci un importo valido.",
         "dueAmountLabel": "Importo dovuto",
         "amountHint": "Vale solo per questo pagamento. Lascia vuoto per usare l'importo della fattura.",
         "dueDateLabel": "Data di scadenza",
@@ -309,7 +310,7 @@
             "email": "Notifiche email",
             "telegram": "Telegram (token del bot e promemoria)",
             "languages": "Impostazioni lingua",
-            "currency": "Valuta predefinita"
+            "currency": "Valuta e formato numerico"
         }
     },
     "SnapshotRecoverySection": {
@@ -386,6 +387,12 @@
             "customOption": "Personalizzato…",
             "customCurrencyAriaLabel": "Codice valuta personalizzato",
             "customCurrencyPlaceholder": "es. CHF"
+        },
+        "decimalSeparator": {
+            "title": "Separatore decimale",
+            "description": "Scegli come vengono mostrati i prezzi.",
+            "period": "Punto (.)",
+            "comma": "Virgola (,)"
         },
         "languages": {
             "title": "Lingue",

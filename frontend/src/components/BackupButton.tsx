@@ -5,11 +5,24 @@ import { createPortal } from "react-dom";
 import { HardDriveDownload, Loader2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { BACKUP_SECTIONS, BackupSection, downloadBackup } from "@/lib/export-api";
+import { Checkbox } from "@/components/ui/Checkbox";
 
 type State = "idle" | "confirming" | "downloading" | "warning" | "error";
 
+// Grouped under the same tab names as the Settings page, so the sections read as
+// "the same data you'd find under Settings > Preferences" etc. "bills" has no
+// settings-tab home of its own (it's the app's core content, not a preference) —
+// it groups under "data", the tab this Backup button itself lives on.
+const SECTION_GROUPS: { tabKey: "data" | "preferences" | "notifications" | "categories"; sections: BackupSection[] }[] = [
+  { tabKey: "data", sections: ["bills"] },
+  { tabKey: "preferences", sections: ["currency", "languages"] },
+  { tabKey: "notifications", sections: ["email", "telegram"] },
+  { tabKey: "categories", sections: ["categories"] },
+];
+
 export default function BackupButton({ label }: { label?: string } = {}) {
   const t = useTranslations("BackupButton");
+  const tSettings = useTranslations("SettingsPage");
   const [state, setState] = useState<State>("idle");
   const [selected, setSelected] = useState<Set<BackupSection>>(
     () => new Set(BACKUP_SECTIONS)
@@ -81,7 +94,7 @@ export default function BackupButton({ label }: { label?: string } = {}) {
                 {t("dialogDescription")}
               </p>
               {state !== "warning" && (
-                <fieldset className="mb-6 space-y-2" disabled={state === "downloading"}>
+                <fieldset className="mb-6 space-y-4" disabled={state === "downloading"}>
                   <button
                     type="button"
                     onClick={() =>
@@ -91,19 +104,22 @@ export default function BackupButton({ label }: { label?: string } = {}) {
                   >
                     {allSelected ? t("deselectAll") : t("selectAll")}
                   </button>
-                  {BACKUP_SECTIONS.map((section) => (
-                    <label
-                      key={section}
-                      className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-200"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={selected.has(section)}
-                        onChange={() => toggle(section)}
-                        className="h-4 w-4 accent-green-600"
-                      />
-                      {t(`sections.${section}`)}
-                    </label>
+                  {SECTION_GROUPS.map(({ tabKey, sections }) => (
+                    <div key={tabKey}>
+                      <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
+                        {tSettings(`tabs.${tabKey}`)}
+                      </p>
+                      <div className="space-y-2">
+                        {sections.map((section) => (
+                          <Checkbox
+                            key={section}
+                            checked={selected.has(section)}
+                            onChange={() => toggle(section)}
+                            label={t(`sections.${section}`)}
+                          />
+                        ))}
+                      </div>
+                    </div>
                   ))}
                 </fieldset>
               )}

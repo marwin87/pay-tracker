@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { useLocale as useAppLocale } from "@/context/locale-context";
 import { formatMoney, trendPeriods } from "@/lib/summary";
 import type { TrendPoint } from "@/lib/payments-api";
 import { CARD_CLASS } from "./MonthSummaryCard";
@@ -30,7 +31,8 @@ interface Props {
 export default function TrendChart({ points, currency, month }: Props) {
   const t = useTranslations("Dashboard.trend");
   const locale = useLocale();
-  const money = (v: number) => formatMoney(v, currency, locale);
+  const { decimalSeparator } = useAppLocale();
+  const money = (v: number) => formatMoney(v, currency, locale, decimalSeparator);
   const [active, setActive] = useState<number | null>(null);
 
   const periods = trendPeriods(month);

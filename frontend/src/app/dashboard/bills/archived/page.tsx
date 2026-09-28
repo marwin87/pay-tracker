@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { Archive, ArchiveRestore, ChevronRight, ChevronsUpDown } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useLocale } from "@/context/locale-context";
 import { useFrequencyLabel } from "@/lib/frequency";
+import { formatAmount } from "@/lib/summary";
 import { fetchBills, unarchiveBill, type BillTemplateOut } from "@/lib/bills-api";
 import {
   categoryFilterLabel,
@@ -27,6 +29,7 @@ export default function ArchivedBillsPage() {
   const frequencyLabel = useFrequencyLabel();
   const tCategories = useTranslations("Categories");
   const tFilters = useTranslations("Filters");
+  const { decimalSeparator } = useLocale();
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
@@ -239,7 +242,7 @@ export default function ArchivedBillsPage() {
                         </span>
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                           <span className="text-xs font-medium text-slate-600 dark:text-slate-300">
-                            {tmpl.amount} {tmpl.currency}
+                            {formatAmount(tmpl.amount, decimalSeparator)} {tmpl.currency}
                           </span>
                           <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
                             {frequencyLabel(tmpl.frequency, tmpl.interval)}

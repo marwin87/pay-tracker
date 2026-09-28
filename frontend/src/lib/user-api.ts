@@ -6,6 +6,7 @@ export interface UserProfile {
   language_preference: Locale | null;
   enabled_languages: Locale[];
   default_currency: string | null;
+  decimal_separator: "." | ",";
   email_reminders_enabled: boolean;
   notify_2_days_before: boolean;
   notify_1_day_before: boolean;
@@ -37,6 +38,7 @@ export function updateMe(
       | "language_preference"
       | "enabled_languages"
       | "default_currency"
+      | "decimal_separator"
       | "email_reminders_enabled"
       | "notify_2_days_before"
       | "notify_1_day_before"

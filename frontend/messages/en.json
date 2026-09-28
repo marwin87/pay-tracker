@@ -260,6 +260,7 @@
     "MarkPaidDialog": {
         "title": "Mark as Paid: {billName}",
         "editTitle": "Edit payment: {billName}",
+        "amountInvalid": "Enter a valid amount.",
         "dueAmountLabel": "Amount due",
         "amountHint": "Applies to this payment only. Leave empty to use the bill's amount.",
         "dueDateLabel": "Due date",
@@ -309,7 +310,7 @@
             "email": "Email notification setup",
             "telegram": "Telegram (bot token & reminders)",
             "languages": "Language settings",
-            "currency": "Default currency"
+            "currency": "Currency & number format"
         }
     },
     "SnapshotRecoverySection": {
@@ -386,6 +387,12 @@
             "customOption": "Custom…",
             "customCurrencyAriaLabel": "Custom currency code",
             "customCurrencyPlaceholder": "e.g. CHF"
+        },
+        "decimalSeparator": {
+            "title": "Decimal Separator",
+            "description": "Choose how prices are displayed.",
+            "period": "Period (.)",
+            "comma": "Comma (,)"
         },
         "languages": {
             "title": "Languages",

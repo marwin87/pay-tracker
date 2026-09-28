@@ -1,5 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
+from typing import Literal
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 from app.models.bill import BillFrequency, PaymentStatus
 from app.schemas.auth import normalize_bot_token, normalize_chat_id
@@ -242,6 +243,7 @@ class BackupPreferences(BaseModel):
     language_preference: str | None = Field(default=None, max_length=5)
     enabled_languages: list[str] | None = None
     default_currency: str | None = Field(default=None, max_length=10)
+    decimal_separator: Literal[".", ","] | None = None
 
     @field_validator("enabled_languages")
     @classmethod
