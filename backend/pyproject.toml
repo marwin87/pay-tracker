@@ -33,6 +33,7 @@ dev = [
     "pytest-cov>=6.0",
     "httpx>=0.28",
     "testcontainers[postgresql]>=4.0",
+    "types-openpyxl>=3.1.5.20260827",
 ]
 
 [tool.pytest.ini_options]

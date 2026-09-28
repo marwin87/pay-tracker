@@ -9,6 +9,8 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from fastapi.responses import Response, StreamingResponse
+from openpyxl.styles import Border, Font, PatternFill, Side
+from openpyxl.utils import get_column_letter
 from pydantic import ValidationError
 from sqlalchemy.orm import Session, selectinload
 
@@ -144,6 +146,48 @@ _STATUS_LABELS: dict[str, dict[str, str]] = {
     "de": {"upcoming": "Bevorstehend", "overdue": "Überfällig", "paid": "Bezahlt"},
 }
 
+# Mirrors the status colors used in the frontend (PaymentsCalendar.tsx STATUS_TILE).
+_STATUS_STYLES: dict[str, tuple[str, str]] = {
+    "upcoming": ("DBEAFE", "1D4ED8"),  # blue-100 / blue-700
+    "overdue": ("FEE2E2", "B91C1C"),  # red-100 / red-700
+    "paid": ("DCFCE7", "15803D"),  # green-100 / green-700
+}
+_HEADER_FILL = PatternFill("solid", fgColor="F3F4F6")  # gray-100
+_HEADER_FONT = Font(bold=True)
+_STATUS_COL_IDX = _COLUMNS.index("Status") + 1
+_CATEGORY_COL_IDX = _COLUMNS.index("Category") + 1
+_MAX_COL_WIDTH = 40
+
+# The app always shows amounts with a period (raw Decimal strings from the API,
+# never locale-reformatted). "0.00" alone still renders with Excel's regional
+# decimal separator (comma under a Polish locale) — the "[$-409]" locale tag
+# pins the format to en-US so the period shows regardless of the user's Excel locale.
+_AMOUNT_NUMBER_FORMAT = "[$-409]0.00"
+_AMOUNT_COL_IDXS = {_COLUMNS.index("Amount") + 1, _COLUMNS.index("Paid Amount") + 1}
+
+# Mirrors CATEGORY_COLOR_BORDER's light-mode shades in frontend/src/lib/categories.ts —
+# a left-border accent instead of a full cell fill, so many categories don't turn
+# the sheet into a rainbow. Falls back to slate, same as the frontend's FALLBACK_COLOR.
+_CATEGORY_BORDER_HEX: dict[str, str] = {
+    "blue": "60A5FA",
+    "purple": "C084FC",
+    "rose": "FB7185",
+    "orange": "FB923C",
+    "slate": "94A3B8",
+    "violet": "A78BFA",
+    "cyan": "06B6D4",
+    "emerald": "34D399",
+    "slate-light": "CBD5E1",
+    "yellow": "FACC15",
+    "lime": "A3E635",
+    "pink": "F472B6",
+    "blue-dark": "1D4ED8",
+    "emerald-dark": "047857",
+    "rose-dark": "BE123C",
+    "orange-dark": "9A3412",
+}
+_CATEGORY_BORDER_FALLBACK = _CATEGORY_BORDER_HEX["slate"]
+
 _MONTH_ABBR: dict[str, list[str]] = {
     "en": [calendar.month_abbr[m] for m in range(1, 13)],
     "pl": [
@@ -234,8 +278,10 @@ def export_xlsx(
                 "Currency": i.template.currency,
                 "Status": _STATUS_LABELS[lang].get(i.status, i.status),
                 "Paid Amount": float(i.paid_amount) if i.paid_amount else None,
-                "Paid At": i.paid_at.isoformat() if i.paid_at else None,
+                "Paid At": i.paid_at.date().isoformat() if i.paid_at else None,
                 "Notes": i.notes,
+                "_status_key": i.status,
+                "_category_color": i.template.category.color,
             }
         )
 
@@ -252,6 +298,44 @@ def export_xlsx(
             )
             df.columns = headers
             df.to_excel(writer, index=False, sheet_name=sheet_name)
+
+            ws = writer.sheets[sheet_name]
+            for col_idx, header in enumerate(headers, start=1):
+                cell = ws.cell(row=1, column=col_idx)
+                cell.font = _HEADER_FONT
+                cell.fill = _HEADER_FILL
+                max_len = len(header)
+                for row_idx in range(2, len(rows) + 2):
+                    value = ws.cell(row=row_idx, column=col_idx).value
+                    if value is not None:
+                        max_len = max(max_len, len(str(value)))
+                ws.column_dimensions[get_column_letter(col_idx)].width = min(
+                    max_len + 2, _MAX_COL_WIDTH
+                )
+
+            for row_idx, row in enumerate(rows, start=2):
+                fill_color, font_color = _STATUS_STYLES.get(
+                    row["_status_key"], (None, None)
+                )
+                if fill_color:
+                    cell = ws.cell(row=row_idx, column=_STATUS_COL_IDX)
+                    cell.fill = PatternFill("solid", fgColor=fill_color)
+                    cell.font = Font(color=font_color)
+
+                border_color = _CATEGORY_BORDER_HEX.get(
+                    row["_category_color"], _CATEGORY_BORDER_FALLBACK
+                )
+                cell = ws.cell(row=row_idx, column=_CATEGORY_COL_IDX)
+                cell.border = Border(left=Side(style="thick", color=border_color))
+
+                for amount_col_idx in _AMOUNT_COL_IDXS:
+                    ws.cell(row=row_idx, column=amount_col_idx).number_format = (
+                        _AMOUNT_NUMBER_FORMAT
+                    )
+
+        today = date.today()
+        active_month = today.month if year == today.year else 1
+        writer.book.active = active_month - 1
     buf.seek(0)
 
     filename = f"pay-tracker-{lang}-{year}.xlsx"

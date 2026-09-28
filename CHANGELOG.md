@@ -10,10 +10,11 @@ Notable changes to Pay Tracker, release by release.
 - Dropdown menus and the category filter's checkbox list can now be navigated with the keyboard: arrow keys, Home and
   End move through options, matching the accessibility semantics they already advertised
 - Unpaid payments can now have their due date edited for that instance only, via the existing edit-payment dialog
-- Redesigned all auth screens (login, register, forgot-password, reset-password): calmer premium look, icon-labeled
-  fields, solid brand CTA
+- Redesigned all auth screens (login, register, forgot-password, reset-password)
 - Unified the whole app's look with the new auth screens: warmer background, two-tone nav wordmark, and every
   dialog/form's primary action is now a solid button (Cancel/secondary actions stay outline)
+- XLSX export now opens on the current month's tab, auto-sizes columns to their content, and colors the Status column
+  (matching the app's status colors) plus a left-border accent on the Category column (matching each category's color)
 
 ### Security
 
