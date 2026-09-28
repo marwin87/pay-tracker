@@ -28,7 +28,7 @@ import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
-import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
+import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
 const CATEGORY_SORT_OPTIONS: CategorySortOrder[] = ["az", "za"];
@@ -70,7 +70,7 @@ export default function BillsPage() {
   const activeCategoryKeys = activeCategories.map((cat) => String(cat.id));
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
-    useCollapsedCategories("bills-collapsed-categories", activeCategoryKeys);
+    useCollapsedCategories(COLLAPSED_CATEGORIES_KEYS.bills, activeCategoryKeys);
 
   const [sortOption, setSortOption] = useSortOption<CategorySortOrder>(
     "bills-sort",

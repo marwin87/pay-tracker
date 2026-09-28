@@ -26,7 +26,7 @@ import RevertPaymentDialog from "@/components/payments/RevertPaymentDialog";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
-import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
+import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
 type PaymentSortOption = "category-az" | "category-za" | "paid-first" | "unpaid-first";
@@ -261,7 +261,7 @@ function PaymentsPageInner() {
   const activeCategoryKeys = activeCategories.map((cat) => String(cat.id));
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
-    useCollapsedCategories("payments-collapsed-categories", activeCategoryKeys);
+    useCollapsedCategories(COLLAPSED_CATEGORIES_KEYS.payments, activeCategoryKeys);
 
   const [sortOption, setSortOption] = useSortOption<PaymentSortOption>(
     "payments-sort",

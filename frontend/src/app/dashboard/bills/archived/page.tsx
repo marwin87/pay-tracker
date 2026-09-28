@@ -17,7 +17,7 @@ import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
 import RestoreConfirmDialog from "@/components/bills/RestoreConfirmDialog";
-import { useCollapsedCategories } from "@/hooks/useCollapsedCategories";
+import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
 const CATEGORY_SORT_OPTIONS: CategorySortOrder[] = ["az", "za"];
@@ -50,7 +50,7 @@ export default function ArchivedBillsPage() {
   const activeCategoryKeys = activeCategories.map((cat) => String(cat.id));
 
   const { collapsed, toggle, collapseAll, expandAll, allCollapsed } =
-    useCollapsedCategories("archived-bills-collapsed-categories", activeCategoryKeys);
+    useCollapsedCategories(COLLAPSED_CATEGORIES_KEYS.archivedBills, activeCategoryKeys);
 
   const [sortOption, setSortOption] = useSortOption<CategorySortOrder>(
     "archived-bills-sort",

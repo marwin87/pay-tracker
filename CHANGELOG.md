@@ -20,6 +20,12 @@ Notable changes to Pay Tracker, release by release.
 - `/server-time` and backup-restore endpoints now return typed, schema-validated responses instead of raw JSON objects
 - Payment dialogs (mark as paid, delete, revert) now render through the same portal-to-body pattern as every other dialog, instead of inline in the page
 - Corrected foreign-key metadata on bill templates and payment instances to match the database's actual cascade behavior, closing a drift between the test schema and production
+- Search field is full width on mobile (Payments, Bills, Archive)
+- Settings page: mobile now uses a per-section accordion instead of a horizontally-scrolling tab strip
+- Category color picker separates unused colors from already-used ones and labels each group; palette expanded with more distinct colors
+- "Add category" button and the unsaved-changes / archive-bill dialogs restyled to match the rest of the app (previously solid-red buttons with no dark-mode support)
+- Save/Cancel button order made consistent everywhere (Cancel always first)
+- Category expanders on Payments/Bills/Archive now reset to expanded on every login instead of remembering a previous session's state
 
 ## v1.1.0 — 27-09-2026
 

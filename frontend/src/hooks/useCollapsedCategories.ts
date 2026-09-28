@@ -2,6 +2,16 @@
 
 import { useCallback, useState } from "react";
 
+// Every page's collapse-state storage key, in one place so a fresh login can
+// reset them all — collapse state should survive page-to-page navigation
+// within a session, but not survive a logout/login (or a different user
+// signing in on the same browser).
+export const COLLAPSED_CATEGORIES_KEYS = {
+  bills: "bills-collapsed-categories",
+  payments: "payments-collapsed-categories",
+  archivedBills: "archived-bills-collapsed-categories",
+} as const;
+
 function readFromStorage(storageKey: string): Set<string> {
   if (typeof window === "undefined") return new Set<string>();
   try {

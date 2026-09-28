@@ -24,7 +24,7 @@ test('create, rename and archive a custom category in Settings', async ({ page }
   await page.getByRole('tab', { name: 'Categories', exact: true }).click();
 
   // Step: create
-  await page.getByRole('button', { name: '+ Add category' }).click();
+  await page.getByRole('button', { name: 'Add category', exact: true }).click();
   await page.getByPlaceholder('e.g. Hobbies').fill(name);
   await page.getByRole('button', { name: 'rose', exact: true }).click();
   await page.getByRole('button', { name: 'Save', exact: true }).click();
