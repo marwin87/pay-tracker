@@ -7,7 +7,7 @@
  * Each test uses a fresh isolated user.
  */
 import { test, expect } from '@playwright/test';
-import { API, getCsrfHeader, loginNewUser } from './helpers';
+import { API, loginNewUser } from './helpers';
 
 test('changing email updates the account; wrong current password is rejected', async ({ page }) => {
   const { email } = await loginNewUser(page);
@@ -74,11 +74,7 @@ test('changing password: new one logs in, old one no longer does', async ({ page
     headers: { 'Content-Type': 'application/json' },
   });
   expect(withOld.status()).toBe(401);
-
-  // Cleanup: the password change invalidated the token globalTeardown holds, so
-  // delete this user with the fresh session cookies from the new-password login.
-  const cleanup = await page.request.delete(`${API}/auth/users/me`, {
-    headers: await getCsrfHeader(page),
-  });
-  expect(cleanup.ok()).toBeTruthy();
+  // No manual cleanup needed: changing the password doesn't invalidate the
+  // bearer token loginNewUser tracked at registration (token_version is
+  // only bumped by /auth/logout), so globalTeardown deletes this user fine.
 });

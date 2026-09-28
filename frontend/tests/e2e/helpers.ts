@@ -4,14 +4,49 @@ import type { Page } from '@playwright/test';
 export const API = process.env.E2E_API_URL ?? 'http://localhost:8010';
 const E2E_USERS_FILE = '/tmp/e2e-users.json';
 
+function readTrackedUsers(): Array<{ email: string; token: string }> {
+  return fs.existsSync(E2E_USERS_FILE)
+    ? (JSON.parse(fs.readFileSync(E2E_USERS_FILE, 'utf-8')) as Array<{ email: string; token: string }>)
+    : [];
+}
+
+function writeTrackedUsers(users: Array<{ email: string; token: string }>): void {
+  fs.writeFileSync(E2E_USERS_FILE, JSON.stringify(users));
+}
+
+/**
+ * Registers `email`/token for globalTeardown to delete via DELETE
+ * /auth/users/me after the suite finishes. loginNewUser calls this for you;
+ * call it directly only when a test creates a user outside that helper
+ * (e.g. re-registering an email after deleting the original account).
+ */
+export function trackUser(email: string, token: string): void {
+  const existing = readTrackedUsers();
+  existing.push({ email, token });
+  writeTrackedUsers(existing);
+}
+
+/**
+ * Stops tracking a user for teardown deletion. Call this right after a test
+ * deletes its own account (e.g. via the Delete Account dialog, or a direct
+ * API call) — otherwise globalTeardown redundantly retries the delete with
+ * the now-stale token and logs a confusing 401 warning for an account that's
+ * already gone (the auth dependency can't tell "bad token" from "token for a
+ * user that no longer exists" and reports both as 401, not 404).
+ */
+export function untrackUser(email: string): void {
+  writeTrackedUsers(readTrackedUsers().filter((u) => u.email !== email));
+}
+
 /**
  * Registers a fresh user via the backend API and returns their credentials.
  * Because page.request shares the browser context's cookie jar, the
  * access_token and auth_logged_in cookies set by the register endpoint are
  * immediately available to the page — no UI login required.
  *
- * The token is written to E2E_USERS_FILE so globalTeardown can delete the
- * user via DELETE /auth/users/me after the suite finishes.
+ * The token is tracked so globalTeardown can delete the user via DELETE
+ * /auth/users/me after the suite finishes — see untrackUser above for tests
+ * that delete the account themselves.
  */
 export async function loginNewUser(page: Page): Promise<{ email: string; password: string }> {
   const email = `e2e-${Date.now()}@test.com`;
@@ -27,13 +62,7 @@ export async function loginNewUser(page: Page): Promise<{ email: string; passwor
   }
 
   const data = await res.json();
-  const token: string = data.access_token;
-
-  const existing: Array<{ email: string; token: string }> = fs.existsSync(E2E_USERS_FILE)
-    ? (JSON.parse(fs.readFileSync(E2E_USERS_FILE, 'utf-8')) as Array<{ email: string; token: string }>)
-    : [];
-  existing.push({ email, token });
-  fs.writeFileSync(E2E_USERS_FILE, JSON.stringify(existing));
+  trackUser(email, data.access_token);
 
   return { email, password };
 }

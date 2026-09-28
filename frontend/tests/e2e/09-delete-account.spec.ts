@@ -7,7 +7,7 @@
  * Each test uses a fresh isolated user with real owned data before deleting.
  */
 import { test, expect } from '@playwright/test';
-import { loginNewUser, createBillViaApi } from './helpers';
+import { loginNewUser, createBillViaApi, trackUser, untrackUser } from './helpers';
 
 const API = process.env.E2E_API_URL ?? 'http://localhost:8010';
 
@@ -33,6 +33,9 @@ test('deleting the account cascades owned data and frees the email for re-regist
 
   // Assert: redirected to /login (cookies cleared server-side, client re-synced)
   await page.waitForURL('**/login');
+  // The account (and its registration-time token) is gone — stop tracking it
+  // so globalTeardown doesn't redundantly retry the delete and log a 401.
+  untrackUser(email);
 
   // Assert: the email is truly free — re-registering with the same
   // email/password succeeds, proving the account row (and its unique
@@ -42,4 +45,8 @@ test('deleting the account cascades owned data and frees the email for re-regist
     headers: { 'Content-Type': 'application/json' },
   });
   expect(res.ok()).toBe(true);
+  // This re-registration is a brand new account row under the same email —
+  // track it too, or it leaks past the suite untouched by teardown.
+  const { access_token } = await res.json();
+  trackUser(email, access_token);
 });
