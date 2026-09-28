@@ -26,7 +26,7 @@ test('dashboard summarises each currency separately and is reachable from the lo
   await expect(page).toHaveURL(/\/dashboard$/);
 
   // Step: pick EUR — only the €50 bill counts
-  const currencies = page.getByRole('group', { name: 'Currency' });
+  const currencies = page.getByRole('group', { name: 'Show summary in:' });
   await currencies.getByRole('button', { name: 'EUR' }).click();
   const card = page.getByRole('region', { name: /\d{4}/ }); // month-summary section, titled "<Month> <Year>"
   await expect(card).toContainText('€50');
