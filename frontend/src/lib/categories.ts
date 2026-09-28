@@ -12,10 +12,13 @@ export const CATEGORY_COLORS = [
   "cyan",
   "emerald",
   "slate-light",
-  "amber",
-  "teal",
-  "indigo",
+  "yellow",
+  "lime",
   "pink",
+  "blue-dark",
+  "emerald-dark",
+  "rose-dark",
+  "orange-dark",
 ] as const;
 
 export type CategoryColor = (typeof CATEGORY_COLORS)[number];
@@ -32,10 +35,13 @@ export const CATEGORY_COLOR_BORDER: Record<CategoryColor, string> = {
   cyan: "border-l-cyan-500 dark:border-l-cyan-400",
   emerald: "border-l-emerald-400 dark:border-l-emerald-500",
   "slate-light": "border-l-slate-300 dark:border-l-slate-600",
-  amber: "border-l-amber-400 dark:border-l-amber-500",
-  teal: "border-l-teal-400 dark:border-l-teal-500",
-  indigo: "border-l-indigo-400 dark:border-l-indigo-500",
+  yellow: "border-l-yellow-400 dark:border-l-yellow-500",
+  lime: "border-l-lime-400 dark:border-l-lime-500",
   pink: "border-l-pink-400 dark:border-l-pink-500",
+  "blue-dark": "border-l-blue-700 dark:border-l-blue-600",
+  "emerald-dark": "border-l-emerald-700 dark:border-l-emerald-600",
+  "rose-dark": "border-l-rose-700 dark:border-l-rose-600",
+  "orange-dark": "border-l-orange-800 dark:border-l-orange-700",
 };
 
 // Solid swatch classes for the color picker in the category management UI.
@@ -49,10 +55,13 @@ export const CATEGORY_COLOR_SWATCH: Record<CategoryColor, string> = {
   cyan: "bg-cyan-500 dark:bg-cyan-400",
   emerald: "bg-emerald-400 dark:bg-emerald-500",
   "slate-light": "bg-slate-300 dark:bg-slate-600",
-  amber: "bg-amber-400 dark:bg-amber-500",
-  teal: "bg-teal-400 dark:bg-teal-500",
-  indigo: "bg-indigo-400 dark:bg-indigo-500",
+  yellow: "bg-yellow-400 dark:bg-yellow-500",
+  lime: "bg-lime-400 dark:bg-lime-500",
   pink: "bg-pink-400 dark:bg-pink-500",
+  "blue-dark": "bg-blue-700 dark:bg-blue-600",
+  "emerald-dark": "bg-emerald-700 dark:bg-emerald-600",
+  "rose-dark": "bg-rose-700 dark:bg-rose-600",
+  "orange-dark": "bg-orange-800 dark:bg-orange-700",
 };
 
 // Stroke classes for SVG charts (donut segments); same hues as the swatches above.
@@ -66,10 +75,13 @@ export const CATEGORY_COLOR_STROKE: Record<CategoryColor, string> = {
   cyan: "stroke-cyan-500 dark:stroke-cyan-400",
   emerald: "stroke-emerald-400 dark:stroke-emerald-500",
   "slate-light": "stroke-slate-300 dark:stroke-slate-600",
-  amber: "stroke-amber-400 dark:stroke-amber-500",
-  teal: "stroke-teal-400 dark:stroke-teal-500",
-  indigo: "stroke-indigo-400 dark:stroke-indigo-500",
+  yellow: "stroke-yellow-400 dark:stroke-yellow-500",
+  lime: "stroke-lime-400 dark:stroke-lime-500",
   pink: "stroke-pink-400 dark:stroke-pink-500",
+  "blue-dark": "stroke-blue-700 dark:stroke-blue-600",
+  "emerald-dark": "stroke-emerald-700 dark:stroke-emerald-600",
+  "rose-dark": "stroke-rose-700 dark:stroke-rose-600",
+  "orange-dark": "stroke-orange-800 dark:stroke-orange-700",
 };
 
 export function categoryStrokeClass(color: string): string {

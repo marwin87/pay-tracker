@@ -466,7 +466,9 @@
             "edit": "编辑",
             "archive": "归档",
             "unarchive": "取消归档",
-            "addNew": "+ 添加类别"
+            "addNew": "添加类别",
+            "newColorsLabel": "新颜色",
+            "usedColorsLabel": "已用颜色"
         }
     },
     "Categories": {

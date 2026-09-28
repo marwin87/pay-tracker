@@ -27,7 +27,7 @@ def test_registration_seeds_nine_default_categories(client):
 def test_create_category(client):
     tok = register_and_login(client, "create@test.com")
     r = client.post(
-        "/categories", json={"name": "Hobbies", "color": "teal"}, headers=auth(tok)
+        "/categories", json={"name": "Hobbies", "color": "pink"}, headers=auth(tok)
     )
     assert r.status_code == 201
     data = r.json()

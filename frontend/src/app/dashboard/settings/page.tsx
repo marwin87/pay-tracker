@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { HardDriveDownload, HardDriveUpload, Trash2 } from "lucide-react";
+import { ChevronRight, HardDriveDownload, HardDriveUpload, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { deleteAccount, fetchMe, UserProfile } from "@/lib/user-api";
 import { notifyAuthChange } from "@/lib/auth-store";
@@ -59,6 +59,9 @@ export default function SettingsPage() {
 
   // Safe to read the URL in the initializer: nothing tab-related renders until the profile loads.
   const [activeTab, setActiveTab] = useState<TabKey>(tabFromUrl);
+  // Mobile accordion: which sections are expanded, independent of activeTab — each one
+  // opens/closes on its own instead of exactly one always being open.
+  const [expandedMobile, setExpandedMobile] = useState<Set<TabKey>>(() => new Set([tabFromUrl()]));
 
   const isDirtyAny =
     profileDirty || currencyDirty || emailDirty || telegramDirty || passwordDirty;
@@ -72,6 +75,15 @@ export default function SettingsPage() {
   function selectTab(tab: TabKey) {
     setActiveTab(tab);
     window.history.replaceState(null, "", `?tab=${tab}`);
+  }
+
+  function toggleMobileSection(tab: TabKey) {
+    setExpandedMobile((prev) => {
+      const next = new Set(prev);
+      if (next.has(tab)) next.delete(tab);
+      else next.add(tab);
+      return next;
+    });
   }
 
   useEffect(() => {
@@ -162,7 +174,7 @@ export default function SettingsPage() {
 
       <div
         role="tablist"
-        className="flex gap-1 border-b border-slate-200 dark:border-slate-700"
+        className="hidden gap-1 border-b border-slate-200 dark:border-slate-700 sm:flex"
       >
         {TABS.map((tab) => (
           <button
@@ -183,11 +195,34 @@ export default function SettingsPage() {
         ))}
       </div>
 
+      {/* Mobile accordion header for "account" — desktop uses the tablist above instead. */}
+      <button
+        type="button"
+        onClick={() => toggleMobileSection("account")}
+        aria-expanded={expandedMobile.has("account")}
+        aria-controls="settings-panel-account"
+        id="settings-tab-account-mobile"
+        className={`flex w-full items-center justify-between border-b border-slate-200 py-3 text-left text-sm font-semibold dark:border-slate-700 sm:hidden ${
+          expandedMobile.has("account")
+            ? TILE_STYLES[TAB_COLOR.account].icon
+            : "text-slate-600 dark:text-slate-300"
+        }`}
+      >
+        {t("tabs.account")}
+        <ChevronRight
+          size={16}
+          className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
+            expandedMobile.has("account") ? "rotate-90" : ""
+          }`}
+        />
+      </button>
       <div
         role="tabpanel"
         id="settings-panel-account"
-        aria-labelledby="settings-tab-account"
-        className={`space-y-4 ${activeTab === "account" ? "" : "hidden"}`}
+        aria-labelledby="settings-tab-account settings-tab-account-mobile"
+        className={`space-y-4 ${expandedMobile.has("account") ? "block" : "hidden"} ${
+          activeTab === "account" ? "sm:block" : "sm:hidden"
+        }`}
       >
         <ProfileTile
           profile={profile}
@@ -214,11 +249,33 @@ export default function SettingsPage() {
         </Tile>
       </div>
 
+      <button
+        type="button"
+        onClick={() => toggleMobileSection("preferences")}
+        aria-expanded={expandedMobile.has("preferences")}
+        aria-controls="settings-panel-preferences"
+        id="settings-tab-preferences-mobile"
+        className={`flex w-full items-center justify-between border-b border-slate-200 py-3 text-left text-sm font-semibold dark:border-slate-700 sm:hidden ${
+          expandedMobile.has("preferences")
+            ? TILE_STYLES[TAB_COLOR.preferences].icon
+            : "text-slate-600 dark:text-slate-300"
+        }`}
+      >
+        {t("tabs.preferences")}
+        <ChevronRight
+          size={16}
+          className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
+            expandedMobile.has("preferences") ? "rotate-90" : ""
+          }`}
+        />
+      </button>
       <div
         role="tabpanel"
         id="settings-panel-preferences"
-        aria-labelledby="settings-tab-preferences"
-        className={`space-y-4 ${activeTab === "preferences" ? "" : "hidden"}`}
+        aria-labelledby="settings-tab-preferences settings-tab-preferences-mobile"
+        className={`space-y-4 ${expandedMobile.has("preferences") ? "block" : "hidden"} ${
+          activeTab === "preferences" ? "sm:block" : "sm:hidden"
+        }`}
       >
         <CurrencyTile
           profile={profile}
@@ -229,11 +286,33 @@ export default function SettingsPage() {
         <LanguagesTile t={t} />
       </div>
 
+      <button
+        type="button"
+        onClick={() => toggleMobileSection("notifications")}
+        aria-expanded={expandedMobile.has("notifications")}
+        aria-controls="settings-panel-notifications"
+        id="settings-tab-notifications-mobile"
+        className={`flex w-full items-center justify-between border-b border-slate-200 py-3 text-left text-sm font-semibold dark:border-slate-700 sm:hidden ${
+          expandedMobile.has("notifications")
+            ? TILE_STYLES[TAB_COLOR.notifications].icon
+            : "text-slate-600 dark:text-slate-300"
+        }`}
+      >
+        {t("tabs.notifications")}
+        <ChevronRight
+          size={16}
+          className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
+            expandedMobile.has("notifications") ? "rotate-90" : ""
+          }`}
+        />
+      </button>
       <div
         role="tabpanel"
         id="settings-panel-notifications"
-        aria-labelledby="settings-tab-notifications"
-        className={`space-y-4 ${activeTab === "notifications" ? "" : "hidden"}`}
+        aria-labelledby="settings-tab-notifications settings-tab-notifications-mobile"
+        className={`space-y-4 ${expandedMobile.has("notifications") ? "block" : "hidden"} ${
+          activeTab === "notifications" ? "sm:block" : "sm:hidden"
+        }`}
       >
         <EmailNotificationsTile
           profile={profile}
@@ -252,20 +331,64 @@ export default function SettingsPage() {
         <BrowserNotificationsTile profile={profile} t={t} />
       </div>
 
+      <button
+        type="button"
+        onClick={() => toggleMobileSection("categories")}
+        aria-expanded={expandedMobile.has("categories")}
+        aria-controls="settings-panel-categories"
+        id="settings-tab-categories-mobile"
+        className={`flex w-full items-center justify-between border-b border-slate-200 py-3 text-left text-sm font-semibold dark:border-slate-700 sm:hidden ${
+          expandedMobile.has("categories")
+            ? TILE_STYLES[TAB_COLOR.categories].icon
+            : "text-slate-600 dark:text-slate-300"
+        }`}
+      >
+        {t("tabs.categories")}
+        <ChevronRight
+          size={16}
+          className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
+            expandedMobile.has("categories") ? "rotate-90" : ""
+          }`}
+        />
+      </button>
       <div
         role="tabpanel"
         id="settings-panel-categories"
-        aria-labelledby="settings-tab-categories"
-        className={`space-y-4 ${activeTab === "categories" ? "" : "hidden"}`}
+        aria-labelledby="settings-tab-categories settings-tab-categories-mobile"
+        className={`space-y-4 ${expandedMobile.has("categories") ? "block" : "hidden"} ${
+          activeTab === "categories" ? "sm:block" : "sm:hidden"
+        }`}
       >
         <CategoriesTile t={t} />
       </div>
 
+      <button
+        type="button"
+        onClick={() => toggleMobileSection("data")}
+        aria-expanded={expandedMobile.has("data")}
+        aria-controls="settings-panel-data"
+        id="settings-tab-data-mobile"
+        className={`flex w-full items-center justify-between border-b border-slate-200 py-3 text-left text-sm font-semibold dark:border-slate-700 sm:hidden ${
+          expandedMobile.has("data")
+            ? TILE_STYLES[TAB_COLOR.data].icon
+            : "text-slate-600 dark:text-slate-300"
+        }`}
+      >
+        {t("tabs.data")}
+        <ChevronRight
+          size={16}
+          className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
+            expandedMobile.has("data") ? "rotate-90" : ""
+          }`}
+        />
+      </button>
       <div
         role="tabpanel"
         id="settings-panel-data"
-        aria-labelledby="settings-tab-data"
-        className={`space-y-4 ${activeTab === "data" ? "" : "hidden"}`}
+        aria-labelledby="settings-tab-data settings-tab-data-mobile"
+        className={`space-y-4 ${expandedMobile.has("data") ? "block" : "hidden"} ${
+          activeTab === "data" ? "sm:block" : "sm:hidden"
+        }`}
       >
         <Tile
           color={TAB_COLOR.data}

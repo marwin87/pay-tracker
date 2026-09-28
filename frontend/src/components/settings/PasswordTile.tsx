@@ -89,15 +89,15 @@ export function PasswordTile({
         )}
         {isDirty && (
           <div className="flex gap-2 pt-1">
-            <button onClick={savePassword} disabled={isPasswordSaving} className={btnSave}>
-              {isPasswordSaving ? tp("saving") : tp("save")}
-            </button>
             <button
               onClick={() => { setCurPassword(""); setNewPassword(""); setPasswordError(null); }}
               disabled={isPasswordSaving}
               className={btnCancel}
             >
               {tp("cancel")}
+            </button>
+            <button onClick={savePassword} disabled={isPasswordSaving} className={btnSave}>
+              {isPasswordSaving ? tp("saving") : tp("save")}
             </button>
           </div>
         )}

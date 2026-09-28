@@ -242,18 +242,18 @@ export function ChannelScheduleSection({
           <div className="flex flex-col gap-1 pt-1">
             <div className="flex gap-2">
               <button
-                onClick={save}
-                disabled={isSaving}
-                className="rounded-lg border border-emerald-200 bg-white px-4 py-1.5 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
-              >
-                {isSaving ? t("saving") : t("save")}
-              </button>
-              <button
                 onClick={cancel}
                 disabled={isSaving}
                 className="rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
               >
                 {t("cancel")}
+              </button>
+              <button
+                onClick={save}
+                disabled={isSaving}
+                className="rounded-lg border border-emerald-200 bg-white px-4 py-1.5 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
+              >
+                {isSaving ? t("saving") : t("save")}
               </button>
             </div>
             {saveError && <p className="text-sm text-red-600 dark:text-red-400">{saveError}</p>}

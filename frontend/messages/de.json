@@ -466,7 +466,9 @@
             "edit": "Bearbeiten",
             "archive": "Archivieren",
             "unarchive": "Wiederherstellen",
-            "addNew": "+ Kategorie hinzufügen"
+            "addNew": "Kategorie hinzufügen",
+            "newColorsLabel": "Neue Farben",
+            "usedColorsLabel": "Verwendete Farben"
         }
     },
     "Categories": {

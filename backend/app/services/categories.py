@@ -16,10 +16,13 @@ CATEGORY_COLORS = (
     "cyan",
     "emerald",
     "slate-light",
-    "amber",
-    "teal",
-    "indigo",
+    "yellow",
+    "lime",
     "pink",
+    "blue-dark",
+    "emerald-dark",
+    "rose-dark",
+    "orange-dark",
 )
 
 # The starter set every user gets on registration. slug matches the old

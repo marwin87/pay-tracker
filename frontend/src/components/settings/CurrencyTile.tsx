@@ -92,11 +92,11 @@ export function CurrencyTile({
 
       {isDirty && (
         <div className="flex gap-2 pt-1">
-          <button onClick={save} disabled={isSaving} className={btnSave}>
-            {isSaving ? tp("saving") : tp("save")}
-          </button>
           <button onClick={cancel} disabled={isSaving} className={btnCancel}>
             {tp("cancel")}
+          </button>
+          <button onClick={save} disabled={isSaving} className={btnSave}>
+            {isSaving ? tp("saving") : tp("save")}
           </button>
         </div>
       )}

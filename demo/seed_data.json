@@ -1607,7 +1607,7 @@
       "id": 10,
       "name": "Streaming (Old)",
       "slug": null,
-      "color": "teal",
+      "color": "lime",
       "sort_order": 9,
       "is_default": false,
       "is_archived": true
@@ -1616,7 +1616,7 @@
       "id": 11,
       "name": "Side Hustle",
       "slug": null,
-      "color": "amber",
+      "color": "pink",
       "sort_order": 10,
       "is_default": false,
       "is_archived": false

@@ -438,7 +438,7 @@ def test_v4_backup_round_trips_categories(client):
     tok = register_and_login(client, "v4cat@test.com")
 
     r = client.post(
-        "/categories", json={"name": "Hobbies", "color": "teal"}, headers=auth(tok)
+        "/categories", json={"name": "Hobbies", "color": "pink"}, headers=auth(tok)
     )
     assert r.status_code == 201
     custom_category_id = r.json()["id"]

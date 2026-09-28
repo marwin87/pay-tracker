@@ -106,15 +106,15 @@ export function ProfileTile({
         )}
         {isEmailDirty && (
           <div className="flex gap-2 pt-1">
-            <button onClick={saveEmail} disabled={isEmailSaving} className={btnSave}>
-              {isEmailSaving ? tp("saving") : tp("save")}
-            </button>
             <button
               onClick={() => { setEmailInput(""); setEmailPassword(""); setEmailError(null); }}
               disabled={isEmailSaving}
               className={btnCancel}
             >
               {tp("cancel")}
+            </button>
+            <button onClick={saveEmail} disabled={isEmailSaving} className={btnSave}>
+              {isEmailSaving ? tp("saving") : tp("save")}
             </button>
           </div>
         )}

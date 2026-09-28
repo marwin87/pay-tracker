@@ -22,6 +22,8 @@ There are five button shapes in this app. Pick the one matching the button's *ro
 | Dialog confirm — destructive | `DeletePaymentDialog.tsx`, `RestoreButton.tsx` confirm | outline red, full dark-mode |
 | Dialog confirm — positive/neutral | `BackupButton.tsx` confirm | outline green |
 
+**Order: Cancel always renders before Save/Confirm**, left to right (`BillTemplateForm.tsx`, every dialog in "Modals / confirm dialogs" below). This applies to inline tile Save/Cancel pairs too, not just popups — `ProfileTile.tsx`, `PasswordTile.tsx`, `CurrencyTile.tsx`, `ChannelScheduleSection.tsx`, `CategoriesTile.tsx` all follow it. Don't put the affirmative action first.
+
 **Neutral trigger button** (e.g. "Backup", "Restore", "Delete account" tile buttons):
 ```
 flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-{accent}-300 hover:bg-{accent}-50 hover:text-{accent}-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-{accent}-700 dark:hover:bg-{accent}-900/20 dark:hover:text-{accent}-400
@@ -44,8 +46,6 @@ rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text
 flex-1 rounded-lg border border-red-200 bg-white py-2.5 text-sm font-medium text-red-600 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:border-red-800 dark:bg-slate-800 dark:text-red-400 dark:hover:border-red-700 dark:hover:bg-red-900/20 dark:hover:text-red-300
 ```
 Swap `red` for `green`/`emerald` for a positive confirm (see `BackupButton.tsx`).
-
-> **Known deviation, don't copy:** `ArchiveConfirmDialog.tsx`'s confirm button is a solid filled `bg-red-600` with no dark-mode variants. It predates the outline convention above and hasn't been fixed yet. If you're touching that file anyway, align it; otherwise leave it and use the outline pattern for anything new.
 
 **Loading/disabled state:** swap the label, don't add a separate spinner-only state, unless the action is a genuinely slow async op (file download/upload), in which case use `Loader2` from `lucide-react` at `size={14}` with `animate-spin`, `gap-2`, inside a `flex items-center justify-center` button (see `BackupButton.tsx`/`RestoreButton.tsx` confirm buttons). Always pair with `disabled:opacity-50` and `disabled={pending}`.
 
