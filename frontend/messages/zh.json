@@ -71,7 +71,7 @@
             "remaining": "仍需支付",
             "loadError": "无法加载概览，请重试。",
             "loading": "正在加载概览",
-            "currency": "币种"
+            "currency": "显示摘要币种："
         },
         "categories": {
             "title": "按类别",
@@ -343,6 +343,7 @@
     },
     "SettingsPage": {
         "pageTitle": "设置",
+        "subtitle": "把 PayTracker 打造成专属于你的样子。",
         "tabs": {
             "account": "账户",
             "preferences": "偏好设置",

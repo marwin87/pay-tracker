@@ -71,7 +71,7 @@
             "remaining": "Noch zu zahlen",
             "loadError": "Die Übersicht konnte nicht geladen werden. Bitte erneut versuchen.",
             "loading": "Übersicht wird geladen",
-            "currency": "Währung"
+            "currency": "Zusammenfassung anzeigen in:"
         },
         "categories": {
             "title": "Nach Kategorie",
@@ -343,6 +343,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Einstellungen",
+        "subtitle": "Mach PayTracker zu deinem eigenen.",
         "tabs": {
             "account": "Konto",
             "preferences": "Einstellungen",

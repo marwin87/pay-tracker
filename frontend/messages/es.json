@@ -71,7 +71,7 @@
             "remaining": "Falta por pagar",
             "loadError": "No se pudo cargar el resumen. Inténtalo de nuevo.",
             "loading": "Cargando resumen",
-            "currency": "Moneda"
+            "currency": "Mostrar resumen en:"
         },
         "categories": {
             "title": "Por categoría",
@@ -343,6 +343,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Ajustes",
+        "subtitle": "Haz que PayTracker sea tuyo.",
         "tabs": {
             "account": "Cuenta",
             "preferences": "Preferencias",

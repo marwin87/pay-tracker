@@ -6,18 +6,13 @@ import { useLocale, useTranslations } from "next-intl";
 import { updateMe, type UserProfile } from "@/lib/user-api";
 import { LOCALE_DEFAULT_CURRENCY } from "@/lib/currency";
 import CurrencyPicker from "@/components/CurrencyPicker";
+import { btnSaveClass as btnSave, btnCancelClass as btnCancel } from "@/components/ui/formButtonClasses";
 import { Tile } from "./Tile";
 
 const selectClass =
   "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
 
 const customInputClass = selectClass + " mt-2";
-
-const btnCancel =
-  "rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200";
-
-const btnSave =
-  "rounded-lg border border-emerald-200 bg-white px-4 py-1.5 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300";
 
 export function CurrencyTile({
   profile,

@@ -186,3 +186,8 @@ Requires HTTPS in production. Localhost works as an exception in most browsers.
 - **JSON backup** — Settings → Data → Download Backup. Tick the sections to include (bills & payments, custom categories, email notification setup, Telegram, language settings, default currency) or use select/deselect all. Scoped to your account. The Telegram option writes the bot token in plaintext, so keep such files private.
 - **Restore** — Settings → Restore from Backup. Shows a comparison of your current data vs. the backup (bill/payment counts, export date) before you confirm, then atomically replaces the data the file contains — sections missing from the file (e.g. a currency-only backup) are left untouched. Accepts `schema_version` 2–5.
 - **Undo a restore** — every restore automatically snapshots your prior data server-side first (skipped if you had no existing bills). If a restore turns out to be a mistake, Settings → Restore shows a "Restore This Snapshot" option with the snapshot's timestamp, letting you revert. Snapshots are kept for `RESTORE_SNAPSHOT_RETENTION_DAYS` (default 7) and only the single most recent one is retained per account.
+
+
+## 📄 License
+
+Releases up to and including v1.1.0 are MIT-licensed. **From v1.2.0 onward**, Pay Tracker is free for personal, educational, research and other non-commercial use — including modifying, forking and redistributing — with attribution back to this repository. Commercial use requires the copyright holder's written permission. See [LICENSE](LICENSE) for the full terms.

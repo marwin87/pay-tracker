@@ -107,11 +107,12 @@ export default function DashboardLayout({
           {/* Brand */}
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 text-green-700 transition-opacity hover:opacity-80 dark:text-green-500"
+            className="flex items-center gap-2 transition-opacity hover:opacity-80"
           >
             <Image src="/pt-logo.png" alt="Pay Tracker" width={32} height={32} className="rounded-xl" />
-            <span className="text-lg tracking-tight">
-              <span className="font-normal">Pay</span><span className="font-bold">Tracker</span>
+            <span className="text-lg font-bold tracking-tight">
+              <span className="text-[#10231A] dark:text-slate-100">Pay</span>
+              <span className="text-[#079447] dark:text-emerald-500">Tracker</span>
             </span>
           </Link>
 

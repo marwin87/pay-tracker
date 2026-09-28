@@ -71,7 +71,7 @@
             "remaining": "Reste à payer",
             "loadError": "Impossible de charger le résumé. Veuillez réessayer.",
             "loading": "Chargement du résumé",
-            "currency": "Devise"
+            "currency": "Afficher le résumé en :"
         },
         "categories": {
             "title": "Par catégorie",
@@ -343,6 +343,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Paramètres",
+        "subtitle": "Faites de PayTracker le vôtre.",
         "tabs": {
             "account": "Compte",
             "preferences": "Préférences",

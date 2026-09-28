@@ -71,7 +71,7 @@
             "remaining": "Do zapłaty jeszcze",
             "loadError": "Nie udało się wczytać podsumowania. Spróbuj ponownie.",
             "loading": "Wczytywanie podsumowania",
-            "currency": "Waluta"
+            "currency": "Pokaż podsumowanie w:"
         },
         "categories": {
             "title": "Wg kategorii",
@@ -343,6 +343,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Ustawienia",
+        "subtitle": "Dostosuj PayTracker do siebie.",
         "tabs": {
             "account": "Konto",
             "preferences": "Preferencje",

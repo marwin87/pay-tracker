@@ -71,7 +71,7 @@
             "remaining": "Still to pay",
             "loadError": "Couldn't load the summary. Please try again.",
             "loading": "Loading summary",
-            "currency": "Currency"
+            "currency": "Show summary in:"
         },
         "categories": {
             "title": "By category",
@@ -343,6 +343,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Settings",
+        "subtitle": "Make PayTracker your own.",
         "tabs": {
             "account": "Account",
             "preferences": "Preferences",

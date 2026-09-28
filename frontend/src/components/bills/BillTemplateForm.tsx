@@ -10,6 +10,7 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import Dropdown from "@/components/ui/Dropdown";
 import { LOCALE_DEFAULT_CURRENCY } from "@/lib/currency";
 import type { BillFrequency, BillTemplateCreate } from "@/lib/bills-api";
+import { btnSaveClass, btnCancelClass } from "@/components/ui/formButtonClasses";
 
 const FREQUENCY_VALUES: BillFrequency[] = ["monthly", "annual", "one_off"];
 
@@ -300,14 +301,14 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
         <button
           type="button"
           onClick={onCancel}
-          className="rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200"
+          className={btnCancelClass}
         >
           {t("cancel")}
         </button>
         <button
           type="submit"
           disabled={saving}
-          className="rounded-lg border border-emerald-200 bg-white px-4 py-1.5 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
+          className={btnSaveClass}
         >
           {saving ? t("saving") : t("save")}
         </button>

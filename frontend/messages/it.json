@@ -71,7 +71,7 @@
             "remaining": "Ancora da pagare",
             "loadError": "Impossibile caricare il riepilogo. Riprova.",
             "loading": "Caricamento del riepilogo",
-            "currency": "Valuta"
+            "currency": "Mostra riepilogo in:"
         },
         "categories": {
             "title": "Per categoria",
@@ -343,6 +343,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Impostazioni",
+        "subtitle": "Rendi PayTracker tuo.",
         "tabs": {
             "account": "Account",
             "preferences": "Preferenze",

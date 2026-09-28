@@ -109,7 +109,7 @@ export default function DeletePaymentDialog({
           <button
             onClick={handleConfirm}
             disabled={isDeleting}
-            className="flex-1 rounded-lg border border-red-200 bg-white py-2.5 text-sm font-medium text-red-600 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:border-red-800 dark:bg-slate-800 dark:text-red-400 dark:hover:border-red-700 dark:hover:bg-red-900/20 dark:hover:text-red-300"
+            className="flex-1 rounded-lg border border-transparent bg-red-600 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-red-700 disabled:opacity-50"
           >
             {isDeleting ? t("deleting") : t("confirm")}
           </button>

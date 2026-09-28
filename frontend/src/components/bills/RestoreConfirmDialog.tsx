@@ -46,7 +46,7 @@ export default function RestoreConfirmDialog({ billName, onConfirm, onCancel, re
           <button
             onClick={onConfirm}
             disabled={restoring}
-            className="flex-1 rounded-lg border border-emerald-200 bg-white py-2.5 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
+            className="flex-1 rounded-lg border border-transparent bg-emerald-600 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-emerald-700 disabled:opacity-50"
           >
             {restoring ? t("restoring") : t("restore")}
           </button>

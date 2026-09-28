@@ -40,7 +40,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="min-h-full flex flex-col bg-slate-50 dark:bg-slate-900 antialiased">
+      <body className="min-h-full flex flex-col bg-[#F6FAF8] dark:bg-slate-900 antialiased">
         <PwaRegister />
         <AuthProvider>
           <LocaleProvider>{children}</LocaleProvider>

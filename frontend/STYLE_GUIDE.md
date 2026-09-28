@@ -12,40 +12,38 @@ Concrete Tailwind conventions for pay-tracker's UI, extracted from existing comp
 
 ## Buttons
 
-There are five button shapes in this app. Pick the one matching the button's *role*, not its color.
+**Primary vs Secondary, everywhere.** Every screen/dialog's *one* affirmative
+action (Save, Confirm, Mark as Paid, Archive, Delete, Restore, form submit)
+is a **solid, colored fill**. Cancel/dismiss/secondary actions stay **outline,
+muted-at-rest**. This mirrors the login/register/forgot-password pages' solid
+brand-green CTA, applied consistently to every real Cancel+Confirm pair in
+the app — don't leave a screen with two outline buttons of equal visual
+weight, and don't make Cancel solid.
 
 | Role | Reference component | Shape |
 |---|---|---|
-| Neutral trigger (opens a dialog from static content) | `BackupButton.tsx`, `RestoreButton.tsx` | outline, muted at rest, tints on hover |
-| Save (commit a dirty form field) | `ProfileTile.tsx`, `CurrencyTile.tsx` (`btnSave`) | outline emerald |
-| Cancel (discard a dirty field / dismiss a dialog) | same files (`btnCancel`) | outline slate |
-| Dialog confirm — destructive | `DeletePaymentDialog.tsx`, `RestoreButton.tsx` confirm | outline red, full dark-mode |
-| Dialog confirm — positive/neutral | `BackupButton.tsx` confirm | outline green |
+| Neutral trigger (opens a dialog from static content) | `BackupButton.tsx`, `RestoreButton.tsx` (the button that *opens* the dialog, not its confirm) | outline, muted at rest, tints on hover |
+| Save (commit a dirty form field) | `frontend/src/components/ui/formButtonClasses.ts` (`btnSaveClass`) | solid emerald |
+| Cancel (discard a dirty field / dismiss a dialog) | same file (`btnCancelClass`) | outline slate |
+| Dialog confirm — destructive | `DeletePaymentDialog.tsx`, `DeleteAccountDialog.tsx`, `ArchiveConfirmDialog.tsx` | solid red |
+| Dialog confirm — positive/neutral | `MarkPaidDialog.tsx`, `RestoreConfirmDialog.tsx`, `BackupButton.tsx` confirm | solid emerald/green |
+| Dialog confirm — caution | `RevertPaymentDialog.tsx` | solid amber |
 
 **Order: Cancel always renders before Save/Confirm**, left to right (`BillTemplateForm.tsx`, every dialog in "Modals / confirm dialogs" below). This applies to inline tile Save/Cancel pairs too, not just popups — `ProfileTile.tsx`, `PasswordTile.tsx`, `CurrencyTile.tsx`, `ChannelScheduleSection.tsx`, `CategoriesTile.tsx` all follow it. Don't put the affirmative action first.
 
-**Neutral trigger button** (e.g. "Backup", "Restore", "Delete account" tile buttons):
+**Neutral trigger button** (e.g. "Backup", "Restore", "Delete account" tile buttons — the always-visible button that *opens* a dialog):
 ```
 flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-{accent}-300 hover:bg-{accent}-50 hover:text-{accent}-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-{accent}-700 dark:hover:bg-{accent}-900/20 dark:hover:text-{accent}-400
 ```
-`{accent}` = the semantic color of the action (green for backup/restore, red for delete). Icon at `size={18}` before the label. **Never** a solid filled button for this role — every static, always-visible trigger in this app is muted-at-rest.
+`{accent}` = the semantic color of the action (green for backup/restore, red for delete). Icon at `size={18}` before the label. **Never solid** for this specific role — a static, always-visible trigger stays muted-at-rest even though the dialog it opens now has a solid confirm.
 
-**Save button:**
-```
-rounded-lg border border-emerald-200 bg-white px-4 py-1.5 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300
-```
+**Save / Cancel:** import from `frontend/src/components/ui/formButtonClasses.ts` (`btnSaveClass`, `btnCancelClass`) rather than redeclaring the strings locally — this used to be copy-pasted across 7 files and had already drifted (`px-3` vs `px-4`) before being centralized. If you need the modal-footer sizing instead (`flex-1 py-2.5` instead of `px-4 py-1.5`), see the dialog confirm patterns below.
 
-**Cancel button:**
+**Dialog confirm — solid, colored by semantic meaning:**
 ```
-rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200
+flex-1 rounded-lg border border-transparent bg-{color}-600 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:bg-{color}-700 disabled:opacity-50
 ```
-(in a modal footer: swap `px-4 py-1.5` for `flex-1 py-2.5`)
-
-**Dialog confirm — destructive:**
-```
-flex-1 rounded-lg border border-red-200 bg-white py-2.5 text-sm font-medium text-red-600 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-700 disabled:opacity-50 dark:border-red-800 dark:bg-slate-800 dark:text-red-400 dark:hover:border-red-700 dark:hover:bg-red-900/20 dark:hover:text-red-300
-```
-Swap `red` for `green`/`emerald` for a positive confirm (see `BackupButton.tsx`).
+`{color}`: `red` for destructive, `amber` for caution/revert (600→500 hover, not 700, it's already a strong color), `emerald` for positive confirm/mark-paid/restore, `green` (700→800 hover) specifically for `BackupButton.tsx` to match its existing hue. **No `dark:` variant needed on the fill itself** — a solid, saturated color reads fine as white-on-color regardless of page theme (confirmed by login's own `Button.tsx` `solid` variant, which has none either). This is the one place in this file where skipping `dark:` is correct, not an oversight — don't generalize it to outline buttons, which still need the full `dark:` treatment below.
 
 **Loading/disabled state:** swap the label, don't add a separate spinner-only state, unless the action is a genuinely slow async op (file download/upload), in which case use `Loader2` from `lucide-react` at `size={14}` with `animate-spin`, `gap-2`, inside a `flex items-center justify-center` button (see `BackupButton.tsx`/`RestoreButton.tsx` confirm buttons). Always pair with `disabled:opacity-50` and `disabled={pending}`.
 
@@ -95,7 +93,7 @@ Always use the shared `Tile` component (`frontend/src/components/settings/Tile.t
 
 Sole exception: the Delete Account tile is always `red` (destructive), and `red` is never a tab color.
 
-In practice, every real tile renders its own local `save`/`cancel` buttons as children (outline emerald/slate, see Buttons above) rather than using `Tile`'s built-in `isDirty`/`onSave`/`onCancel` props — that prop path exists but isn't the pattern actually in use. Follow `CurrencyTile.tsx`/`ProfileTile.tsx`, not `Tile.tsx`'s internal solid-green fallback button.
+In practice, every real tile renders its own local `save`/`cancel` buttons as children (`formButtonClasses.ts`, see Buttons above) rather than using `Tile`'s built-in `isDirty`/`onSave`/`onCancel` props — that prop path exists but isn't the pattern actually in use. Follow `CurrencyTile.tsx`/`ProfileTile.tsx`.
 
 Note `Tile`'s header (icon + title + description) always renders as a `<button>`, even when the tile has no `onToggle` (non-collapsible) — see the gotcha above.
 
