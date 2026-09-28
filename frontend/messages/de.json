@@ -258,6 +258,7 @@
         "editTitle": "Zahlung bearbeiten: {billName}",
         "dueAmountLabel": "Fälliger Betrag",
         "amountHint": "Gilt nur für diese Zahlung. Leer lassen, um den Betrag der Rechnung zu verwenden.",
+        "dueDateLabel": "Fälligkeitsdatum",
         "save": "Speichern",
         "dateLabel": "Zahlungsdatum",
         "amountLabel": "Bezahlter Betrag",

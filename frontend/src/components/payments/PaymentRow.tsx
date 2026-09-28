@@ -140,7 +140,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
                 <span className="hidden sm:inline">{t("markAsPaid")}</span>
               </button>
             )}
-            {/* Edit — any status (unpaid: amount + note; paid: date, amount, note) */}
+            {/* Edit — any status (unpaid: due date + amount + note; paid: date, amount, note) */}
             <button
               onClick={() => onEdit(instance)}
               title={t("edit")}

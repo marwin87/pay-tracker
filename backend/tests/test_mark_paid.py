@@ -234,3 +234,69 @@ def test_editing_overdue_payment_keeps_overdue_status(client_db):
         f"/bills/payments/{instance_id}", json={"notes": "x"}, headers=auth(token)
     )
     assert r.json()["status"] == "overdue"
+
+
+def test_edit_due_date_on_unpaid_instance(client_db):
+    client, db = client_db
+    token = register_and_login(client, "dd1@test.com")
+    bill_id = _create_bill(client, token)
+    instance_id = _instance_id(client, token, bill_id)
+    period = date.today().strftime("%Y-%m")
+    new_due = f"{period}-20"
+
+    r = client.patch(
+        f"/bills/payments/{instance_id}",
+        json={"due_date": new_due},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+    assert r.json()["due_date"] == new_due
+
+
+def test_edit_due_date_on_overdue_instance(client_db):
+    client, db = client_db
+    token = register_and_login(client, "dd2@test.com")
+    bill_id = _create_bill(client, token)
+    instance_id = _instance_id(client, token, bill_id)
+    inst = db.get(PaymentInstance, instance_id)
+    inst.due_date = date.today() - timedelta(days=3)
+    db.commit()
+    period = inst.period
+    new_due = f"{period}-20"
+
+    r = client.patch(
+        f"/bills/payments/{instance_id}",
+        json={"due_date": new_due},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+    assert r.json()["due_date"] == new_due
+
+
+def test_edit_due_date_rejected_when_paid(client_db):
+    client, db = client_db
+    token = register_and_login(client, "dd3@test.com")
+    instance_id = _paid_instance(client, token)
+    period = date.today().strftime("%Y-%m")
+
+    r = client.patch(
+        f"/bills/payments/{instance_id}",
+        json={"due_date": f"{period}-20"},
+        headers=auth(token),
+    )
+    assert r.status_code == 400
+
+
+def test_edit_due_date_rejected_outside_period_month(client_db):
+    client, db = client_db
+    token = register_and_login(client, "dd4@test.com")
+    bill_id = _create_bill(client, token)
+    instance_id = _instance_id(client, token, bill_id)
+
+    other_month = date.today().replace(day=1) + timedelta(days=40)
+    r = client.patch(
+        f"/bills/payments/{instance_id}",
+        json={"due_date": other_month.replace(day=1).isoformat()},
+        headers=auth(token),
+    )
+    assert r.status_code == 400

@@ -43,6 +43,7 @@ export default function MarkPaidDialog({
   const [paidDate, setPaidDate] = useState(
     toISODate(isEdit && instance.paid_at ? new Date(instance.paid_at) : new Date()),
   );
+  const [dueDate, setDueDate] = useState(instance.due_date);
   const [notes, setNotes] = useState(instance.notes ?? "");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +60,7 @@ export default function MarkPaidDialog({
       const updated = !isEdit
         ? await markPaid(instance.id, paidAmount || null, notes, paidDate)
         : editingUnpaid
-          ? await updatePayment(instance.id, { amount, notes })
+          ? await updatePayment(instance.id, { amount, notes, due_date: dueDate })
           : await updatePayment(instance.id, {
               paid_amount: amount,
               notes,
@@ -99,6 +100,22 @@ export default function MarkPaidDialog({
               {t("dateLabel")}
             </label>
             <PaymentDateCalendar value={paidDate} onChange={setPaidDate} />
+          </div>
+        )}
+
+        {editingUnpaid && (
+          <div className="mb-3">
+            <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
+              {t("dueDateLabel")}
+            </label>
+            <PaymentDateCalendar
+              value={dueDate}
+              onChange={setDueDate}
+              lockToMonth={{
+                year: Number(instance.period.slice(0, 4)),
+                month: Number(instance.period.slice(5, 7)),
+              }}
+            />
           </div>
         )}
 

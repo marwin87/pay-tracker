@@ -8,6 +8,8 @@ import { useLocale } from "next-intl";
 interface Props {
   value: string; // "YYYY-MM-DD"
   onChange: (date: string) => void;
+  /** When set, the picker is pinned to this month: no prev/next nav, no future-date cap. */
+  lockToMonth?: { year: number; month: number }; // month 1-12
 }
 
 export function toISODate(d: Date): string {
@@ -32,7 +34,7 @@ function firstDayOffset(year: number, month: number): number {
   return jsDay === 0 ? 6 : jsDay - 1;
 }
 
-export default function PaymentDateCalendar({ value, onChange }: Props) {
+export default function PaymentDateCalendar({ value, onChange, lockToMonth }: Props) {
   const locale = useLocale();
   const [open, setOpen] = useState(false);
   const selected = parseISODate(value);
@@ -127,8 +129,8 @@ export default function PaymentDateCalendar({ value, onChange }: Props) {
         ? { position: "fixed", bottom: window.innerHeight - rect.top + 6, left: rect.left, width: 288, zIndex: 9999 }
         : { position: "fixed", top: rect.bottom + 6, left: rect.left, width: 288, zIndex: 9999 }
     );
-    setViewYear(selected.getFullYear());
-    setViewMonth(selected.getMonth() + 1);
+    setViewYear(lockToMonth ? lockToMonth.year : selected.getFullYear());
+    setViewMonth(lockToMonth ? lockToMonth.month : selected.getMonth() + 1);
     setOpen((o) => !o);
   }
 
@@ -150,24 +152,32 @@ export default function PaymentDateCalendar({ value, onChange }: Props) {
         <div ref={containerRef} style={popupStyle} className="rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-800">
           {/* Month navigation */}
           <div className="mb-2 flex items-center justify-between">
-            <button
-              type="button"
-              onClick={prevMonth}
-              className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
-            >
-              <ChevronLeft size={16} />
-            </button>
+            {lockToMonth ? (
+              <span />
+            ) : (
+              <button
+                type="button"
+                onClick={prevMonth}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"
+              >
+                <ChevronLeft size={16} />
+              </button>
+            )}
             <span className="text-sm font-semibold text-slate-700 dark:text-slate-200 capitalize">
               {fmt(viewYear, viewMonth)}
             </span>
-            <button
-              type="button"
-              onClick={nextMonth}
-              disabled={isCurrentViewMonth}
-              className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 disabled:opacity-30 disabled:hover:bg-transparent dark:hover:bg-slate-700 transition-colors"
-            >
-              <ChevronRight size={16} />
-            </button>
+            {lockToMonth ? (
+              <span />
+            ) : (
+              <button
+                type="button"
+                onClick={nextMonth}
+                disabled={isCurrentViewMonth}
+                className="rounded-lg p-1 text-slate-400 hover:bg-slate-100 disabled:opacity-30 disabled:hover:bg-transparent dark:hover:bg-slate-700 transition-colors"
+              >
+                <ChevronRight size={16} />
+              </button>
+            )}
           </div>
 
           {/* Weekday headers */}
@@ -189,7 +199,7 @@ export default function PaymentDateCalendar({ value, onChange }: Props) {
             ))}
             {Array.from({ length: maxDay }, (_, i) => i + 1).map((d) => {
               const cellDate = new Date(viewYear, viewMonth - 1, d);
-              const isFuture = cellDate.getTime() > today.getTime();
+              const isFuture = !lockToMonth && cellDate.getTime() > today.getTime();
               const isSelected = toISODate(cellDate) === value;
               return (
                 <button

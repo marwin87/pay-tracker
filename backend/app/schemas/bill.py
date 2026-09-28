@@ -113,14 +113,18 @@ class MarkPaidRequest(BaseModel):
 class PaymentInstanceUpdate(BaseModel):
     """Edit one payment; only fields present in the body change.
 
-    Paid: paid_amount / paid_at / notes. Unpaid: amount / notes, where amount
-    applies to this payment only (null clears it → follows the bill's amount).
+    Paid: paid_amount / paid_at / notes. Unpaid: amount / notes / due_date,
+    where amount applies to this payment only (null clears it → follows the
+    bill's amount).
     """
 
     amount: Decimal | None = Field(default=None, ge=0)
     paid_amount: Decimal | None = None
     notes: str | None = None  # sent as null/"" clears the note
     paid_at: date | None = None  # must not be future
+    due_date: date | None = (
+        None  # unpaid only; must fall within the instance's period month
+    )
 
 
 class HasDeletedFutureOut(BaseModel):

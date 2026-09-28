@@ -257,14 +257,24 @@ def edit_payment(
         raise HTTPException(
             status_code=400, detail="Amount can only be edited before payment"
         )
+    if is_paid and "due_date" in sent:
+        raise HTTPException(
+            status_code=400, detail="Due date can only be edited before payment"
+        )
     if not is_paid and sent & {"paid_amount", "paid_at"}:
         raise HTTPException(status_code=400, detail="Payment is not marked as paid")
     _reject_future_paid_at(body.paid_at)
+    if body.due_date is not None and body.due_date.strftime("%Y-%m") != instance.period:
+        raise HTTPException(
+            status_code=400, detail="Due date must fall within the payment's period"
+        )
 
     if body.paid_at is not None:
         instance.paid_at = _paid_at_datetime(body.paid_at)
     if body.paid_amount is not None:
         instance.paid_amount = body.paid_amount
+    if body.due_date is not None:
+        instance.due_date = body.due_date
     if "amount" in sent:
         # Per-payment only: the template and other periods are never touched.
         instance.amount_override = body.amount

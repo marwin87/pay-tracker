@@ -258,6 +258,7 @@
         "editTitle": "Modifica pagamento: {billName}",
         "dueAmountLabel": "Importo dovuto",
         "amountHint": "Vale solo per questo pagamento. Lascia vuoto per usare l'importo della fattura.",
+        "dueDateLabel": "Data di scadenza",
         "save": "Salva",
         "dateLabel": "Data di pagamento",
         "amountLabel": "Importo pagato",

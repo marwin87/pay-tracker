@@ -1,4 +1,4 @@
-# <img src="frontend/public/pt-logo.png" width="32" alt="Pay Tracker logo" valign="middle"> Pay Tracker
+# <img src="frontend/public/pt-logo-rounded.png" width="32" alt="Pay Tracker logo" valign="middle"> Pay Tracker
 
 A self-hosted household bill tracking PWA. Define your recurring bills once, then each month's payment instances are generated automatically. Mark bills paid from any device — phone, tablet, or desktop.
 
@@ -30,7 +30,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Dashboard** — month summary, a category donut and a 12-month trend at a glance.
 - **Archive bills** — archive a bill you no longer need to hide it from the active list; its payment history stays intact and stays accessible from the Archive page. Restore an archived bill any time to bring it back to the active list and resume generating payments.
 - **Category grouping** — bills and payments are grouped under category headers. Every account starts with 9 defaults (Housing, Utilities, Insurance, Subscriptions, Entertainment, Transport, Healthcare, Education, Other); add your own, rename or recolor any of them, or archive ones you no longer use from Settings. Category is required on every bill. Archiving a category hides it from the "new bill" picker but doesn't touch bills already using it — they keep working and stay filterable, just flagged as archived.
-- **Payment tracking** — view upcoming, overdue, and paid bills for any month, grouped by category. Mark as paid with an optional amount override and note. Edit the amount, date and note of any payment afterwards, or revert if you made a mistake.
+- **Payment tracking** — view upcoming, overdue, and paid bills for any month, grouped by category. Mark as paid with an optional amount override and note. Edit the amount, date and note of any payment afterwards, or revert if you made a mistake. Unpaid bills can also have their due date nudged to a different day in the same month.
 - **Email reminders** — optional, off by default for new accounts. Configure SMTP credentials and a send time (30-minute precision) and the app emails you before or after each bill's due date.
 - **Monthly summary email** — optional. On the last day of each month, receive a full summary of what was paid (amount due vs. paid, date) and what was missed, with totals. Toggle it in Settings → Email Notifications. A "Send monthly summary now" button lets you request the current month's snapshot on demand.
 - **Browser notifications** — optional. Get a desktop/mobile notification when a bill is due today (Settings → Browser Notifications).

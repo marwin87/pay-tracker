@@ -67,7 +67,7 @@ export function markPaid(
   });
 }
 
-/** Edit one payment. Paid: paid_amount/paid_at/notes. Unpaid: amount/notes
+/** Edit one payment. Paid: paid_amount/paid_at/notes. Unpaid: amount/notes/due_date
  *  (amount applies to this payment only; null → follow the bill's amount). */
 export function updatePayment(
   instanceId: number,
@@ -76,6 +76,7 @@ export function updatePayment(
     paid_amount?: number | null;
     paid_at?: string; // "YYYY-MM-DD"
     notes?: string;
+    due_date?: string; // "YYYY-MM-DD"
   },
 ): Promise<PaymentInstanceOut> {
   return apiFetch<PaymentInstanceOut>(`/bills/payments/${instanceId}`, {

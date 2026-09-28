@@ -258,6 +258,7 @@
         "editTitle": "Edit payment: {billName}",
         "dueAmountLabel": "Amount due",
         "amountHint": "Applies to this payment only. Leave empty to use the bill's amount.",
+        "dueDateLabel": "Due date",
         "save": "Save",
         "dateLabel": "Date paid",
         "amountLabel": "Amount paid",

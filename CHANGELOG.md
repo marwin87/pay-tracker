@@ -8,6 +8,7 @@ Notable changes to Pay Tracker, release by release.
 
 - Search bills and payments by name on the Payments, Bills, and Archived Bills pages
 - Dropdown menus and the category filter's checkbox list can now be navigated with the keyboard: arrow keys, Home and End move through options, matching the accessibility semantics they already advertised
+- Unpaid payments can now have their due date edited for that instance only, via the existing edit-payment dialog
 
 ### Security
 
