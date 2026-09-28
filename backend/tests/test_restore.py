@@ -451,7 +451,7 @@ def test_v4_backup_round_trips_categories(client):
     assert r.status_code == 201
 
     backup = client.get("/export/json", headers=auth(tok)).json()
-    assert backup["schema_version"] == 6
+    assert backup["schema_version"] == 7
     assert any(c["name"] == "Hobbies" for c in backup["categories"])
 
     r = _upload(client, tok, backup)

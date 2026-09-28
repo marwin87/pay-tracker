@@ -8,7 +8,7 @@ from app.services.categories import CATEGORY_COLORS
 
 from tests.conftest import auth, category_id, register_and_login
 
-_ALL = ["bills", "categories", "email", "telegram", "languages", "currency"]
+_ALL = ["bills", "categories", "email", "telegram", "languages", "currency", "export"]
 _KEYS = {
     "bills": {"bill_templates", "payment_instances"},
     "categories": {"categories"},
@@ -16,6 +16,7 @@ _KEYS = {
     "telegram": {"notifications", "telegram"},
     "languages": {"preferences"},
     "currency": {"preferences"},
+    "export": {"preferences"},
 }
 _ALL_KEYS = set().union(*_KEYS.values())
 _META = {"schema_version", "exported_by", "exported_at"}
@@ -78,12 +79,25 @@ def test_export_default_is_full(client):
     _seed(client, tok)
     body = _export(client, tok)
     assert set(body) == _META | _ALL_KEYS
-    assert body["schema_version"] == 6
+    assert body["schema_version"] == 7
     assert body["preferences"] == {
         "language_preference": "de",
         "enabled_languages": ["en", "de"],
         "default_currency": "EUR",
         "decimal_separator": ".",
+        "export_enabled": True,
+        "export_fields": [
+            "bill",
+            "category",
+            "period",
+            "due_date",
+            "amount",
+            "currency",
+            "status",
+            "paid_amount",
+            "paid_at",
+            "notes",
+        ],
     }
     assert body["telegram"]["bot_token"] == _TOKEN
     assert set(body["notifications"]) == {"email", "telegram", "browser_enabled"}
@@ -107,6 +121,10 @@ def test_export_prefs_sections_are_independent(client):
     assert set(_export(client, tok, ["currency"])["preferences"]) == {
         "default_currency",
         "decimal_separator",
+    }
+    assert set(_export(client, tok, ["export"])["preferences"]) == {
+        "export_enabled",
+        "export_fields",
     }
 
 
