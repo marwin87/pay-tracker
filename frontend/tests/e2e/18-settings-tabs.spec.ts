@@ -9,13 +9,20 @@
 import { test, expect } from '@playwright/test';
 import { loginNewUser } from './helpers';
 
-test('settings has five tabs; Currency and Languages live under Preferences, not Account', async ({ page }) => {
+test('settings has six tabs; Currency and Languages live under Preferences, not Account', async ({ page }) => {
   await loginNewUser(page);
   await page.goto('/dashboard/settings');
 
-  // Assert: five tabs exposed with the tab role
+  // Assert: six tabs exposed with the tab role
   await expect(page.getByRole('tablist')).toBeVisible();
-  await expect(page.getByRole('tab')).toHaveText(['Account', 'Preferences', 'Notifications', 'Categories', 'Data']);
+  await expect(page.getByRole('tab')).toHaveText([
+    'Account',
+    'Preferences',
+    'Notifications',
+    'Categories',
+    'Export',
+    'Backup & Restore',
+  ]);
   await expect(page.getByRole('tab', { name: 'Account', exact: true })).toHaveAttribute('aria-selected', 'true');
 
   // Assert: Account holds identity tiles, not preferences
@@ -49,7 +56,7 @@ test('active settings tab is kept in the URL: refresh and deep-link land on it',
 
   // Assert: a deep-link opens the requested tab; an unknown value falls back to Account
   await page.goto('/dashboard/settings?tab=data');
-  await expect(page.getByRole('tab', { name: 'Data', exact: true })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tab', { name: 'Backup & Restore', exact: true })).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByRole('heading', { name: 'Backup Data' })).toBeVisible();
 
   await page.goto('/dashboard/settings?tab=bogus');

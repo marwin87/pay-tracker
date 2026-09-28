@@ -16,6 +16,7 @@ import { PasswordTile } from "@/components/settings/PasswordTile";
 import { CurrencyTile } from "@/components/settings/CurrencyTile";
 import { DecimalSeparatorTile } from "@/components/settings/DecimalSeparatorTile";
 import { LanguagesTile } from "@/components/settings/LanguagesTile";
+import { ExportSettingsTile } from "@/components/settings/ExportSettingsTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
 import { TelegramNotificationsTile } from "@/components/settings/TelegramNotificationsTile";
 import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificationsTile";
@@ -23,7 +24,14 @@ import { CategoriesTile } from "@/components/settings/CategoriesTile";
 import { UnsavedChangesDialog } from "@/components/settings/UnsavedChangesDialog";
 import DeleteAccountDialog from "@/components/settings/DeleteAccountDialog";
 
-const TABS = ["account", "preferences", "notifications", "categories", "data"] as const;
+const TABS = [
+  "account",
+  "preferences",
+  "notifications",
+  "categories",
+  "export",
+  "data",
+] as const;
 type TabKey = (typeof TABS)[number];
 
 // One color per tab; tiles inside a tab and the active-tab underline all use it.
@@ -32,6 +40,7 @@ const TAB_COLOR: Record<TabKey, TileColor> = {
   preferences: "purple",
   notifications: "yellow",
   categories: "green",
+  export: "teal",
   data: "orange",
 };
 
@@ -367,6 +376,37 @@ export default function SettingsPage() {
         }`}
       >
         <CategoriesTile t={t} />
+      </div>
+
+      <button
+        type="button"
+        onClick={() => toggleMobileSection("export")}
+        aria-expanded={expandedMobile.has("export")}
+        aria-controls="settings-panel-export"
+        id="settings-tab-export-mobile"
+        className={`flex w-full items-center justify-between border-b border-slate-200 py-3 text-left text-sm font-semibold dark:border-slate-700 sm:hidden ${
+          expandedMobile.has("export")
+            ? TILE_STYLES[TAB_COLOR.export].icon
+            : "text-slate-600 dark:text-slate-300"
+        }`}
+      >
+        {t("tabs.export")}
+        <ChevronRight
+          size={16}
+          className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
+            expandedMobile.has("export") ? "rotate-90" : ""
+          }`}
+        />
+      </button>
+      <div
+        role="tabpanel"
+        id="settings-panel-export"
+        aria-labelledby="settings-tab-export settings-tab-export-mobile"
+        className={`space-y-4 ${expandedMobile.has("export") ? "block" : "hidden"} ${
+          activeTab === "export" ? "sm:block" : "sm:hidden"
+        }`}
+      >
+        <ExportSettingsTile profile={profile} onProfileUpdate={setProfile} t={t} />
       </div>
 
       <button

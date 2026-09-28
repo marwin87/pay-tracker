@@ -6,6 +6,46 @@ from pydantic import BaseModel, EmailStr, Field, field_validator
 
 SupportedLanguage = Literal["en", "pl", "de", "es", "it", "fr", "zh"]
 
+EXPORT_FIELD_KEYS: tuple[str, ...] = (
+    "bill",
+    "category",
+    "period",
+    "due_date",
+    "amount",
+    "currency",
+    "status",
+    "paid_amount",
+    "paid_at",
+    "notes",
+)
+MANDATORY_EXPORT_FIELDS: frozenset[str] = frozenset(
+    {"bill", "due_date", "amount", "currency"}
+)
+ExportFieldKey = Literal[
+    "bill",
+    "category",
+    "period",
+    "due_date",
+    "amount",
+    "currency",
+    "status",
+    "paid_amount",
+    "paid_at",
+    "notes",
+]
+
+
+def validate_export_fields(v: list[str] | None) -> list[str] | None:
+    if v is None:
+        return v
+    if not set(v).issubset(EXPORT_FIELD_KEYS):
+        raise ValueError("export_fields contains an unknown field key")
+    if not MANDATORY_EXPORT_FIELDS.issubset(v):
+        raise ValueError(
+            f"export_fields must include: {', '.join(sorted(MANDATORY_EXPORT_FIELDS))}"
+        )
+    return v
+
 
 class RegisterRequest(BaseModel):
     email: EmailStr
@@ -48,6 +88,8 @@ class UserProfileOut(BaseModel):
     telegram_send_minute: int
     telegram_monthly_summary_enabled: bool
     browser_notifications_enabled: bool
+    export_enabled: bool
+    export_fields: list[ExportFieldKey]
 
 
 def normalize_chat_id(v: str | None) -> str | None:
@@ -90,6 +132,8 @@ class UserProfileUpdate(BaseModel):
     telegram_send_minute: Annotated[int, Field(ge=0, le=1410)] | None = None
     telegram_monthly_summary_enabled: bool | None = None
     browser_notifications_enabled: bool | None = None
+    export_enabled: bool | None = None
+    export_fields: list[ExportFieldKey] | None = None
 
     @field_validator("telegram_chat_id")
     @classmethod
@@ -100,6 +144,11 @@ class UserProfileUpdate(BaseModel):
     @classmethod
     def _bot_token(cls, v: str | None) -> str | None:
         return normalize_bot_token(v)
+
+    @field_validator("export_fields")
+    @classmethod
+    def _export_fields(cls, v: list[str] | None) -> list[str] | None:
+        return validate_export_fields(v)
 
 
 class ChangePasswordRequest(BaseModel):

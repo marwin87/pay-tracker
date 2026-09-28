@@ -310,7 +310,8 @@
             "email": "Notifications e-mail",
             "telegram": "Telegram (jeton du bot et rappels)",
             "languages": "Paramètres de langue",
-            "currency": "Devise et format numérique"
+            "currency": "Devise et format numérique",
+            "export": "Paramètres d'export Excel"
         }
     },
     "SnapshotRecoverySection": {
@@ -350,7 +351,8 @@
             "preferences": "Préférences",
             "notifications": "Notifications",
             "categories": "Catégories",
-            "data": "Données"
+            "export": "Export",
+            "data": "Sauvegarde et restauration"
         },
         "unsavedTitle": "Modifications non enregistrées",
         "unsavedDescription": "Vous avez des modifications non enregistrées. Quitter sans enregistrer ?",
@@ -398,6 +400,25 @@
             "title": "Langues",
             "description": "Choisissez les langues qui apparaissent dans le sélecteur de langue.",
             "activeSuffix": "(actuelle)"
+        },
+        "excelExport": {
+            "title": "Excel (XLSX)",
+            "description": "Contrôlez si le bouton d'export Excel est disponible et quelles colonnes il inclut.",
+            "toggleLabel": "Activer l'export Excel",
+            "fieldsHeading": "Colonnes à inclure",
+            "requiredSuffix": "(obligatoire)",
+            "fields": {
+                "bill": "Facture",
+                "category": "Catégorie",
+                "period": "Période",
+                "due_date": "Date d'échéance",
+                "amount": "Montant",
+                "currency": "Devise",
+                "status": "Statut",
+                "paid_amount": "Montant payé",
+                "paid_at": "Date de paiement",
+                "notes": "Notes"
+            }
         },
         "emailNotifications": {
             "title": "Notifications par email",

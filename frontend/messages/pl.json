@@ -310,7 +310,8 @@
             "email": "Powiadomienia e-mail",
             "telegram": "Telegram (token bota i przypomnienia)",
             "languages": "Ustawienia języków",
-            "currency": "Waluta i format liczb"
+            "currency": "Waluta i format liczb",
+            "export": "Ustawienia eksportu do Excela"
         }
     },
     "SnapshotRecoverySection": {
@@ -350,7 +351,8 @@
             "preferences": "Preferencje",
             "notifications": "Powiadomienia",
             "categories": "Kategorie",
-            "data": "Dane"
+            "export": "Eksport",
+            "data": "Kopia zapasowa i przywracanie"
         },
         "unsavedTitle": "Niezapisane zmiany",
         "unsavedDescription": "Masz niezapisane zmiany. Wyjść bez zapisywania?",
@@ -398,6 +400,25 @@
             "title": "Języki",
             "description": "Wybierz, które języki mają być dostępne w przełączniku języka.",
             "activeSuffix": "(aktualny)"
+        },
+        "excelExport": {
+            "title": "Excel (XLSX)",
+            "description": "Kontroluj, czy przycisk eksportu do Excela jest dostępny i które kolumny zawiera.",
+            "toggleLabel": "Włącz eksport do Excela",
+            "fieldsHeading": "Kolumny do uwzględnienia",
+            "requiredSuffix": "(wymagane)",
+            "fields": {
+                "bill": "Rachunek",
+                "category": "Kategoria",
+                "period": "Okres",
+                "due_date": "Termin płatności",
+                "amount": "Kwota",
+                "currency": "Waluta",
+                "status": "Status",
+                "paid_amount": "Kwota zapłacona",
+                "paid_at": "Data zapłaty",
+                "notes": "Notatki"
+            }
         },
         "emailNotifications": {
             "title": "Powiadomienia e-mail",

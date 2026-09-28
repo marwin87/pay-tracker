@@ -36,7 +36,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Browser notifications** — optional. Get a desktop/mobile notification when a bill is due today (Settings → Browser Notifications).
 - **Email sent indicator** — each payment row shows an `@` icon: gray if no reminder has been sent, amber if one was sent. Click it to see the exact timestamp.
 - **Telegram reminders** — optional. Per-user bot token and chat ID, own schedule and monthly summary, independent of email. See `context/foundation/telegram-setup.md`.
-- **Export & backup** — download payment history as `.xlsx` (one sheet per month) or a JSON backup where you choose what to include (bills & payments, custom categories, email setup, Telegram, languages, default currency; select/deselect all). Restore applies whatever the file contains.
+- **Export & backup** — download payment history as `.xlsx` (one sheet per month) or a JSON backup where you choose what to include (bills & payments, custom categories, email setup, Telegram, languages, default currency, Excel export settings; select/deselect all). Restore applies whatever the file contains. Excel export itself can be turned off, and which of its 10 columns are included is configurable, from Settings → Export.
 - **Restore safety net** — before confirming a restore, see a comparison of your current data vs. the backup file (bill/payment counts, backup export date), with a warning if the backup would reduce your data. The server also auto-snapshots your current data immediately before any restore executes, so a mistaken restore can be undone from Settings — even if you proceeded past the warning or called the API directly.
 - **Password reset** — optional. When SMTP is configured, a "Forgot password?" link appears on the login page. Users receive a secure one-time reset link by email (expires after 60 minutes by default).
 - **Multilingual** — English, Polish, German, Spanish, Italian, French, Chinese. Language and the set of enabled languages are saved per account.
@@ -182,9 +182,9 @@ Requires HTTPS in production. Localhost works as an exception in most browsers.
 
 ## 💾 Export & backup
 
-- **XLSX** — Payments page → Export Excel. One sheet per month, all columns.
-- **JSON backup** — Settings → Data → Download Backup. Tick the sections to include (bills & payments, custom categories, email notification setup, Telegram, language settings, default currency) or use select/deselect all. Scoped to your account. The Telegram option writes the bot token in plaintext, so keep such files private.
-- **Restore** — Settings → Restore from Backup. Shows a comparison of your current data vs. the backup (bill/payment counts, export date) before you confirm, then atomically replaces the data the file contains — sections missing from the file (e.g. a currency-only backup) are left untouched. Accepts `schema_version` 2–5.
+- **XLSX** — Payments page → Export Excel. One sheet per month; which of the 10 columns are included, and whether the button is available at all, is configured in Settings → Export (4 columns — Bill, Due Date, Amount, Currency — are always required).
+- **JSON backup** — Settings → Backup & Restore → Download Backup. Tick the sections to include (bills & payments, custom categories, email notification setup, Telegram, language settings, default currency, Excel export settings) or use select/deselect all. Scoped to your account. The Telegram option writes the bot token in plaintext, so keep such files private.
+- **Restore** — Settings → Backup & Restore → Restore from Backup. Shows a comparison of your current data vs. the backup (bill/payment counts, export date) before you confirm, then atomically replaces the data the file contains — sections missing from the file (e.g. a currency-only backup) are left untouched. Accepts `schema_version` 2–7.
 - **Undo a restore** — every restore automatically snapshots your prior data server-side first (skipped if you had no existing bills). If a restore turns out to be a mistake, Settings → Restore shows a "Restore This Snapshot" option with the snapshot's timestamp, letting you revert. Snapshots are kept for `RESTORE_SNAPSHOT_RETENTION_DAYS` (default 7) and only the single most recent one is retained per account.
 
 

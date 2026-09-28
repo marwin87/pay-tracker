@@ -95,6 +95,14 @@ class User(Base):
     browser_notifications_enabled: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
     )
+    export_enabled: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=True, server_default="true"
+    )
+    export_fields: Mapped[list[str]] = mapped_column(
+        ARRAY(String(20)),
+        nullable=False,
+        server_default="{bill,category,period,due_date,amount,currency,status,paid_amount,paid_at,notes}",
+    )
     telegram_chat_id: Mapped[str | None] = mapped_column(
         String(32), nullable=True, default=None
     )

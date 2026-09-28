@@ -9,6 +9,7 @@ Notable changes to Pay Tracker, release by release.
 - Decimal separator preference (period or comma) for displayed prices
 - Excel export amounts follow the chosen decimal separator
 - XLSX export opens on the current month, auto-sizes columns, colors Status and Category
+- Export configuration: enable/disable Excel export and choose which columns to include
 - Search bills and payments by name on Payments, Bills, and Archived Bills
 - Keyboard navigation for dropdowns and the category filter checklist
 - Unpaid payments' due date can be edited per instance

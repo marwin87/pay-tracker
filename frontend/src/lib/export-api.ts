@@ -10,6 +10,7 @@ export const BACKUP_SECTIONS = [
   "telegram",
   "languages",
   "currency",
+  "export",
 ] as const;
 export type BackupSection = (typeof BACKUP_SECTIONS)[number];
 

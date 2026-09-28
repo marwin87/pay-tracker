@@ -3,7 +3,11 @@ from decimal import Decimal
 from typing import Literal
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 from app.models.bill import BillFrequency, PaymentStatus
-from app.schemas.auth import normalize_bot_token, normalize_chat_id
+from app.schemas.auth import (
+    normalize_bot_token,
+    normalize_chat_id,
+    validate_export_fields,
+)
 from app.schemas.category import CategoryOut
 
 _PERIOD_RE = r"^\d{4}-(0[1-9]|1[0-2])$"
@@ -244,6 +248,8 @@ class BackupPreferences(BaseModel):
     enabled_languages: list[str] | None = None
     default_currency: str | None = Field(default=None, max_length=10)
     decimal_separator: Literal[".", ","] | None = None
+    export_enabled: bool | None = None
+    export_fields: list[str] | None = None
 
     @field_validator("enabled_languages")
     @classmethod
@@ -251,6 +257,11 @@ class BackupPreferences(BaseModel):
         if v is not None and (not v or any(not x or len(x) > 5 for x in v)):
             raise ValueError("enabled_languages must be non-empty language codes")
         return v
+
+    @field_validator("export_fields")
+    @classmethod
+    def _export_fields(cls, v: list[str] | None) -> list[str] | None:
+        return validate_export_fields(v)
 
 
 class BackupPayload(BaseModel):

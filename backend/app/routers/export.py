@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
+from app.schemas.auth import EXPORT_FIELD_KEYS
 from app.models.bill import (
     BillFrequency,
     BillTemplate,
@@ -41,7 +42,9 @@ from app.services.recurrence import backfill_template_instances
 router = APIRouter(prefix="/export", tags=["export"])
 
 
-Section = Literal["bills", "categories", "email", "telegram", "languages", "currency"]
+Section = Literal[
+    "bills", "categories", "email", "telegram", "languages", "currency", "export"
+]
 ALL_SECTIONS: tuple[Section, ...] = (
     "bills",
     "categories",
@@ -49,6 +52,7 @@ ALL_SECTIONS: tuple[Section, ...] = (
     "telegram",
     "languages",
     "currency",
+    "export",
 )
 
 
@@ -110,6 +114,10 @@ _COLUMNS = [
     "Notes",
 ]
 
+# Index-aligned with _COLUMNS: EXPORT_FIELD_KEYS[i] is the stable identifier for
+# _COLUMNS[i], stored on User.export_fields (snake_case, locale-independent).
+_COLUMN_KEYS = list(EXPORT_FIELD_KEYS)
+
 # Mirrors the per-language dicts already established in
 # app/services/reminder_job.py for outbound emails.
 _COLUMN_LABELS: dict[str, list[str]] = {
@@ -154,8 +162,6 @@ _STATUS_STYLES: dict[str, tuple[str, str]] = {
 }
 _HEADER_FILL = PatternFill("solid", fgColor="F3F4F6")  # gray-100
 _HEADER_FONT = Font(bold=True)
-_STATUS_COL_IDX = _COLUMNS.index("Status") + 1
-_CATEGORY_COL_IDX = _COLUMNS.index("Category") + 1
 _MAX_COL_WIDTH = 40
 
 # Amount/Paid Amount are written as Text cells (not Number) using the user's chosen
@@ -168,7 +174,6 @@ _MAX_COL_WIDTH = 40
 # working as Text; do not switch back without verifying in a real, non-US-locale
 # Excel first.
 _AMOUNT_TEXT_FORMAT = "@"
-_AMOUNT_COL_IDXS = {_COLUMNS.index("Amount") + 1, _COLUMNS.index("Paid Amount") + 1}
 
 # Mirrors CATEGORY_COLOR_BORDER's light-mode shades in frontend/src/lib/categories.ts —
 # a left-border accent instead of a full cell fill, so many categories don't turn
@@ -251,8 +256,16 @@ def export_xlsx(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
+    if not me.export_enabled:
+        raise HTTPException(status_code=403, detail="Excel export is disabled")
+
     if lang not in _COLUMN_LABELS:
         lang = "en"
+
+    selected_keys = set(me.export_fields)
+    selected_columns = [
+        col for key, col in zip(_COLUMN_KEYS, _COLUMNS) if key in selected_keys
+    ]
 
     _ensure_year_instances(db, me.id, year)
 
@@ -294,16 +307,31 @@ def export_xlsx(
             }
         )
 
-    headers = _COLUMN_LABELS[lang]
+    all_headers = _COLUMN_LABELS[lang]
+    headers = [h for col, h in zip(_COLUMNS, all_headers) if col in selected_columns]
+    status_col_idx = (
+        selected_columns.index("Status") + 1 if "Status" in selected_columns else None
+    )
+    category_col_idx = (
+        selected_columns.index("Category") + 1
+        if "Category" in selected_columns
+        else None
+    )
+    amount_col_idxs = {
+        selected_columns.index(c) + 1
+        for c in ("Amount", "Paid Amount")
+        if c in selected_columns
+    }
+
     buf = io.BytesIO()
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
         for month in range(1, 13):
             sheet_name = f"{_MONTH_ABBR[lang][month - 1]} {year}"
             rows = by_month[month]
             df = (
-                pd.DataFrame(rows, columns=_COLUMNS)
+                pd.DataFrame(rows, columns=selected_columns)
                 if rows
-                else pd.DataFrame(columns=_COLUMNS)
+                else pd.DataFrame(columns=selected_columns)
             )
             df.columns = headers
             df.to_excel(writer, index=False, sheet_name=sheet_name)
@@ -323,21 +351,23 @@ def export_xlsx(
                 )
 
             for row_idx, row in enumerate(rows, start=2):
-                fill_color, font_color = _STATUS_STYLES.get(
-                    row["_status_key"], (None, None)
-                )
-                if fill_color:
-                    cell = ws.cell(row=row_idx, column=_STATUS_COL_IDX)
-                    cell.fill = PatternFill("solid", fgColor=fill_color)
-                    cell.font = Font(color=font_color)
+                if status_col_idx is not None:
+                    fill_color, font_color = _STATUS_STYLES.get(
+                        row["_status_key"], (None, None)
+                    )
+                    if fill_color:
+                        cell = ws.cell(row=row_idx, column=status_col_idx)
+                        cell.fill = PatternFill("solid", fgColor=fill_color)
+                        cell.font = Font(color=font_color)
 
-                border_color = _CATEGORY_BORDER_HEX.get(
-                    row["_category_color"], _CATEGORY_BORDER_FALLBACK
-                )
-                cell = ws.cell(row=row_idx, column=_CATEGORY_COL_IDX)
-                cell.border = Border(left=Side(style="thick", color=border_color))
+                if category_col_idx is not None:
+                    border_color = _CATEGORY_BORDER_HEX.get(
+                        row["_category_color"], _CATEGORY_BORDER_FALLBACK
+                    )
+                    cell = ws.cell(row=row_idx, column=category_col_idx)
+                    cell.border = Border(left=Side(style="thick", color=border_color))
 
-                for amount_col_idx in _AMOUNT_COL_IDXS:
+                for amount_col_idx in amount_col_idxs:
                     ws.cell(row=row_idx, column=amount_col_idx).number_format = (
                         _AMOUNT_TEXT_FORMAT
                     )
@@ -410,6 +440,9 @@ def _build_backup_arrays(
     if "currency" in sections:
         prefs["default_currency"] = user.default_currency
         prefs["decimal_separator"] = user.decimal_separator
+    if "export" in sections:
+        prefs["export_enabled"] = user.export_enabled
+        prefs["export_fields"] = list(user.export_fields)
     if prefs:
         out["preferences"] = prefs
 
@@ -491,7 +524,7 @@ def export_json(
     me: User = Depends(current_user),
 ):
     payload = {
-        "schema_version": 6,
+        "schema_version": 7,
         "exported_by": me.email,
         "exported_at": datetime.now(timezone.utc).isoformat(),
         **_build_backup_arrays(db, me.id, sections),
@@ -684,6 +717,10 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
                 user.default_currency = p.default_currency
             if p.decimal_separator is not None:
                 user.decimal_separator = p.decimal_separator
+            if p.export_enabled is not None:
+                user.export_enabled = p.export_enabled
+            if p.export_fields is not None:
+                user.export_fields = p.export_fields
             if (
                 user.language_preference
                 and user.language_preference not in user.enabled_languages
@@ -714,7 +751,7 @@ def restore_json(
     except json.JSONDecodeError:
         raise HTTPException(status_code=422, detail="Invalid JSON")
 
-    if raw.get("schema_version") not in {2, 3, 4, 5, 6}:
+    if raw.get("schema_version") not in {2, 3, 4, 5, 6, 7}:
         raise HTTPException(status_code=422, detail="Unsupported schema version")
 
     try:
@@ -739,7 +776,7 @@ def restore_json(
     )
     if has_existing_bills and backup.bill_templates is not None:
         snapshot_payload = {
-            "schema_version": 6,
+            "schema_version": 7,
             **_build_backup_arrays(db, me.id),
         }
         db.query(RestoreSnapshot).filter(RestoreSnapshot.user_id == me.id).delete(

@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 
 // One color per Settings tab: every tile in a tab shares it, and the tab underline reuses it.
 // Exception: red is reserved for the Delete Account tile (destructive), never a tab color.
-export type TileColor = "blue" | "purple" | "yellow" | "green" | "orange" | "red";
+export type TileColor = "blue" | "purple" | "yellow" | "green" | "orange" | "teal" | "red";
 
 export const TILE_STYLES: Record<
   TileColor,
@@ -40,6 +40,12 @@ export const TILE_STYLES: Record<
     header: "bg-orange-50 dark:bg-orange-900/30",
     icon: "text-orange-500 dark:text-orange-400",
     tab: "border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-400",
+  },
+  teal: {
+    border: "border-teal-400 dark:border-teal-500",
+    header: "bg-teal-50 dark:bg-teal-900/30",
+    icon: "text-teal-600 dark:text-teal-400",
+    tab: "border-teal-600 text-teal-600 dark:border-teal-400 dark:text-teal-400",
   },
   red: {
     border: "border-red-400 dark:border-red-500",

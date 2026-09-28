@@ -1,6 +1,26 @@
 import { apiFetch } from "@/lib/api";
 import type { Locale } from "@/context/locale-context";
 
+export const EXPORT_FIELD_KEYS = [
+  "bill",
+  "category",
+  "period",
+  "due_date",
+  "amount",
+  "currency",
+  "status",
+  "paid_amount",
+  "paid_at",
+  "notes",
+] as const;
+export type ExportFieldKey = (typeof EXPORT_FIELD_KEYS)[number];
+export const MANDATORY_EXPORT_FIELDS: readonly ExportFieldKey[] = [
+  "bill",
+  "due_date",
+  "amount",
+  "currency",
+];
+
 export interface UserProfile {
   email: string;
   language_preference: Locale | null;
@@ -25,6 +45,8 @@ export interface UserProfile {
   telegram_send_minute: number;
   telegram_monthly_summary_enabled: boolean;
   browser_notifications_enabled: boolean;
+  export_enabled: boolean;
+  export_fields: ExportFieldKey[];
 }
 
 export function fetchMe(): Promise<UserProfile> {
@@ -55,6 +77,8 @@ export function updateMe(
       | "telegram_send_minute"
       | "telegram_monthly_summary_enabled"
       | "browser_notifications_enabled"
+      | "export_enabled"
+      | "export_fields"
     >
   > & { telegram_bot_token?: string }, // write-only; "" clears
 ): Promise<UserProfile> {

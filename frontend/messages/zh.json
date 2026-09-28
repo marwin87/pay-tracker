@@ -310,7 +310,8 @@
             "email": "电子邮件通知设置",
             "telegram": "Telegram（机器人令牌和提醒）",
             "languages": "语言设置",
-            "currency": "货币和数字格式"
+            "currency": "货币和数字格式",
+            "export": "Excel 导出设置"
         }
     },
     "SnapshotRecoverySection": {
@@ -350,7 +351,8 @@
             "preferences": "偏好设置",
             "notifications": "通知",
             "categories": "类别",
-            "data": "数据"
+            "export": "导出",
+            "data": "备份与恢复"
         },
         "unsavedTitle": "有未保存的更改",
         "unsavedDescription": "您有未保存的更改。是否在不保存的情况下离开？",
@@ -398,6 +400,25 @@
             "title": "语言",
             "description": "选择在语言切换器中显示的语言。",
             "activeSuffix": "（当前）"
+        },
+        "excelExport": {
+            "title": "Excel (XLSX)",
+            "description": "控制是否显示 Excel 导出按钮，以及导出包含哪些列。",
+            "toggleLabel": "启用 Excel 导出",
+            "fieldsHeading": "要包含的列",
+            "requiredSuffix": "（必需）",
+            "fields": {
+                "bill": "账单",
+                "category": "类别",
+                "period": "期间",
+                "due_date": "到期日",
+                "amount": "金额",
+                "currency": "货币",
+                "status": "状态",
+                "paid_amount": "已付金额",
+                "paid_at": "支付日期",
+                "notes": "备注"
+            }
         },
         "emailNotifications": {
             "title": "邮件通知",

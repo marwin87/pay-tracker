@@ -310,7 +310,8 @@
             "email": "Notifiche email",
             "telegram": "Telegram (token del bot e promemoria)",
             "languages": "Impostazioni lingua",
-            "currency": "Valuta e formato numerico"
+            "currency": "Valuta e formato numerico",
+            "export": "Impostazioni di esportazione Excel"
         }
     },
     "SnapshotRecoverySection": {
@@ -350,7 +351,8 @@
             "preferences": "Preferenze",
             "notifications": "Notifiche",
             "categories": "Categorie",
-            "data": "Dati"
+            "export": "Esportazione",
+            "data": "Backup e ripristino"
         },
         "unsavedTitle": "Modifiche non salvate",
         "unsavedDescription": "Hai modifiche non salvate. Uscire senza salvare?",
@@ -398,6 +400,25 @@
             "title": "Lingue",
             "description": "Scegli quali lingue compaiono nel selettore della lingua.",
             "activeSuffix": "(attuale)"
+        },
+        "excelExport": {
+            "title": "Excel (XLSX)",
+            "description": "Controlla se il pulsante di esportazione Excel è disponibile e quali colonne include.",
+            "toggleLabel": "Abilita esportazione Excel",
+            "fieldsHeading": "Colonne da includere",
+            "requiredSuffix": "(obbligatorio)",
+            "fields": {
+                "bill": "Fattura",
+                "category": "Categoria",
+                "period": "Periodo",
+                "due_date": "Scadenza",
+                "amount": "Importo",
+                "currency": "Valuta",
+                "status": "Stato",
+                "paid_amount": "Importo pagato",
+                "paid_at": "Data pagamento",
+                "notes": "Note"
+            }
         },
         "emailNotifications": {
             "title": "Notifiche via email",

@@ -310,7 +310,8 @@
             "email": "Email notification setup",
             "telegram": "Telegram (bot token & reminders)",
             "languages": "Language settings",
-            "currency": "Currency & number format"
+            "currency": "Currency & number format",
+            "export": "Excel export settings"
         }
     },
     "SnapshotRecoverySection": {
@@ -350,7 +351,8 @@
             "preferences": "Preferences",
             "notifications": "Notifications",
             "categories": "Categories",
-            "data": "Data"
+            "export": "Export",
+            "data": "Backup & Restore"
         },
         "unsavedTitle": "Unsaved changes",
         "unsavedDescription": "You have unsaved changes. Leave without saving?",
@@ -398,6 +400,25 @@
             "title": "Languages",
             "description": "Choose which languages appear in the language switcher.",
             "activeSuffix": "(current)"
+        },
+        "excelExport": {
+            "title": "Excel (XLSX)",
+            "description": "Control whether the Excel export button is available and which columns it includes.",
+            "toggleLabel": "Enable Excel export",
+            "fieldsHeading": "Columns to include",
+            "requiredSuffix": "(required)",
+            "fields": {
+                "bill": "Bill",
+                "category": "Category",
+                "period": "Period",
+                "due_date": "Due Date",
+                "amount": "Amount",
+                "currency": "Currency",
+                "status": "Status",
+                "paid_amount": "Paid Amount",
+                "paid_at": "Paid At",
+                "notes": "Notes"
+            }
         },
         "emailNotifications": {
             "title": "Email Notifications",

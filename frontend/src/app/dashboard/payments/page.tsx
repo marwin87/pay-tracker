@@ -17,6 +17,7 @@ import {
   type CategorySortOrder,
 } from "@/lib/categories";
 import { downloadXlsx } from "@/lib/export-api";
+import { fetchMe } from "@/lib/user-api";
 import { SessionExpiredError } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
 import PaymentsCalendar from "@/components/payments/PaymentsCalendar";
@@ -142,6 +143,7 @@ function PaymentsPageInner() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [xlsxLoadingYear, setXlsxLoadingYear] = useState<number | null>(null);
   const [xlsxError, setXlsxError] = useState<string | null>(null);
+  const [exportEnabled, setExportEnabled] = useState(true);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [calendarOpen, setCalendarOpen] = useState(() => {
     if (typeof window === "undefined") return true;
@@ -195,6 +197,18 @@ function PaymentsPageInner() {
       cancelled = true;
     };
   }, [selectedMonth, currentMonth, t]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchMe()
+      .then((profile) => {
+        if (!cancelled) setExportEnabled(profile.export_enabled);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function handleInstancePaid(updated: PaymentInstanceOut) {
     setInstances((prev) =>
@@ -396,26 +410,28 @@ function PaymentsPageInner() {
         </div>
 
         {/* Export */}
-        <div className="mt-4 flex items-center justify-end gap-3">
-          <button
-            onClick={() => handleExportXlsx(selectedYear)}
-            disabled={xlsxLoadingYear !== null}
-            className="group flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
-          >
-            {xlsxLoadingYear === selectedYear ? (
-              <Loader2 size={15} className="animate-spin text-green-600 dark:text-emerald-400" />
-            ) : (
-              <Download size={15} className="transition-transform group-hover:-translate-y-0.5" />
+        {exportEnabled && (
+          <div className="mt-4 flex items-center justify-end gap-3">
+            <button
+              onClick={() => handleExportXlsx(selectedYear)}
+              disabled={xlsxLoadingYear !== null}
+              className="group flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+            >
+              {xlsxLoadingYear === selectedYear ? (
+                <Loader2 size={15} className="animate-spin text-green-600 dark:text-emerald-400" />
+              ) : (
+                <Download size={15} className="transition-transform group-hover:-translate-y-0.5" />
+              )}
+              {xlsxLoadingYear === selectedYear ? t("exportXlsxLoading") : t("exportXlsx")}
+              <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:bg-slate-700 dark:text-slate-500">
+                {selectedYear}
+              </span>
+            </button>
+            {xlsxError && (
+              <p className="text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
             )}
-            {xlsxLoadingYear === selectedYear ? t("exportXlsxLoading") : t("exportXlsx")}
-            <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:bg-slate-700 dark:text-slate-500">
-              {selectedYear}
-            </span>
-          </button>
-          {xlsxError && (
-            <p className="text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Calendar view */}
         <div className="mt-4">

@@ -310,7 +310,8 @@
             "email": "E-Mail-Benachrichtigungen",
             "telegram": "Telegram (Bot-Token & Erinnerungen)",
             "languages": "Spracheinstellungen",
-            "currency": "Währung & Zahlenformat"
+            "currency": "Währung & Zahlenformat",
+            "export": "Excel-Export-Einstellungen"
         }
     },
     "SnapshotRecoverySection": {
@@ -350,7 +351,8 @@
             "preferences": "Einstellungen",
             "notifications": "Benachrichtigungen",
             "categories": "Kategorien",
-            "data": "Daten"
+            "export": "Export",
+            "data": "Sicherung & Wiederherstellung"
         },
         "unsavedTitle": "Nicht gespeicherte Änderungen",
         "unsavedDescription": "Sie haben nicht gespeicherte Änderungen. Ohne Speichern verlassen?",
@@ -398,6 +400,25 @@
             "title": "Sprachen",
             "description": "Wähle, welche Sprachen im Sprachumschalter verfügbar sein sollen.",
             "activeSuffix": "(aktuell)"
+        },
+        "excelExport": {
+            "title": "Excel (XLSX)",
+            "description": "Steuere, ob die Excel-Export-Schaltfläche verfügbar ist und welche Spalten enthalten sind.",
+            "toggleLabel": "Excel-Export aktivieren",
+            "fieldsHeading": "Einzuschließende Spalten",
+            "requiredSuffix": "(erforderlich)",
+            "fields": {
+                "bill": "Rechnung",
+                "category": "Kategorie",
+                "period": "Zeitraum",
+                "due_date": "Fälligkeitsdatum",
+                "amount": "Betrag",
+                "currency": "Währung",
+                "status": "Status",
+                "paid_amount": "Bezahlter Betrag",
+                "paid_at": "Bezahlt am",
+                "notes": "Notizen"
+            }
         },
         "emailNotifications": {
             "title": "E-Mail-Benachrichtigungen",
