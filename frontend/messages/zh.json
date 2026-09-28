@@ -1,9 +1,13 @@
 {
     "Auth": {
-        "loginSubtitle": "登录您的账户",
+        "loginSubtitle": "登录以继续使用 PayTracker",
+        "welcomeHeading": "欢迎回来 👋",
         "registerSubtitle": "创建您的账户",
+        "registerTagline": "开始用 PayTracker 追踪您的账单",
         "emailLabel": "邮箱",
+        "emailPlaceholder": "请输入邮箱",
         "passwordLabel": "密码",
+        "passwordPlaceholder": "请输入密码",
         "passwordHint": "至少 8 个字符",
         "passwordTooShort": "密码必须至少包含 8 个字符",
         "requiredField": "此字段为必填项。",
@@ -13,7 +17,7 @@
         "loginFailed": "登录失败",
         "sessionExpired": "您的会话已过期，请重新登录。",
         "noAccount": "还没有账户？",
-        "register": "注册",
+        "register": "创建账户",
         "createAccount": "创建账户",
         "creatingAccount": "正在创建账户…",
         "registrationFailed": "注册失败",

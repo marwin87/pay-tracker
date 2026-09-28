@@ -33,7 +33,7 @@ export function PasswordInput({ className = "", onChange, ...props }: PasswordIn
         title={label}
         className="absolute inset-y-0 right-0 flex w-10 items-center justify-center text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300"
       >
-        <Icon className="h-4 w-4" />
+        <Icon className="h-5 w-5" />
       </button>
       )}
     </div>
