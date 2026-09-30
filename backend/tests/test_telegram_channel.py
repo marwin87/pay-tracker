@@ -185,7 +185,15 @@ def test_summary_telegram_uses_coloured_icons(send) -> None:
     send_summary_telegram(
         url="tgram://x/y",
         month_label="2026-09",
-        paid_rows=[{"name": "Rent"}],
+        paid_rows=[
+            {
+                "name": "Rent",
+                "amount": Decimal("100.00"),
+                "paid_amount": Decimal("90.00"),
+                "currency": "PLN",
+            },
+            {"name": "Water", "amount": Decimal("0.00"), "currency": "PLN"},
+        ],
         unpaid_rows=[
             {
                 "name": "Gas",
@@ -203,9 +211,12 @@ def test_summary_telegram_uses_coloured_icons(send) -> None:
         language="en",
     )
     body = send.call_args.args[2]
-    assert body.startswith("\u200b\n✅ Rent")  # blank line under the title
+    assert body.startswith("\u200b\n❌ Gas")  # blank line under the title, unpaid first
     assert "❌ Gas — 45.00 EUR (2026-09-20)" in body
     assert "❌ Insurance (2026-09-25)" in body  # zero amount hidden
+    assert "✅ Rent — 90.00 PLN" in body  # actually paid, not expected
+    assert body.endswith("✅ Water")  # zero amount hidden
+    assert body.index("❌ Insurance") < body.index("✅ Rent")
 
 
 @patch("app.services.email.notify.send")

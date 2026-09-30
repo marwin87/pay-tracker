@@ -18,6 +18,8 @@ Notable changes to Pay Tracker, release by release.
 - Unpaid payments' due date can be edited per instance
 - Redesigned auth screens and a warmer, unified app look
 - Settings "send now" buttons: clearer labels, and sending reminders now no longer affects the schedule
+- Telegram monthly summary shows amounts (paid or due) and lists unpaid bills first
+- Icons on the Settings tabs and mobile sections
 
 ### Security
 

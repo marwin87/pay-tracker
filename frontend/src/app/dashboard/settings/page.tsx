@@ -1,8 +1,20 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { createElement, useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronRight, HardDriveDownload, HardDriveUpload, Trash2 } from "lucide-react";
+import {
+  Bell,
+  ChevronRight,
+  DatabaseBackup,
+  Download,
+  HardDriveDownload,
+  HardDriveUpload,
+  SlidersHorizontal,
+  Tags,
+  Trash2,
+  User,
+  type LucideIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { deleteAccount, fetchMe, UserProfile } from "@/lib/user-api";
 import { notifyAuthChange } from "@/lib/auth-store";
@@ -34,6 +46,19 @@ const TABS = [
   "data",
 ] as const;
 type TabKey = (typeof TABS)[number];
+
+const TAB_ICON: Record<TabKey, LucideIcon> = {
+  account: User,
+  preferences: SlidersHorizontal,
+  notifications: Bell,
+  categories: Tags,
+  export: Download,
+  data: DatabaseBackup,
+};
+
+// Grey while inactive; when active/expanded it inherits the tab's text color (currentColor).
+const tabIconClass = (active: boolean) =>
+  active ? "shrink-0" : "shrink-0 text-slate-400 dark:text-slate-500";
 
 // One color per tab; tiles inside a tab and the active-tab underline all use it.
 const TAB_COLOR: Record<TabKey, TileColor> = {
@@ -200,12 +225,13 @@ export default function SettingsPage() {
             aria-selected={activeTab === tab}
             aria-controls={`settings-panel-${tab}`}
             onClick={() => selectTab(tab)}
-            className={`whitespace-nowrap px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+            className={`flex items-center gap-2 whitespace-nowrap px-4 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
               activeTab === tab
                 ? TILE_STYLES[TAB_COLOR[tab]].tab
                 : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"
             }`}
           >
+            {createElement(TAB_ICON[tab], { size: 16, className: tabIconClass(activeTab === tab) })}
             {t(`tabs.${tab}`)}
           </button>
         ))}
@@ -224,7 +250,10 @@ export default function SettingsPage() {
             : "text-slate-600 dark:text-slate-300"
         }`}
       >
+        <span className="flex items-center gap-2">
+        <TAB_ICON.account size={16} className={tabIconClass(expandedMobile.has("account"))} />
         {t("tabs.account")}
+        </span>
         <ChevronRight
           size={16}
           className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
@@ -277,7 +306,10 @@ export default function SettingsPage() {
             : "text-slate-600 dark:text-slate-300"
         }`}
       >
+        <span className="flex items-center gap-2">
+        <TAB_ICON.preferences size={16} className={tabIconClass(expandedMobile.has("preferences"))} />
         {t("tabs.preferences")}
+        </span>
         <ChevronRight
           size={16}
           className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
@@ -315,7 +347,10 @@ export default function SettingsPage() {
             : "text-slate-600 dark:text-slate-300"
         }`}
       >
+        <span className="flex items-center gap-2">
+        <TAB_ICON.notifications size={16} className={tabIconClass(expandedMobile.has("notifications"))} />
         {t("tabs.notifications")}
+        </span>
         <ChevronRight
           size={16}
           className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
@@ -362,7 +397,10 @@ export default function SettingsPage() {
             : "text-slate-600 dark:text-slate-300"
         }`}
       >
+        <span className="flex items-center gap-2">
+        <TAB_ICON.categories size={16} className={tabIconClass(expandedMobile.has("categories"))} />
         {t("tabs.categories")}
+        </span>
         <ChevronRight
           size={16}
           className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
@@ -393,7 +431,10 @@ export default function SettingsPage() {
             : "text-slate-600 dark:text-slate-300"
         }`}
       >
+        <span className="flex items-center gap-2">
+        <TAB_ICON.export size={16} className={tabIconClass(expandedMobile.has("export"))} />
         {t("tabs.export")}
+        </span>
         <ChevronRight
           size={16}
           className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
@@ -424,7 +465,10 @@ export default function SettingsPage() {
             : "text-slate-600 dark:text-slate-300"
         }`}
       >
+        <span className="flex items-center gap-2">
+        <TAB_ICON.data size={16} className={tabIconClass(expandedMobile.has("data"))} />
         {t("tabs.data")}
+        </span>
         <ChevronRight
           size={16}
           className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
