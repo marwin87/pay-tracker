@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ChevronsUpDown, Download, Loader2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsUpDown, Download, Loader2, Share2 } from "lucide-react";
 import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
@@ -19,10 +19,11 @@ import {
 import Dropdown from "@/components/ui/Dropdown";
 import { downloadXlsx } from "@/lib/export-api";
 import { fetchMe } from "@/lib/user-api";
-import { SessionExpiredError } from "@/lib/api";
+import { SessionExpiredError, apiFetch } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
 import PaymentsCalendar from "@/components/payments/PaymentsCalendar";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
+import ShareMonthDialog from "@/components/payments/ShareMonthDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
 import RevertPaymentDialog from "@/components/payments/RevertPaymentDialog";
 import FilterSelect from "@/components/FilterSelect";
@@ -147,6 +148,9 @@ function PaymentsPageInner() {
   const [xlsxLoading, setXlsxLoading] = useState(false);
   const [xlsxError, setXlsxError] = useState<string | null>(null);
   const [exportEnabled, setExportEnabled] = useState(true);
+  const [shareAvailable, setShareAvailable] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [shareSent, setShareSent] = useState(false);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
   const [calendarOpen, setCalendarOpen] = useState(() => {
     if (typeof window === "undefined") return true;
@@ -205,7 +209,12 @@ function PaymentsPageInner() {
     let cancelled = false;
     fetchMe()
       .then((profile) => {
-        if (!cancelled) setExportEnabled(profile.export_enabled);
+        if (cancelled) return;
+        setExportEnabled(profile.export_enabled);
+        if (!profile.share_enabled) return;
+        return apiFetch<{ configured: boolean }>("/auth/smtp-status").then((d) => {
+          if (!cancelled) setShareAvailable(d?.configured ?? false);
+        });
       })
       .catch(() => {});
     return () => {
@@ -240,6 +249,13 @@ function PaymentsPageInner() {
   }
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
+
+  // Moving the year keeps the same month, so the list, export and share follow the header.
+  function changeYear(delta: number) {
+    const year = selectedYear + delta;
+    setSelectedYear(year);
+    setSelectedMonth(monthKey(year, Number(selectedMonth.slice(5, 7)) - 1));
+  }
 
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
@@ -361,7 +377,8 @@ function PaymentsPageInner() {
         {/* Year navigation */}
         <div className="flex items-center gap-1 mb-3">
           <button
-            onClick={() => setSelectedYear((y) => y - 1)}
+            onClick={() => changeYear(-1)}
+            aria-label={t("previousYear")}
             disabled={selectedYear <= currentYear - 2}
             className="rounded p-1 text-slate-400 hover:text-slate-600 disabled:opacity-30 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
           >
@@ -371,7 +388,8 @@ function PaymentsPageInner() {
             {selectedYear}
           </span>
           <button
-            onClick={() => setSelectedYear((y) => y + 1)}
+            onClick={() => changeYear(1)}
+            aria-label={t("nextYear")}
             disabled={selectedYear >= currentYear + 1}
             className="rounded p-1 text-slate-400 hover:text-slate-600 disabled:opacity-30 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
           >
@@ -417,8 +435,28 @@ function PaymentsPageInner() {
         </div>
 
         {/* Export */}
-        {exportEnabled && (
+        {(exportEnabled || shareAvailable) && (
           <div className="mt-4 flex items-center justify-end gap-3">
+            {shareSent && (
+              <p role="status" className="text-sm text-green-600 dark:text-emerald-400">
+                {t("shareSent")}
+              </p>
+            )}
+            {shareAvailable && (
+              <button
+                type="button"
+                onClick={() => {
+                  setShareSent(false);
+                  setShareOpen(true);
+                }}
+                aria-label={t("shareMonth")}
+                title={t("shareMonth")}
+                className="flex items-center rounded-lg border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-400"
+              >
+                <Share2 size={14} />
+              </button>
+            )}
+            {exportEnabled && (
             <Dropdown<ExportScope | "">
               variant="pill-sm"
               align="right"
@@ -450,10 +488,25 @@ function PaymentsPageInner() {
                 { value: "year", label: t("exportXlsxYear", { year: selectedYear }) },
               ]}
             />
+            )}
             {xlsxError && (
               <p className="text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
             )}
           </div>
+        )}
+
+        {shareOpen && (
+          <ShareMonthDialog
+            month={selectedMonth}
+            monthLabel={new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
+              new Date(Number(selectedMonth.slice(0, 4)), Number(selectedMonth.slice(5, 7)) - 1),
+            )}
+            onClose={() => setShareOpen(false)}
+            onSent={() => {
+              setShareOpen(false);
+              setShareSent(true);
+            }}
+          />
         )}
 
         {/* Calendar view */}

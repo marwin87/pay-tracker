@@ -219,7 +219,11 @@
         "summaryOverdue": "已逾期",
         "summaryPaid": "已付款",
         "calendarTitle": "日历",
-        "clearDayFilter": "清除"
+        "clearDayFilter": "清除",
+        "shareMonth": "通过邮件分享",
+        "shareSent": "月度汇总已发送",
+        "previousYear": "上一年",
+        "nextYear": "下一年"
     },
     "PaymentRow": {
         "status": {
@@ -313,7 +317,7 @@
             "telegram": "Telegram（机器人令牌和提醒）",
             "languages": "语言设置",
             "currency": "货币和数字格式",
-            "export": "Excel 导出设置"
+            "export": "Excel 导出与分享设置"
         }
     },
     "SnapshotRecoverySection": {
@@ -353,7 +357,7 @@
             "preferences": "偏好设置",
             "notifications": "通知",
             "categories": "类别",
-            "export": "导出",
+            "reports": "报表",
             "data": "备份与恢复"
         },
         "unsavedTitle": "有未保存的更改",
@@ -505,6 +509,11 @@
             "addNew": "添加类别",
             "newColorsLabel": "新颜色",
             "usedColorsLabel": "已用颜色"
+        },
+        "shareByEmail": {
+            "title": "通过邮件分享月份",
+            "description": "在付款页面添加分享按钮，可将月度汇总发送到任意邮箱。需要已配置邮件。",
+            "toggleLabel": "启用邮件分享"
         }
     },
     "Categories": {
@@ -605,5 +614,15 @@
             "12": "12月"
         },
         "monthYear": "{year}年{month}"
+    },
+    "ShareMonthDialog": {
+        "title": "通过邮件分享",
+        "description": "将 {month} 的汇总发送到一个邮箱地址。",
+        "emailLabel": "邮箱地址",
+        "emailPlaceholder": "name@example.com",
+        "cancel": "取消",
+        "send": "发送",
+        "sending": "发送中…",
+        "failed": "无法发送邮件。"
     }
 }

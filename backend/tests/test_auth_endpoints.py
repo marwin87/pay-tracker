@@ -566,3 +566,63 @@ def test_new_user_has_all_notifications_disabled(client):
     ]
     assert len(flags) >= 13
     assert not [k for k in flags if me[k] is not False]
+
+
+# ---------------------------------------------------------------------------
+# POST /auth/share-month
+# ---------------------------------------------------------------------------
+
+_SHARE = {"email": "friend@gmail.com", "month": "2026-09"}
+
+
+def _share(client, token, body=None):
+    from unittest.mock import patch
+
+    with (
+        patch("app.routers.auth.settings") as mock_settings,
+        patch(
+            "app.routers.auth.send_monthly_summary_for_user", return_value=True
+        ) as mock_send,
+    ):
+        mock_settings.smtp_host = "smtp.test"
+        r = client.post("/auth/share-month", json=body or _SHARE, headers=auth(token))
+    return r, mock_send
+
+
+def test_share_month_requires_toggle(client):
+    tok = register_and_login(client, "share_off@test.com", _PASSWORD)
+    r, mock_send = _share(client, tok)
+    assert r.status_code == 403
+    mock_send.assert_not_called()
+
+
+def test_share_month_sends_to_given_address(client):
+    tok = register_and_login(client, "share_on@test.com", _PASSWORD)
+    client.patch("/auth/me", json={"share_enabled": True}, headers=auth(tok))
+    r, mock_send = _share(client, tok)
+    assert r.status_code == 200 and r.json()["sent"] is True
+    assert mock_send.call_args.args[-1] == "friend@gmail.com"
+    assert mock_send.call_args.args[2] == "2026-09"
+
+
+def test_share_month_validation_and_blocked_domain(client):
+    tok = register_and_login(client, "share_val@test.com", _PASSWORD)
+    client.patch("/auth/me", json={"share_enabled": True}, headers=auth(tok))
+    assert _share(client, tok, {**_SHARE, "email": "nope"})[0].status_code == 422
+    assert _share(client, tok, {**_SHARE, "month": "2026-13"})[0].status_code == 422
+    blocked = {**_SHARE, "email": "x@example.com"}
+    assert _share(client, tok, blocked)[0].status_code == 400
+
+
+def test_share_month_smtp_missing_and_rate_limit(client):
+    from app.routers.auth import _share_sent
+
+    _share_sent.clear()  # user ids are reused across tests
+    tok = register_and_login(client, "share_lim@test.com", _PASSWORD)
+    client.patch("/auth/me", json={"share_enabled": True}, headers=auth(tok))
+    with patch("app.routers.auth.settings") as mock_settings:
+        mock_settings.smtp_host = None
+        r = client.post("/auth/share-month", json=_SHARE, headers=auth(tok))
+    assert r.status_code == 400
+    codes = [_share(client, tok)[0].status_code for _ in range(11)]
+    assert codes[:10] == [200] * 10 and codes[10] == 429

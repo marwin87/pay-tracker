@@ -2,7 +2,13 @@
 
 Notable changes to Pay Tracker, release by release.
 
-## v1.2.0 (Not released yet)
+## v1.3.0 (Not released yet)
+
+### Features
+
+- Share the month summary by email (opt-in in the Settings Reports tab)
+
+## v1.2.0 — 30-09-2026
 
 ### License
 

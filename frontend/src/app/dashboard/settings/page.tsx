@@ -6,7 +6,7 @@ import {
   Bell,
   ChevronRight,
   DatabaseBackup,
-  Download,
+  FileText,
   HardDriveDownload,
   HardDriveUpload,
   SlidersHorizontal,
@@ -29,6 +29,7 @@ import { CurrencyTile } from "@/components/settings/CurrencyTile";
 import { DecimalSeparatorTile } from "@/components/settings/DecimalSeparatorTile";
 import { LanguagesTile } from "@/components/settings/LanguagesTile";
 import { ExportSettingsTile } from "@/components/settings/ExportSettingsTile";
+import { ShareSettingsTile } from "@/components/settings/ShareSettingsTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
 import { TelegramNotificationsTile } from "@/components/settings/TelegramNotificationsTile";
 import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificationsTile";
@@ -42,7 +43,7 @@ const TABS = [
   "preferences",
   "notifications",
   "categories",
-  "export",
+  "reports",
   "data",
 ] as const;
 type TabKey = (typeof TABS)[number];
@@ -52,7 +53,7 @@ const TAB_ICON: Record<TabKey, LucideIcon> = {
   preferences: SlidersHorizontal,
   notifications: Bell,
   categories: Tags,
-  export: Download,
+  reports: FileText,
   data: DatabaseBackup,
 };
 
@@ -66,7 +67,7 @@ const TAB_COLOR: Record<TabKey, TileColor> = {
   preferences: "purple",
   notifications: "yellow",
   categories: "green",
-  export: "teal",
+  reports: "teal",
   data: "orange",
 };
 
@@ -421,24 +422,24 @@ export default function SettingsPage() {
 
       <button
         type="button"
-        onClick={() => toggleMobileSection("export")}
-        aria-expanded={expandedMobile.has("export")}
+        onClick={() => toggleMobileSection("reports")}
+        aria-expanded={expandedMobile.has("reports")}
         aria-controls="settings-panel-export"
         id="settings-tab-export-mobile"
         className={`flex w-full items-center justify-between border-b border-slate-200 py-3 text-left text-sm font-semibold dark:border-slate-700 sm:hidden ${
-          expandedMobile.has("export")
-            ? TILE_STYLES[TAB_COLOR.export].icon
+          expandedMobile.has("reports")
+            ? TILE_STYLES[TAB_COLOR.reports].icon
             : "text-slate-600 dark:text-slate-300"
         }`}
       >
         <span className="flex items-center gap-2">
-        <TAB_ICON.export size={16} className={tabIconClass(expandedMobile.has("export"))} />
-        {t("tabs.export")}
+        <TAB_ICON.reports size={16} className={tabIconClass(expandedMobile.has("reports"))} />
+        {t("tabs.reports")}
         </span>
         <ChevronRight
           size={16}
           className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
-            expandedMobile.has("export") ? "rotate-90" : ""
+            expandedMobile.has("reports") ? "rotate-90" : ""
           }`}
         />
       </button>
@@ -446,11 +447,12 @@ export default function SettingsPage() {
         role="tabpanel"
         id="settings-panel-export"
         aria-labelledby="settings-tab-export settings-tab-export-mobile"
-        className={`space-y-4 ${expandedMobile.has("export") ? "block" : "hidden"} ${
-          activeTab === "export" ? "sm:block" : "sm:hidden"
+        className={`space-y-4 ${expandedMobile.has("reports") ? "block" : "hidden"} ${
+          activeTab === "reports" ? "sm:block" : "sm:hidden"
         }`}
       >
         <ExportSettingsTile profile={profile} onProfileUpdate={setProfile} t={t} />
+        <ShareSettingsTile profile={profile} onProfileUpdate={setProfile} t={t} />
       </div>
 
       <button

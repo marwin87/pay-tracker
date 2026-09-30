@@ -14,14 +14,14 @@ type State = "idle" | "confirming" | "downloading" | "warning" | "error";
 // settings-tab home of its own (it's the app's core content, not a preference) —
 // it groups under "data", the tab this Backup button itself lives on.
 const SECTION_GROUPS: {
-  tabKey: "data" | "preferences" | "notifications" | "categories" | "export";
+  tabKey: "data" | "preferences" | "notifications" | "categories" | "reports";
   sections: BackupSection[];
 }[] = [
   { tabKey: "data", sections: ["bills"] },
   { tabKey: "preferences", sections: ["currency", "languages"] },
   { tabKey: "notifications", sections: ["email", "telegram"] },
   { tabKey: "categories", sections: ["categories"] },
-  { tabKey: "export", sections: ["export"] },
+  { tabKey: "reports", sections: ["export"] },
 ];
 
 export default function BackupButton({ label }: { label?: string } = {}) {

@@ -89,6 +89,7 @@ Always use the shared `Tile` component (`frontend/src/components/settings/Tile.t
 | Preferences | `purple` |
 | Notifications | `yellow` |
 | Categories | `green` |
+| Reports | `teal` |
 | Data | `orange` |
 
 Sole exception: the Delete Account tile is always `red` (destructive), and `red` is never a tab color.

@@ -376,6 +376,7 @@ def _build_backup_arrays(
         prefs["decimal_separator"] = user.decimal_separator
     if "export" in sections:
         prefs["export_enabled"] = user.export_enabled
+        prefs["share_enabled"] = user.share_enabled
         prefs["export_fields"] = list(user.export_fields)
     if prefs:
         out["preferences"] = prefs
@@ -653,6 +654,8 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
                 user.decimal_separator = p.decimal_separator
             if p.export_enabled is not None:
                 user.export_enabled = p.export_enabled
+            if p.share_enabled is not None:
+                user.share_enabled = p.share_enabled
             if p.export_fields is not None:
                 user.export_fields = p.export_fields
             if (

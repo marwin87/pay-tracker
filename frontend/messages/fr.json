@@ -219,7 +219,11 @@
         "summaryOverdue": "en retard",
         "summaryPaid": "payées",
         "calendarTitle": "Calendrier",
-        "clearDayFilter": "Effacer"
+        "clearDayFilter": "Effacer",
+        "shareMonth": "Partager par e-mail",
+        "shareSent": "Résumé du mois envoyé",
+        "previousYear": "Année précédente",
+        "nextYear": "Année suivante"
     },
     "PaymentRow": {
         "status": {
@@ -313,7 +317,7 @@
             "telegram": "Telegram (jeton du bot et rappels)",
             "languages": "Paramètres de langue",
             "currency": "Devise et format numérique",
-            "export": "Paramètres d'export Excel"
+            "export": "Paramètres d'export Excel et de partage"
         }
     },
     "SnapshotRecoverySection": {
@@ -353,7 +357,7 @@
             "preferences": "Préférences",
             "notifications": "Notifications",
             "categories": "Catégories",
-            "export": "Export",
+            "reports": "Rapports",
             "data": "Sauvegarde et restauration"
         },
         "unsavedTitle": "Modifications non enregistrées",
@@ -505,6 +509,11 @@
             "addNew": "Ajouter une catégorie",
             "newColorsLabel": "Nouvelles couleurs",
             "usedColorsLabel": "Couleurs utilisées"
+        },
+        "shareByEmail": {
+            "title": "Partager le mois par e-mail",
+            "description": "Ajoute sur la page Paiements un bouton qui envoie le résumé du mois à n'importe quelle adresse. Nécessite un e-mail configuré.",
+            "toggleLabel": "Activer le partage par e-mail"
         }
     },
     "Categories": {
@@ -605,5 +614,15 @@
             "12": "décembre"
         },
         "monthYear": "{month} {year}"
+    },
+    "ShareMonthDialog": {
+        "title": "Partager par e-mail",
+        "description": "Envoyer le résumé de {month} à une adresse e-mail.",
+        "emailLabel": "Adresse e-mail",
+        "emailPlaceholder": "nom@example.com",
+        "cancel": "Annuler",
+        "send": "Envoyer",
+        "sending": "Envoi…",
+        "failed": "Impossible d'envoyer l'e-mail."
     }
 }

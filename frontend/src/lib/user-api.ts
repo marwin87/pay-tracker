@@ -46,6 +46,7 @@ export interface UserProfile {
   telegram_monthly_summary_enabled: boolean;
   browser_notifications_enabled: boolean;
   export_enabled: boolean;
+  share_enabled: boolean;
   export_fields: ExportFieldKey[];
 }
 
@@ -78,6 +79,7 @@ export function updateMe(
       | "telegram_monthly_summary_enabled"
       | "browser_notifications_enabled"
       | "export_enabled"
+      | "share_enabled"
       | "export_fields"
     >
   > & { telegram_bot_token?: string }, // write-only; "" clears
@@ -114,6 +116,16 @@ export function sendMonthlySummaryNow(
 ): Promise<{ sent: boolean }> {
   return apiFetch<{ sent: boolean }>(`/auth/send-monthly-summary-now?channel=${channel}`, {
     method: "POST",
+  });
+}
+
+export function shareMonthByEmail(
+  email: string,
+  month: string,
+): Promise<{ sent: boolean }> {
+  return apiFetch<{ sent: boolean }>("/auth/share-month", {
+    method: "POST",
+    body: JSON.stringify({ email, month }),
   });
 }
 

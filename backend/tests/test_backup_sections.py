@@ -86,6 +86,7 @@ def test_export_default_is_full(client):
         "default_currency": "EUR",
         "decimal_separator": ".",
         "export_enabled": True,
+        "share_enabled": False,
         "export_fields": [
             "bill",
             "category",
@@ -124,6 +125,7 @@ def test_export_prefs_sections_are_independent(client):
     }
     assert set(_export(client, tok, ["export"])["preferences"]) == {
         "export_enabled",
+        "share_enabled",
         "export_fields",
     }
 
@@ -288,3 +290,16 @@ def test_snapshot_undo_restores_preferences(client):
     assert me["default_currency"] == "EUR"
     assert me["decimal_separator"] == "."
     assert len(_bills(client, tok)) == 1
+
+
+def test_share_enabled_round_trip_and_old_backup_leaves_it(client):
+    tok = register_and_login(client, "share@test.com")
+    client.patch("/auth/me", json={"share_enabled": True}, headers=auth(tok))
+    backup = _export(client, tok, ["export"])
+    assert backup["preferences"]["share_enabled"] is True
+    client.patch("/auth/me", json={"share_enabled": False}, headers=auth(tok))
+    assert _upload(client, tok, backup).status_code == 200
+    assert _me(client, tok)["share_enabled"] is True
+    old = {"schema_version": 6, "preferences": {"decimal_separator": ","}}
+    assert _upload(client, tok, old).status_code == 200
+    assert _me(client, tok)["share_enabled"] is True

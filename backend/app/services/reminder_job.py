@@ -89,10 +89,19 @@ def _month_label(month: str, lang: str) -> str:
 
 
 def send_monthly_summary_for_user(
-    db: Session, user: User, month: str, channel: Channel = EMAIL
+    db: Session,
+    user: User,
+    month: str,
+    channel: Channel = EMAIL,
+    to_addr: str | None = None,
 ) -> bool:
-    """Send the monthly summary on one channel. Returns True on success."""
+    """Send the monthly summary on one channel. Returns True on success.
+
+    ``to_addr`` redirects an email summary to another recipient (share feature).
+    """
     if not channel_available(user, channel):
+        return False
+    if to_addr and _is_blocked_domain(to_addr):
         return False
     lang = user.language_preference or "en"
     instances = (
@@ -159,7 +168,7 @@ def send_monthly_summary_for_user(
                 ),
                 smtp_use_tls=settings.smtp_use_tls,
                 from_addr=settings.reminder_from or settings.smtp_user or "",
-                to_addr=user.email,
+                to_addr=to_addr or user.email,
                 month_label=month_label,
                 paid_rows=paid_rows,
                 unpaid_rows=unpaid_rows,

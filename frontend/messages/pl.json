@@ -219,7 +219,11 @@
         "summaryOverdue": "zaległe",
         "summaryPaid": "opłacone",
         "calendarTitle": "Kalendarz",
-        "clearDayFilter": "Wyczyść"
+        "clearDayFilter": "Wyczyść",
+        "shareMonth": "Udostępnij e-mailem",
+        "shareSent": "Podsumowanie miesiąca wysłane",
+        "previousYear": "Poprzedni rok",
+        "nextYear": "Następny rok"
     },
     "PaymentRow": {
         "status": {
@@ -313,7 +317,7 @@
             "telegram": "Telegram (token bota i przypomnienia)",
             "languages": "Ustawienia języków",
             "currency": "Waluta i format liczb",
-            "export": "Ustawienia eksportu do Excela"
+            "export": "Ustawienia eksportu do Excela i udostępniania"
         }
     },
     "SnapshotRecoverySection": {
@@ -353,7 +357,7 @@
             "preferences": "Preferencje",
             "notifications": "Powiadomienia",
             "categories": "Kategorie",
-            "export": "Eksport",
+            "reports": "Raporty",
             "data": "Kopia zapasowa i przywracanie"
         },
         "unsavedTitle": "Niezapisane zmiany",
@@ -505,6 +509,11 @@
             "addNew": "Dodaj kategorię",
             "newColorsLabel": "Nowe kolory",
             "usedColorsLabel": "Użyte kolory"
+        },
+        "shareByEmail": {
+            "title": "Udostępnianie miesiąca e-mailem",
+            "description": "Dodaje na stronie Płatności przycisk wysyłający podsumowanie miesiąca na dowolny adres e-mail. Wymaga skonfigurowanego e-maila.",
+            "toggleLabel": "Włącz udostępnianie e-mailem"
         }
     },
     "Categories": {
@@ -605,5 +614,15 @@
             "12": "grudzień"
         },
         "monthYear": "{month} {year}"
+    },
+    "ShareMonthDialog": {
+        "title": "Udostępnij e-mailem",
+        "description": "Wyślij podsumowanie miesiąca {month} na adres e-mail.",
+        "emailLabel": "Adres e-mail",
+        "emailPlaceholder": "imie@example.com",
+        "cancel": "Anuluj",
+        "send": "Wyślij",
+        "sending": "Wysyłanie…",
+        "failed": "Nie udało się wysłać e-maila."
     }
 }

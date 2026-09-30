@@ -219,7 +219,11 @@
         "summaryOverdue": "vencidos",
         "summaryPaid": "pagados",
         "calendarTitle": "Calendario",
-        "clearDayFilter": "Borrar"
+        "clearDayFilter": "Borrar",
+        "shareMonth": "Compartir por correo",
+        "shareSent": "Resumen del mes enviado",
+        "previousYear": "Año anterior",
+        "nextYear": "Año siguiente"
     },
     "PaymentRow": {
         "status": {
@@ -313,7 +317,7 @@
             "telegram": "Telegram (token del bot y recordatorios)",
             "languages": "Ajustes de idioma",
             "currency": "Moneda y formato numérico",
-            "export": "Ajustes de exportación a Excel"
+            "export": "Ajustes de exportación a Excel y compartir"
         }
     },
     "SnapshotRecoverySection": {
@@ -353,7 +357,7 @@
             "preferences": "Preferencias",
             "notifications": "Notificaciones",
             "categories": "Categorías",
-            "export": "Exportación",
+            "reports": "Informes",
             "data": "Copia de seguridad y restauración"
         },
         "unsavedTitle": "Cambios sin guardar",
@@ -505,6 +509,11 @@
             "addNew": "Añadir categoría",
             "newColorsLabel": "Colores nuevos",
             "usedColorsLabel": "Colores usados"
+        },
+        "shareByEmail": {
+            "title": "Compartir el mes por correo",
+            "description": "Añade en la página de Pagos un botón que envía el resumen del mes a cualquier dirección. Requiere el correo configurado.",
+            "toggleLabel": "Activar compartir por correo"
         }
     },
     "Categories": {
@@ -605,5 +614,15 @@
             "12": "diciembre"
         },
         "monthYear": "{month} {year}"
+    },
+    "ShareMonthDialog": {
+        "title": "Compartir por correo",
+        "description": "Envía el resumen de {month} a una dirección de correo.",
+        "emailLabel": "Dirección de correo",
+        "emailPlaceholder": "nombre@example.com",
+        "cancel": "Cancelar",
+        "send": "Enviar",
+        "sending": "Enviando…",
+        "failed": "No se pudo enviar el correo."
     }
 }

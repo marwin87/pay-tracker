@@ -249,6 +249,7 @@ class BackupPreferences(BaseModel):
     default_currency: str | None = Field(default=None, max_length=10)
     decimal_separator: Literal[".", ","] | None = None
     export_enabled: bool | None = None
+    share_enabled: bool | None = None
     export_fields: list[str] | None = None
 
     @field_validator("enabled_languages")

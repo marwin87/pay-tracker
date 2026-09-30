@@ -219,7 +219,11 @@
         "summaryOverdue": "scadute",
         "summaryPaid": "pagate",
         "calendarTitle": "Calendario",
-        "clearDayFilter": "Cancella"
+        "clearDayFilter": "Cancella",
+        "shareMonth": "Condividi via e-mail",
+        "shareSent": "Riepilogo del mese inviato",
+        "previousYear": "Anno precedente",
+        "nextYear": "Anno successivo"
     },
     "PaymentRow": {
         "status": {
@@ -313,7 +317,7 @@
             "telegram": "Telegram (token del bot e promemoria)",
             "languages": "Impostazioni lingua",
             "currency": "Valuta e formato numerico",
-            "export": "Impostazioni di esportazione Excel"
+            "export": "Impostazioni di esportazione Excel e condivisione"
         }
     },
     "SnapshotRecoverySection": {
@@ -353,7 +357,7 @@
             "preferences": "Preferenze",
             "notifications": "Notifiche",
             "categories": "Categorie",
-            "export": "Esportazione",
+            "reports": "Report",
             "data": "Backup e ripristino"
         },
         "unsavedTitle": "Modifiche non salvate",
@@ -505,6 +509,11 @@
             "addNew": "Aggiungi categoria",
             "newColorsLabel": "Nuovi colori",
             "usedColorsLabel": "Colori già usati"
+        },
+        "shareByEmail": {
+            "title": "Condividi il mese via e-mail",
+            "description": "Aggiunge nella pagina Pagamenti un pulsante che invia il riepilogo del mese a qualsiasi indirizzo. Richiede l'e-mail configurata.",
+            "toggleLabel": "Attiva la condivisione via e-mail"
         }
     },
     "Categories": {
@@ -605,5 +614,15 @@
             "12": "dicembre"
         },
         "monthYear": "{month} {year}"
+    },
+    "ShareMonthDialog": {
+        "title": "Condividi via e-mail",
+        "description": "Invia il riepilogo di {month} a un indirizzo e-mail.",
+        "emailLabel": "Indirizzo e-mail",
+        "emailPlaceholder": "nome@example.com",
+        "cancel": "Annulla",
+        "send": "Invia",
+        "sending": "Invio…",
+        "failed": "Impossibile inviare l'e-mail."
     }
 }

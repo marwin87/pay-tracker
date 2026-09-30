@@ -56,6 +56,10 @@ Hooks defined in `.pre-commit-config.yaml`:
 
 To update the secrets baseline after an intentional addition: `detect-secrets scan > .secrets.baseline`.
 
+## Changelog
+
+`CHANGELOG.md` entries are one short line each — what the user gets, no implementation details, limits or caveats.
+
 ## Commit Guidelines
 
 Conventional Commits format required: `type(scope): subject` — e.g. `fix(pre-commit): restore project-specific hooks`. Allowed types: `feat`, `fix`, `chore`, `docs`, `refactor`. One-line subject under 72 characters. Reference the PRD FR number in the body when implementing a functional requirement (e.g. `Implements FR-009`).

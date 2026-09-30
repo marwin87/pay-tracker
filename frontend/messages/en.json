@@ -219,7 +219,11 @@
         "summaryOverdue": "overdue",
         "summaryPaid": "paid",
         "calendarTitle": "Calendar",
-        "clearDayFilter": "Clear"
+        "clearDayFilter": "Clear",
+        "shareMonth": "Share by email",
+        "shareSent": "Month summary sent",
+        "previousYear": "Previous year",
+        "nextYear": "Next year"
     },
     "PaymentRow": {
         "status": {
@@ -313,7 +317,7 @@
             "telegram": "Telegram (bot token & reminders)",
             "languages": "Language settings",
             "currency": "Currency & number format",
-            "export": "Excel export settings"
+            "export": "Excel export & sharing settings"
         }
     },
     "SnapshotRecoverySection": {
@@ -353,7 +357,7 @@
             "preferences": "Preferences",
             "notifications": "Notifications",
             "categories": "Categories",
-            "export": "Export",
+            "reports": "Reports",
             "data": "Backup & Restore"
         },
         "unsavedTitle": "Unsaved changes",
@@ -505,6 +509,11 @@
             "addNew": "Add category",
             "newColorsLabel": "New colors",
             "usedColorsLabel": "Used colors"
+        },
+        "shareByEmail": {
+            "title": "Share month by email",
+            "description": "Adds a share button on the Payments page that emails the month summary to any address. Requires e-mail to be configured.",
+            "toggleLabel": "Enable sharing by email"
         }
     },
     "Categories": {
@@ -605,5 +614,15 @@
             "12": "December"
         },
         "monthYear": "{month} {year}"
+    },
+    "ShareMonthDialog": {
+        "title": "Share by email",
+        "description": "Send the summary of {month} to an email address.",
+        "emailLabel": "Email address",
+        "emailPlaceholder": "name@example.com",
+        "cancel": "Cancel",
+        "send": "Send",
+        "sending": "Sending…",
+        "failed": "Could not send the email."
     }
 }

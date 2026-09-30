@@ -98,6 +98,7 @@ class UserProfileOut(BaseModel):
     telegram_monthly_summary_enabled: bool
     browser_notifications_enabled: bool
     export_enabled: bool
+    share_enabled: bool
     export_fields: list[ExportFieldKey]
 
 
@@ -142,6 +143,7 @@ class UserProfileUpdate(BaseModel):
     telegram_monthly_summary_enabled: bool | None = None
     browser_notifications_enabled: bool | None = None
     export_enabled: bool | None = None
+    share_enabled: bool | None = None
     export_fields: list[ExportFieldKey] | None = None
 
     @field_validator("telegram_chat_id")
@@ -176,6 +178,11 @@ class SendNotificationNowOut(BaseModel):
 
 class SendMonthlySummaryNowOut(BaseModel):
     sent: bool
+
+
+class ShareMonthRequest(BaseModel):
+    email: EmailStr
+    month: Annotated[str, Field(pattern=r"^\d{4}-(0[1-9]|1[0-2])$")]
 
 
 class ServerTimeOut(BaseModel):

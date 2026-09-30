@@ -219,7 +219,11 @@
         "summaryOverdue": "überfällig",
         "summaryPaid": "bezahlt",
         "calendarTitle": "Kalender",
-        "clearDayFilter": "Zurücksetzen"
+        "clearDayFilter": "Zurücksetzen",
+        "shareMonth": "Per E-Mail teilen",
+        "shareSent": "Monatsübersicht gesendet",
+        "previousYear": "Vorheriges Jahr",
+        "nextYear": "Nächstes Jahr"
     },
     "PaymentRow": {
         "status": {
@@ -313,7 +317,7 @@
             "telegram": "Telegram (Bot-Token & Erinnerungen)",
             "languages": "Spracheinstellungen",
             "currency": "Währung & Zahlenformat",
-            "export": "Excel-Export-Einstellungen"
+            "export": "Einstellungen für Excel-Export & Teilen"
         }
     },
     "SnapshotRecoverySection": {
@@ -353,7 +357,7 @@
             "preferences": "Einstellungen",
             "notifications": "Benachrichtigungen",
             "categories": "Kategorien",
-            "export": "Export",
+            "reports": "Berichte",
             "data": "Sicherung & Wiederherstellung"
         },
         "unsavedTitle": "Nicht gespeicherte Änderungen",
@@ -505,6 +509,11 @@
             "addNew": "Kategorie hinzufügen",
             "newColorsLabel": "Neue Farben",
             "usedColorsLabel": "Verwendete Farben"
+        },
+        "shareByEmail": {
+            "title": "Monat per E-Mail teilen",
+            "description": "Fügt auf der Zahlungsseite eine Schaltfläche hinzu, die die Monatsübersicht an eine beliebige Adresse sendet. Erfordert konfigurierte E-Mail.",
+            "toggleLabel": "Teilen per E-Mail aktivieren"
         }
     },
     "Categories": {
@@ -605,5 +614,15 @@
             "12": "Dezember"
         },
         "monthYear": "{month} {year}"
+    },
+    "ShareMonthDialog": {
+        "title": "Per E-Mail teilen",
+        "description": "Sende die Übersicht für {month} an eine E-Mail-Adresse.",
+        "emailLabel": "E-Mail-Adresse",
+        "emailPlaceholder": "name@example.com",
+        "cancel": "Abbrechen",
+        "send": "Senden",
+        "sending": "Wird gesendet…",
+        "failed": "E-Mail konnte nicht gesendet werden."
     }
 }

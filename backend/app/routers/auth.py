@@ -27,6 +27,7 @@ from app.schemas.auth import (
     SendMonthlySummaryNowOut,
     SendNotificationNowOut,
     ServerTimeOut,
+    ShareMonthRequest,
     SmtpStatusResponse,
     TokenResponse,
     UserProfileOut,
@@ -39,6 +40,7 @@ from app.services.reminder_job import (
     EMAIL,
     TELEGRAM,
     Channel,
+    _is_blocked_domain,
     send_monthly_summary_for_user,
     send_reminders_for_user,
 )
@@ -221,6 +223,31 @@ def send_monthly_summary_now(
         return SendMonthlySummaryNowOut(sent=False)
     current_month = datetime.now(timezone.utc).strftime("%Y-%m")
     sent = send_monthly_summary_for_user(db, user, current_month, ch)
+    return SendMonthlySummaryNowOut(sent=sent)
+
+
+_SHARE_LIMIT = 10  # sends per user per hour
+_share_sent: dict[int, list[datetime]] = {}
+
+
+@router.post("/share-month", response_model=SendMonthlySummaryNowOut)
+def share_month(
+    body: ShareMonthRequest,
+    user: User = Depends(current_user),
+    db: Session = Depends(get_db),
+):
+    _channel_or_400(user, "email")
+    if not user.share_enabled:
+        raise HTTPException(status_code=403, detail="Sharing by email is disabled")
+    if _is_blocked_domain(body.email):
+        raise HTTPException(status_code=400, detail="Recipient domain not allowed")
+    # ponytail: per-process memory, resets on restart; move to DB/redis if multi-worker
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=1)
+    recent = [ts for ts in _share_sent.get(user.id, []) if ts > cutoff]
+    if len(recent) >= _SHARE_LIMIT:
+        raise HTTPException(status_code=429, detail="Too many shares, try later")
+    _share_sent[user.id] = recent + [datetime.now(timezone.utc)]
+    sent = send_monthly_summary_for_user(db, user, body.month, EMAIL, body.email)
     return SendMonthlySummaryNowOut(sent=sent)
 
 

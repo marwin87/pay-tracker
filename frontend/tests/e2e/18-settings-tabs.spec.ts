@@ -20,7 +20,7 @@ test('settings has six tabs; Currency and Languages live under Preferences, not 
     'Preferences',
     'Notifications',
     'Categories',
-    'Export',
+    'Reports',
     'Backup & Restore',
   ]);
   await expect(page.getByRole('tab', { name: 'Account', exact: true })).toHaveAttribute('aria-selected', 'true');
