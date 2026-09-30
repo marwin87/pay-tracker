@@ -422,6 +422,7 @@
                 "notes": "Note"
             }
         },
+        "notificationsServerTimeHint": "Le notifiche vengono inviate in base all'ora del server (UTC). Ora attuale del server: <b>{time}</b>.",
         "emailNotifications": {
             "title": "Notifiche via email",
             "description": "Scegli quando ricevere promemoria via email per bollette in scadenza e scadute.",
@@ -432,16 +433,16 @@
             "noneWarning": "Seleziona almeno un'opzione per ricevere promemoria via email.",
             "sendTimeLabel": "Orario di invio (UTC)",
             "masterToggle": "Attiva notifiche via email",
-            "sendNowButton": "Invia notifica ora",
+            "sendNowButton": "Invia promemoria ora",
             "sendNowSending": "Invio in corso...",
             "sendNowSent": "{count} promemoria inviati",
-            "sendNowNoReminders": "Nessun promemoria in arrivo da inviare",
+            "sendNowNoReminders": "Nessun promemoria da inviare (controlla le scadenze selezionate)",
             "monthlySummaryToggle": "Riepilogo mensile (ultimo giorno del mese)",
-            "sendMonthlySummaryButton": "Invia riepilogo mensile",
+            "sendMonthlySummaryButton": "Invia riepilogo di {month}",
             "sendMonthlySummarySending": "Invio in corso...",
-            "sendMonthlySummarySent": "Riepilogo mensile inviato",
-            "sendMonthlySummaryNoData": "Nessun pagamento trovato per questo mese",
-            "serverTimeHint": "I promemoria vengono inviati in base all'ora del server (UTC). Ora attuale del server: {time}."
+            "sendMonthlySummarySent": "Riepilogo di {month} inviato a {email}",
+            "sendMonthlySummarySentTelegram": "Riepilogo di {month} inviato su Telegram",
+            "sendMonthlySummaryNoData": "Nessun pagamento per {month}, nulla inviato"
         },
         "browserNotifications": {
             "title": "Notifiche del browser",

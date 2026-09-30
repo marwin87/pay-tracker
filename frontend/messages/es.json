@@ -422,6 +422,7 @@
                 "notes": "Notas"
             }
         },
+        "notificationsServerTimeHint": "Las notificaciones se envían según la hora del servidor (UTC). Hora actual del servidor: <b>{time}</b>.",
         "emailNotifications": {
             "title": "Notificaciones por correo",
             "description": "Elige cuándo recibir recordatorios por correo de facturas próximas y vencidas.",
@@ -432,16 +433,16 @@
             "noneWarning": "Selecciona al menos una opción para recibir recordatorios por correo.",
             "sendTimeLabel": "Hora de envío (UTC)",
             "masterToggle": "Activar notificaciones por correo",
-            "sendNowButton": "Enviar notificación ahora",
+            "sendNowButton": "Enviar recordatorios ahora",
             "sendNowSending": "Enviando...",
             "sendNowSent": "{count} recordatorio(s) enviado(s)",
-            "sendNowNoReminders": "No hay recordatorios próximos que enviar",
+            "sendNowNoReminders": "No hay recordatorios que enviar (revisa los plazos seleccionados)",
             "monthlySummaryToggle": "Resumen mensual (último día del mes)",
-            "sendMonthlySummaryButton": "Enviar resumen mensual",
+            "sendMonthlySummaryButton": "Enviar resumen de {month}",
             "sendMonthlySummarySending": "Enviando...",
-            "sendMonthlySummarySent": "Resumen mensual enviado",
-            "sendMonthlySummaryNoData": "No se encontraron pagos para este mes",
-            "serverTimeHint": "Los recordatorios se envían según la hora del servidor (UTC). Hora actual del servidor: {time}."
+            "sendMonthlySummarySent": "Resumen de {month} enviado a {email}",
+            "sendMonthlySummarySentTelegram": "Resumen de {month} enviado a Telegram",
+            "sendMonthlySummaryNoData": "No hay pagos en {month}, no se envió nada"
         },
         "browserNotifications": {
             "title": "Notificaciones del navegador",

@@ -26,6 +26,7 @@ from app.services.reminder_job import (
     send_catchup_reminders,
     send_daily_reminders,
     send_monthly_summary_for_user,
+    send_reminders_for_user,
 )
 
 
@@ -236,6 +237,44 @@ def test_already_sent_flag_skips_email(
         send_daily_reminders(db_sessionmaker, send_minute=480)
 
     mock_send.assert_not_called()
+
+
+@patch("app.services.reminder_job.send_reminder_email")
+def test_force_resends_already_sent_reminder(mock_send, db_session):
+    user = _make_user(db_session, notify_1_day_before=True)
+    bill = _make_bill(db_session, user.id)
+    _make_instance(
+        db_session,
+        bill.id,
+        due_date=_today_utc() + timedelta(days=1),
+        reminder_sent_upcoming=True,
+    )
+    db_session.commit()
+
+    with patch("app.services.reminder_job.settings") as mock_settings:
+        _smtp_settings(mock_settings)
+        assert send_reminders_for_user(db_session, user) == 0
+        assert send_reminders_for_user(db_session, user, force=True) == 1
+        assert send_reminders_for_user(db_session, user, force=True) == 1
+    assert mock_send.call_count == 2
+
+
+@patch("app.services.reminder_job.send_reminder_email")
+def test_force_does_not_record_send(mock_send, db_session):
+    user = _make_user(db_session, notify_1_day_before=True)
+    bill = _make_bill(db_session, user.id)
+    inst = _make_instance(
+        db_session, bill.id, due_date=_today_utc() + timedelta(days=1)
+    )
+    db_session.commit()
+
+    with patch("app.services.reminder_job.settings") as mock_settings:
+        _smtp_settings(mock_settings)
+        assert send_reminders_for_user(db_session, user, force=True) == 1
+
+    db_session.refresh(inst)
+    assert inst.reminder_sent_upcoming is False
+    assert inst.email_sent_at is None
 
 
 @patch("app.services.reminder_job.send_monthly_summary_email")

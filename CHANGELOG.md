@@ -17,6 +17,7 @@ Notable changes to Pay Tracker, release by release.
 - Keyboard navigation for dropdowns and the category filter checklist
 - Unpaid payments' due date can be edited per instance
 - Redesigned auth screens and a warmer, unified app look
+- Settings "send now" buttons: clearer labels, and sending reminders now no longer affects the schedule
 
 ### Security
 
@@ -24,6 +25,7 @@ Notable changes to Pay Tracker, release by release.
 
 ### Fixes
 
+- Monthly summary email no longer shows a pointless "(expected: —)" note for payments without a planned amount
 - Settings warns about unsaved changes before logout and uses an accordion on mobile
 - Dashboard totals no longer rounded to whole currency units
 - Category color picker separates used and unused colors, with a wider palette

@@ -20,6 +20,7 @@ import { ExportSettingsTile } from "@/components/settings/ExportSettingsTile";
 import { EmailNotificationsTile } from "@/components/settings/EmailNotificationsTile";
 import { TelegramNotificationsTile } from "@/components/settings/TelegramNotificationsTile";
 import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificationsTile";
+import { ServerTimeNote } from "@/components/settings/ServerTimeNote";
 import { CategoriesTile } from "@/components/settings/CategoriesTile";
 import { UnsavedChangesDialog } from "@/components/settings/UnsavedChangesDialog";
 import DeleteAccountDialog from "@/components/settings/DeleteAccountDialog";
@@ -330,6 +331,8 @@ export default function SettingsPage() {
           activeTab === "notifications" ? "sm:block" : "sm:hidden"
         }`}
       >
+        <ServerTimeNote />
+
         <EmailNotificationsTile
           profile={profile}
           onProfileUpdate={setProfile}

@@ -205,7 +205,9 @@ def send_notification_now(
     ch = _channel_or_400(user, channel)
     if not getattr(user, ch.enabled):
         return SendNotificationNowOut(sent=0)
-    return SendNotificationNowOut(sent=send_reminders_for_user(db, user, ch))
+    return SendNotificationNowOut(
+        sent=send_reminders_for_user(db, user, ch, force=True)
+    )
 
 
 @router.post("/send-monthly-summary-now", response_model=SendMonthlySummaryNowOut)

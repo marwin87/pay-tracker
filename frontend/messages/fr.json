@@ -422,6 +422,7 @@
                 "notes": "Notes"
             }
         },
+        "notificationsServerTimeHint": "Les notifications sont envoyées selon l'heure du serveur (UTC). Heure actuelle du serveur : <b>{time}</b>.",
         "emailNotifications": {
             "title": "Notifications par email",
             "description": "Choisissez quand recevoir des rappels par email pour les factures à venir et en retard.",
@@ -432,16 +433,16 @@
             "noneWarning": "Sélectionnez au moins une option pour recevoir des rappels par email.",
             "sendTimeLabel": "Heure d'envoi (UTC)",
             "masterToggle": "Activer les notifications par email",
-            "sendNowButton": "Envoyer la notification maintenant",
+            "sendNowButton": "Envoyer les rappels maintenant",
             "sendNowSending": "Envoi en cours...",
             "sendNowSent": "{count} rappel(s) envoyé(s)",
-            "sendNowNoReminders": "Aucun rappel à venir à envoyer",
+            "sendNowNoReminders": "Aucun rappel à envoyer (vérifiez les délais sélectionnés)",
             "monthlySummaryToggle": "Résumé mensuel (dernier jour du mois)",
-            "sendMonthlySummaryButton": "Envoyer le résumé mensuel",
+            "sendMonthlySummaryButton": "Envoyer le résumé de {month}",
             "sendMonthlySummarySending": "Envoi en cours...",
-            "sendMonthlySummarySent": "Résumé mensuel envoyé",
-            "sendMonthlySummaryNoData": "Aucun paiement trouvé pour ce mois",
-            "serverTimeHint": "Les rappels sont envoyés selon l'heure du serveur (UTC). Heure actuelle du serveur : {time}."
+            "sendMonthlySummarySent": "Résumé de {month} envoyé à {email}",
+            "sendMonthlySummarySentTelegram": "Résumé de {month} envoyé sur Telegram",
+            "sendMonthlySummaryNoData": "Aucun paiement pour {month}, rien envoyé"
         },
         "browserNotifications": {
             "title": "Notifications du navigateur",

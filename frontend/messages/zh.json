@@ -422,6 +422,7 @@
                 "notes": "备注"
             }
         },
+        "notificationsServerTimeHint": "通知将按服务器时间（UTC）发送。当前服务器时间：<b>{time}</b>。",
         "emailNotifications": {
             "title": "邮件通知",
             "description": "选择何时接收即将到期和已逾期账单的邮件提醒。",
@@ -432,16 +433,16 @@
             "noneWarning": "请至少选择一个选项以接收邮件提醒。",
             "sendTimeLabel": "发送时间（UTC）",
             "masterToggle": "开启邮件通知",
-            "sendNowButton": "立即发送通知",
+            "sendNowButton": "立即发送提醒",
             "sendNowSending": "正在发送…",
             "sendNowSent": "已发送 {count} 条提醒",
-            "sendNowNoReminders": "暂无待发送的提醒",
+            "sendNowNoReminders": "暂无可发送的提醒（请检查所选的提醒时间）",
             "monthlySummaryToggle": "月度汇总（每月最后一天）",
-            "sendMonthlySummaryButton": "发送月度汇总",
+            "sendMonthlySummaryButton": "发送{month}汇总",
             "sendMonthlySummarySending": "正在发送…",
-            "sendMonthlySummarySent": "月度汇总已发送",
-            "sendMonthlySummaryNoData": "本月未找到付款记录",
-            "serverTimeHint": "提醒将按服务器时间（UTC）发送。当前服务器时间：{time}。"
+            "sendMonthlySummarySent": "{month}汇总已发送至 {email}",
+            "sendMonthlySummarySentTelegram": "{month}汇总已发送至 Telegram",
+            "sendMonthlySummaryNoData": "{month}无付款记录，未发送任何内容"
         },
         "browserNotifications": {
             "title": "浏览器通知",

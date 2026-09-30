@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import date, datetime, timedelta, timezone
 from typing import Any
 
-from sqlalchemy import or_
+from sqlalchemy import or_, true
 from sqlalchemy.orm import Session, selectinload, sessionmaker
 
 from app.core.config import settings
@@ -180,8 +180,14 @@ def send_monthly_summary_for_user(
         return False
 
 
-def send_reminders_for_user(db: Session, user: User, channel: Channel = EMAIL) -> int:
-    """Send due reminders on one channel. Returns count of reminders sent."""
+def send_reminders_for_user(
+    db: Session, user: User, channel: Channel = EMAIL, *, force: bool = False
+) -> int:
+    """Send due reminders on one channel. Returns count of reminders sent.
+
+    force=True (manual "send now") is ad hoc: it ignores the already-sent flags
+    and records nothing, so it never affects the scheduler or the payment icons.
+    """
     if not channel_available(user, channel):
         logger.debug("No %s delivery for user %s, skipping", channel.name, user.id)
         return 0
@@ -220,7 +226,7 @@ def send_reminders_for_user(db: Session, user: User, channel: Channel = EMAIL) -
                 PaymentInstance.due_date == due_by_kind[kind],
                 PaymentInstance.status != PaymentStatus.paid,
                 PaymentInstance.is_deleted.is_(False),
-                getattr(PaymentInstance, sent_flag).is_(False),
+                true() if force else getattr(PaymentInstance, sent_flag).is_(False),
             )
             .all()
         )
@@ -233,6 +239,7 @@ def send_reminders_for_user(db: Session, user: User, channel: Channel = EMAIL) -
                 flag_attr=sent_flag,
                 language=lang,
                 channel=channel,
+                record=not force,
             ):
                 sent += 1
     return sent
@@ -333,6 +340,7 @@ def _send_and_flag(
     flag_attr: str,
     language: str,
     channel: Channel = EMAIL,
+    record: bool = True,
 ) -> bool:
     bill_name = (
         instance.template.name if instance.template else f"bill#{instance.bill_id}"
@@ -377,6 +385,9 @@ def _send_and_flag(
             exc,
         )
         return False
+
+    if not record:
+        return True
 
     setattr(instance, flag_attr, True)
     if channel is EMAIL:

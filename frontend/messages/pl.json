@@ -422,6 +422,7 @@
                 "notes": "Notatki"
             }
         },
+        "notificationsServerTimeHint": "Powiadomienia są wysyłane według czasu serwera (UTC). Aktualny czas serwera: <b>{time}</b>.",
         "emailNotifications": {
             "title": "Powiadomienia e-mail",
             "description": "Wybierz, kiedy otrzymywać przypomnienia e-mail o nadchodzących i zaległych rachunkach.",
@@ -432,16 +433,16 @@
             "noneWarning": "Wybierz co najmniej jedną opcję, aby otrzymywać przypomnienia e-mail.",
             "sendTimeLabel": "Godzina wysyłki (UTC)",
             "masterToggle": "Włącz powiadomienia e-mail",
-            "sendNowButton": "Wyślij powiadomienie teraz",
+            "sendNowButton": "Wyślij przypomnienia teraz",
             "sendNowSending": "Wysyłanie...",
             "sendNowSent": "Wysłano {count} przypomnienie(ń)",
-            "sendNowNoReminders": "Brak nadchodzących przypomnień do wysłania",
+            "sendNowNoReminders": "Brak przypomnień do wysłania (sprawdź zaznaczone terminy)",
             "monthlySummaryToggle": "Miesięczne podsumowanie (ostatni dzień miesiąca)",
-            "sendMonthlySummaryButton": "Wyślij miesięczne podsumowanie",
+            "sendMonthlySummaryButton": "Wyślij podsumowanie za {month}",
             "sendMonthlySummarySending": "Wysyłanie...",
-            "sendMonthlySummarySent": "Miesięczne podsumowanie wysłane",
-            "sendMonthlySummaryNoData": "Brak płatności w tym miesiącu",
-            "serverTimeHint": "Przypomnienia są wysyłane według czasu serwera (UTC). Aktualny czas serwera: {time}."
+            "sendMonthlySummarySent": "Wysłano podsumowanie za {month} na adres {email}",
+            "sendMonthlySummarySentTelegram": "Wysłano podsumowanie za {month} na Telegram",
+            "sendMonthlySummaryNoData": "Brak płatności za {month}, nic nie wysłano"
         },
         "browserNotifications": {
             "title": "Powiadomienia przeglądarki",
@@ -573,7 +574,7 @@
             "unpaid_header": "Nieopłacone / Zaległe",
             "bill": "Rachunek",
             "due_date": "Termin",
-            "expected": "Kwota",
+            "expected": "Planowana",
             "paid": "Zapłacono",
             "paid_on": "Data zapłaty",
             "amount": "Kwota",

@@ -422,6 +422,7 @@
                 "notes": "Notizen"
             }
         },
+        "notificationsServerTimeHint": "Benachrichtigungen werden nach Serverzeit (UTC) gesendet. Aktuelle Serverzeit: <b>{time}</b>.",
         "emailNotifications": {
             "title": "E-Mail-Benachrichtigungen",
             "description": "Wählen Sie, wann Sie E-Mail-Erinnerungen für bevorstehende und überfällige Rechnungen erhalten möchten.",
@@ -432,16 +433,16 @@
             "noneWarning": "Wählen Sie mindestens eine Option, um E-Mail-Erinnerungen zu erhalten.",
             "sendTimeLabel": "Sendezeit (UTC)",
             "masterToggle": "E-Mail-Benachrichtigungen aktivieren",
-            "sendNowButton": "Benachrichtigung jetzt senden",
+            "sendNowButton": "Erinnerungen jetzt senden",
             "sendNowSending": "Wird gesendet...",
             "sendNowSent": "{count} Erinnerung(en) gesendet",
-            "sendNowNoReminders": "Keine bevorstehenden Erinnerungen zum Senden",
+            "sendNowNoReminders": "Keine Erinnerungen zu senden (ausgewählte Zeitpunkte prüfen)",
             "monthlySummaryToggle": "Monatliche Zusammenfassung (letzter Tag des Monats)",
-            "sendMonthlySummaryButton": "Monatliche Zusammenfassung senden",
+            "sendMonthlySummaryButton": "Zusammenfassung für {month} senden",
             "sendMonthlySummarySending": "Wird gesendet...",
-            "sendMonthlySummarySent": "Monatliche Zusammenfassung gesendet",
-            "sendMonthlySummaryNoData": "Keine Zahlungen für diesen Monat gefunden",
-            "serverTimeHint": "Erinnerungen werden nach Serverzeit (UTC) gesendet. Aktuelle Serverzeit: {time}."
+            "sendMonthlySummarySent": "Zusammenfassung für {month} an {email} gesendet",
+            "sendMonthlySummarySentTelegram": "Zusammenfassung für {month} an Telegram gesendet",
+            "sendMonthlySummaryNoData": "Keine Zahlungen für {month}, nichts gesendet"
         },
         "browserNotifications": {
             "title": "Browser-Benachrichtigungen",

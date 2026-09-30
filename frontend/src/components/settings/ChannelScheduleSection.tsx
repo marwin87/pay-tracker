@@ -2,7 +2,7 @@
 
 import { AlertTriangle, BarChart2, Loader2, Send } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import {
   sendMonthlySummaryNow,
   sendNotificationNow,
@@ -81,6 +81,13 @@ export function ChannelScheduleSection({
   disabledHint?: string;
 }) {
   const tp = useTranslations("SettingsPage");
+  const locale = useLocale();
+  // Server builds the summary for the current UTC month, so label it in UTC too.
+  const month = new Intl.DateTimeFormat(locale, {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date());
   const k = CHANNEL_KEYS[channel];
   const b = (key: keyof UserProfile) => profile[key] as boolean;
 
@@ -308,7 +315,7 @@ export function ChannelScheduleSection({
                 )}
                 {isSendingSummary
                   ? tp("emailNotifications.sendMonthlySummarySending")
-                  : tp("emailNotifications.sendMonthlySummaryButton")}
+                  : tp("emailNotifications.sendMonthlySummaryButton", { month })}
               </button>
               {sendSummaryResult && "error" in sendSummaryResult && (
                 <p className="text-sm text-red-600 dark:text-red-400">{sendSummaryResult.error}</p>
@@ -316,8 +323,10 @@ export function ChannelScheduleSection({
               {sendSummaryResult && "sent" in sendSummaryResult && (
                 <p className="text-sm text-green-600 dark:text-green-500">
                   {sendSummaryResult.sent
-                    ? tp("emailNotifications.sendMonthlySummarySent")
-                    : tp("emailNotifications.sendMonthlySummaryNoData")}
+                    ? channel === "email"
+                      ? tp("emailNotifications.sendMonthlySummarySent", { month, email: profile.email })
+                      : tp("emailNotifications.sendMonthlySummarySentTelegram", { month })
+                    : tp("emailNotifications.sendMonthlySummaryNoData", { month })}
                 </p>
               )}
             </>

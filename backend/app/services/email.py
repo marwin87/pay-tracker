@@ -108,9 +108,11 @@ def _build_summary_html(
             if row.get("paid_amount")
             else expected
         )
-        mismatch = row.get("paid_amount") and Decimal(
-            str(row["paid_amount"])
-        ) != Decimal(str(row["amount"]))
+        mismatch = (
+            row.get("paid_amount")
+            and Decimal(str(row["amount"])) > 0
+            and Decimal(str(row["paid_amount"])) != Decimal(str(row["amount"]))
+        )
         paid_cell = paid_actual
         if mismatch:
             paid_cell = f'{paid_actual} <span style="color:#b45309">({h["expected"]}: {expected})</span>'
