@@ -1,4 +1,4 @@
-# <img src="frontend/public/pt-logo-rounded.png" width="32" alt="Pay Tracker logo" valign="middle"> Pay Tracker
+# <img src="assets/pt-logo-rounded.png" width="32" alt="Pay Tracker logo" valign="middle"> Pay Tracker
 
 A self-hosted household bill tracking PWA. Define your recurring bills once, then each month's payment instances are generated automatically. Mark bills paid from any device — phone, tablet, or desktop.
 
@@ -6,20 +6,20 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 
 
 <p align="center">
-  <a href="demo/public/dashboard.png">
-    <img src="demo/public/dashboard.png" width="180" alt="Dashboard">
+  <a href="assets/dashboard.png">
+    <img src="assets/dashboard.png" width="180" alt="Dashboard">
   </a>
-  <a href="demo/public/payments_light.png">
-    <img src="demo/public/payments_light.png" width="180" alt="Payments light">
+  <a href="assets/payments_light.png">
+    <img src="assets/payments_light.png" width="180" alt="Payments light">
   </a>
-  <a href="demo/public/payments_dark.png">
-    <img src="demo/public/payments_dark.png" width="180" alt="Payments dark">
+  <a href="assets/payments_dark.png">
+    <img src="assets/payments_dark.png" width="180" alt="Payments dark">
   </a>
-  <a href="demo/public/bills.png">
-    <img src="demo/public/bills.png" width="180" alt="Bills">
+  <a href="assets/bills.png">
+    <img src="assets/bills.png" width="180" alt="Bills">
   </a>
-  <a href="demo/public/settings.png">
-    <img src="demo/public/settings.png" width="180" alt="Settings">
+  <a href="assets/settings.png">
+    <img src="assets/settings.png" width="180" alt="Settings">
   </a>
 </p>
 

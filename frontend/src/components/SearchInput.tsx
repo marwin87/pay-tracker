@@ -21,7 +21,7 @@ export default function SearchInput({ value, onChange, placeholder }: Props) {
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="w-full rounded-lg border border-slate-200 bg-white py-1.5 pl-7 pr-2 text-xs font-medium text-slate-600 shadow-sm outline-none transition-all placeholder:text-slate-400 hover:border-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:placeholder:text-slate-500 dark:hover:border-emerald-700 dark:focus:border-green-600 dark:focus:ring-green-900/40"
+        className="w-full [&::-webkit-search-cancel-button]:cursor-pointer rounded-lg border border-slate-200 bg-white py-1.5 pl-7 pr-2 text-xs font-medium text-slate-600 shadow-sm outline-none transition-all placeholder:text-slate-400 hover:border-green-300 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:placeholder:text-slate-500 dark:hover:border-emerald-700 dark:focus:border-green-600 dark:focus:ring-green-900/40"
       />
     </div>
   );
