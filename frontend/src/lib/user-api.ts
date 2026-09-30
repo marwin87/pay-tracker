@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/api";
 import type { Locale } from "@/context/locale-context";
+import type { Theme } from "@/lib/theme";
 
 export const EXPORT_FIELD_KEYS = [
   "bill",
@@ -27,6 +28,7 @@ export interface UserProfile {
   enabled_languages: Locale[];
   default_currency: string | null;
   decimal_separator: "." | ",";
+  theme: Theme;
   email_reminders_enabled: boolean;
   notify_2_days_before: boolean;
   notify_1_day_before: boolean;
@@ -62,6 +64,7 @@ export function updateMe(
       | "enabled_languages"
       | "default_currency"
       | "decimal_separator"
+      | "theme"
       | "email_reminders_enabled"
       | "notify_2_days_before"
       | "notify_1_day_before"

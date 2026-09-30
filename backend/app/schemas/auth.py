@@ -15,6 +15,8 @@ def _check_language(v: str) -> str:
 
 SupportedLanguage = Annotated[str, AfterValidator(_check_language)]
 
+Theme = Literal["light", "dark", "vesperfall"]
+
 EXPORT_FIELD_KEYS: tuple[str, ...] = (
     "bill",
     "category",
@@ -79,6 +81,7 @@ class UserProfileOut(BaseModel):
     enabled_languages: list[SupportedLanguage]
     default_currency: str | None
     decimal_separator: Literal[".", ","]
+    theme: Theme
     email_reminders_enabled: bool
     notify_2_days_before: bool
     notify_1_day_before: bool
@@ -125,6 +128,7 @@ class UserProfileUpdate(BaseModel):
     enabled_languages: list[SupportedLanguage] | None = None
     default_currency: str | None = None
     decimal_separator: Literal[".", ","] | None = None
+    theme: Theme | None = None
     email_reminders_enabled: bool | None = None
     notify_2_days_before: bool | None = None
     notify_1_day_before: bool | None = None

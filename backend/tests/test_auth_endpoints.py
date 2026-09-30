@@ -626,3 +626,17 @@ def test_share_month_smtp_missing_and_rate_limit(client):
     assert r.status_code == 400
     codes = [_share(client, tok)[0].status_code for _ in range(11)]
     assert codes[:10] == [200] * 10 and codes[10] == 429
+
+
+def test_theme_is_stored_per_user(client):
+    a = register_and_login(client, "theme_a@test.com")
+    b = register_and_login(client, "theme_b@test.com")
+    assert client.get("/auth/me", headers=auth(a)).json()["theme"] == "light"
+
+    r = client.patch("/auth/me", json={"theme": "vesperfall"}, headers=auth(b))
+    assert r.status_code == 200
+    assert client.get("/auth/me", headers=auth(a)).json()["theme"] == "light"
+    assert client.get("/auth/me", headers=auth(b)).json()["theme"] == "vesperfall"
+
+    r = client.patch("/auth/me", json={"theme": "neon"}, headers=auth(a))
+    assert r.status_code == 422

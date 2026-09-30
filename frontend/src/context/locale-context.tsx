@@ -11,6 +11,7 @@ import {
 import { NextIntlClientProvider } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import { fetchMe, updateMe } from "@/lib/user-api";
+import { setTheme } from "@/lib/theme";
 import { LOCALES, messagesMap, detectBrowserLocale, type Locale } from "@/lib/locales";
 
 export type { Locale };
@@ -54,6 +55,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         );
         setEnabledLocalesState(enabled.length ? enabled : LOCALES);
         setDecimalSeparatorState(profile.decimal_separator);
+        setTheme(profile.theme);
       })
       .catch(() => {});
     return () => {

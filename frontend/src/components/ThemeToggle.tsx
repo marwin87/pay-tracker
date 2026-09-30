@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check, ChevronDown, Palette } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getTheme, setTheme as saveTheme, THEMES, type Theme } from "@/lib/theme";
+import { updateMe } from "@/lib/user-api";
 import { MENU_ROW_CLASS } from "@/components/menuRow";
 
 /** Menu row that expands in place into the available themes. Stays open after a pick. */
@@ -17,6 +18,9 @@ export default function ThemeToggle() {
   function pick(next: Theme) {
     saveTheme(next);
     setTheme(next);
+    updateMe({ theme: next }).catch(() => {
+      // persist failure is non-fatal
+    });
   }
 
   return (

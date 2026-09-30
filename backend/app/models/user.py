@@ -41,6 +41,9 @@ class User(Base):
     decimal_separator: Mapped[str] = mapped_column(
         String(1), nullable=False, default=".", server_default="."
     )
+    theme: Mapped[str] = mapped_column(
+        String(20), nullable=False, default="light", server_default="light"
+    )
     email_reminders_enabled: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="true"
     )
