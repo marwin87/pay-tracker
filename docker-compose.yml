@@ -18,7 +18,10 @@ services:
 
   backend:
     image: pay-tracker-backend:latest
-    build: ./backend
+    build:
+      context: ./backend
+      additional_contexts:
+        i18n: ./frontend/messages
     container_name: backend
     restart: unless-stopped
     env_file: .env

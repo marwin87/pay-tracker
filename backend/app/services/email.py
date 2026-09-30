@@ -3,88 +3,8 @@ from datetime import date
 from decimal import Decimal
 from typing import Any
 
+from app.core.i18n import resolve_locale, t
 from app.services import notify
-
-_SUBJECTS: dict[tuple[str, str], str] = {
-    (
-        "2_days_before",
-        "en",
-    ): "Reminder: {bill_name} due in 2 days ({amount} {currency})",
-    (
-        "2_days_before",
-        "pl",
-    ): "Przypomnienie: {bill_name} płatne za 2 dni ({amount} {currency})",
-    (
-        "2_days_before",
-        "de",
-    ): "Erinnerung: {bill_name} fällig in 2 Tagen ({amount} {currency})",
-    ("upcoming", "en"): "Reminder: {bill_name} due tomorrow ({amount} {currency})",
-    ("upcoming", "pl"): "Przypomnienie: {bill_name} płatne jutro ({amount} {currency})",
-    ("upcoming", "de"): "Erinnerung: {bill_name} fällig morgen ({amount} {currency})",
-    ("on_day", "en"): "Due today: {bill_name} ({amount} {currency})",
-    ("on_day", "pl"): "Płatne dziś: {bill_name} ({amount} {currency})",
-    ("on_day", "de"): "Heute fällig: {bill_name} ({amount} {currency})",
-    (
-        "1_day_after",
-        "en",
-    ): "Overdue: {bill_name} was due yesterday ({amount} {currency})",
-    (
-        "1_day_after",
-        "pl",
-    ): "Zaległość: {bill_name} było płatne wczoraj ({amount} {currency})",
-    (
-        "1_day_after",
-        "de",
-    ): "Überfällig: {bill_name} war gestern fällig ({amount} {currency})",
-}
-
-_BODIES: dict[tuple[str, str], str] = {
-    ("2_days_before", "en"): (
-        "This is a reminder that {bill_name} is due in 2 days ({due_date}).\n"
-        "Amount: {amount} {currency}"
-    ),
-    ("2_days_before", "pl"): (
-        "Przypominamy, że {bill_name} jest płatne za 2 dni ({due_date}).\n"
-        "Kwota: {amount} {currency}"
-    ),
-    ("2_days_before", "de"): (
-        "Erinnerung: {bill_name} ist in 2 Tagen fällig ({due_date}).\n"
-        "Betrag: {amount} {currency}"
-    ),
-    ("upcoming", "en"): (
-        "This is a reminder that {bill_name} is due tomorrow ({due_date}).\n"
-        "Amount: {amount} {currency}"
-    ),
-    ("upcoming", "pl"): (
-        "Przypominamy, że {bill_name} jest płatne jutro ({due_date}).\n"
-        "Kwota: {amount} {currency}"
-    ),
-    ("upcoming", "de"): (
-        "Erinnerung: {bill_name} ist morgen fällig ({due_date}).\n"
-        "Betrag: {amount} {currency}"
-    ),
-    ("on_day", "en"): (
-        "{bill_name} is due today ({due_date}).\n" "Amount: {amount} {currency}"
-    ),
-    ("on_day", "pl"): (
-        "{bill_name} jest płatne dzisiaj ({due_date}).\n" "Kwota: {amount} {currency}"
-    ),
-    ("on_day", "de"): (
-        "{bill_name} ist heute fällig ({due_date}).\n" "Betrag: {amount} {currency}"
-    ),
-    ("1_day_after", "en"): (
-        "{bill_name} was due yesterday ({due_date}) and remains unpaid.\n"
-        "Amount: {amount} {currency}"
-    ),
-    ("1_day_after", "pl"): (
-        "{bill_name} było płatne wczoraj ({due_date}) i nadal nie zostało opłacone.\n"
-        "Kwota: {amount} {currency}"
-    ),
-    ("1_day_after", "de"): (
-        "{bill_name} war gestern fällig ({due_date}) und ist noch unbezahlt.\n"
-        "Betrag: {amount} {currency}"
-    ),
-}
 
 
 def _deliver(
@@ -149,71 +69,31 @@ def send_reminder_email(
     )
 
 
-_SUMMARY_SUBJECTS: dict[str, str] = {
-    "en": "Monthly summary for {month_label}",
-    "pl": "Miesięczne podsumowanie za {month_label}",
-    "de": "Monatliche Zusammenfassung für {month_label}",
-}
-
-_SUMMARY_HEADINGS: dict[str, dict[str, str]] = {
-    "en": {
-        "intro": "Here is your payment summary for {month_label}.",
-        "paid_header": "Paid",
-        "unpaid_header": "Unpaid / Overdue",
-        "bill": "Bill",
-        "due_date": "Due date",
-        "expected": "Expected",
-        "paid": "Paid",
-        "paid_on": "Paid on",
-        "amount": "Amount",
-        "nothing_paid": "No payments were marked as paid this month.",
-        "nothing_unpaid": "All bills are paid — great job!",
-        "total_paid": "Total paid",
-        "total_outstanding": "Total outstanding",
-        "footer": "Manage your bills in the Pay Tracker app.",
-    },
-    "pl": {
-        "intro": "Oto podsumowanie płatności za {month_label}.",
-        "paid_header": "Opłacone",
-        "unpaid_header": "Nieopłacone / Zaległe",
-        "bill": "Rachunek",
-        "due_date": "Termin",
-        "expected": "Kwota",
-        "paid": "Zapłacono",
-        "paid_on": "Data zapłaty",
-        "amount": "Kwota",
-        "nothing_paid": "Żadne płatności nie zostały oznaczone jako opłacone w tym miesiącu.",
-        "nothing_unpaid": "Wszystkie rachunki są opłacone — świetna robota!",
-        "total_paid": "Łącznie zapłacono",
-        "total_outstanding": "Łącznie do zapłaty",
-        "footer": "Zarządzaj rachunkami w aplikacji Pay Tracker.",
-    },
-    "de": {
-        "intro": "Hier ist Ihre Zahlungsübersicht für {month_label}.",
-        "paid_header": "Bezahlt",
-        "unpaid_header": "Unbezahlt / Überfällig",
-        "bill": "Rechnung",
-        "due_date": "Fälligkeitsdatum",
-        "expected": "Erwartet",
-        "paid": "Bezahlt",
-        "paid_on": "Bezahlt am",
-        "amount": "Betrag",
-        "nothing_paid": "Keine Zahlungen wurden diesen Monat als bezahlt markiert.",
-        "nothing_unpaid": "Alle Rechnungen sind bezahlt — gut gemacht!",
-        "total_paid": "Gesamt bezahlt",
-        "total_outstanding": "Gesamt ausstehend",
-        "footer": "Verwalten Sie Ihre Rechnungen in der Pay Tracker App.",
-    },
-}
-
-
 def _build_summary_html(
     month_label: str,
     paid_rows: list[dict[str, Any]],
     unpaid_rows: list[dict[str, Any]],
     lang: str,
 ) -> str:
-    h = _SUMMARY_HEADINGS.get(lang, _SUMMARY_HEADINGS["en"])
+    h = {
+        k: t(lang, f"Notifications.summary.{k}")
+        for k in (
+            "intro",
+            "paid_header",
+            "unpaid_header",
+            "bill",
+            "due_date",
+            "expected",
+            "paid",
+            "paid_on",
+            "amount",
+            "nothing_paid",
+            "nothing_unpaid",
+            "total_paid",
+            "total_outstanding",
+            "footer",
+        )
+    }
 
     def fmt_amount(amount: Any, currency: str) -> str:
         value = Decimal(str(amount))
@@ -326,40 +206,6 @@ def _build_summary_html(
 </html>"""
 
 
-_RESET_SUBJECTS: dict[str, str] = {
-    "en": "Reset your Pay Tracker password",
-    "pl": "Zresetuj hasło Pay Tracker",
-    "de": "Pay Tracker Passwort zurücksetzen",
-}
-
-_RESET_BODIES: dict[str, str] = {
-    "en": (
-        "You requested a password reset for your Pay Tracker account.\n\n"
-        "Click the link below to set a new password (valid for {expires_label}):\n"
-        "{reset_url}\n\n"
-        "If you did not request this, you can ignore this email — your password will not change."
-    ),
-    "pl": (
-        "Zostało złożone żądanie zresetowania hasła do konta Pay Tracker.\n\n"
-        "Kliknij poniższy link, aby ustawić nowe hasło (ważny przez {expires_label}):\n"
-        "{reset_url}\n\n"
-        "Jeśli nie prosiłeś o reset hasła, zignoruj tę wiadomość — Twoje hasło pozostanie bez zmian."
-    ),
-    "de": (
-        "Sie haben eine Passwortzurücksetzung für Ihr Pay Tracker-Konto angefordert.\n\n"
-        "Klicken Sie auf den folgenden Link, um ein neues Passwort festzulegen (gültig für {expires_label}):\n"
-        "{reset_url}\n\n"
-        "Falls Sie diese Anforderung nicht gestellt haben, können Sie diese E-Mail ignorieren — Ihr Passwort bleibt unverändert."
-    ),
-}
-
-_EXPIRES_LABELS: dict[str, str] = {
-    "en": "{minutes} minutes",
-    "pl": "{minutes} minut",
-    "de": "{minutes} Minuten",
-}
-
-
 def reminder_text(
     *,
     bill_name: str,
@@ -369,30 +215,25 @@ def reminder_text(
     kind: str,
     language: str,
 ) -> tuple[str, str]:
-    lang = language if (kind, language) in _SUBJECTS else "en"
     ctx = {
         "bill_name": bill_name,
         "due_date": due_date.isoformat(),
         "amount": amount,
         "currency": currency,
     }
-    subject = _SUBJECTS[(kind, lang)].format(**ctx)
-    body = _BODIES[(kind, lang)].format(**ctx)
+    subject = t(language, f"Notifications.reminder.{kind}.subject").format(**ctx)
+    body = t(language, f"Notifications.reminder.{kind}.body").format(**ctx)
     if amount <= 0:  # bills without an amount: drop "(0.00 PLN)" and the Amount line
         subject = subject.removesuffix(f" ({amount} {currency})")
         body = body.rsplit("\n", 1)[0]
     return subject, body
 
 
-_DUE_DATE_LABELS: dict[str, str] = {"en": "Due date", "pl": "Termin", "de": "Fällig am"}
-
-
 def send_reminder_telegram(*, url: str, **text_kwargs: Any) -> None:
     # The subject already names the bill, timing and amount; the body only adds
     # the exact due date instead of repeating the same sentence (email keeps both).
     subject, _ = reminder_text(**text_kwargs)
-    lang = text_kwargs["language"]
-    label = _DUE_DATE_LABELS.get(lang, _DUE_DATE_LABELS["en"])
+    label = t(text_kwargs["language"], "Notifications.dueDateLabel")
     notify.send(url, subject, f"{label}: {text_kwargs['due_date'].isoformat()}")
 
 
@@ -404,7 +245,6 @@ def send_summary_telegram(
     unpaid_rows: list[dict[str, Any]],
     language: str,
 ) -> None:
-    lang = language if language in _SUMMARY_SUBJECTS else "en"
     lines = [f"✅ {r['name']}" for r in paid_rows]
     # bills without an amount (0.00) show only the name and due date
     lines += [
@@ -415,7 +255,7 @@ def send_summary_telegram(
     ]
     notify.send(
         url,
-        _SUMMARY_SUBJECTS[lang].format(month_label=month_label),
+        t(language, "Notifications.summary.subject").format(month_label=month_label),
         # Apprise strips leading whitespace, so a zero-width space on its own line
         # is what keeps the blank line under the title.
         "\u200b\n" + ("\n".join(lines) or "—"),
@@ -435,16 +275,17 @@ def send_password_reset_email(
     language: str,
     expires_minutes: int = 60,
 ) -> None:
-    lang = language if language in _RESET_SUBJECTS else "en"
-
     if expires_minutes > 0:
-        label_template = _EXPIRES_LABELS.get(lang, _EXPIRES_LABELS["en"])
-        expires_label = label_template.format(minutes=expires_minutes)
+        expires_label = t(language, "Notifications.reset.expires").format(
+            minutes=expires_minutes
+        )
     else:
-        expires_label = "no expiry"
+        expires_label = t(language, "Notifications.reset.noExpiry")
 
-    subject = _RESET_SUBJECTS[lang]
-    body = _RESET_BODIES[lang].format(reset_url=reset_url, expires_label=expires_label)
+    subject = t(language, "Notifications.reset.subject")
+    body = t(language, "Notifications.reset.body").format(
+        reset_url=reset_url, expires_label=expires_label
+    )
     _deliver(
         smtp_host,
         smtp_port,
@@ -472,9 +313,12 @@ def send_monthly_summary_email(
     unpaid_rows: list[dict[str, Any]],
     language: str,
 ) -> None:
-    lang = language if language in _SUMMARY_SUBJECTS else "en"
-    subject = _SUMMARY_SUBJECTS[lang].format(month_label=month_label)
-    body = _build_summary_html(month_label, paid_rows, unpaid_rows, lang)
+    subject = t(language, "Notifications.summary.subject").format(
+        month_label=month_label
+    )
+    body = _build_summary_html(
+        month_label, paid_rows, unpaid_rows, resolve_locale(language)
+    )
 
     _deliver(
         smtp_host,

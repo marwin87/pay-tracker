@@ -529,5 +529,80 @@
         "sortPaidFirst": "Pagati prima",
         "sortUnpaidFirst": "Non pagati prima",
         "searchPlaceholder": "Cerca per nome…"
+    },
+    "ExcelExport": {
+        "monthShort": {
+            "1": "gen",
+            "2": "feb",
+            "3": "mar",
+            "4": "apr",
+            "5": "mag",
+            "6": "giu",
+            "7": "lug",
+            "8": "ago",
+            "9": "set",
+            "10": "ott",
+            "11": "nov",
+            "12": "dic"
+        }
+    },
+    "Notifications": {
+        "reminder": {
+            "2_days_before": {
+                "subject": "Promemoria: {bill_name} in scadenza tra 2 giorni ({amount} {currency})",
+                "body": "Ti ricordiamo che {bill_name} scade tra 2 giorni ({due_date}).\nImporto: {amount} {currency}"
+            },
+            "upcoming": {
+                "subject": "Promemoria: {bill_name} in scadenza domani ({amount} {currency})",
+                "body": "Ti ricordiamo che {bill_name} scade domani ({due_date}).\nImporto: {amount} {currency}"
+            },
+            "on_day": {
+                "subject": "In scadenza oggi: {bill_name} ({amount} {currency})",
+                "body": "{bill_name} scade oggi ({due_date}).\nImporto: {amount} {currency}"
+            },
+            "1_day_after": {
+                "subject": "Scaduto: {bill_name} era in scadenza ieri ({amount} {currency})",
+                "body": "{bill_name} era in scadenza ieri ({due_date}) e risulta ancora non pagato.\nImporto: {amount} {currency}"
+            }
+        },
+        "dueDateLabel": "Scadenza",
+        "summary": {
+            "subject": "Riepilogo mensile per {month_label}",
+            "intro": "Ecco il riepilogo dei tuoi pagamenti per {month_label}.",
+            "paid_header": "Pagato",
+            "unpaid_header": "Non pagato / Scaduto",
+            "bill": "Fattura",
+            "due_date": "Scadenza",
+            "expected": "Previsto",
+            "paid": "Pagato",
+            "paid_on": "Pagato il",
+            "amount": "Importo",
+            "nothing_paid": "Nessun pagamento è stato contrassegnato come pagato questo mese.",
+            "nothing_unpaid": "Tutte le fatture sono pagate — ottimo lavoro!",
+            "total_paid": "Totale pagato",
+            "total_outstanding": "Totale da pagare",
+            "footer": "Gestisci le tue fatture nell'app Pay Tracker."
+        },
+        "reset": {
+            "subject": "Reimposta la password di Pay Tracker",
+            "body": "Hai richiesto il ripristino della password del tuo account Pay Tracker.\n\nFai clic sul link seguente per impostare una nuova password (valido per {expires_label}):\n{reset_url}\n\nSe non hai fatto tu questa richiesta, puoi ignorare questa email: la tua password non cambierà.",
+            "expires": "{minutes} minuti",
+            "noExpiry": "senza scadenza"
+        },
+        "monthLong": {
+            "1": "gennaio",
+            "2": "febbraio",
+            "3": "marzo",
+            "4": "aprile",
+            "5": "maggio",
+            "6": "giugno",
+            "7": "luglio",
+            "8": "agosto",
+            "9": "settembre",
+            "10": "ottobre",
+            "11": "novembre",
+            "12": "dicembre"
+        },
+        "monthYear": "{month} {year}"
     }
 }

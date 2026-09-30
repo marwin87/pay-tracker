@@ -8,6 +8,8 @@ COPY pyproject.toml uv.lock* ./
 RUN uv sync --no-dev
 
 COPY . .
+# Shared translations + locales.json, owned by the frontend (see docker-compose additional_contexts)
+COPY --from=i18n . /app/i18n
 
 RUN useradd -m appuser && chown -R appuser:appuser /app
 USER appuser

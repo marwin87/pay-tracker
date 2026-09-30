@@ -8,6 +8,7 @@ Pay Tracker is a household bill-tracking PWA. Stack: Next.js 16 (App Router, Typ
 - **Recurrence auto-generation is idempotent.** The key is `(bill_id, period)`. Never insert a `PaymentInstance` without checking for an existing row on that pair — see `@backend/app/services/recurrence.py`.
 - **Archive templates, never delete.** Set `is_archived = True` on `BillTemplate`; hard deletes cascade to payment history.
 - **Migrations run automatically on container start.** `alembic upgrade head` fires in the backend container's start command (`backend/Dockerfile`), before uvicorn. New model changes require a new revision: `docker compose exec backend uv run alembic revision --autogenerate -m "<desc>"`.
+- **i18n has one source: `frontend/messages/`.** Languages live in `locales.json`, strings in `<code>.json`. Backend reads them via `app.core.i18n` (`t()`, `LOCALES`) — never add per-language dicts in Python or a second language list. Adding a language: JSON file + `locales.json` entry + import/map entry in `frontend/src/lib/locales.ts`.
 - **Use SQLAlchemy 2.0 `Mapped[T]` / `mapped_column()` style.** The 1.x `Column()` pattern will pass linting but is wrong for this codebase — see `@backend/app/models/bill.py`.
 
 ## Project Structure

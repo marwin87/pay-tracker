@@ -529,5 +529,80 @@
         "sortPaidFirst": "Najpierw opłacone",
         "sortUnpaidFirst": "Najpierw nieopłacone",
         "searchPlaceholder": "Szukaj po nazwie…"
+    },
+    "ExcelExport": {
+        "monthShort": {
+            "1": "sty",
+            "2": "lut",
+            "3": "mar",
+            "4": "kwi",
+            "5": "maj",
+            "6": "cze",
+            "7": "lip",
+            "8": "sie",
+            "9": "wrz",
+            "10": "paź",
+            "11": "lis",
+            "12": "gru"
+        }
+    },
+    "Notifications": {
+        "reminder": {
+            "2_days_before": {
+                "subject": "Przypomnienie: {bill_name} płatne za 2 dni ({amount} {currency})",
+                "body": "Przypominamy, że {bill_name} jest płatne za 2 dni ({due_date}).\nKwota: {amount} {currency}"
+            },
+            "upcoming": {
+                "subject": "Przypomnienie: {bill_name} płatne jutro ({amount} {currency})",
+                "body": "Przypominamy, że {bill_name} jest płatne jutro ({due_date}).\nKwota: {amount} {currency}"
+            },
+            "on_day": {
+                "subject": "Płatne dziś: {bill_name} ({amount} {currency})",
+                "body": "{bill_name} jest płatne dzisiaj ({due_date}).\nKwota: {amount} {currency}"
+            },
+            "1_day_after": {
+                "subject": "Zaległość: {bill_name} było płatne wczoraj ({amount} {currency})",
+                "body": "{bill_name} było płatne wczoraj ({due_date}) i nadal nie zostało opłacone.\nKwota: {amount} {currency}"
+            }
+        },
+        "dueDateLabel": "Termin",
+        "summary": {
+            "subject": "Miesięczne podsumowanie za {month_label}",
+            "intro": "Oto podsumowanie płatności za {month_label}.",
+            "paid_header": "Opłacone",
+            "unpaid_header": "Nieopłacone / Zaległe",
+            "bill": "Rachunek",
+            "due_date": "Termin",
+            "expected": "Kwota",
+            "paid": "Zapłacono",
+            "paid_on": "Data zapłaty",
+            "amount": "Kwota",
+            "nothing_paid": "Żadne płatności nie zostały oznaczone jako opłacone w tym miesiącu.",
+            "nothing_unpaid": "Wszystkie rachunki są opłacone — świetna robota!",
+            "total_paid": "Łącznie zapłacono",
+            "total_outstanding": "Łącznie do zapłaty",
+            "footer": "Zarządzaj rachunkami w aplikacji Pay Tracker."
+        },
+        "reset": {
+            "subject": "Zresetuj hasło Pay Tracker",
+            "body": "Zostało złożone żądanie zresetowania hasła do konta Pay Tracker.\n\nKliknij poniższy link, aby ustawić nowe hasło (ważny przez {expires_label}):\n{reset_url}\n\nJeśli nie prosiłeś o reset hasła, zignoruj tę wiadomość — Twoje hasło pozostanie bez zmian.",
+            "expires": "{minutes} minut",
+            "noExpiry": "bezterminowo"
+        },
+        "monthLong": {
+            "1": "styczeń",
+            "2": "luty",
+            "3": "marzec",
+            "4": "kwiecień",
+            "5": "maj",
+            "6": "czerwiec",
+            "7": "lipiec",
+            "8": "sierpień",
+            "9": "wrzesień",
+            "10": "październik",
+            "11": "listopad",
+            "12": "grudzień"
+        },
+        "monthYear": "{month} {year}"
     }
 }

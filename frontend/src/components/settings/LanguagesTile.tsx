@@ -2,19 +2,10 @@
 
 import { Languages } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useLocale, type Locale } from "@/context/locale-context";
+import { useLocale } from "@/context/locale-context";
+import { LOCALE_OPTIONS, type Locale } from "@/lib/locales";
 import { CheckboxMark } from "@/components/ui/Checkbox";
 import { Tile } from "./Tile";
-
-const LOCALES: { value: Locale; flag: string; name: string }[] = [
-  { value: "en", flag: "🇬🇧", name: "English" },
-  { value: "pl", flag: "🇵🇱", name: "Polski" },
-  { value: "de", flag: "🇩🇪", name: "Deutsch" },
-  { value: "es", flag: "🇪🇸", name: "Español" },
-  { value: "it", flag: "🇮🇹", name: "Italiano" },
-  { value: "fr", flag: "🇫🇷", name: "Français" },
-  { value: "zh", flag: "🇨🇳", name: "中文" },
-];
 
 export function LanguagesTile({
   t,
@@ -46,7 +37,7 @@ export function LanguagesTile({
       onToggle={onToggle}
     >
       <div className="space-y-2">
-        {LOCALES.map(({ value, flag, name }) => {
+        {LOCALE_OPTIONS.map(({ code: value, flag, name }) => {
           const isActive = value === locale;
           return (
             <label

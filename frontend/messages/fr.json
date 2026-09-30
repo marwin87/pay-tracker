@@ -529,5 +529,80 @@
         "sortPaidFirst": "Payées en premier",
         "sortUnpaidFirst": "Impayées en premier",
         "searchPlaceholder": "Rechercher par nom…"
+    },
+    "ExcelExport": {
+        "monthShort": {
+            "1": "janv.",
+            "2": "févr.",
+            "3": "mars",
+            "4": "avr.",
+            "5": "mai",
+            "6": "juin",
+            "7": "juil.",
+            "8": "août",
+            "9": "sept.",
+            "10": "oct.",
+            "11": "nov.",
+            "12": "déc."
+        }
+    },
+    "Notifications": {
+        "reminder": {
+            "2_days_before": {
+                "subject": "Rappel : {bill_name} à payer dans 2 jours ({amount} {currency})",
+                "body": "Nous vous rappelons que {bill_name} est à payer dans 2 jours ({due_date}).\nMontant : {amount} {currency}"
+            },
+            "upcoming": {
+                "subject": "Rappel : {bill_name} à payer demain ({amount} {currency})",
+                "body": "Nous vous rappelons que {bill_name} est à payer demain ({due_date}).\nMontant : {amount} {currency}"
+            },
+            "on_day": {
+                "subject": "À payer aujourd'hui : {bill_name} ({amount} {currency})",
+                "body": "{bill_name} est à payer aujourd'hui ({due_date}).\nMontant : {amount} {currency}"
+            },
+            "1_day_after": {
+                "subject": "En retard : {bill_name} était à payer hier ({amount} {currency})",
+                "body": "{bill_name} était à payer hier ({due_date}) et n'est toujours pas payé.\nMontant : {amount} {currency}"
+            }
+        },
+        "dueDateLabel": "Échéance",
+        "summary": {
+            "subject": "Récapitulatif mensuel pour {month_label}",
+            "intro": "Voici votre récapitulatif des paiements pour {month_label}.",
+            "paid_header": "Payé",
+            "unpaid_header": "Impayé / En retard",
+            "bill": "Facture",
+            "due_date": "Échéance",
+            "expected": "Prévu",
+            "paid": "Payé",
+            "paid_on": "Payé le",
+            "amount": "Montant",
+            "nothing_paid": "Aucun paiement n'a été marqué comme payé ce mois-ci.",
+            "nothing_unpaid": "Toutes les factures sont payées — bravo !",
+            "total_paid": "Total payé",
+            "total_outstanding": "Total restant dû",
+            "footer": "Gérez vos factures dans l'application Pay Tracker."
+        },
+        "reset": {
+            "subject": "Réinitialisez votre mot de passe Pay Tracker",
+            "body": "Vous avez demandé la réinitialisation du mot de passe de votre compte Pay Tracker.\n\nCliquez sur le lien ci-dessous pour définir un nouveau mot de passe (valable {expires_label}) :\n{reset_url}\n\nSi vous n'êtes pas à l'origine de cette demande, ignorez cet e-mail : votre mot de passe ne changera pas.",
+            "expires": "{minutes} minutes",
+            "noExpiry": "sans limite de durée"
+        },
+        "monthLong": {
+            "1": "janvier",
+            "2": "février",
+            "3": "mars",
+            "4": "avril",
+            "5": "mai",
+            "6": "juin",
+            "7": "juillet",
+            "8": "août",
+            "9": "septembre",
+            "10": "octobre",
+            "11": "novembre",
+            "12": "décembre"
+        },
+        "monthYear": "{month} {year}"
     }
 }

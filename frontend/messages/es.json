@@ -529,5 +529,80 @@
         "sortPaidFirst": "Pagados primero",
         "sortUnpaidFirst": "No pagados primero",
         "searchPlaceholder": "Buscar por nombre…"
+    },
+    "ExcelExport": {
+        "monthShort": {
+            "1": "ene",
+            "2": "feb",
+            "3": "mar",
+            "4": "abr",
+            "5": "may",
+            "6": "jun",
+            "7": "jul",
+            "8": "ago",
+            "9": "sep",
+            "10": "oct",
+            "11": "nov",
+            "12": "dic"
+        }
+    },
+    "Notifications": {
+        "reminder": {
+            "2_days_before": {
+                "subject": "Recordatorio: {bill_name} vence en 2 días ({amount} {currency})",
+                "body": "Te recordamos que {bill_name} vence en 2 días ({due_date}).\nImporte: {amount} {currency}"
+            },
+            "upcoming": {
+                "subject": "Recordatorio: {bill_name} vence mañana ({amount} {currency})",
+                "body": "Te recordamos que {bill_name} vence mañana ({due_date}).\nImporte: {amount} {currency}"
+            },
+            "on_day": {
+                "subject": "Vence hoy: {bill_name} ({amount} {currency})",
+                "body": "{bill_name} vence hoy ({due_date}).\nImporte: {amount} {currency}"
+            },
+            "1_day_after": {
+                "subject": "Vencido: {bill_name} venció ayer ({amount} {currency})",
+                "body": "{bill_name} venció ayer ({due_date}) y sigue sin pagar.\nImporte: {amount} {currency}"
+            }
+        },
+        "dueDateLabel": "Vencimiento",
+        "summary": {
+            "subject": "Resumen mensual de {month_label}",
+            "intro": "Este es tu resumen de pagos de {month_label}.",
+            "paid_header": "Pagado",
+            "unpaid_header": "Sin pagar / Vencido",
+            "bill": "Factura",
+            "due_date": "Vencimiento",
+            "expected": "Esperado",
+            "paid": "Pagado",
+            "paid_on": "Pagado el",
+            "amount": "Importe",
+            "nothing_paid": "Este mes no se ha marcado ningún pago como pagado.",
+            "nothing_unpaid": "Todas las facturas están pagadas. ¡Buen trabajo!",
+            "total_paid": "Total pagado",
+            "total_outstanding": "Total pendiente",
+            "footer": "Gestiona tus facturas en la aplicación Pay Tracker."
+        },
+        "reset": {
+            "subject": "Restablece tu contraseña de Pay Tracker",
+            "body": "Has solicitado restablecer la contraseña de tu cuenta de Pay Tracker.\n\nHaz clic en el siguiente enlace para establecer una nueva contraseña (válido durante {expires_label}):\n{reset_url}\n\nSi no lo solicitaste, puedes ignorar este correo: tu contraseña no cambiará.",
+            "expires": "{minutes} minutos",
+            "noExpiry": "sin caducidad"
+        },
+        "monthLong": {
+            "1": "enero",
+            "2": "febrero",
+            "3": "marzo",
+            "4": "abril",
+            "5": "mayo",
+            "6": "junio",
+            "7": "julio",
+            "8": "agosto",
+            "9": "septiembre",
+            "10": "octubre",
+            "11": "noviembre",
+            "12": "diciembre"
+        },
+        "monthYear": "{month} {year}"
     }
 }

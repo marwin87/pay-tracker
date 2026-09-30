@@ -40,6 +40,8 @@ Notable changes to Pay Tracker, release by release.
 - Fixed foreign-key metadata drift on bill templates and payment instances
 - Payment dialogs render through the shared modal portal
 - Save/Cancel button order made consistent everywhere
+- Emails (reminders, monthly summary, password reset) and Telegram messages are translated into all app languages
+- Languages and translations have a single source shared by frontend and backend (no duplicated lists)
 
 ## v1.1.0 — 27-09-2026
 

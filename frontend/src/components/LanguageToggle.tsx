@@ -3,18 +3,9 @@
 import { useState } from "react";
 import { Check, ChevronDown, Languages } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useLocale, type Locale } from "@/context/locale-context";
+import { useLocale } from "@/context/locale-context";
+import { LOCALE_OPTIONS } from "@/lib/locales";
 import { MENU_ROW_CLASS } from "@/components/menuRow";
-
-const LOCALES: { value: Locale; flag: string; name: string }[] = [
-  { value: "en", flag: "🇬🇧", name: "English" },
-  { value: "pl", flag: "🇵🇱", name: "Polski" },
-  { value: "de", flag: "🇩🇪", name: "Deutsch" },
-  { value: "es", flag: "🇪🇸", name: "Español" },
-  { value: "it", flag: "🇮🇹", name: "Italiano" },
-  { value: "fr", flag: "🇫🇷", name: "Français" },
-  { value: "zh", flag: "🇨🇳", name: "中文" },
-];
 
 /** Menu row that expands in place into the user's enabled languages. Stays open after a pick. */
 export default function LanguageToggle() {
@@ -22,8 +13,8 @@ export default function LanguageToggle() {
   const { locale, setLocale, enabledLocales } = useLocale();
   const [open, setOpen] = useState(false);
 
-  const options = LOCALES.filter(({ value }) => enabledLocales.includes(value));
-  const current = LOCALES.find((l) => l.value === locale);
+  const options = LOCALE_OPTIONS.filter(({ code }) => enabledLocales.includes(code));
+  const current = LOCALE_OPTIONS.find((l) => l.code === locale);
 
   return (
     <div>
@@ -44,7 +35,7 @@ export default function LanguageToggle() {
 
       {open && (
         <div role="listbox" aria-label={t("ariaLabel")} className="mt-0.5 flex flex-col gap-0.5 pl-3">
-          {options.map(({ value, flag, name }) => (
+          {options.map(({ code: value, flag, name }) => (
             <button
               key={value}
               type="button"

@@ -8,6 +8,7 @@ from sqlalchemy import or_
 from sqlalchemy.orm import Session, selectinload, sessionmaker
 
 from app.core.config import settings
+from app.core.i18n import t
 from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
 from app.models.user import User
 from app.services.email import (
@@ -79,57 +80,12 @@ def _is_blocked_domain(email: str) -> bool:
     return domain in {d.lower() for d in settings.email_blocked_domains}
 
 
-_MONTH_NAMES: dict[str, list[str]] = {
-    "en": [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-    ],
-    "pl": [
-        "styczeń",
-        "luty",
-        "marzec",
-        "kwiecień",
-        "maj",
-        "czerwiec",
-        "lipiec",
-        "sierpień",
-        "wrzesień",
-        "październik",
-        "listopad",
-        "grudzień",
-    ],
-    "de": [
-        "Januar",
-        "Februar",
-        "März",
-        "April",
-        "Mai",
-        "Juni",
-        "Juli",
-        "August",
-        "September",
-        "Oktober",
-        "November",
-        "Dezember",
-    ],
-}
-
-
 def _month_label(month: str, lang: str) -> str:
     """Return a human-readable month label, e.g. 'June 2026'."""
     year, m = month.split("-")
-    names = _MONTH_NAMES.get(lang, _MONTH_NAMES["en"])
-    return f"{names[int(m) - 1]} {year}"
+    return t(lang, "Notifications.monthYear").format(
+        month=t(lang, f"Notifications.monthLong.{int(m)}"), year=year
+    )
 
 
 def send_monthly_summary_for_user(

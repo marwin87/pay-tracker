@@ -529,5 +529,80 @@
         "sortPaidFirst": "Bezahlt zuerst",
         "sortUnpaidFirst": "Unbezahlt zuerst",
         "searchPlaceholder": "Nach Name suchen…"
+    },
+    "ExcelExport": {
+        "monthShort": {
+            "1": "Jan",
+            "2": "Feb",
+            "3": "Mär",
+            "4": "Apr",
+            "5": "Mai",
+            "6": "Jun",
+            "7": "Jul",
+            "8": "Aug",
+            "9": "Sep",
+            "10": "Okt",
+            "11": "Nov",
+            "12": "Dez"
+        }
+    },
+    "Notifications": {
+        "reminder": {
+            "2_days_before": {
+                "subject": "Erinnerung: {bill_name} fällig in 2 Tagen ({amount} {currency})",
+                "body": "Erinnerung: {bill_name} ist in 2 Tagen fällig ({due_date}).\nBetrag: {amount} {currency}"
+            },
+            "upcoming": {
+                "subject": "Erinnerung: {bill_name} fällig morgen ({amount} {currency})",
+                "body": "Erinnerung: {bill_name} ist morgen fällig ({due_date}).\nBetrag: {amount} {currency}"
+            },
+            "on_day": {
+                "subject": "Heute fällig: {bill_name} ({amount} {currency})",
+                "body": "{bill_name} ist heute fällig ({due_date}).\nBetrag: {amount} {currency}"
+            },
+            "1_day_after": {
+                "subject": "Überfällig: {bill_name} war gestern fällig ({amount} {currency})",
+                "body": "{bill_name} war gestern fällig ({due_date}) und ist noch unbezahlt.\nBetrag: {amount} {currency}"
+            }
+        },
+        "dueDateLabel": "Fällig am",
+        "summary": {
+            "subject": "Monatliche Zusammenfassung für {month_label}",
+            "intro": "Hier ist Ihre Zahlungsübersicht für {month_label}.",
+            "paid_header": "Bezahlt",
+            "unpaid_header": "Unbezahlt / Überfällig",
+            "bill": "Rechnung",
+            "due_date": "Fälligkeitsdatum",
+            "expected": "Erwartet",
+            "paid": "Bezahlt",
+            "paid_on": "Bezahlt am",
+            "amount": "Betrag",
+            "nothing_paid": "Keine Zahlungen wurden diesen Monat als bezahlt markiert.",
+            "nothing_unpaid": "Alle Rechnungen sind bezahlt — gut gemacht!",
+            "total_paid": "Gesamt bezahlt",
+            "total_outstanding": "Gesamt ausstehend",
+            "footer": "Verwalten Sie Ihre Rechnungen in der Pay Tracker App."
+        },
+        "reset": {
+            "subject": "Pay Tracker Passwort zurücksetzen",
+            "body": "Sie haben eine Passwortzurücksetzung für Ihr Pay Tracker-Konto angefordert.\n\nKlicken Sie auf den folgenden Link, um ein neues Passwort festzulegen (gültig für {expires_label}):\n{reset_url}\n\nFalls Sie diese Anforderung nicht gestellt haben, können Sie diese E-Mail ignorieren — Ihr Passwort bleibt unverändert.",
+            "expires": "{minutes} Minuten",
+            "noExpiry": "unbegrenzt"
+        },
+        "monthLong": {
+            "1": "Januar",
+            "2": "Februar",
+            "3": "März",
+            "4": "April",
+            "5": "Mai",
+            "6": "Juni",
+            "7": "Juli",
+            "8": "August",
+            "9": "September",
+            "10": "Oktober",
+            "11": "November",
+            "12": "Dezember"
+        },
+        "monthYear": "{month} {year}"
     }
 }

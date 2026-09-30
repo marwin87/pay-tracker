@@ -529,5 +529,80 @@
         "sortPaidFirst": "已付款优先",
         "sortUnpaidFirst": "未付款优先",
         "searchPlaceholder": "按名称搜索…"
+    },
+    "ExcelExport": {
+        "monthShort": {
+            "1": "1月",
+            "2": "2月",
+            "3": "3月",
+            "4": "4月",
+            "5": "5月",
+            "6": "6月",
+            "7": "7月",
+            "8": "8月",
+            "9": "9月",
+            "10": "10月",
+            "11": "11月",
+            "12": "12月"
+        }
+    },
+    "Notifications": {
+        "reminder": {
+            "2_days_before": {
+                "subject": "提醒：{bill_name} 将在 2 天后到期 ({amount} {currency})",
+                "body": "提醒您，{bill_name} 将在 2 天后到期（{due_date}）。\n金额：{amount} {currency}"
+            },
+            "upcoming": {
+                "subject": "提醒：{bill_name} 明天到期 ({amount} {currency})",
+                "body": "提醒您，{bill_name} 明天到期（{due_date}）。\n金额：{amount} {currency}"
+            },
+            "on_day": {
+                "subject": "今天到期：{bill_name} ({amount} {currency})",
+                "body": "{bill_name} 今天到期（{due_date}）。\n金额：{amount} {currency}"
+            },
+            "1_day_after": {
+                "subject": "已逾期：{bill_name} 昨天到期 ({amount} {currency})",
+                "body": "{bill_name} 昨天到期（{due_date}），仍未支付。\n金额：{amount} {currency}"
+            }
+        },
+        "dueDateLabel": "到期日",
+        "summary": {
+            "subject": "{month_label} 月度汇总",
+            "intro": "这是您 {month_label} 的付款汇总。",
+            "paid_header": "已支付",
+            "unpaid_header": "未支付 / 已逾期",
+            "bill": "账单",
+            "due_date": "到期日",
+            "expected": "应付",
+            "paid": "已付",
+            "paid_on": "支付日期",
+            "amount": "金额",
+            "nothing_paid": "本月没有标记为已支付的付款。",
+            "nothing_unpaid": "所有账单均已支付——干得好！",
+            "total_paid": "已付总额",
+            "total_outstanding": "未付总额",
+            "footer": "请在 Pay Tracker 应用中管理您的账单。"
+        },
+        "reset": {
+            "subject": "重置您的 Pay Tracker 密码",
+            "body": "您请求重置 Pay Tracker 账户的密码。\n\n请点击下方链接设置新密码（{expires_label}内有效）：\n{reset_url}\n\n如果这不是您本人的操作，请忽略此邮件——您的密码不会改变。",
+            "expires": "{minutes} 分钟",
+            "noExpiry": "无期限"
+        },
+        "monthLong": {
+            "1": "1月",
+            "2": "2月",
+            "3": "3月",
+            "4": "4月",
+            "5": "5月",
+            "6": "6月",
+            "7": "7月",
+            "8": "8月",
+            "9": "9月",
+            "10": "10月",
+            "11": "11月",
+            "12": "12月"
+        },
+        "monthYear": "{year}年{month}"
     }
 }

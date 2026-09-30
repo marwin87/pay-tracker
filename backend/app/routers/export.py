@@ -1,4 +1,3 @@
-import calendar
 import io
 import json
 from datetime import date, datetime, timedelta, timezone
@@ -17,6 +16,7 @@ from sqlalchemy.orm import Session, selectinload
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
+from app.core.i18n import resolve_locale, t
 from app.schemas.auth import EXPORT_FIELD_KEYS
 from app.models.bill import (
     BillFrequency,
@@ -117,94 +117,6 @@ _COLUMNS = [
 # _COLUMNS[i], stored on User.export_fields (snake_case, locale-independent).
 _COLUMN_KEYS = list(EXPORT_FIELD_KEYS)
 
-# Mirrors the per-language dicts already established in
-# app/services/reminder_job.py for outbound emails.
-_COLUMN_LABELS: dict[str, list[str]] = {
-    "en": _COLUMNS,
-    "pl": [
-        "Rachunek",
-        "Kategoria",
-        "Okres",
-        "Termin płatności",
-        "Kwota",
-        "Waluta",
-        "Status",
-        "Kwota zapłacona",
-        "Data zapłaty",
-        "Notatki",
-    ],
-    "de": [
-        "Rechnung",
-        "Kategorie",
-        "Zeitraum",
-        "Fälligkeitsdatum",
-        "Betrag",
-        "Währung",
-        "Status",
-        "Bezahlter Betrag",
-        "Bezahlt am",
-        "Notizen",
-    ],
-    "es": [
-        "Factura",
-        "Categoría",
-        "Periodo",
-        "Fecha de vencimiento",
-        "Importe",
-        "Moneda",
-        "Estado",
-        "Importe pagado",
-        "Pagado el",
-        "Notas",
-    ],
-    "fr": [
-        "Facture",
-        "Catégorie",
-        "Période",
-        "Date d'échéance",
-        "Montant",
-        "Devise",
-        "Statut",
-        "Montant payé",
-        "Payé le",
-        "Notes",
-    ],
-    "it": [
-        "Fattura",
-        "Categoria",
-        "Periodo",
-        "Data di scadenza",
-        "Importo",
-        "Valuta",
-        "Stato",
-        "Importo pagato",
-        "Pagato il",
-        "Note",
-    ],
-    "zh": [
-        "账单",
-        "类别",
-        "期间",
-        "到期日",
-        "金额",
-        "货币",
-        "状态",
-        "已付金额",
-        "支付日期",
-        "备注",
-    ],
-}
-
-_STATUS_LABELS: dict[str, dict[str, str]] = {
-    "en": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
-    "pl": {"upcoming": "Nadchodzące", "overdue": "Zaległe", "paid": "Opłacone"},
-    "de": {"upcoming": "Bevorstehend", "overdue": "Überfällig", "paid": "Bezahlt"},
-    "es": {"upcoming": "Próximo", "overdue": "Vencido", "paid": "Pagado"},
-    "fr": {"upcoming": "À venir", "overdue": "En retard", "paid": "Payé"},
-    "it": {"upcoming": "In arrivo", "overdue": "Scaduto", "paid": "Pagato"},
-    "zh": {"upcoming": "即将到期", "overdue": "已逾期", "paid": "已支付"},
-}
-
 # Mirrors the status colors used in the frontend (PaymentsCalendar.tsx STATUS_TILE).
 _STATUS_STYLES: dict[str, tuple[str, str]] = {
     "upcoming": ("DBEAFE", "1D4ED8"),  # blue-100 / blue-700
@@ -249,81 +161,6 @@ _CATEGORY_BORDER_HEX: dict[str, str] = {
 }
 _CATEGORY_BORDER_FALLBACK = _CATEGORY_BORDER_HEX["slate"]
 
-_MONTH_ABBR: dict[str, list[str]] = {
-    "en": [calendar.month_abbr[m] for m in range(1, 13)],
-    "pl": [
-        "sty",
-        "lut",
-        "mar",
-        "kwi",
-        "maj",
-        "cze",
-        "lip",
-        "sie",
-        "wrz",
-        "paź",
-        "lis",
-        "gru",
-    ],
-    "de": [
-        "Jan",
-        "Feb",
-        "Mär",
-        "Apr",
-        "Mai",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Okt",
-        "Nov",
-        "Dez",
-    ],
-    "es": [
-        "ene",
-        "feb",
-        "mar",
-        "abr",
-        "may",
-        "jun",
-        "jul",
-        "ago",
-        "sep",
-        "oct",
-        "nov",
-        "dic",
-    ],
-    "fr": [
-        "janv.",
-        "févr.",
-        "mars",
-        "avr.",
-        "mai",
-        "juin",
-        "juil.",
-        "août",
-        "sept.",
-        "oct.",
-        "nov.",
-        "déc.",
-    ],
-    "it": [
-        "gen",
-        "feb",
-        "mar",
-        "apr",
-        "mag",
-        "giu",
-        "lug",
-        "ago",
-        "set",
-        "ott",
-        "nov",
-        "dic",
-    ],
-    "zh": [f"{m}月" for m in range(1, 13)],
-}
-
 
 def _ensure_year_instances(db: Session, user_id: int, year: int) -> None:
     """Backfill missing payment instances for every eligible template across
@@ -354,8 +191,7 @@ def export_xlsx(
     if not me.export_enabled:
         raise HTTPException(status_code=403, detail="Excel export is disabled")
 
-    if lang not in _COLUMN_LABELS:
-        lang = "en"
+    lang = resolve_locale(lang)
 
     selected_keys = set(me.export_fields)
     selected_columns = [
@@ -388,7 +224,7 @@ def export_xlsx(
                 "Due Date": i.due_date.isoformat(),
                 "Amount": f"{i.current_amount:.2f}".replace(".", me.decimal_separator),
                 "Currency": i.template.currency,
-                "Status": _STATUS_LABELS[lang].get(i.status, i.status),
+                "Status": t(lang, f"PaymentRow.status.{i.status}"),
                 "Paid Amount": (
                     f"{i.paid_amount:.2f}".replace(".", me.decimal_separator)
                     if i.paid_amount
@@ -401,8 +237,11 @@ def export_xlsx(
             }
         )
 
-    all_headers = _COLUMN_LABELS[lang]
-    headers = [h for col, h in zip(_COLUMNS, all_headers) if col in selected_columns]
+    headers = [
+        t(lang, f"SettingsPage.excelExport.fields.{key}")
+        for key in _COLUMN_KEYS
+        if key in selected_keys
+    ]
     status_col_idx = (
         selected_columns.index("Status") + 1 if "Status" in selected_columns else None
     )
@@ -420,7 +259,7 @@ def export_xlsx(
     buf = io.BytesIO()
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
         for m in [month] if month else range(1, 13):
-            sheet_name = f"{_MONTH_ABBR[lang][m - 1]} {year}"
+            sheet_name = f"{t(lang, f"ExcelExport.monthShort.{m}")} {year}"
             rows = by_month[m]
             df = (
                 pd.DataFrame(rows, columns=selected_columns)

@@ -43,6 +43,8 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: ./backend
+          build-contexts: |
+            i18n=./frontend/messages
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |

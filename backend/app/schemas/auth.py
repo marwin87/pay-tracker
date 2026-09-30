@@ -2,9 +2,18 @@ import re
 from datetime import datetime
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic import AfterValidator, BaseModel, EmailStr, Field, field_validator
 
-SupportedLanguage = Literal["en", "pl", "de", "es", "it", "fr", "zh"]
+from app.core.i18n import LOCALES
+
+
+def _check_language(v: str) -> str:
+    if v not in LOCALES:
+        raise ValueError(f"Unsupported language: {v}")
+    return v
+
+
+SupportedLanguage = Annotated[str, AfterValidator(_check_language)]
 
 EXPORT_FIELD_KEYS: tuple[str, ...] = (
     "bill",

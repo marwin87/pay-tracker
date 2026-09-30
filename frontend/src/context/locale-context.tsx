@@ -11,39 +11,9 @@ import {
 import { NextIntlClientProvider } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import { fetchMe, updateMe } from "@/lib/user-api";
-import enMessages from "../../messages/en.json";
-import plMessages from "../../messages/pl.json";
-import deMessages from "../../messages/de.json";
-import esMessages from "../../messages/es.json";
-import itMessages from "../../messages/it.json";
-import frMessages from "../../messages/fr.json";
-import zhMessages from "../../messages/zh.json";
+import { LOCALES, messagesMap, detectBrowserLocale, type Locale } from "@/lib/locales";
 
-export type Locale = "en" | "pl" | "de" | "es" | "it" | "fr" | "zh";
-
-const messagesMap: Record<Locale, typeof enMessages> = {
-  en: enMessages,
-  pl: plMessages,
-  de: deMessages,
-  es: esMessages,
-  it: itMessages,
-  fr: frMessages,
-  zh: zhMessages,
-};
-
-const VALID_LOCALES: Locale[] = ["en", "pl", "de", "es", "it", "fr", "zh"];
-
-function detectBrowserLocale(): Locale {
-  if (typeof navigator === "undefined") return "en";
-  const lang = navigator.language;
-  if (lang.startsWith("pl")) return "pl";
-  if (lang.startsWith("de")) return "de";
-  if (lang.startsWith("es")) return "es";
-  if (lang.startsWith("it")) return "it";
-  if (lang.startsWith("fr")) return "fr";
-  if (lang.startsWith("zh")) return "zh";
-  return "en";
-}
+export type { Locale };
 
 export type DecimalSeparator = "." | ",";
 
@@ -61,7 +31,7 @@ const LocaleContext = createContext<LocaleContextValue | null>(null);
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
   const [locale, setLocaleState] = useState<Locale>(detectBrowserLocale);
-  const [enabledLocales, setEnabledLocalesState] = useState<Locale[]>(VALID_LOCALES);
+  const [enabledLocales, setEnabledLocalesState] = useState<Locale[]>(LOCALES);
   const [decimalSeparator, setDecimalSeparatorState] = useState<DecimalSeparator>(".");
 
   useEffect(() => {
@@ -72,7 +42,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         if (cancelled) return;
         if (
           profile.language_preference &&
-          VALID_LOCALES.includes(profile.language_preference as Locale)
+          LOCALES.includes(profile.language_preference as Locale)
         ) {
           setLocaleState(profile.language_preference as Locale);
         } else if (!profile.language_preference) {
@@ -80,9 +50,9 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
           updateMe({ language_preference: detectBrowserLocale() }).catch(() => {});
         }
         const enabled = (profile.enabled_languages ?? []).filter((l): l is Locale =>
-          VALID_LOCALES.includes(l as Locale),
+          LOCALES.includes(l as Locale),
         );
-        setEnabledLocalesState(enabled.length ? enabled : VALID_LOCALES);
+        setEnabledLocalesState(enabled.length ? enabled : LOCALES);
         setDecimalSeparatorState(profile.decimal_separator);
       })
       .catch(() => {});

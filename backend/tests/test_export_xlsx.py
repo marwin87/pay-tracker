@@ -6,6 +6,7 @@ from datetime import date
 
 import openpyxl
 
+from app.core.i18n import LOCALES
 from tests.conftest import auth, category_id, register_and_login, sync_payments
 
 _BILL_A = {
@@ -294,16 +295,9 @@ def test_xlsx_rejects_out_of_range_month(client):
 
 
 def test_xlsx_supports_every_frontend_locale(client):
-    """Every locale in frontend/messages must have translated headers, status and
+    """Every locale in locales.json must have translated headers, status and
     sheet names — an unsupported one silently falls back to English."""
-    import pathlib
-
-    locales = sorted(
-        p.stem
-        for p in (pathlib.Path(__file__).parents[2] / "frontend" / "messages").glob(
-            "*.json"
-        )
-    )
+    locales = LOCALES
     assert len(locales) >= 7
     tok = _monthly_bill_from_january(client, "xlsx_alllocales@test.com")
     year = date.today().year

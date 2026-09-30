@@ -529,5 +529,80 @@
         "sortPaidFirst": "Paid first",
         "sortUnpaidFirst": "Unpaid first",
         "searchPlaceholder": "Search by name…"
+    },
+    "ExcelExport": {
+        "monthShort": {
+            "1": "Jan",
+            "2": "Feb",
+            "3": "Mar",
+            "4": "Apr",
+            "5": "May",
+            "6": "Jun",
+            "7": "Jul",
+            "8": "Aug",
+            "9": "Sep",
+            "10": "Oct",
+            "11": "Nov",
+            "12": "Dec"
+        }
+    },
+    "Notifications": {
+        "reminder": {
+            "2_days_before": {
+                "subject": "Reminder: {bill_name} due in 2 days ({amount} {currency})",
+                "body": "This is a reminder that {bill_name} is due in 2 days ({due_date}).\nAmount: {amount} {currency}"
+            },
+            "upcoming": {
+                "subject": "Reminder: {bill_name} due tomorrow ({amount} {currency})",
+                "body": "This is a reminder that {bill_name} is due tomorrow ({due_date}).\nAmount: {amount} {currency}"
+            },
+            "on_day": {
+                "subject": "Due today: {bill_name} ({amount} {currency})",
+                "body": "{bill_name} is due today ({due_date}).\nAmount: {amount} {currency}"
+            },
+            "1_day_after": {
+                "subject": "Overdue: {bill_name} was due yesterday ({amount} {currency})",
+                "body": "{bill_name} was due yesterday ({due_date}) and remains unpaid.\nAmount: {amount} {currency}"
+            }
+        },
+        "dueDateLabel": "Due date",
+        "summary": {
+            "subject": "Monthly summary for {month_label}",
+            "intro": "Here is your payment summary for {month_label}.",
+            "paid_header": "Paid",
+            "unpaid_header": "Unpaid / Overdue",
+            "bill": "Bill",
+            "due_date": "Due date",
+            "expected": "Expected",
+            "paid": "Paid",
+            "paid_on": "Paid on",
+            "amount": "Amount",
+            "nothing_paid": "No payments were marked as paid this month.",
+            "nothing_unpaid": "All bills are paid — great job!",
+            "total_paid": "Total paid",
+            "total_outstanding": "Total outstanding",
+            "footer": "Manage your bills in the Pay Tracker app."
+        },
+        "reset": {
+            "subject": "Reset your Pay Tracker password",
+            "body": "You requested a password reset for your Pay Tracker account.\n\nClick the link below to set a new password (valid for {expires_label}):\n{reset_url}\n\nIf you did not request this, you can ignore this email — your password will not change.",
+            "expires": "{minutes} minutes",
+            "noExpiry": "no expiry"
+        },
+        "monthLong": {
+            "1": "January",
+            "2": "February",
+            "3": "March",
+            "4": "April",
+            "5": "May",
+            "6": "June",
+            "7": "July",
+            "8": "August",
+            "9": "September",
+            "10": "October",
+            "11": "November",
+            "12": "December"
+        },
+        "monthYear": "{month} {year}"
     }
 }
