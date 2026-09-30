@@ -247,14 +247,19 @@ def send_summary_telegram(
     unpaid_rows: list[dict[str, Any]],
     language: str,
 ) -> None:
-    lines = [f"✅ {r['name']}" for r in paid_rows]
     # bills without an amount (0.00) show only the name and due date
-    lines += [
+    lines = [
         f"❌ {r['name']}"
         + (f" — {r['amount']} {r['currency']}" if r["amount"] > 0 else "")
         + f" ({r['due_date']})"
         for r in unpaid_rows
     ]
+    # paid rows show what was actually paid; 0.00 (no amount set) is omitted
+    for r in paid_rows:
+        paid = r.get("paid_amount") or r["amount"]
+        lines.append(
+            f"✅ {r['name']}" + (f" — {paid} {r['currency']}" if paid > 0 else "")
+        )
     notify.send(
         url,
         t(language, "Notifications.summary.subject").format(month_label=month_label),
