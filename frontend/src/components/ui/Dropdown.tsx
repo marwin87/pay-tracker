@@ -37,6 +37,9 @@ interface Props<T extends string> {
   placeholder?: ReactNode;
   variant?: keyof typeof TRIGGER_VARIANTS;
   scrollable?: boolean;
+  disabled?: boolean;
+  /** Which edge the popup lines up with — use "right" for triggers at the right edge of the page. */
+  align?: "left" | "right";
 }
 
 export default function Dropdown<T extends string>({
@@ -48,6 +51,8 @@ export default function Dropdown<T extends string>({
   placeholder,
   variant = "field",
   scrollable,
+  disabled,
+  align = "left",
 }: Props<T>) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -122,7 +127,8 @@ export default function Dropdown<T extends string>({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={ariaLabel}
-        className={TRIGGER_VARIANTS[variant]}
+        disabled={disabled}
+        className={`${TRIGGER_VARIANTS[variant]} disabled:cursor-not-allowed disabled:opacity-50`}
       >
         <span className="flex-1 truncate text-left">
           {selected ? selected.label : placeholder}
@@ -133,7 +139,7 @@ export default function Dropdown<T extends string>({
       {open && (
         <div
           role="listbox"
-          className="absolute z-20 mt-1.5 min-w-full w-max max-w-xs rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg dark:border-slate-600 dark:bg-slate-800"
+          className={`absolute z-20 mt-1.5 ${align === "right" ? "right-0" : ""} min-w-full w-max max-w-xs rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg dark:border-slate-600 dark:bg-slate-800`}
         >
           <div className={scrollable ? "max-h-64 overflow-y-auto" : undefined}>
             {options.map((opt, i) => (

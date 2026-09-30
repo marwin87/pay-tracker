@@ -132,6 +132,8 @@ Focus ring is always green regardless of the tile's color — don't theme it per
   ariaLabel="…"        // or pass `id` + an associated <label htmlFor>
   variant="field"        // "field" | "pill" | "pill-sm"
   scrollable              // for long option lists (time slots, categories)
+  disabled                // e.g. while an action is running
+  align="right"           // popup lines up with the trigger's right edge (triggers at the page edge)
 />
 ```
 
