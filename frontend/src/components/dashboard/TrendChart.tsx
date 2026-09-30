@@ -62,7 +62,7 @@ export default function TrendChart({ points, currency, month }: Props) {
           {t("title")}
         </h2>
         <span className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
-          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-green-500" />{t("paid")}</span>
+          <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-emerald-500" />{t("paid")}</span>
           <span className="flex items-center gap-1.5"><span className="h-2 w-2 rounded-full bg-blue-400" />{t("unpaid")}</span>
           {avg > 0 && <span>{t("average", { amount: money(avg) })}</span>}
         </span>
@@ -92,7 +92,7 @@ export default function TrendChart({ points, currency, month }: Props) {
                   <rect x={LEFT + i * step} y={TOP} width={step} height={BASE - TOP + 24} fill="transparent" strokeWidth={2} className="stroke-transparent" />
                   {b.paid > 0 && (
                     <rect x={x} y={y(b.paid)} width={bw} height={BASE - y(b.paid)} rx={2}
-                      className="fill-green-500 dark:fill-green-600" opacity={isLast || active === i ? 1 : 0.75} />
+                      className="fill-emerald-500 dark:fill-emerald-600" opacity={isLast || active === i ? 1 : 0.75} />
                   )}
                   {b.unpaid > 0 && (
                     <rect x={x} y={y(b.total)} width={bw} height={y(b.paid) - y(b.total)} rx={2}

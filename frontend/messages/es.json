@@ -333,8 +333,9 @@
     "ThemeToggle": {
         "ariaLabel": "Cambiar tema",
         "label": "Tema",
+        "light": "Claro",
         "dark": "Oscuro",
-        "light": "Claro"
+        "vesperfall": "Vesperfall"
     },
     "LanguageToggle": {
         "ariaLabel": "Cambiar idioma",

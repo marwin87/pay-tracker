@@ -86,7 +86,7 @@ export default function CategoryDonut({ rows, currency }: { rows: CategoryTotal[
                         {t("paidOf", { paid: money(r.paid), total: money(r.total) })}
                       </span>
                       <span className="mt-1 block h-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-700">
-                        <span className="block h-full bg-green-500 dark:bg-green-600" style={{ width: `${pctPaid}%` }} />
+                        <span className="block h-full bg-emerald-500 dark:bg-emerald-600" style={{ width: `${pctPaid}%` }} />
                       </span>
                     </span>
                     <span className="text-sm tabular-nums text-slate-500 dark:text-slate-400">

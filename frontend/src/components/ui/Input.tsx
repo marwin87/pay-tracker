@@ -35,7 +35,7 @@ export function Input({ error, icon: Icon, size = "md", className = "", ...props
           <Icon
             size={21}
             strokeWidth={1.8}
-            className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-[#607268] dark:text-slate-400"
+            className="pointer-events-none absolute z-10 left-3.5 top-1/2 -translate-y-1/2 text-[#607268] dark:text-slate-400"
           />
           {field}
         </div>

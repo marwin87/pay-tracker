@@ -331,10 +331,11 @@
         "error": "恢复失败，请重试。"
     },
     "ThemeToggle": {
-        "ariaLabel": "切换主题",
+        "ariaLabel": "更改主题",
         "label": "主题",
+        "light": "浅色",
         "dark": "深色",
-        "light": "浅色"
+        "vesperfall": "Vesperfall"
     },
     "LanguageToggle": {
         "ariaLabel": "切换语言",

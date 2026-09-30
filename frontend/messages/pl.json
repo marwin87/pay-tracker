@@ -331,10 +331,11 @@
         "error": "Przywracanie nie powiodło się. Spróbuj ponownie."
     },
     "ThemeToggle": {
-        "ariaLabel": "Przełącz motyw",
+        "ariaLabel": "Zmień motyw",
         "label": "Motyw",
+        "light": "Jasny",
         "dark": "Ciemny",
-        "light": "Jasny"
+        "vesperfall": "Vesperfall"
     },
     "LanguageToggle": {
         "ariaLabel": "Zmień język",

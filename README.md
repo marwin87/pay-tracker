@@ -7,19 +7,24 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 
 <p align="center">
   <a href="assets/dashboard.png">
-    <img src="assets/dashboard.png" width="180" alt="Dashboard">
-  </a>
-  <a href="assets/payments_light.png">
-    <img src="assets/payments_light.png" width="180" alt="Payments light">
-  </a>
-  <a href="assets/payments_dark.png">
-    <img src="assets/payments_dark.png" width="180" alt="Payments dark">
+    <img src="assets/dashboard.png" width="260" alt="Dashboard">
   </a>
   <a href="assets/bills.png">
-    <img src="assets/bills.png" width="180" alt="Bills">
+    <img src="assets/bills.png" width="260" alt="Bills">
   </a>
   <a href="assets/settings.png">
-    <img src="assets/settings.png" width="180" alt="Settings">
+    <img src="assets/settings.png" width="260" alt="Settings">
+  </a>
+</p>
+<p align="center">
+  <a href="assets/payments_light.png">
+    <img src="assets/payments_light.png" width="260" alt="Payments light">
+  </a>
+  <a href="assets/payments_dark.png">
+    <img src="assets/payments_dark.png" width="260" alt="Payments dark">
+  </a>
+  <a href="assets/payments_vesperfall.png">
+    <img src="assets/payments_vesperfall.png" width="260" alt="Payments vesperfall">
   </a>
 </p>
 
@@ -40,6 +45,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Restore safety net** — before confirming a restore, see a comparison of your current data vs. the backup file (bill/payment counts, backup export date), with a warning if the backup would reduce your data. The server also auto-snapshots your current data immediately before any restore executes, so a mistaken restore can be undone from Settings — even if you proceeded past the warning or called the API directly.
 - **Password reset** — optional. When SMTP is configured, a "Forgot password?" link appears on the login page. Users receive a secure one-time reset link by email (expires after 60 minutes by default).
 - **Multilingual** — English, Polish, German, Spanish, Italian, French, Chinese. Language and the set of enabled languages are saved per account. The Excel export, emails and Telegram messages follow it.
+- **Themes** — light, dark and Vesperfall (a warm gold-and-leather dark theme). Switch from the avatar menu.
 - **Installable as PWA** — works offline-first on mobile and desktop.
 
 

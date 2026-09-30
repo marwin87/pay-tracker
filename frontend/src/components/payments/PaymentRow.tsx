@@ -12,7 +12,7 @@ const STATUS_STYLES: Record<string, string> = {
     "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
   overdue:
     "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400",
-  paid: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400",
+  paid: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
 };
 
 interface Props {
@@ -61,7 +61,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
   function tileGradientClass(): string {
     const base = "bg-gradient-to-r from-0% to-70%";
     if (instance.status === "overdue") return `${base} from-red-100 to-white dark:from-red-500/10 dark:to-slate-800`;
-    if (instance.status === "paid") return `${base} from-green-100 to-white dark:from-green-500/10 dark:to-slate-800`;
+    if (instance.status === "paid") return `${base} from-emerald-100 to-white dark:from-emerald-500/10 dark:to-slate-800`;
     if (isDueToday) return `${base} from-orange-100 to-white dark:from-orange-400/10 dark:to-slate-800`;
     return `${base} from-blue-100 to-white dark:from-blue-400/10 dark:to-slate-800`;
   }

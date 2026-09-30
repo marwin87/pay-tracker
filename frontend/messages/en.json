@@ -331,10 +331,11 @@
         "error": "Restore failed. Please try again."
     },
     "ThemeToggle": {
-        "ariaLabel": "Toggle theme",
+        "ariaLabel": "Change theme",
         "label": "Theme",
+        "light": "Light",
         "dark": "Dark",
-        "light": "Light"
+        "vesperfall": "Vesperfall"
     },
     "LanguageToggle": {
         "ariaLabel": "Switch language",

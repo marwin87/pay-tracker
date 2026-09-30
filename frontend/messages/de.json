@@ -331,10 +331,11 @@
         "error": "Wiederherstellung fehlgeschlagen. Bitte erneut versuchen."
     },
     "ThemeToggle": {
-        "ariaLabel": "Design umschalten",
+        "ariaLabel": "Design ändern",
         "label": "Design",
+        "light": "Hell",
         "dark": "Dunkel",
-        "light": "Hell"
+        "vesperfall": "Vesperfall"
     },
     "LanguageToggle": {
         "ariaLabel": "Sprache wechseln",

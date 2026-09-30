@@ -1,36 +1,66 @@
 "use client";
 
 import { useState } from "react";
-import { Sun, Moon } from "lucide-react";
+import { Check, ChevronDown, Palette } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { getTheme, setTheme as saveTheme, THEMES, type Theme } from "@/lib/theme";
 import { MENU_ROW_CLASS } from "@/components/menuRow";
 
-/** Menu row (avatar menu / mobile menu) that flips light/dark on click. */
+/** Menu row that expands in place into the available themes. Stays open after a pick. */
 export default function ThemeToggle() {
   const t = useTranslations("ThemeToggle");
-  const [dark, setDark] = useState(
-    () => typeof window !== "undefined" && document.documentElement.classList.contains("dark"),
+  const [theme, setTheme] = useState<Theme>(() =>
+    typeof window === "undefined" ? "light" : getTheme(),
   );
+  const [open, setOpen] = useState(false);
 
-  function toggle() {
-    const isDark = document.documentElement.classList.toggle("dark");
-    localStorage.setItem("theme", isDark ? "dark" : "light");
-    setDark(isDark);
+  function pick(next: Theme) {
+    saveTheme(next);
+    setTheme(next);
   }
 
   return (
-    <button
-      type="button"
-      onClick={toggle}
-      aria-label={t("ariaLabel")}
-      suppressHydrationWarning
-      className={MENU_ROW_CLASS}
-    >
-      {dark ? <Moon size={15} /> : <Sun size={15} />}
-      <span suppressHydrationWarning>{t("label")}</span>
-      <span suppressHydrationWarning className="ml-auto text-xs font-normal text-slate-400 dark:text-slate-500">
-        {dark ? t("dark") : t("light")}
-      </span>
-    </button>
+    <div>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-label={t("ariaLabel")}
+        suppressHydrationWarning
+        className={MENU_ROW_CLASS}
+      >
+        <Palette size={15} />
+        <span>{t("label")}</span>
+        <span
+          suppressHydrationWarning
+          className="ml-auto flex items-center gap-1 text-xs font-normal text-slate-400 dark:text-slate-500"
+        >
+          {t(theme)}
+          <ChevronDown size={14} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+        </span>
+      </button>
+
+      {open && (
+        <div role="listbox" aria-label={t("ariaLabel")} className="mt-0.5 flex flex-col gap-0.5 pl-3">
+          {THEMES.map((value) => (
+            <button
+              key={value}
+              type="button"
+              role="option"
+              aria-selected={value === theme}
+              onClick={() => pick(value)}
+              className={`flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left text-sm transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50 ${
+                value === theme
+                  ? "font-medium text-green-700 dark:text-green-400"
+                  : "text-slate-600 dark:text-slate-400"
+              }`}
+            >
+              <span>{t(value)}</span>
+              {value === theme && <Check size={14} className="ml-auto" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

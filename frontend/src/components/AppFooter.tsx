@@ -1,9 +1,11 @@
 const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "dev";
 
+// Opaque bar pinned to the viewport bottom; <body> reserves matching padding (pb-9)
+// so page content ends above it. z-40 keeps modals (z-50) on top.
 export default function AppFooter() {
   return (
-    <footer className="fixed bottom-3 right-4 z-50 text-xs text-slate-400 dark:text-slate-500">
-      <span>{APP_VERSION}</span>
+    <footer className="app-footer fixed inset-x-0 bottom-0 z-40 flex h-9 items-center justify-center border-t border-slate-200 bg-[#F6FAF8] text-xs text-slate-400 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-500">
+      <span>© {new Date().getFullYear()} Pay Tracker · {APP_VERSION}</span>
     </footer>
   );
 }

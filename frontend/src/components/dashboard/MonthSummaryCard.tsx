@@ -23,7 +23,7 @@ export default function MonthSummaryCard({ summary, currency, monthLabel }: Prop
   const count = summary.paidCount + summary.overdueCount + summary.upcomingCount;
 
   const stats = [
-    { key: "paid", label: t("paid"), value: summary.paid, n: summary.paidCount, dot: "bg-green-500", text: "text-slate-800 dark:text-slate-100" },
+    { key: "paid", label: t("paid"), value: summary.paid, n: summary.paidCount, dot: "bg-emerald-500", text: "text-slate-800 dark:text-slate-100" },
     { key: "overdue", label: t("overdue"), value: summary.overdue, n: summary.overdueCount, dot: "bg-red-500", text: "text-red-600 dark:text-red-400" },
     { key: "upcoming", label: t("upcoming"), value: summary.upcoming, n: summary.upcomingCount, dot: "bg-blue-400", text: "text-slate-800 dark:text-slate-100" },
   ];
@@ -56,7 +56,7 @@ export default function MonthSummaryCard({ summary, currency, monthLabel }: Prop
             role="img"
             aria-label={t("barLabel", { percent: Math.round(pct(summary.paid)) })}
           >
-            <div className="bg-green-500 dark:bg-green-600" style={{ width: `${pct(summary.paid)}%` }} />
+            <div className="bg-emerald-500 dark:bg-emerald-600" style={{ width: `${pct(summary.paid)}%` }} />
             <div className="bg-red-500 dark:bg-red-500" style={{ width: `${pct(summary.overdue)}%` }} />
             <div className="bg-blue-400 dark:bg-blue-500" style={{ width: `${pct(summary.upcoming)}%` }} />
           </div>

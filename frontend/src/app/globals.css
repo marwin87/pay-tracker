@@ -32,3 +32,156 @@ button:not(:disabled) {
   scrollbar-width: thin;
   scrollbar-color: #059669 transparent;
 }
+
+/* "Vesperfall" theme: dark base (the `dark` class is set too) with slate → warm
+   charcoal, green/emerald → aged gold, red → blood. Remaps Tailwind's palette
+   variables, so every existing utility follows without per-component classes. */
+.theme-vesperfall {
+  --color-slate-50: #f4f0e8;
+  --color-slate-100: #e8e1d3;
+  --color-slate-200: #cfc6b4;
+  --color-slate-300: #c9bfa8;
+  --color-slate-400: #ab9f88;
+  --color-slate-500: #8d8069;
+  --color-slate-600: #6e6250;
+  --color-slate-700: #554a3b;
+  --color-slate-800: #40372c;
+  --color-slate-900: #2e2821;
+  --color-slate-950: #221d18;
+
+  --color-green-50: #faf3e0;
+  --color-green-100: #f1e2b8;
+  --color-green-200: #e3cb85;
+  --color-green-300: #d2b05a;
+  --color-green-400: #c29a3f;
+  --color-green-500: #a9822f;
+  --color-green-600: #8f6b25;
+  --color-green-700: #74561e;
+  --color-green-800: #5a4218;
+  --color-green-900: #3f2e11;
+  --color-green-950: #261b09;
+
+  --color-red-400: #d05a4e;
+  --color-red-500: #b3352b;
+  --color-red-600: #9a2a22;
+  --color-red-700: #7f211b;
+  --color-red-900: #3d100d;
+}
+
+/* Angular, iron-bound panels instead of soft rounded cards. */
+.theme-vesperfall {
+  --radius-md: 2px;
+  --radius-lg: 3px;
+  --radius-xl: 4px;
+  --radius-2xl: 5px;
+}
+
+/* Dark leather with a torch-lit vignette and a faint grain. */
+.theme-vesperfall body {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .8 0 0 0 0 .65 0 0 0 0 .4 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at top, #6e5b3d 0%, transparent 65%),
+    radial-gradient(ellipse at bottom, #5a2f26 0%, transparent 60%);
+  background-attachment: fixed;
+}
+
+.theme-vesperfall ::selection {
+  background: #8f6b25;
+  color: #fff7e0;
+}
+
+/* Cinzel headings with a gold glow. */
+.theme-vesperfall h1,
+.theme-vesperfall h2,
+.theme-vesperfall h3 {
+  font-family: var(--font-cinzel), Georgia, serif;
+  letter-spacing: 0.06em;
+  color: #e3cb85;
+  text-shadow: 0 0 12px rgba(194, 154, 63, 0.35), 0 1px 0 #000;
+}
+
+/* Panels: leather gradient, gold hairline, inner bevel. Utilities are `dark:`-prefixed
+   (the theme keeps the `dark` class), so match those. Elements carrying a
+   `border-l-*` category accent are skipped so their color survives. */
+.theme-vesperfall .dark\:bg-slate-800 {
+  background-image: linear-gradient(180deg, rgba(255, 235, 190, 0.04), rgba(0, 0, 0, 0.18));
+  box-shadow: inset 0 0 0 1px rgba(194, 154, 63, 0.10), 0 2px 10px rgba(0, 0, 0, 0.45);
+}
+.theme-vesperfall .dark\:border-slate-700:not([class*="border-l-"]),
+.theme-vesperfall .dark\:border-slate-600:not([class*="border-l-"]) {
+  border-color: #7d6636;
+}
+
+/* Status tiles/badges (calendar days, tags): stronger tints so they read on brown. */
+.theme-vesperfall .dark\:bg-red-900\/30 { background-color: rgb(179 53 43 / 0.55); }
+.theme-vesperfall .dark\:bg-orange-900\/30 { background-color: rgb(194 100 30 / 0.55); }
+.theme-vesperfall .dark\:bg-blue-900\/30 { background-color: rgb(59 100 180 / 0.55); }
+.theme-vesperfall .dark\:bg-emerald-900\/30 { background-color: rgb(30 130 90 / 0.55); }
+.theme-vesperfall .dark\:bg-amber-900\/30 { background-color: rgb(180 120 20 / 0.55); }
+.theme-vesperfall .dark\:text-red-300,
+.theme-vesperfall .dark\:text-orange-300,
+.theme-vesperfall .dark\:text-blue-300,
+.theme-vesperfall .dark\:text-emerald-300 { color: #fff3dc; }
+
+/* Form headers (New Bill etc.): a gold band with a bright rule, so the form's edges read. */
+.theme-vesperfall .dark\:bg-green-900\/20 {
+  background-image: linear-gradient(180deg, rgba(194, 154, 63, 0.38), rgba(194, 154, 63, 0.18));
+}
+.theme-vesperfall .dark\:border-green-900,
+.theme-vesperfall .dark\:border-green-800 {
+  border-color: #c29a3f;
+}
+/* Inline edit area: recessed dark well under the row, framed in gold. */
+.theme-vesperfall .dark\:bg-slate-900\/40 {
+  background-color: rgba(20, 14, 8, 0.55);
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.45);
+  border-top-color: #c29a3f;
+}
+
+/* Primary buttons: forged gold with a bevel. */
+.theme-vesperfall .bg-green-600,
+.theme-vesperfall .bg-green-700,
+.theme-vesperfall .bg-emerald-600 {
+  background-image: linear-gradient(180deg, #b8912f, #74561e);
+  border-color: #e3cb85;
+  color: #fff7e0;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 1px 0 rgba(255, 240, 190, 0.35), 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+.theme-vesperfall .bg-red-600 {
+  background-image: linear-gradient(180deg, #b3352b, #6e1a15);
+  border-color: #d05a4e;
+  box-shadow: inset 0 1px 0 rgba(255, 200, 190, 0.25), 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.theme-vesperfall ::-webkit-scrollbar-thumb {
+  background-color: #8f6b25;
+}
+.theme-vesperfall * {
+  scrollbar-color: #8f6b25 transparent;
+}
+
+/* Light & dark: same grain + vignette idea as Vesperfall, in the app's own colors. */
+html:not(.dark) body {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .3 0 0 0 0 .25 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at top, #e0f2e9 0%, transparent 65%),
+    radial-gradient(ellipse at bottom, #e8eef6 0%, transparent 60%);
+  background-attachment: fixed;
+}
+
+html.dark:not(.theme-vesperfall) body {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .7 0 0 0 0 .85 0 0 0 0 .8 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(ellipse at top, #12332b 0%, transparent 65%),
+    radial-gradient(ellipse at bottom, #172036 0%, transparent 60%);
+  background-attachment: fixed;
+}
+.theme-vesperfall .app-footer {
+  font-family: var(--font-cinzel), Georgia, serif;
+  letter-spacing: 0.08em;
+  color: #c29a3f;
+  text-shadow: 0 1px 0 #000;
+  background-color: #241f1a;
+  border-top-color: #c29a3f;
+}

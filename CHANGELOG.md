@@ -7,6 +7,7 @@ Notable changes to Pay Tracker, release by release.
 ### Features
 
 - Share the month summary by email (opt-in in the Settings Reports tab)
+- New theme: Vesperfall
 
 ## v1.2.0 — 30-09-2026
 
