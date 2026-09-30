@@ -4,44 +4,36 @@ Notable changes to Pay Tracker, release by release.
 
 ## v1.2.0 (Not released yet)
 
+### License
+
+- Pay Tracker is no longer MIT-licensed; commercial use now requires permission. See [LICENSE](LICENSE)
+
 ### Features
 
+- Excel export: pick the selected month or the whole year, choose which columns to include or turn it off, follows your decimal separator
+- Excel export, emails and Telegram messages are translated into all 7 app languages
 - Decimal separator preference (period or comma) for displayed prices
-- Excel export amounts follow the chosen decimal separator
-- Excel export button opens a dropdown: export the selected month or the whole year
-- XLSX export opens on the current month, auto-sizes columns, colors Status and Category
-- Export configuration: enable/disable Excel export and choose which columns to include
 - Search bills and payments by name on Payments, Bills, and Archived Bills
 - Keyboard navigation for dropdowns and the category filter checklist
 - Unpaid payments' due date can be edited per instance
-- Redesigned all auth screens (login, register, forgot/reset password)
-- Unified app look: warmer background, two-tone nav wordmark, solid primary buttons
+- Redesigned auth screens and a warmer, unified app look
 
 ### Security
 
 - Backend, frontend, and demo-seed containers now run as non-root users
 
-### License
-
-- Pay Tracker is no longer MIT-licensed; commercial use now requires permission. See [LICENSE](LICENSE)
-
 ### Fixes
 
-- Excel export is translated into all app languages (added Spanish, French, Italian, Chinese)
-- Settings warns about unsaved changes before logout, not just navigation
-- Settings uses a mobile accordion instead of a scrolling tab strip
-- Backup dialog sections grouped under Settings-matching headings
-- Category color picker separates used and unused colors, palette expanded
-- Restyled "Add category" and confirmation dialogs to match the app
-- Search field is full width on mobile
-- Category expanders reset to expanded on every login
+- Settings warns about unsaved changes before logout and uses an accordion on mobile
 - Dashboard totals no longer rounded to whole currency units
-- `/server-time` and backup-restore endpoints return typed responses
-- Fixed foreign-key metadata drift on bill templates and payment instances
-- Payment dialogs render through the shared modal portal
-- Save/Cancel button order made consistent everywhere
-- Emails (reminders, monthly summary, password reset) and Telegram messages are translated into all app languages
-- Languages and translations have a single source shared by frontend and backend (no duplicated lists)
+- Category color picker separates used and unused colors, with a wider palette
+- Category expanders reset to expanded on every login
+- UI polish: dialogs, backup sections, mobile search field, consistent Save/Cancel order
+
+### Internal
+
+- Languages and translations have a single source shared by frontend and backend
+- Typed responses for `/server-time` and restore endpoints; fixed foreign-key metadata drift
 
 ## v1.1.0 — 27-09-2026
 
