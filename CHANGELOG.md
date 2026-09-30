@@ -8,6 +8,7 @@ Notable changes to Pay Tracker, release by release.
 
 - Decimal separator preference (period or comma) for displayed prices
 - Excel export amounts follow the chosen decimal separator
+- Excel export button opens a dropdown: export the selected month or the whole year
 - XLSX export opens on the current month, auto-sizes columns, colors Status and Category
 - Export configuration: enable/disable Excel export and choose which columns to include
 - Search bills and payments by name on Payments, Bills, and Archived Bills
@@ -26,6 +27,7 @@ Notable changes to Pay Tracker, release by release.
 
 ### Fixes
 
+- Excel export is translated into all app languages (added Spanish, French, Italian, Chinese)
 - Settings warns about unsaved changes before logout, not just navigation
 - Settings uses a mobile accordion instead of a scrolling tab strip
 - Backup dialog sections grouped under Settings-matching headings

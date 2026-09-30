@@ -210,6 +210,8 @@
         "exportXlsx": "Excel-Export",
         "exportXlsxLoading": "Exportiere…",
         "exportXlsxError": "Export fehlgeschlagen. Bitte erneut versuchen.",
+        "exportXlsxMonth": "Aktueller Monat ({month})",
+        "exportXlsxYear": "Ganzes Jahr ({year})",
         "collapseAll": "Alle einklappen",
         "expandAll": "Alle ausklappen",
         "summaryUpcoming": "bevorstehend",

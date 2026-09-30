@@ -210,6 +210,8 @@
         "exportXlsx": "Excel Export",
         "exportXlsxLoading": "Exporting…",
         "exportXlsxError": "Export failed. Please try again.",
+        "exportXlsxMonth": "Current month ({month})",
+        "exportXlsxYear": "Whole year ({year})",
         "collapseAll": "Collapse all",
         "expandAll": "Expand all",
         "summaryUpcoming": "upcoming",

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ChevronsUpDown, Download, Loader2 } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, Download, Loader2 } from "lucide-react";
 import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
@@ -141,7 +141,9 @@ function PaymentsPageInner() {
   const [instances, setInstances] = useState<PaymentInstanceOut[]>([]);
   const [loadedMonth, setLoadedMonth] = useState<string | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
-  const [xlsxLoadingYear, setXlsxLoadingYear] = useState<number | null>(null);
+  const [xlsxLoading, setXlsxLoading] = useState(false);
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
+  const exportMenuRef = useRef<HTMLDivElement>(null);
   const [xlsxError, setXlsxError] = useState<string | null>(null);
   const [exportEnabled, setExportEnabled] = useState(true);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -291,15 +293,35 @@ function PaymentsPageInner() {
     { value: "unpaid-first", label: tFilters("sortUnpaidFirst") },
   ];
 
-  async function handleExportXlsx(year: number) {
+  useEffect(() => {
+    if (!exportMenuOpen) return;
+    function close(e: MouseEvent | KeyboardEvent) {
+      if (e instanceof KeyboardEvent ? e.key === "Escape" : !exportMenuRef.current?.contains(e.target as Node)) {
+        setExportMenuOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", close);
+    document.addEventListener("keydown", close);
+    return () => {
+      document.removeEventListener("mousedown", close);
+      document.removeEventListener("keydown", close);
+    };
+  }, [exportMenuOpen]);
+
+  async function handleExportXlsx(scope: "month" | "year") {
+    setExportMenuOpen(false);
     setXlsxError(null);
-    setXlsxLoadingYear(year);
+    setXlsxLoading(true);
     try {
-      await downloadXlsx(year, locale);
+      if (scope === "month") {
+        await downloadXlsx(Number(selectedMonth.slice(0, 4)), locale, Number(selectedMonth.slice(5, 7)));
+      } else {
+        await downloadXlsx(selectedYear, locale);
+      }
     } catch {
       setXlsxError(t("exportXlsxError"));
     } finally {
-      setXlsxLoadingYear(null);
+      setXlsxLoading(false);
     }
   }
 
@@ -412,21 +434,44 @@ function PaymentsPageInner() {
         {/* Export */}
         {exportEnabled && (
           <div className="mt-4 flex items-center justify-end gap-3">
-            <button
-              onClick={() => handleExportXlsx(selectedYear)}
-              disabled={xlsxLoadingYear !== null}
-              className="group flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
-            >
-              {xlsxLoadingYear === selectedYear ? (
-                <Loader2 size={15} className="animate-spin text-green-600 dark:text-emerald-400" />
-              ) : (
-                <Download size={15} className="transition-transform group-hover:-translate-y-0.5" />
+            <div ref={exportMenuRef} className="relative">
+              <button
+                type="button"
+                onClick={() => setExportMenuOpen((o) => !o)}
+                disabled={xlsxLoading}
+                aria-haspopup="menu"
+                aria-expanded={exportMenuOpen}
+                className="group flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-medium text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+              >
+                {xlsxLoading ? (
+                  <Loader2 size={15} className="animate-spin text-green-600 dark:text-emerald-400" />
+                ) : (
+                  <Download size={15} className="transition-transform group-hover:-translate-y-0.5" />
+                )}
+                {xlsxLoading ? t("exportXlsxLoading") : t("exportXlsx")}
+                <ChevronDown size={14} className="text-slate-400 dark:text-slate-500" />
+              </button>
+              {exportMenuOpen && (
+                <div
+                  role="menu"
+                  className="absolute right-0 z-20 mt-1.5 w-max rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg dark:border-slate-600 dark:bg-slate-800"
+                >
+                  {(["month", "year"] as const).map((scope) => (
+                    <button
+                      key={scope}
+                      type="button"
+                      role="menuitem"
+                      onClick={() => handleExportXlsx(scope)}
+                      className="flex w-full items-center rounded-lg px-3 py-2 text-left text-sm text-slate-700 transition-colors hover:bg-green-50 hover:text-green-800 dark:text-slate-300 dark:hover:bg-green-900/30 dark:hover:text-green-300"
+                    >
+                      {scope === "month"
+                        ? t("exportXlsxMonth", { month: getMonthLabel(Number(selectedMonth.slice(0, 4)), Number(selectedMonth.slice(5, 7)) - 1, locale) })
+                        : t("exportXlsxYear", { year: selectedYear })}
+                    </button>
+                  ))}
+                </div>
               )}
-              {xlsxLoadingYear === selectedYear ? t("exportXlsxLoading") : t("exportXlsx")}
-              <span className="rounded bg-slate-100 px-1.5 py-0.5 text-xs font-semibold text-slate-400 dark:bg-slate-700 dark:text-slate-500">
-                {selectedYear}
-              </span>
-            </button>
+            </div>
             {xlsxError && (
               <p className="text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
             )}

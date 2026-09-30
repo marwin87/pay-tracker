@@ -210,6 +210,8 @@
         "exportXlsx": "Esporta in Excel",
         "exportXlsxLoading": "Esportazione…",
         "exportXlsxError": "Esportazione non riuscita. Riprova.",
+        "exportXlsxMonth": "Mese corrente ({month})",
+        "exportXlsxYear": "Anno intero ({year})",
         "collapseAll": "Comprimi tutto",
         "expandAll": "Espandi tutto",
         "summaryUpcoming": "in arrivo",

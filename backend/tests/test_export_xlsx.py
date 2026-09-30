@@ -245,3 +245,75 @@ def test_xlsx_amount_uses_chosen_decimal_separator_and_is_text(client):
     assert [c.value for c in cells] == ["100,00"]
     assert all(c.data_type == "s" for c in cells)  # "s" = string, never a Number cell
     assert all(c.number_format == "@" for c in cells)
+
+
+def _monthly_bill_from_january(client, email):
+    tok = register_and_login(client, email)
+    r = client.post(
+        "/bills",
+        json={**_BILL_A, "category_id": category_id(client, tok), "due_month": 1},
+        headers=auth(tok),
+    )
+    assert r.status_code == 201
+    return tok
+
+
+def test_xlsx_month_param_exports_single_month(client):
+    """?month=N yields one sheet with only that month's rows, and a month-suffixed filename."""
+    tok = _monthly_bill_from_january(client, "xlsx_month@test.com")
+    year = date.today().year
+
+    r = client.get(f"/export/xlsx?year={year}&month=3", headers=auth(tok))
+    assert r.status_code == 200
+    assert f"pay-tracker-en-{year}-03.xlsx" in r.headers["content-disposition"]
+
+    wb = openpyxl.load_workbook(io.BytesIO(r.content))
+    assert wb.sheetnames == [f"Mar {year}"]
+    assert _data_rows(r.content) == 1
+    assert wb.worksheets[0]["C2"].value == f"{year}-03"
+
+
+def test_xlsx_without_month_exports_all_twelve_sheets(client):
+    """Regression: the month query param must not leak into the whole-year export
+    (it was once overwritten by a loop variable, yielding a single month)."""
+    tok = _monthly_bill_from_january(client, "xlsx_allmonths@test.com")
+    year = date.today().year
+
+    r = client.get(f"/export/xlsx?year={year}", headers=auth(tok))
+    assert r.status_code == 200
+    assert f"pay-tracker-en-{year}.xlsx" in r.headers["content-disposition"]
+    assert len(openpyxl.load_workbook(io.BytesIO(r.content)).sheetnames) == 12
+    assert _data_rows(r.content) == 12
+
+
+def test_xlsx_rejects_out_of_range_month(client):
+    tok = register_and_login(client, "xlsx_badmonth@test.com")
+    for bad in (0, 13):
+        r = client.get(f"/export/xlsx?year=2026&month={bad}", headers=auth(tok))
+        assert r.status_code == 422
+
+
+def test_xlsx_supports_every_frontend_locale(client):
+    """Every locale in frontend/messages must have translated headers, status and
+    sheet names — an unsupported one silently falls back to English."""
+    import pathlib
+
+    locales = sorted(
+        p.stem
+        for p in (pathlib.Path(__file__).parents[2] / "frontend" / "messages").glob(
+            "*.json"
+        )
+    )
+    assert len(locales) >= 7
+    tok = _monthly_bill_from_january(client, "xlsx_alllocales@test.com")
+    year = date.today().year
+
+    headers = {}
+    for lang in locales:
+        r = client.get(f"/export/xlsx?year={year}&lang={lang}", headers=auth(tok))
+        assert r.status_code == 200
+        assert f"pay-tracker-{lang}-{year}.xlsx" in r.headers["content-disposition"]
+        ws = openpyxl.load_workbook(io.BytesIO(r.content)).worksheets[0]
+        headers[lang] = tuple(c.value for c in ws[1])
+    # en is the fallback, so every other locale must differ from it.
+    assert all(h != headers["en"] for lang, h in headers.items() if lang != "en")

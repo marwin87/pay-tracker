@@ -26,3 +26,6 @@ backend/htmlcov/
 .DS_Store
 
 /.claude/
+
+# coverage.py data
+.coverage

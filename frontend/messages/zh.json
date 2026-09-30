@@ -210,6 +210,8 @@
         "exportXlsx": "导出 Excel",
         "exportXlsxLoading": "正在导出…",
         "exportXlsxError": "导出失败，请重试。",
+        "exportXlsxMonth": "当前月份（{month}）",
+        "exportXlsxYear": "全年（{year}）",
         "collapseAll": "全部折叠",
         "expandAll": "全部展开",
         "summaryUpcoming": "待付款",

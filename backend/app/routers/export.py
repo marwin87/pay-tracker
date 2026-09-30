@@ -41,7 +41,6 @@ from app.services.recurrence import backfill_template_instances
 
 router = APIRouter(prefix="/export", tags=["export"])
 
-
 Section = Literal[
     "bills", "categories", "email", "telegram", "languages", "currency", "export"
 ]
@@ -146,12 +145,64 @@ _COLUMN_LABELS: dict[str, list[str]] = {
         "Bezahlt am",
         "Notizen",
     ],
+    "es": [
+        "Factura",
+        "Categoría",
+        "Periodo",
+        "Fecha de vencimiento",
+        "Importe",
+        "Moneda",
+        "Estado",
+        "Importe pagado",
+        "Pagado el",
+        "Notas",
+    ],
+    "fr": [
+        "Facture",
+        "Catégorie",
+        "Période",
+        "Date d'échéance",
+        "Montant",
+        "Devise",
+        "Statut",
+        "Montant payé",
+        "Payé le",
+        "Notes",
+    ],
+    "it": [
+        "Fattura",
+        "Categoria",
+        "Periodo",
+        "Data di scadenza",
+        "Importo",
+        "Valuta",
+        "Stato",
+        "Importo pagato",
+        "Pagato il",
+        "Note",
+    ],
+    "zh": [
+        "账单",
+        "类别",
+        "期间",
+        "到期日",
+        "金额",
+        "货币",
+        "状态",
+        "已付金额",
+        "支付日期",
+        "备注",
+    ],
 }
 
 _STATUS_LABELS: dict[str, dict[str, str]] = {
     "en": {"upcoming": "Upcoming", "overdue": "Overdue", "paid": "Paid"},
     "pl": {"upcoming": "Nadchodzące", "overdue": "Zaległe", "paid": "Opłacone"},
     "de": {"upcoming": "Bevorstehend", "overdue": "Überfällig", "paid": "Bezahlt"},
+    "es": {"upcoming": "Próximo", "overdue": "Vencido", "paid": "Pagado"},
+    "fr": {"upcoming": "À venir", "overdue": "En retard", "paid": "Payé"},
+    "it": {"upcoming": "In arrivo", "overdue": "Scaduto", "paid": "Pagato"},
+    "zh": {"upcoming": "即将到期", "overdue": "已逾期", "paid": "已支付"},
 }
 
 # Mirrors the status colors used in the frontend (PaymentsCalendar.tsx STATUS_TILE).
@@ -228,6 +279,49 @@ _MONTH_ABBR: dict[str, list[str]] = {
         "Nov",
         "Dez",
     ],
+    "es": [
+        "ene",
+        "feb",
+        "mar",
+        "abr",
+        "may",
+        "jun",
+        "jul",
+        "ago",
+        "sep",
+        "oct",
+        "nov",
+        "dic",
+    ],
+    "fr": [
+        "janv.",
+        "févr.",
+        "mars",
+        "avr.",
+        "mai",
+        "juin",
+        "juil.",
+        "août",
+        "sept.",
+        "oct.",
+        "nov.",
+        "déc.",
+    ],
+    "it": [
+        "gen",
+        "feb",
+        "mar",
+        "apr",
+        "mag",
+        "giu",
+        "lug",
+        "ago",
+        "set",
+        "ott",
+        "nov",
+        "dic",
+    ],
+    "zh": [f"{m}月" for m in range(1, 13)],
 }
 
 
@@ -252,6 +346,7 @@ def _ensure_year_instances(db: Session, user_id: int, year: int) -> None:
 @router.get("/xlsx")
 def export_xlsx(
     year: int = Query(default_factory=lambda: date.today().year),
+    month: int | None = Query(default=None, ge=1, le=12),
     lang: str = Query(default="en"),
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
@@ -285,8 +380,7 @@ def export_xlsx(
     # Index instances by month number (1–12)
     by_month: dict[int, list[dict]] = {m: [] for m in range(1, 13)}
     for i in instances:
-        month = int(i.period[5:7])
-        by_month[month].append(
+        by_month[int(i.period[5:7])].append(
             {
                 "Bill": i.template.name,
                 "Category": i.template.category.name,
@@ -325,9 +419,9 @@ def export_xlsx(
 
     buf = io.BytesIO()
     with pd.ExcelWriter(buf, engine="openpyxl") as writer:
-        for month in range(1, 13):
-            sheet_name = f"{_MONTH_ABBR[lang][month - 1]} {year}"
-            rows = by_month[month]
+        for m in [month] if month else range(1, 13):
+            sheet_name = f"{_MONTH_ABBR[lang][m - 1]} {year}"
+            rows = by_month[m]
             df = (
                 pd.DataFrame(rows, columns=selected_columns)
                 if rows
@@ -374,10 +468,11 @@ def export_xlsx(
 
         today = date.today()
         active_month = today.month if year == today.year else 1
-        writer.book.active = active_month - 1
+        writer.book.active = 0 if month else active_month - 1
     buf.seek(0)
 
-    filename = f"pay-tracker-{lang}-{year}.xlsx"
+    suffix = f"{year}-{month:02d}" if month else str(year)
+    filename = f"pay-tracker-{lang}-{suffix}.xlsx"
     return StreamingResponse(
         buf,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

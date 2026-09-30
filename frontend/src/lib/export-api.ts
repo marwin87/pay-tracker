@@ -80,8 +80,14 @@ export async function restoreFromSnapshot(): Promise<{
   return apiFetch("/export/restore-snapshot", { method: "POST" });
 }
 
-export async function downloadXlsx(year: number, lang: string): Promise<void> {
-  const res = await fetch(`${BASE_URL}/export/xlsx?year=${year}&lang=${lang}`, {
+// `month` (1–12) limits the workbook to that one month; omit for the whole year.
+export async function downloadXlsx(
+  year: number,
+  lang: string,
+  month?: number
+): Promise<void> {
+  const monthQs = month ? `&month=${month}` : "";
+  const res = await fetch(`${BASE_URL}/export/xlsx?year=${year}&lang=${lang}${monthQs}`, {
     credentials: "include",
   });
 
@@ -91,7 +97,8 @@ export async function downloadXlsx(year: number, lang: string): Promise<void> {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `pay-tracker-${lang}-${year}.xlsx`;
+  const suffix = month ? `${year}-${String(month).padStart(2, "0")}` : year;
+  a.download = `pay-tracker-${lang}-${suffix}.xlsx`;
   a.click();
   URL.revokeObjectURL(url);
 }
