@@ -447,6 +447,8 @@ def update_bill(
         )
         for inst in tombstones:
             inst.is_deleted = False
+            if inst.status == PaymentStatus.paid:
+                continue  # paid history comes back as it was, never reset to upcoming
             inst.amount = bill.amount
             inst.due_date = _due_date_for_period(inst.period, bill.due_day)
             inst.status = PaymentStatus.upcoming

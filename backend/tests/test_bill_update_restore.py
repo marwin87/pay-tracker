@@ -1,6 +1,6 @@
 """Tests for GET /bills/{id}/has-deleted-future and PATCH recreate_deleted_future."""
 
-from datetime import date
+from datetime import date, datetime, timezone
 
 import pytest
 from fastapi.testclient import TestClient
@@ -325,3 +325,39 @@ def test_patch_restore_cross_user_returns_403(client_db):
         headers=auth(tok_b),
     )
     assert r.status_code == 403
+
+
+def test_patch_restore_keeps_a_paid_payment_paid(client_db):
+    """A paid payment that was deleted comes back as it was: still paid, with its
+    paid_at/paid_amount, not an 'upcoming' row carrying leftover payment data."""
+    client, db = client_db
+    token = register_and_login(client, "restorepaid@test.com")
+    bill_id = _create_bill(client, token)
+    period = _current_period()
+    inst = _insert_instance(
+        db,
+        bill_id,
+        period,
+        _due_date_for_period(period, 15),
+        status=PaymentStatus.paid,
+        is_deleted=True,
+        amount="120.00",
+    )
+    inst.paid_amount = "99.00"
+    inst.paid_at = datetime(2026, 1, 5, 12, tzinfo=timezone.utc)
+    db.commit()
+
+    r = client.patch(
+        f"/bills/{bill_id}",
+        json={"amount": "250.00", "due_day": 20, "recreate_deleted_future": True},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+    db.expire_all()
+    inst = db.get(PaymentInstance, inst.id)
+    assert inst.is_deleted is False
+    assert inst.status == PaymentStatus.paid
+    assert str(inst.paid_amount) == "99.00" and inst.paid_at is not None
+    # history is untouched by the bill's new price / due day
+    assert str(inst.amount) == "120.00"
+    assert inst.due_date == _due_date_for_period(period, 15)
