@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     # deployments — see .env.example.
     environment: str = "development"
 
+    # Baked in at image build (same value as the frontend footer); shown in notification footers.
+    app_version: str = "dev"
+
     database_url: str = "postgresql://paytracker:changeme@localhost:5432/paytracker"
 
     jwt_secret: str = _DEFAULT_JWT_SECRET

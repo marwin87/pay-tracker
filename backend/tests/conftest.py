@@ -1,5 +1,11 @@
 """Test fixtures: PostgreSQL via testcontainers + FastAPI TestClient."""
 
+import os
+
+# Settings() runs at import time and warns on the weak default secret when ../.env isn't
+# found (cwd-relative, e.g. PyCharm running from the repo root).
+os.environ.setdefault("JWT_SECRET", "x" * 32)  # pragma: allowlist secret
+
 # Import models before app to (a) register them in Base.metadata for create_all
 # and (b) avoid shadowing the `app` FastAPI instance with the `app` package name.
 import app.models.bill  # noqa: F401

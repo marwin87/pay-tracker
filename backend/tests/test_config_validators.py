@@ -4,13 +4,13 @@ password-reset token expiry outside ENVIRONMENT=development."""
 import pytest
 from pydantic import ValidationError
 
-from app.core.config import Settings
+from app.core.config import _DEFAULT_JWT_SECRET, Settings
 
 
 def test_default_jwt_secret_rejected_in_production():
     with pytest.raises(ValidationError):
-        # _env_file=None: a developer .env with a real JWT_SECRET must not mask the default
-        Settings(environment="production", _env_file=None)
+        # explicit placeholder: neither a .env nor the JWT_SECRET env var may mask it
+        Settings(environment="production", jwt_secret=_DEFAULT_JWT_SECRET)
 
 
 def test_short_jwt_secret_rejected_in_production():
@@ -25,7 +25,9 @@ def test_strong_jwt_secret_accepted_in_production():
 
 
 def test_weak_jwt_secret_allowed_in_development():
-    settings = Settings(environment="development")
+    weak_secret = "too-short"  # pragma: allowlist secret
+    with pytest.warns(UserWarning, match="JWT_SECRET is weak"):
+        settings = Settings(environment="development", jwt_secret=weak_secret)
     assert settings.jwt_secret
 
 
@@ -39,14 +41,17 @@ def test_never_expiring_reset_token_rejected_in_production():
 
 
 def test_never_expiring_reset_token_allowed_in_development():
-    settings = Settings(
-        environment="development", password_reset_token_expire_minutes=0
-    )
+    with pytest.warns(UserWarning, match="never expire"):
+        settings = Settings(
+            environment="development",
+            jwt_secret="x" * 32,
+            password_reset_token_expire_minutes=0,
+        )
     assert settings.password_reset_token_expire_minutes == 0
 
 
 def test_docs_enabled_in_development():
-    settings = Settings(environment="development")
+    settings = Settings(environment="development", jwt_secret="x" * 32)
     assert settings.docs_enabled is True
 
 

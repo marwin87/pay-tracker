@@ -1,4 +1,6 @@
 import html
+from html import escape as _escape
+import re
 from datetime import date
 from decimal import Decimal
 from typing import Any
@@ -29,7 +31,12 @@ def _deliver(
         from_addr=from_addr,
         to_addr=to_addr,
     )
-    notify.send(url, subject, body, html=html)
+    if (
+        not html
+    ):  # plain-text emails go out as HTML too, so the footer is identical everywhere
+        body = re.sub(r"(https?://[^\s<]+)", r'<a href="\1">\1</a>', _escape(body))
+        body = f'<div style="white-space:pre-wrap">{body}</div>'
+    notify.send(url, subject, body, html=True)
 
 
 def send_reminder_email(

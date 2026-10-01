@@ -1,6 +1,7 @@
 import base64
 import hashlib
 import logging
+from datetime import datetime
 from typing import Protocol
 from urllib.parse import quote
 
@@ -71,6 +72,13 @@ def telegram_url(user: _TelegramUser) -> str | None:
 
 
 def send(url: str, title: str, body: str, *, html: bool = False) -> None:
+    year = datetime.now().year
+    footer = f"© {year} Pay Tracker · {settings.app_version}"
+    body += (
+        f'\n<p style="color:#94a3b8;font-size:12px">{footer}</p>'
+        if html
+        else f"\n\u200b\n{footer}"  # zero-width space: Apprise collapses blank lines
+    )
     fmt = apprise.NotifyFormat.HTML if html else apprise.NotifyFormat.TEXT
     ap = apprise.Apprise()
     if not ap.add(url) or not ap.notify(title=title, body=body, body_format=fmt):

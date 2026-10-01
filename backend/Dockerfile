@@ -7,6 +7,9 @@ WORKDIR /app
 COPY pyproject.toml uv.lock* ./
 RUN uv sync --no-dev
 
+ARG APP_VERSION=dev
+ENV APP_VERSION=$APP_VERSION
+
 COPY . .
 # Shared translations + locales.json, owned by the frontend (see docker-compose additional_contexts)
 COPY --from=i18n . /app/i18n

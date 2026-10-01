@@ -22,6 +22,8 @@ services:
       context: ./backend
       additional_contexts:
         i18n: ./frontend/messages
+      args:
+        APP_VERSION: ${NEXT_PUBLIC_APP_VERSION:-dev}
     container_name: backend
     restart: unless-stopped
     env_file: .env

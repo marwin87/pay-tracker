@@ -181,7 +181,7 @@ def change_password(
         raise HTTPException(status_code=401, detail="Current password is incorrect")
     if len(body.new_password) < 8:
         raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="New password must be at least 8 characters",
         )
     user.password_hash = hash_password(body.new_password)
