@@ -712,3 +712,33 @@ def test_change_email_is_lowercased_and_conflicts_case_insensitively(client):
         headers=auth(token),
     )
     assert r.status_code == 409
+
+
+# ---------------------------------------------------------------------------
+# DELETE /auth/users/me — requires the current password
+# ---------------------------------------------------------------------------
+
+
+def _delete_me(client, token, password=None):
+    body = {} if password is None else {"current_password": password}
+    return client.request("DELETE", "/auth/users/me", json=body, headers=auth(token))
+
+
+def test_delete_account_wrong_password_returns_401_and_keeps_account(client):
+    token = register_and_login(client, "delwrong@test.com", _PASSWORD)
+    assert (
+        _delete_me(client, token, "not-my-password").status_code == 401
+    )  # pragma: allowlist secret
+    assert client.get("/auth/me", headers=auth(token)).status_code == 200
+
+
+def test_delete_account_without_password_returns_422(client):
+    token = register_and_login(client, "delnone@test.com", _PASSWORD)
+    assert _delete_me(client, token).status_code == 422
+    assert client.get("/auth/me", headers=auth(token)).status_code == 200
+
+
+def test_delete_account_with_password_succeeds(client):
+    token = register_and_login(client, "delok@test.com", _PASSWORD)
+    assert _delete_me(client, token, _PASSWORD).status_code == 204
+    assert client.get("/auth/me", headers=auth(token)).status_code == 401

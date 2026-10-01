@@ -175,6 +175,9 @@
         "description": "Esto elimina permanentemente tu cuenta y todo lo vinculado a ella: facturas, categorías e historial de pagos. Esta acción no se puede deshacer.",
         "cancel": "Cancelar",
         "confirm": "Eliminar cuenta",
+        "passwordLabel": "Confirma con tu contraseña",
+        "passwordPlaceholder": "Introduce tu contraseña",
+        "wrongPassword": "La contraseña actual es incorrecta.",
         "deleting": "Eliminando…"
     },
     "RestoreConfirmDialog": {

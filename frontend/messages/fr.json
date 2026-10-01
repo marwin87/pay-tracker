@@ -175,6 +175,9 @@
         "description": "Cela supprime définitivement votre compte et tout ce qui y est lié : factures, catégories et historique des paiements. Cette action est irréversible.",
         "cancel": "Annuler",
         "confirm": "Supprimer le compte",
+        "passwordLabel": "Confirmez avec votre mot de passe",
+        "passwordPlaceholder": "Saisissez votre mot de passe",
+        "wrongPassword": "Le mot de passe actuel est incorrect.",
         "deleting": "Suppression…"
     },
     "RestoreConfirmDialog": {

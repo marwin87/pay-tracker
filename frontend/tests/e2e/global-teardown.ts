@@ -6,15 +6,30 @@ const E2E_USERS_FILE = '/tmp/e2e-users.json';
 export default async function globalTeardown(): Promise<void> {
   if (!fs.existsSync(E2E_USERS_FILE)) return;
 
-  const users = JSON.parse(
-    fs.readFileSync(E2E_USERS_FILE, 'utf-8'),
-  ) as Array<{ email: string; token: string }>;
+  const users = JSON.parse(fs.readFileSync(E2E_USERS_FILE, 'utf-8')) as Array<{
+    email: string;
+    password: string;
+  }>;
+  const json = { 'Content-Type': 'application/json' };
 
-  for (const { email, token } of users) {
+  for (const { email, password } of users) {
     try {
+      // DELETE /auth/users/me needs the password, and a registration-time token may
+      // be stale by now (password change/reset revoke it), so log in fresh.
+      const login = await fetch(`${API}/auth/login`, {
+        method: 'POST',
+        headers: json,
+        body: JSON.stringify({ email, password }),
+      });
+      if (!login.ok) {
+        console.warn(`[teardown] Could not log in as ${email}: HTTP ${login.status}`);
+        continue;
+      }
+      const { access_token } = (await login.json()) as { access_token: string };
       const res = await fetch(`${API}/auth/users/me`, {
         method: 'DELETE',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { ...json, Authorization: `Bearer ${access_token}` },
+        body: JSON.stringify({ current_password: password }),
       });
       if (!res.ok && res.status !== 404) {
         console.warn(`[teardown] Failed to delete ${email}: HTTP ${res.status}`);

@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { ApiError } from "@/lib/api";
 import { deleteAccount, fetchMe, UserProfile } from "@/lib/user-api";
 import { notifyAuthChange } from "@/lib/auth-store";
 import { useAuth } from "@/context/auth-context";
@@ -79,6 +80,7 @@ function tabFromUrl(): TabKey {
 
 export default function SettingsPage() {
   const t = useTranslations("SettingsPage");
+  const tDelete = useTranslations("DeleteAccountDialog");
   const router = useRouter();
   const { logout } = useAuth();
 
@@ -178,17 +180,21 @@ export default function SettingsPage() {
     }
   }
 
-  async function handleDeleteConfirm() {
+  async function handleDeleteConfirm(password: string) {
     setDeleting(true);
     setDeleteError(null);
     try {
-      await deleteAccount();
+      await deleteAccount(password);
       setDeleteDialogOpen(false);
       notifyAuthChange();
       router.refresh();
       router.push("/login");
     } catch (err) {
-      setDeleteError(err instanceof Error ? err.message : t("deleteAccount.error"));
+      setDeleteError(
+        err instanceof ApiError && err.status === 401
+          ? tDelete("wrongPassword")
+          : t("deleteAccount.error"),
+      );
       setDeleting(false);
     }
   }

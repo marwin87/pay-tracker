@@ -29,7 +29,20 @@ test('deleting the account cascades owned data and frees the email for re-regist
   // DeleteAccountDialog appears — confirm
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
-  await dialog.getByRole('button', { name: 'Delete account', exact: true }).click();
+
+  // The destructive button stays disabled until a password is typed
+  const confirm = dialog.getByRole('button', { name: 'Delete account', exact: true });
+  await expect(confirm).toBeDisabled();
+
+  // Wrong password: rejected, the dialog stays open and the user stays logged in
+  await dialog.getByPlaceholder('Enter your password').fill('not-my-password'); // pragma: allowlist secret
+  await confirm.click();
+  await expect(dialog.getByText('Current password is incorrect.')).toBeVisible();
+  await expect(page).toHaveURL(/\/dashboard\/settings/);
+
+  // Correct password deletes the account
+  await dialog.getByPlaceholder('Enter your password').fill(password);
+  await confirm.click();
 
   // Assert: redirected to /login (cookies cleared server-side, client re-synced)
   await page.waitForURL('**/login');
@@ -47,6 +60,5 @@ test('deleting the account cascades owned data and frees the email for re-regist
   expect(res.ok()).toBe(true);
   // This re-registration is a brand new account row under the same email —
   // track it too, or it leaks past the suite untouched by teardown.
-  const { access_token } = await res.json();
-  trackUser(email, access_token);
+  trackUser(email, password);
 });

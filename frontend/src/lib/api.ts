@@ -36,6 +36,7 @@ const AUTH_401_EXEMPT_PATHS = [
   "/auth/logout",
   "/auth/change-email",
   "/auth/change-password",
+  "/auth/users/me",
 ];
 
 const CSRF_PROTECTED_METHODS = new Set(["POST", "PUT", "PATCH", "DELETE"]);

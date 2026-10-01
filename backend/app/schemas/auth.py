@@ -194,6 +194,10 @@ class ChangePasswordRequest(BaseModel):
     new_password: Password
 
 
+class DeleteAccountRequest(BaseModel):
+    current_password: Password
+
+
 class ChangeEmailRequest(BaseModel):
     new_email: NormalizedEmail
     current_password: Password

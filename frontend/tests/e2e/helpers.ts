@@ -4,35 +4,44 @@ import type { Page } from '@playwright/test';
 export const API = process.env.E2E_API_URL ?? 'http://localhost:8010';
 const E2E_USERS_FILE = '/tmp/e2e-users.json';
 
-function readTrackedUsers(): Array<{ email: string; token: string }> {
+type TrackedUser = { email: string; password: string };
+
+function readTrackedUsers(): TrackedUser[] {
   return fs.existsSync(E2E_USERS_FILE)
-    ? (JSON.parse(fs.readFileSync(E2E_USERS_FILE, 'utf-8')) as Array<{ email: string; token: string }>)
+    ? (JSON.parse(fs.readFileSync(E2E_USERS_FILE, 'utf-8')) as TrackedUser[])
     : [];
 }
 
-function writeTrackedUsers(users: Array<{ email: string; token: string }>): void {
+function writeTrackedUsers(users: TrackedUser[]): void {
   fs.writeFileSync(E2E_USERS_FILE, JSON.stringify(users));
 }
 
 /**
- * Registers `email`/token for globalTeardown to delete via DELETE
- * /auth/users/me after the suite finishes. loginNewUser calls this for you;
- * call it directly only when a test creates a user outside that helper
- * (e.g. re-registering an email after deleting the original account).
+ * Registers `email`/`password` for globalTeardown, which logs in as that user and
+ * deletes the account via DELETE /auth/users/me (the endpoint needs the password,
+ * and a token captured at registration goes stale when the password changes).
+ * loginNewUser calls this for you; call it directly only when a test creates a user
+ * outside that helper (e.g. re-registering an email after deleting the original).
  */
-export function trackUser(email: string, token: string): void {
+export function trackUser(email: string, password: string): void {
   const existing = readTrackedUsers();
-  existing.push({ email, token });
+  existing.push({ email, password });
   writeTrackedUsers(existing);
+}
+
+/**
+ * Call after a test changes a tracked user's email or password, so teardown can
+ * still log in as them.
+ */
+export function updateTrackedUser(email: string, changes: Partial<TrackedUser>): void {
+  writeTrackedUsers(readTrackedUsers().map((u) => (u.email === email ? { ...u, ...changes } : u)));
 }
 
 /**
  * Stops tracking a user for teardown deletion. Call this right after a test
  * deletes its own account (e.g. via the Delete Account dialog, or a direct
- * API call) — otherwise globalTeardown redundantly retries the delete with
- * the now-stale token and logs a confusing 401 warning for an account that's
- * already gone (the auth dependency can't tell "bad token" from "token for a
- * user that no longer exists" and reports both as 401, not 404).
+ * API call) — otherwise globalTeardown tries to log in as an account that's
+ * already gone and logs a confusing warning.
  */
 export function untrackUser(email: string): void {
   writeTrackedUsers(readTrackedUsers().filter((u) => u.email !== email));
@@ -44,9 +53,9 @@ export function untrackUser(email: string): void {
  * access_token and auth_logged_in cookies set by the register endpoint are
  * immediately available to the page — no UI login required.
  *
- * The token is tracked so globalTeardown can delete the user via DELETE
- * /auth/users/me after the suite finishes — see untrackUser above for tests
- * that delete the account themselves.
+ * The credentials are tracked so globalTeardown can delete the user after the
+ * suite finishes — see untrackUser above for tests that delete the account
+ * themselves, and updateTrackedUser for tests that change email or password.
  */
 export async function loginNewUser(page: Page): Promise<{ email: string; password: string }> {
   const email = `e2e-${Date.now()}@test.com`;
@@ -61,8 +70,7 @@ export async function loginNewUser(page: Page): Promise<{ email: string; passwor
     throw new Error(`Registration failed: ${res.status()} — ${await res.text()}`);
   }
 
-  const data = await res.json();
-  trackUser(email, data.access_token);
+  trackUser(email, password);
 
   return { email, password };
 }

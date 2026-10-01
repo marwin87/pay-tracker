@@ -202,7 +202,12 @@ def test_delete_account_only_removes_own_data(client_db):
     bill_b = _create_bill(client, tok_b)
     _seed_payment(client, tok_b, bill_b)
 
-    r = client.delete("/auth/users/me", headers=auth(tok_a))
+    r = client.request(
+        "DELETE",
+        "/auth/users/me",
+        json={"current_password": "pw123456"},  # pragma: allowlist secret
+        headers=auth(tok_a),
+    )
     assert r.status_code == 204
 
     # B's bills, payments, and categories are untouched.

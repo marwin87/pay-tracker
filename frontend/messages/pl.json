@@ -175,6 +175,9 @@
         "description": "To trwale usunie Twoje konto oraz wszystko, co jest z nim powiązane — rachunki, kategorie i historię płatności. Tej operacji nie można cofnąć.",
         "cancel": "Anuluj",
         "confirm": "Usuń konto",
+        "passwordLabel": "Potwierdź swoim hasłem",
+        "passwordPlaceholder": "Wpisz hasło",
+        "wrongPassword": "Aktualne hasło jest nieprawidłowe.",
         "deleting": "Usuwanie…"
     },
     "RestoreConfirmDialog": {

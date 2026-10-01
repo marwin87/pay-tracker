@@ -159,6 +159,9 @@ export function changeEmail(
   });
 }
 
-export function deleteAccount(): Promise<void> {
-  return apiFetch<void>("/auth/users/me", { method: "DELETE" });
+export function deleteAccount(currentPassword: string): Promise<void> {
+  return apiFetch<void>("/auth/users/me", {
+    method: "DELETE",
+    body: JSON.stringify({ current_password: currentPassword }),
+  });
 }

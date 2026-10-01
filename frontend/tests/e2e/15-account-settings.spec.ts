@@ -7,7 +7,7 @@
  * Each test uses a fresh isolated user.
  */
 import { test, expect } from '@playwright/test';
-import { API, loginNewUser } from './helpers';
+import { API, loginNewUser, updateTrackedUser } from './helpers';
 
 test('changing email updates the account; wrong current password is rejected', async ({ page }) => {
   const { email } = await loginNewUser(page);
@@ -28,6 +28,9 @@ test('changing email updates the account; wrong current password is rejected', a
   // Step: correct current password
   await page.getByPlaceholder('Enter current password').first().fill('testpass123'); // pragma: allowlist secret
   await page.getByRole('button', { name: 'Save', exact: true }).click();
+
+  // Teardown must log in under the new address
+  updateTrackedUser(email, { email: newEmail });
 
   // Assert: profile now shows the new email, and it persists across reload
   await expect(page.getByText(newEmail)).toBeVisible();
@@ -74,7 +77,6 @@ test('changing password: new one logs in, old one no longer does', async ({ page
     headers: { 'Content-Type': 'application/json' },
   });
   expect(withOld.status()).toBe(401);
-  // No manual cleanup needed: changing the password doesn't invalidate the
-  // bearer token loginNewUser tracked at registration (token_version is
-  // only bumped by /auth/logout), so globalTeardown deletes this user fine.
+  // Teardown logs in with the tracked password, so point it at the new one
+  updateTrackedUser(email, { password: newPassword });
 });

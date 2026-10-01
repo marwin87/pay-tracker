@@ -25,6 +25,7 @@ from app.services.categories import seed_default_categories
 from app.schemas.auth import (
     ChangeEmailRequest,
     ChangePasswordRequest,
+    DeleteAccountRequest,
     ForgotPasswordRequest,
     LoginRequest,
     MessageResponse,
@@ -206,10 +207,14 @@ def update_me(
 
 @router.delete("/users/me", status_code=status.HTTP_204_NO_CONTENT)
 def delete_me(
+    body: DeleteAccountRequest,
     response: Response,
     user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ):
+    # Irreversible, so a stolen session alone must not be enough.
+    if not verify_password(body.current_password, user.password_hash):
+        raise HTTPException(status_code=401, detail="Current password is incorrect")
     db.delete(user)
     db.commit()
     _clear_auth_cookies(response)

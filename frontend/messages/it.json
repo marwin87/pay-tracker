@@ -175,6 +175,9 @@
         "description": "Questo eliminerà definitivamente il tuo account e tutto ciò che è collegato: bollette, categorie e cronologia pagamenti. Questa azione non può essere annullata.",
         "cancel": "Annulla",
         "confirm": "Elimina account",
+        "passwordLabel": "Conferma con la tua password",
+        "passwordPlaceholder": "Inserisci la password",
+        "wrongPassword": "La password attuale non è corretta.",
         "deleting": "Eliminazione…"
     },
     "RestoreConfirmDialog": {

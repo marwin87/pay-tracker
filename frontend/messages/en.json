@@ -175,6 +175,9 @@
         "description": "This permanently deletes your account and everything linked to it — bills, categories, and payment history. This cannot be undone.",
         "cancel": "Cancel",
         "confirm": "Delete account",
+        "passwordLabel": "Confirm with your password",
+        "passwordPlaceholder": "Enter your password",
+        "wrongPassword": "Current password is incorrect.",
         "deleting": "Deleting…"
     },
     "RestoreConfirmDialog": {
