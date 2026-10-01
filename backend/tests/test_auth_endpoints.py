@@ -676,3 +676,39 @@ def test_over_72_byte_password_returns_422(client, pw):
         "/auth/reset-password", json={"token": "whatever", "new_password": pw}
     )
     assert r.status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Emails are case-insensitive
+# ---------------------------------------------------------------------------
+
+
+def test_register_email_case_insensitive_duplicate_returns_409(client):
+    register_and_login(client, "case@test.com", _PASSWORD)
+    r = client.post(
+        "/auth/register", json={"email": "CASE@Test.com", "password": _PASSWORD}
+    )
+    assert r.status_code == 409
+
+
+def test_login_email_case_insensitive(client):
+    register_and_login(client, "Mixed@Test.com", _PASSWORD)
+    r = client.post(
+        "/auth/login", json={"email": "mIXED@test.COM", "password": _PASSWORD}
+    )
+    assert r.status_code == 200
+    token = r.json()["access_token"]
+    assert client.get("/auth/me", headers=auth(token)).json()["email"] == (
+        "mixed@test.com"
+    )
+
+
+def test_change_email_is_lowercased_and_conflicts_case_insensitively(client):
+    token = register_and_login(client, "ce1@test.com", _PASSWORD)
+    register_and_login(client, "ce2@test.com", _PASSWORD)
+    r = client.patch(
+        "/auth/change-email",
+        json={"new_email": "CE2@test.com", "current_password": _PASSWORD},
+        headers=auth(token),
+    )
+    assert r.status_code == 409

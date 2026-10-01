@@ -17,6 +17,7 @@ Notable changes to Pay Tracker, release by release.
 ### Fixes
 
 - Theme choice is now remembered per account
+- Email addresses are no longer case-sensitive when signing up and logging in
 - Excel export prints in landscape, fitted to page width, with a footer
 
 ## v1.2.0 — 30-09-2026

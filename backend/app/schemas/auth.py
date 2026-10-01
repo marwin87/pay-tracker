@@ -26,6 +26,14 @@ def _check_bcrypt_length(v: str) -> str:
 # Any password the API accepts or checks must fit bcrypt's 72-byte limit.
 Password = Annotated[str, AfterValidator(_check_bcrypt_length)]
 
+
+def _normalize_email(v: str) -> str:
+    # Emails are stored and compared lowercased, so A@x.com and a@x.com are one account.
+    return v.strip().lower()
+
+
+NormalizedEmail = Annotated[EmailStr, AfterValidator(_normalize_email)]
+
 Theme = Literal["light", "dark", "vesperfall"]
 
 EXPORT_FIELD_KEYS: tuple[str, ...] = (
@@ -70,12 +78,12 @@ def validate_export_fields(v: list[str] | None) -> list[str] | None:
 
 
 class RegisterRequest(BaseModel):
-    email: EmailStr
+    email: NormalizedEmail
     password: Annotated[Password, Field(min_length=8)]
 
 
 class LoginRequest(BaseModel):
-    email: EmailStr
+    email: NormalizedEmail
     password: Password
 
 
@@ -187,7 +195,7 @@ class ChangePasswordRequest(BaseModel):
 
 
 class ChangeEmailRequest(BaseModel):
-    new_email: EmailStr
+    new_email: NormalizedEmail
     current_password: Password
 
 
@@ -200,7 +208,7 @@ class SendMonthlySummaryNowOut(BaseModel):
 
 
 class ShareMonthRequest(BaseModel):
-    email: EmailStr
+    email: NormalizedEmail
     month: Annotated[str, Field(pattern=r"^\d{4}-(0[1-9]|1[0-2])$")]
 
 
@@ -209,7 +217,7 @@ class ServerTimeOut(BaseModel):
 
 
 class ForgotPasswordRequest(BaseModel):
-    email: EmailStr
+    email: NormalizedEmail
 
 
 class ResetPasswordRequest(BaseModel):

@@ -3,7 +3,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING
 
-from sqlalchemy import ARRAY, Boolean, DateTime, Integer, String
+from sqlalchemy import ARRAY, Boolean, DateTime, Index, Integer, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.core.database import Base
@@ -147,3 +147,7 @@ class User(Base):
     categories: Mapped[list[Category]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
+
+
+# Case-insensitive uniqueness; emails are also lowercased on input (schemas/auth.py).
+Index("uq_users_email_lower", func.lower(User.email), unique=True)
