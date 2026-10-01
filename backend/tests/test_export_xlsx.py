@@ -319,3 +319,6 @@ def test_xlsx_has_print_footer(client):
     ws = openpyxl.load_workbook(io.BytesIO(r.content)).worksheets[0]
     assert ws.oddFooter.left.text.startswith("© ")
     assert ws.oddFooter.right.text == "&P / &N"
+    assert ws.page_setup.orientation == "landscape"
+    assert ws.sheet_properties.pageSetUpPr.fitToPage
+    assert (ws.page_setup.fitToWidth, ws.page_setup.fitToHeight) == (1, 0)

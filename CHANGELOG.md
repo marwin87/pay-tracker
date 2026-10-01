@@ -13,6 +13,7 @@ Notable changes to Pay Tracker, release by release.
 ### Fixes
 
 - Theme choice is now remembered per account
+- Excel export prints in landscape, fitted to page width, with a footer
 
 ## v1.2.0 — 30-09-2026
 

@@ -12,6 +12,7 @@ from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from fastapi.responses import Response, StreamingResponse
 from openpyxl.styles import Border, Font, PatternFill, Side
 from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.properties import PageSetupProperties
 from pydantic import ValidationError
 from sqlalchemy.orm import Session, selectinload
 
@@ -289,6 +290,10 @@ def export_xlsx(
             df.to_excel(writer, index=False, sheet_name=sheet_name)
 
             ws = writer.sheets[sheet_name]
+            ws.page_setup.orientation = "landscape"
+            ws.sheet_properties.pageSetUpPr = PageSetupProperties(fitToPage=True)
+            ws.page_setup.fitToWidth = 1
+            ws.page_setup.fitToHeight = 0  # as many pages tall as needed
             ws.oddFooter.left.text = f"{footer_text()} · {date.today().isoformat()}"
             ws.oddFooter.right.text = "&P / &N"
             for col_idx, header in enumerate(headers, start=1):
