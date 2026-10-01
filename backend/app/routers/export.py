@@ -850,7 +850,11 @@ def restore_json(
     except json.JSONDecodeError:
         raise HTTPException(status_code=422, detail="Invalid JSON")
 
-    if raw.get("schema_version") not in {2, 3, 4, 5, 6, 7}:
+    if not isinstance(raw, dict):
+        raise HTTPException(status_code=422, detail="Backup must be a JSON object")
+    version = raw.get("schema_version")
+    # isinstance first: an unhashable value (list/dict) can't even be looked up in a set
+    if not isinstance(version, int) or version not in {2, 3, 4, 5, 6, 7}:
         raise HTTPException(status_code=422, detail="Unsupported schema version")
 
     try:

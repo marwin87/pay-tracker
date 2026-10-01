@@ -2,6 +2,8 @@
 
 import json
 
+import pytest
+
 from tests.conftest import auth, category_id, register_and_login, sync_payments
 
 _BILL = {
@@ -836,3 +838,25 @@ def test_amount_override_export_restore_and_snapshot(client):
     assert [_norm_instance(i) for i in after["payment_instances"]] == [
         _norm_instance(i) for i in backup["payment_instances"]
     ]
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        b"[]",
+        b'"x"',
+        b"null",
+        b"5",
+        b'{"schema_version": [1]}',
+        b'{"schema_version": {}}',
+    ],
+)
+def test_restore_non_object_or_bad_version_returns_422(client, body):
+    """Valid JSON that isn't a backup object must be a 422, never a 500."""
+    tok = register_and_login(client, "nonobj@test.com")
+    r = client.post(
+        "/export/restore",
+        files={"file": ("backup.json", body, "application/json")},
+        headers=auth(tok),
+    )
+    assert r.status_code == 422

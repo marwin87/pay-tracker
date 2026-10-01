@@ -24,6 +24,7 @@ Notable changes to Pay Tracker, release by release.
 - Invalid or oversized values in bills and payments now show an error instead of failing
 - A payment already marked as paid, or one that was deleted, can no longer be paid again from a stale page
 - Restoring deleted payments keeps already paid ones paid
+- Restoring from a file that isn't a valid backup now shows an error instead of failing
 - Excel export prints in landscape, fitted to page width, with a footer
 
 ## v1.2.0 — 30-09-2026
