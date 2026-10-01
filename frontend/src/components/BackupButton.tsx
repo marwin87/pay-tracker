@@ -21,7 +21,7 @@ const SECTION_GROUPS: {
   { tabKey: "preferences", sections: ["currency", "languages"] },
   { tabKey: "notifications", sections: ["email", "telegram"] },
   { tabKey: "categories", sections: ["categories"] },
-  { tabKey: "reports", sections: ["export"] },
+  { tabKey: "reports", sections: ["export", "pdf", "share"] },
 ];
 
 export default function BackupButton({ label }: { label?: string } = {}) {

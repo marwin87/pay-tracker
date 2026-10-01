@@ -8,7 +8,17 @@ from app.services.categories import CATEGORY_COLORS
 
 from tests.conftest import auth, category_id, register_and_login
 
-_ALL = ["bills", "categories", "email", "telegram", "languages", "currency", "export"]
+_ALL = [
+    "bills",
+    "categories",
+    "email",
+    "telegram",
+    "languages",
+    "currency",
+    "export",
+    "pdf",
+    "share",
+]
 _KEYS = {
     "bills": {"bill_templates", "payment_instances"},
     "categories": {"categories"},
@@ -17,6 +27,8 @@ _KEYS = {
     "languages": {"preferences"},
     "currency": {"preferences"},
     "export": {"preferences"},
+    "pdf": {"preferences"},
+    "share": {"preferences"},
 }
 _ALL_KEYS = set().union(*_KEYS.values())
 _META = {"schema_version", "exported_by", "exported_at"}
@@ -86,7 +98,6 @@ def test_export_default_is_full(client):
         "default_currency": "EUR",
         "decimal_separator": ".",
         "export_enabled": True,
-        "share_enabled": False,
         "export_fields": [
             "bill",
             "category",
@@ -99,6 +110,20 @@ def test_export_default_is_full(client):
             "paid_at",
             "notes",
         ],
+        "pdf_fields": [
+            "bill",
+            "category",
+            "period",
+            "due_date",
+            "amount",
+            "currency",
+            "status",
+            "paid_amount",
+            "paid_at",
+            "notes",
+        ],
+        "pdf_enabled": True,
+        "share_enabled": False,
     }
     assert body["telegram"]["bot_token"] == _TOKEN
     assert set(body["notifications"]) == {"email", "telegram", "browser_enabled"}
@@ -125,9 +150,13 @@ def test_export_prefs_sections_are_independent(client):
     }
     assert set(_export(client, tok, ["export"])["preferences"]) == {
         "export_enabled",
-        "share_enabled",
         "export_fields",
     }
+    assert set(_export(client, tok, ["pdf"])["preferences"]) == {
+        "pdf_enabled",
+        "pdf_fields",
+    }
+    assert set(_export(client, tok, ["share"])["preferences"]) == {"share_enabled"}
 
 
 def test_export_email_excludes_telegram_and_vice_versa(client):
@@ -295,7 +324,7 @@ def test_snapshot_undo_restores_preferences(client):
 def test_share_enabled_round_trip_and_old_backup_leaves_it(client):
     tok = register_and_login(client, "share@test.com")
     client.patch("/auth/me", json={"share_enabled": True}, headers=auth(tok))
-    backup = _export(client, tok, ["export"])
+    backup = _export(client, tok, ["share"])
     assert backup["preferences"]["share_enabled"] is True
     client.patch("/auth/me", json={"share_enabled": False}, headers=auth(tok))
     assert _upload(client, tok, backup).status_code == 200
@@ -303,3 +332,16 @@ def test_share_enabled_round_trip_and_old_backup_leaves_it(client):
     old = {"schema_version": 6, "preferences": {"decimal_separator": ","}}
     assert _upload(client, tok, old).status_code == 200
     assert _me(client, tok)["share_enabled"] is True
+
+
+def test_pdf_enabled_round_trip_and_old_backup_leaves_it(client):
+    tok = register_and_login(client, "pdf@test.com")
+    client.patch("/auth/me", json={"pdf_enabled": False}, headers=auth(tok))
+    backup = _export(client, tok, ["pdf"])
+    assert backup["preferences"]["pdf_enabled"] is False
+    client.patch("/auth/me", json={"pdf_enabled": True}, headers=auth(tok))
+    assert _upload(client, tok, backup).status_code == 200
+    assert _me(client, tok)["pdf_enabled"] is False
+    old = {"schema_version": 6, "preferences": {"decimal_separator": ","}}
+    assert _upload(client, tok, old).status_code == 200
+    assert _me(client, tok)["pdf_enabled"] is False

@@ -212,6 +212,8 @@
         "exportXlsxError": "Échec de l'exportation. Veuillez réessayer.",
         "exportXlsxMonth": "Mois en cours ({month})",
         "exportXlsxYear": "Année entière ({year})",
+        "exportPdf": "Export PDF",
+        "exportPdfError": "L'export a échoué. Veuillez réessayer.",
         "collapseAll": "Tout réduire",
         "expandAll": "Tout développer",
         "summaryUpcoming": "à venir",
@@ -317,7 +319,9 @@
             "telegram": "Telegram (jeton du bot et rappels)",
             "languages": "Paramètres de langue",
             "currency": "Devise et format numérique",
-            "export": "Paramètres d'export Excel et de partage"
+            "export": "Paramètres d'export Excel",
+            "pdf": "Paramètres d'export PDF",
+            "share": "Paramètre de partage par e-mail"
         }
     },
     "SnapshotRecoverySection": {
@@ -510,6 +514,11 @@
             "addNew": "Ajouter une catégorie",
             "newColorsLabel": "Nouvelles couleurs",
             "usedColorsLabel": "Couleurs utilisées"
+        },
+        "pdfExport": {
+            "title": "Export PDF",
+            "description": "Ajoute un bouton d'export PDF sur la page Paiements (mois en cours ou année entière). Choisissez les colonnes à inclure.",
+            "toggleLabel": "Activer l'export PDF"
         },
         "shareByEmail": {
             "title": "Partager le mois par e-mail",

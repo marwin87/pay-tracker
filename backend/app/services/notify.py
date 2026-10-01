@@ -71,9 +71,13 @@ def telegram_url(user: _TelegramUser) -> str | None:
     return f"tgram://{token}/{user.telegram_chat_id}"
 
 
+def footer_text() -> str:
+    """Single source for the app footer line (notifications and exports)."""
+    return f"© {datetime.now().year} Pay Tracker · {settings.app_version}"
+
+
 def send(url: str, title: str, body: str, *, html: bool = False) -> None:
-    year = datetime.now().year
-    footer = f"© {year} Pay Tracker · {settings.app_version}"
+    footer = footer_text()
     body += (
         f'\n<p style="color:#94a3b8;font-size:12px">{footer}</p>'
         if html

@@ -311,3 +311,11 @@ def test_xlsx_supports_every_frontend_locale(client):
         headers[lang] = tuple(c.value for c in ws[1])
     # en is the fallback, so every other locale must differ from it.
     assert all(h != headers["en"] for lang, h in headers.items() if lang != "en")
+
+
+def test_xlsx_has_print_footer(client):
+    tok = _monthly_bill_from_january(client, "xlsx_footer@test.com")
+    r = client.get("/export/xlsx", headers=auth(tok))
+    ws = openpyxl.load_workbook(io.BytesIO(r.content)).worksheets[0]
+    assert ws.oddFooter.left.text.startswith("© ")
+    assert ws.oddFooter.right.text == "&P / &N"

@@ -212,6 +212,8 @@
         "exportXlsxError": "Esportazione non riuscita. Riprova.",
         "exportXlsxMonth": "Mese corrente ({month})",
         "exportXlsxYear": "Anno intero ({year})",
+        "exportPdf": "Esporta in PDF",
+        "exportPdfError": "Esportazione non riuscita. Riprova.",
         "collapseAll": "Comprimi tutto",
         "expandAll": "Espandi tutto",
         "summaryUpcoming": "in arrivo",
@@ -317,7 +319,9 @@
             "telegram": "Telegram (token del bot e promemoria)",
             "languages": "Impostazioni lingua",
             "currency": "Valuta e formato numerico",
-            "export": "Impostazioni di esportazione Excel e condivisione"
+            "export": "Impostazioni di esportazione Excel",
+            "pdf": "Impostazioni di esportazione PDF",
+            "share": "Impostazione di condivisione via e-mail"
         }
     },
     "SnapshotRecoverySection": {
@@ -510,6 +514,11 @@
             "addNew": "Aggiungi categoria",
             "newColorsLabel": "Nuovi colori",
             "usedColorsLabel": "Colori già usati"
+        },
+        "pdfExport": {
+            "title": "Esportazione PDF",
+            "description": "Aggiunge un pulsante di esportazione PDF nella pagina Pagamenti (mese corrente o anno intero). Scegli quali colonne includere.",
+            "toggleLabel": "Attiva esportazione PDF"
         },
         "shareByEmail": {
             "title": "Condividi il mese via e-mail",

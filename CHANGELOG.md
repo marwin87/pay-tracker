@@ -7,6 +7,7 @@ Notable changes to Pay Tracker, release by release.
 ### Features
 
 - Share the month summary by email (opt-in in the Settings Reports tab)
+- Export payments to PDF for the month or the whole year (can be turned off in Settings)
 - New theme: Vesperfall
 
 ### Fixes

@@ -452,6 +452,7 @@ export default function SettingsPage() {
         }`}
       >
         <ExportSettingsTile profile={profile} onProfileUpdate={setProfile} t={t} />
+        <ExportSettingsTile format="pdf" profile={profile} onProfileUpdate={setProfile} t={t} />
         <ShareSettingsTile profile={profile} onProfileUpdate={setProfile} t={t} />
       </div>
 

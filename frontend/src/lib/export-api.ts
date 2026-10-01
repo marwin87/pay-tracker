@@ -11,6 +11,8 @@ export const BACKUP_SECTIONS = [
   "languages",
   "currency",
   "export",
+  "pdf",
+  "share",
 ] as const;
 export type BackupSection = (typeof BACKUP_SECTIONS)[number];
 
@@ -81,13 +83,14 @@ export async function restoreFromSnapshot(): Promise<{
 }
 
 // `month` (1–12) limits the workbook to that one month; omit for the whole year.
-export async function downloadXlsx(
+async function downloadReport(
+  format: "xlsx" | "pdf",
   year: number,
   lang: string,
   month?: number
 ): Promise<void> {
   const monthQs = month ? `&month=${month}` : "";
-  const res = await fetch(`${BASE_URL}/export/xlsx?year=${year}&lang=${lang}${monthQs}`, {
+  const res = await fetch(`${BASE_URL}/export/${format}?year=${year}&lang=${lang}${monthQs}`, {
     credentials: "include",
   });
 
@@ -98,7 +101,13 @@ export async function downloadXlsx(
   const a = document.createElement("a");
   a.href = url;
   const suffix = month ? `${year}-${String(month).padStart(2, "0")}` : year;
-  a.download = `pay-tracker-${lang}-${suffix}.xlsx`;
+  a.download = `pay-tracker-${lang}-${suffix}.${format}`;
   a.click();
   URL.revokeObjectURL(url);
 }
+
+export const downloadXlsx = (year: number, lang: string, month?: number) =>
+  downloadReport("xlsx", year, lang, month);
+
+export const downloadPdf = (year: number, lang: string, month?: number) =>
+  downloadReport("pdf", year, lang, month);

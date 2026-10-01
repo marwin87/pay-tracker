@@ -212,6 +212,8 @@
         "exportXlsxError": "Eksport nie powiódł się. Spróbuj ponownie.",
         "exportXlsxMonth": "Bieżący miesiąc ({month})",
         "exportXlsxYear": "Cały rok ({year})",
+        "exportPdf": "Eksport PDF",
+        "exportPdfError": "Eksport nie powiódł się. Spróbuj ponownie.",
         "collapseAll": "Zwiń wszystko",
         "expandAll": "Rozwiń wszystko",
         "summaryUpcoming": "nadchodzące",
@@ -317,7 +319,9 @@
             "telegram": "Telegram (token bota i przypomnienia)",
             "languages": "Ustawienia języków",
             "currency": "Waluta i format liczb",
-            "export": "Ustawienia eksportu do Excela i udostępniania"
+            "export": "Ustawienia eksportu do Excela",
+            "pdf": "Ustawienia eksportu do PDF",
+            "share": "Ustawienie udostępniania e-mailem"
         }
     },
     "SnapshotRecoverySection": {
@@ -510,6 +514,11 @@
             "addNew": "Dodaj kategorię",
             "newColorsLabel": "Nowe kolory",
             "usedColorsLabel": "Użyte kolory"
+        },
+        "pdfExport": {
+            "title": "Eksport do PDF",
+            "description": "Dodaje przycisk eksportu PDF na stronie Płatności (bieżący miesiąc lub cały rok). Wybierz, które kolumny uwzględnić.",
+            "toggleLabel": "Włącz eksport PDF"
         },
         "shareByEmail": {
             "title": "Udostępnianie miesiąca e-mailem",

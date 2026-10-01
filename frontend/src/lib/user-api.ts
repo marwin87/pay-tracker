@@ -48,6 +48,8 @@ export interface UserProfile {
   telegram_monthly_summary_enabled: boolean;
   browser_notifications_enabled: boolean;
   export_enabled: boolean;
+  pdf_enabled: boolean;
+  pdf_fields: ExportFieldKey[];
   share_enabled: boolean;
   export_fields: ExportFieldKey[];
 }
@@ -82,6 +84,8 @@ export function updateMe(
       | "telegram_monthly_summary_enabled"
       | "browser_notifications_enabled"
       | "export_enabled"
+      | "pdf_enabled"
+      | "pdf_fields"
       | "share_enabled"
       | "export_fields"
     >

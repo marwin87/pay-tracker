@@ -212,6 +212,8 @@
         "exportXlsxError": "Export failed. Please try again.",
         "exportXlsxMonth": "Current month ({month})",
         "exportXlsxYear": "Whole year ({year})",
+        "exportPdf": "PDF Export",
+        "exportPdfError": "Export failed. Please try again.",
         "collapseAll": "Collapse all",
         "expandAll": "Expand all",
         "summaryUpcoming": "upcoming",
@@ -317,7 +319,9 @@
             "telegram": "Telegram (bot token & reminders)",
             "languages": "Language settings",
             "currency": "Currency & number format",
-            "export": "Excel export & sharing settings"
+            "export": "Excel export settings",
+            "pdf": "PDF export settings",
+            "share": "Share by email setting"
         }
     },
     "SnapshotRecoverySection": {
@@ -510,6 +514,11 @@
             "addNew": "Add category",
             "newColorsLabel": "New colors",
             "usedColorsLabel": "Used colors"
+        },
+        "pdfExport": {
+            "title": "PDF export",
+            "description": "Adds a PDF export button on the Payments page (current month or whole year). Choose which columns to include.",
+            "toggleLabel": "Enable PDF export"
         },
         "shareByEmail": {
             "title": "Share month by email",

@@ -101,8 +101,10 @@ class UserProfileOut(BaseModel):
     telegram_monthly_summary_enabled: bool
     browser_notifications_enabled: bool
     export_enabled: bool
+    pdf_enabled: bool
     share_enabled: bool
     export_fields: list[ExportFieldKey]
+    pdf_fields: list[ExportFieldKey]
 
 
 def normalize_chat_id(v: str | None) -> str | None:
@@ -147,8 +149,10 @@ class UserProfileUpdate(BaseModel):
     telegram_monthly_summary_enabled: bool | None = None
     browser_notifications_enabled: bool | None = None
     export_enabled: bool | None = None
+    pdf_enabled: bool | None = None
     share_enabled: bool | None = None
     export_fields: list[ExportFieldKey] | None = None
+    pdf_fields: list[ExportFieldKey] | None = None
 
     @field_validator("telegram_chat_id")
     @classmethod
@@ -160,7 +164,7 @@ class UserProfileUpdate(BaseModel):
     def _bot_token(cls, v: str | None) -> str | None:
         return normalize_bot_token(v)
 
-    @field_validator("export_fields")
+    @field_validator("export_fields", "pdf_fields")
     @classmethod
     def _export_fields(cls, v: list[str] | None) -> list[str] | None:
         return validate_export_fields(v)

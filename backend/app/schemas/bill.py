@@ -249,8 +249,10 @@ class BackupPreferences(BaseModel):
     default_currency: str | None = Field(default=None, max_length=10)
     decimal_separator: Literal[".", ","] | None = None
     export_enabled: bool | None = None
+    pdf_enabled: bool | None = None
     share_enabled: bool | None = None
     export_fields: list[str] | None = None
+    pdf_fields: list[str] | None = None
 
     @field_validator("enabled_languages")
     @classmethod
@@ -259,7 +261,7 @@ class BackupPreferences(BaseModel):
             raise ValueError("enabled_languages must be non-empty language codes")
         return v
 
-    @field_validator("export_fields")
+    @field_validator("export_fields", "pdf_fields")
     @classmethod
     def _export_fields(cls, v: list[str] | None) -> list[str] | None:
         return validate_export_fields(v)

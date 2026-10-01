@@ -212,6 +212,8 @@
         "exportXlsxError": "导出失败，请重试。",
         "exportXlsxMonth": "当前月份（{month}）",
         "exportXlsxYear": "全年（{year}）",
+        "exportPdf": "导出 PDF",
+        "exportPdfError": "导出失败，请重试。",
         "collapseAll": "全部折叠",
         "expandAll": "全部展开",
         "summaryUpcoming": "待付款",
@@ -317,7 +319,9 @@
             "telegram": "Telegram（机器人令牌和提醒）",
             "languages": "语言设置",
             "currency": "货币和数字格式",
-            "export": "Excel 导出与分享设置"
+            "export": "Excel 导出设置",
+            "pdf": "PDF 导出设置",
+            "share": "邮件分享设置"
         }
     },
     "SnapshotRecoverySection": {
@@ -510,6 +514,11 @@
             "addNew": "添加类别",
             "newColorsLabel": "新颜色",
             "usedColorsLabel": "已用颜色"
+        },
+        "pdfExport": {
+            "title": "PDF 导出",
+            "description": "在付款页面添加 PDF 导出按钮（当前月份或全年）。可选择包含哪些列。",
+            "toggleLabel": "启用 PDF 导出"
         },
         "shareByEmail": {
             "title": "通过邮件分享月份",

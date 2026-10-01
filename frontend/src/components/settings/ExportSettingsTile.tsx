@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FileSpreadsheet } from "lucide-react";
+import { FileSpreadsheet, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   EXPORT_FIELD_KEYS,
@@ -15,17 +15,23 @@ import { Checkbox } from "@/components/ui/Checkbox";
 import { Tile } from "./Tile";
 
 export function ExportSettingsTile({
+  format = "excel",
   profile,
   onProfileUpdate,
   t,
 }: {
+  format?: "excel" | "pdf";
   profile: UserProfile;
   onProfileUpdate: (p: UserProfile) => void;
   t: ReturnType<typeof useTranslations>;
 }) {
   const tp = useTranslations("SettingsPage");
-  const [enabled, setEnabled] = useState(profile.export_enabled);
-  const [fields, setFields] = useState<ExportFieldKey[]>(profile.export_fields);
+  const isPdf = format === "pdf";
+  const enabledKey = isPdf ? "pdf_enabled" : "export_enabled";
+  const fieldsKey = isPdf ? "pdf_fields" : "export_fields";
+  const ns = isPdf ? "pdfExport" : "excelExport";
+  const [enabled, setEnabled] = useState(profile[enabledKey]);
+  const [fields, setFields] = useState<ExportFieldKey[]>(profile[fieldsKey]);
   const [isTogglingEnabled, setIsTogglingEnabled] = useState(false);
   const [savingField, setSavingField] = useState<ExportFieldKey | null>(null);
 
@@ -33,7 +39,7 @@ export function ExportSettingsTile({
     setEnabled(value);
     setIsTogglingEnabled(true);
     try {
-      onProfileUpdate(await updateMe({ export_enabled: value }));
+      onProfileUpdate(await updateMe({ [enabledKey]: value }));
     } catch {
       setEnabled(!value);
     } finally {
@@ -47,7 +53,7 @@ export function ExportSettingsTile({
     setFields(next);
     setSavingField(key);
     try {
-      onProfileUpdate(await updateMe({ export_fields: next }));
+      onProfileUpdate(await updateMe({ [fieldsKey]: next }));
     } catch {
       setFields(previous);
     } finally {
@@ -58,15 +64,15 @@ export function ExportSettingsTile({
   return (
     <Tile
       color="teal"
-      icon={FileSpreadsheet}
-      title={tp("excelExport.title")}
-      description={tp("excelExport.description")}
+      icon={isPdf ? FileText : FileSpreadsheet}
+      title={tp(`${ns}.title`)}
+      description={tp(`${ns}.description`)}
       t={t}
     >
       <Switch
         checked={enabled}
         onChange={toggleEnabled}
-        label={tp("excelExport.toggleLabel")}
+        label={tp(`${ns}.toggleLabel`)}
         disabled={isTogglingEnabled}
       />
 

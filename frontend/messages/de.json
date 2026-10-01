@@ -212,6 +212,8 @@
         "exportXlsxError": "Export fehlgeschlagen. Bitte erneut versuchen.",
         "exportXlsxMonth": "Aktueller Monat ({month})",
         "exportXlsxYear": "Ganzes Jahr ({year})",
+        "exportPdf": "PDF-Export",
+        "exportPdfError": "Export fehlgeschlagen. Bitte erneut versuchen.",
         "collapseAll": "Alle einklappen",
         "expandAll": "Alle ausklappen",
         "summaryUpcoming": "bevorstehend",
@@ -317,7 +319,9 @@
             "telegram": "Telegram (Bot-Token & Erinnerungen)",
             "languages": "Spracheinstellungen",
             "currency": "Währung & Zahlenformat",
-            "export": "Einstellungen für Excel-Export & Teilen"
+            "export": "Einstellungen für Excel-Export",
+            "pdf": "Einstellungen für PDF-Export",
+            "share": "Einstellung für Teilen per E-Mail"
         }
     },
     "SnapshotRecoverySection": {
@@ -510,6 +514,11 @@
             "addNew": "Kategorie hinzufügen",
             "newColorsLabel": "Neue Farben",
             "usedColorsLabel": "Verwendete Farben"
+        },
+        "pdfExport": {
+            "title": "PDF-Export",
+            "description": "Fügt auf der Zahlungsseite eine PDF-Export-Schaltfläche hinzu (aktueller Monat oder ganzes Jahr). Wähle, welche Spalten enthalten sind.",
+            "toggleLabel": "PDF-Export aktivieren"
         },
         "shareByEmail": {
             "title": "Monat per E-Mail teilen",

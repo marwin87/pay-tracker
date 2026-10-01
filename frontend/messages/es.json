@@ -212,6 +212,8 @@
         "exportXlsxError": "Error al exportar. Inténtalo de nuevo.",
         "exportXlsxMonth": "Mes actual ({month})",
         "exportXlsxYear": "Año completo ({year})",
+        "exportPdf": "Exportar a PDF",
+        "exportPdfError": "La exportación falló. Inténtalo de nuevo.",
         "collapseAll": "Contraer todo",
         "expandAll": "Expandir todo",
         "summaryUpcoming": "próximos",
@@ -317,7 +319,9 @@
             "telegram": "Telegram (token del bot y recordatorios)",
             "languages": "Ajustes de idioma",
             "currency": "Moneda y formato numérico",
-            "export": "Ajustes de exportación a Excel y compartir"
+            "export": "Ajustes de exportación a Excel",
+            "pdf": "Ajustes de exportación a PDF",
+            "share": "Ajuste de compartir por correo"
         }
     },
     "SnapshotRecoverySection": {
@@ -510,6 +514,11 @@
             "addNew": "Añadir categoría",
             "newColorsLabel": "Colores nuevos",
             "usedColorsLabel": "Colores usados"
+        },
+        "pdfExport": {
+            "title": "Exportación a PDF",
+            "description": "Añade un botón de exportación a PDF en la página de Pagos (mes actual o año completo). Elige qué columnas incluir.",
+            "toggleLabel": "Activar exportación a PDF"
         },
         "shareByEmail": {
             "title": "Compartir el mes por correo",

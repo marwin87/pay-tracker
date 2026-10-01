@@ -24,6 +24,7 @@ _PROTECTED_ROUTES = [
     ("GET", "/bills/payments"),
     ("GET", "/export/json"),
     ("GET", "/export/xlsx"),
+    ("GET", "/export/pdf"),
 ]
 
 

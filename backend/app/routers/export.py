@@ -4,6 +4,8 @@ from datetime import date, datetime, timedelta, timezone
 from decimal import Decimal
 
 import pandas as pd
+from fpdf import FPDF
+from pathlib import Path
 from typing import Literal
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
@@ -35,14 +37,22 @@ from app.schemas.bill import (
     RestoreSnapshotOut,
 )
 from app.services.categories import seed_default_categories
-from app.services.notify import decrypt_secret, encrypt_secret
+from app.services.notify import decrypt_secret, encrypt_secret, footer_text
 from app.services.reminder_job import EMAIL, TELEGRAM, Channel
 from app.services.recurrence import backfill_template_instances
 
 router = APIRouter(prefix="/export", tags=["export"])
 
 Section = Literal[
-    "bills", "categories", "email", "telegram", "languages", "currency", "export"
+    "bills",
+    "categories",
+    "email",
+    "telegram",
+    "languages",
+    "currency",
+    "export",
+    "pdf",
+    "share",
 ]
 ALL_SECTIONS: tuple[Section, ...] = (
     "bills",
@@ -52,6 +62,8 @@ ALL_SECTIONS: tuple[Section, ...] = (
     "languages",
     "currency",
     "export",
+    "pdf",
+    "share",
 )
 
 
@@ -180,24 +192,9 @@ def _ensure_year_instances(db: Session, user_id: int, year: int) -> None:
         backfill_template_instances(db, template, f"{year}-01", f"{year}-12")
 
 
-@router.get("/xlsx")
-def export_xlsx(
-    year: int = Query(default_factory=lambda: date.today().year),
-    month: int | None = Query(default=None, ge=1, le=12),
-    lang: str = Query(default="en"),
-    db: Session = Depends(get_db),
-    me: User = Depends(current_user),
-):
-    if not me.export_enabled:
-        raise HTTPException(status_code=403, detail="Excel export is disabled")
-
-    lang = resolve_locale(lang)
-
-    selected_keys = set(me.export_fields)
-    selected_columns = [
-        col for key, col in zip(_COLUMN_KEYS, _COLUMNS) if key in selected_keys
-    ]
-
+def _rows_by_month(
+    db: Session, me: User, lang: str, year: int
+) -> dict[int, list[dict]]:
     _ensure_year_instances(db, me.id, year)
 
     instances = (
@@ -236,6 +233,28 @@ def export_xlsx(
                 "_category_color": i.template.category.color,
             }
         )
+    return by_month
+
+
+@router.get("/xlsx")
+def export_xlsx(
+    year: int = Query(default_factory=lambda: date.today().year),
+    month: int | None = Query(default=None, ge=1, le=12),
+    lang: str = Query(default="en"),
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    if not me.export_enabled:
+        raise HTTPException(status_code=403, detail="Excel export is disabled")
+
+    lang = resolve_locale(lang)
+
+    selected_keys = set(me.export_fields)
+    selected_columns = [
+        col for key, col in zip(_COLUMN_KEYS, _COLUMNS) if key in selected_keys
+    ]
+
+    by_month = _rows_by_month(db, me, lang, year)
 
     headers = [
         t(lang, f"SettingsPage.excelExport.fields.{key}")
@@ -270,6 +289,8 @@ def export_xlsx(
             df.to_excel(writer, index=False, sheet_name=sheet_name)
 
             ws = writer.sheets[sheet_name]
+            ws.oddFooter.left.text = f"{footer_text()} · {date.today().isoformat()}"
+            ws.oddFooter.right.text = "&P / &N"
             for col_idx, header in enumerate(headers, start=1):
                 cell = ws.cell(row=1, column=col_idx)
                 cell.font = _HEADER_FONT
@@ -315,6 +336,134 @@ def export_xlsx(
     return StreamingResponse(
         buf,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
+    )
+
+
+_PDF_FONTS = Path(__file__).resolve().parent.parent / "assets" / "fonts"
+_PDF_HEADER_FILL = (243, 244, 246)
+
+
+def _rgb(hex_color: str) -> tuple[int, int, int]:
+    return tuple(int(hex_color[i : i + 2], 16) for i in (0, 2, 4))  # type: ignore[return-value]
+
+
+class _ReportPDF(FPDF):
+    def footer(self) -> None:
+        self.set_y(-10)
+        self.set_font("DejaVu", "", 7)
+        self.set_text_color(120, 120, 120)
+        self.cell(0, 5, f"{footer_text()} · {date.today().isoformat()}", align="L")
+        self.set_x(self.l_margin)
+        self.cell(0, 5, f"{self.page_no()} / {{nb}}", align="R")
+        self.set_text_color(0, 0, 0)
+
+
+@router.get("/pdf")
+def export_pdf(
+    year: int = Query(default_factory=lambda: date.today().year),
+    month: int | None = Query(default=None, ge=1, le=12),
+    lang: str = Query(default="en"),
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    if not me.pdf_enabled:
+        raise HTTPException(status_code=403, detail="PDF export is disabled")
+
+    lang = resolve_locale(lang)
+    selected_keys = set(me.pdf_fields)
+    keys = [k for k in _COLUMN_KEYS if k in selected_keys]
+    columns = [c for k, c in zip(_COLUMN_KEYS, _COLUMNS) if k in selected_keys]
+    headers = [t(lang, f"SettingsPage.excelExport.fields.{k}") for k in keys]
+    by_month = _rows_by_month(db, me, lang, year)
+
+    pdf = _ReportPDF(orientation="L", format="A4")
+    pdf.alias_nb_pages()
+    pdf.add_font("DejaVu", "", str(_PDF_FONTS / "DejaVuSans.ttf"))
+    pdf.add_font("DejaVu", "B", str(_PDF_FONTS / "DejaVuSans-Bold.ttf"))
+    # DejaVu has no CJK glyphs; NotoSC (GB2312 subset) covers zh text.
+    pdf.add_font("NotoSC", "", str(_PDF_FONTS / "NotoSansSC-Regular.ttf"))
+    pdf.add_font("NotoSC", "B", str(_PDF_FONTS / "NotoSansSC-Bold.ttf"))
+    pdf.set_fallback_fonts(["NotoSC"])
+    pdf.set_auto_page_break(auto=True, margin=12)
+    right_aligned = {"amount", "paid_amount"}
+    pad = 4  # total horizontal cell padding, mm
+    page_w = 277  # A4 landscape minus 2 * 10mm margins
+
+    def column_widths(rows: list[dict]) -> list[float]:
+        """Fit each column to its widest content (header or cell) plus padding;
+        if the table is wider than the page, shrink only the widest columns."""
+        natural = []
+        for h, col in zip(headers, columns):
+            pdf.set_font("DejaVu", "B", 8)
+            w = pdf.get_string_width(h)
+            pdf.set_font("DejaVu", "", 8)
+            for row in rows:
+                w = max(w, pdf.get_string_width(str(row[col] or "")))
+            natural.append(w + pad)
+        excess = sum(natural) - page_w
+        if excess <= 0:  # spread the spare width evenly
+            return [w - excess / len(natural) for w in natural]
+        if excess > 0:
+            # ponytail: shave proportionally from columns wider than the average
+            avg = page_w / len(natural)
+            wide = [i for i, w in enumerate(natural) if w > avg]
+            over = sum(natural[i] - avg for i in wide)
+            for i in wide:
+                natural[i] -= excess * (natural[i] - avg) / over
+        return natural
+
+    all_rows = [r for rs in by_month.values() for r in rs]
+    widths = column_widths(all_rows)
+
+    for m in [month] if month else range(1, 13):
+        rows = by_month[m]
+        if not month and not rows:
+            continue
+        pdf.add_page()
+        pdf.set_font("DejaVu", "B", 14)
+        pdf.cell(
+            0,
+            10,
+            f"{t(lang, f'Notifications.monthLong.{m}')[:1].upper()}"
+            f"{t(lang, f'Notifications.monthLong.{m}')[1:]} {year}",
+            new_x="LMARGIN",
+            new_y="NEXT",
+        )
+        pdf.set_font("DejaVu", "B", 8)
+        pdf.set_fill_color(*_PDF_HEADER_FILL)
+        for h, w in zip(headers, widths):
+            pdf.cell(w, 7, h, border=1, fill=True)
+        pdf.ln()
+        pdf.set_font("DejaVu", "", 8)
+        for row in rows:
+            for key, col, w in zip(keys, columns, widths):
+                text = str(row[col] if row[col] is not None else "")
+                pdf.set_fill_color(255, 255, 255)
+                pdf.set_text_color(0, 0, 0)
+                if key == "status":
+                    if style := _STATUS_STYLES.get(row["_status_key"]):
+                        pdf.set_fill_color(*_rgb(style[0]))
+                        pdf.set_text_color(*_rgb(style[1]))
+                # ponytail: only clips if a column had to shrink to fit the page
+                pdf.cell(
+                    w,
+                    6,
+                    text,
+                    border=1,
+                    fill=key == "status",
+                    align="R" if key in right_aligned else "L",
+                )
+            pdf.set_text_color(0, 0, 0)
+            pdf.ln()
+    if pdf.page == 0:
+        pdf.add_page()
+
+    suffix = f"{year}-{month:02d}" if month else str(year)
+    filename = f"pay-tracker-{lang}-{suffix}.pdf"
+    return Response(
+        content=bytes(pdf.output()),
+        media_type="application/pdf",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
 
@@ -376,8 +525,12 @@ def _build_backup_arrays(
         prefs["decimal_separator"] = user.decimal_separator
     if "export" in sections:
         prefs["export_enabled"] = user.export_enabled
-        prefs["share_enabled"] = user.share_enabled
         prefs["export_fields"] = list(user.export_fields)
+    if "pdf" in sections:
+        prefs["pdf_enabled"] = user.pdf_enabled
+        prefs["pdf_fields"] = list(user.pdf_fields)
+    if "share" in sections:
+        prefs["share_enabled"] = user.share_enabled
     if prefs:
         out["preferences"] = prefs
 
@@ -654,10 +807,14 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
                 user.decimal_separator = p.decimal_separator
             if p.export_enabled is not None:
                 user.export_enabled = p.export_enabled
+            if p.pdf_enabled is not None:
+                user.pdf_enabled = p.pdf_enabled
             if p.share_enabled is not None:
                 user.share_enabled = p.share_enabled
             if p.export_fields is not None:
                 user.export_fields = p.export_fields
+            if p.pdf_fields is not None:
+                user.pdf_fields = p.pdf_fields
             if (
                 user.language_preference
                 and user.language_preference not in user.enabled_languages

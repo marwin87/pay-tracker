@@ -155,7 +155,7 @@ test('backup dialog: select/deselect all drives a partial export', async ({ page
 
   const dialog = page.getByRole('dialog');
   const boxes = dialog.getByRole('checkbox');
-  await expect(boxes).toHaveCount(7);
+  await expect(boxes).toHaveCount(9);
   for (const box of await boxes.all()) await expect(box).toBeChecked();
 
   // Deselect all disables the download; selecting one section re-enables it.

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ChevronsUpDown, FileSpreadsheet, Loader2, Share2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsUpDown, FileSpreadsheet, FileText, Loader2, Share2 } from "lucide-react";
 import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
@@ -17,7 +17,7 @@ import {
   type CategorySortOrder,
 } from "@/lib/categories";
 import Dropdown from "@/components/ui/Dropdown";
-import { downloadXlsx } from "@/lib/export-api";
+import { downloadPdf, downloadXlsx } from "@/lib/export-api";
 import { fetchMe } from "@/lib/user-api";
 import { SessionExpiredError, apiFetch } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
@@ -148,6 +148,9 @@ function PaymentsPageInner() {
   const [xlsxLoading, setXlsxLoading] = useState(false);
   const [xlsxError, setXlsxError] = useState<string | null>(null);
   const [exportEnabled, setExportEnabled] = useState(true);
+  const [pdfEnabled, setPdfEnabled] = useState(true);
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfError, setPdfError] = useState<string | null>(null);
   const [shareAvailable, setShareAvailable] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [shareSent, setShareSent] = useState(false);
@@ -211,6 +214,7 @@ function PaymentsPageInner() {
       .then((profile) => {
         if (cancelled) return;
         setExportEnabled(profile.export_enabled);
+        setPdfEnabled(profile.pdf_enabled);
         if (!profile.share_enabled) return;
         return apiFetch<{ configured: boolean }>("/auth/smtp-status").then((d) => {
           if (!cancelled) setShareAvailable(d?.configured ?? false);
@@ -326,6 +330,36 @@ function PaymentsPageInner() {
     }
   }
 
+  async function handleExportPdf(scope: ExportScope) {
+    setPdfError(null);
+    setPdfLoading(true);
+    try {
+      if (scope === "month") {
+        await downloadPdf(Number(selectedMonth.slice(0, 4)), locale, Number(selectedMonth.slice(5, 7)));
+      } else {
+        await downloadPdf(selectedYear, locale);
+      }
+    } catch {
+      setPdfError(t("exportPdfError"));
+    } finally {
+      setPdfLoading(false);
+    }
+  }
+
+  const exportScopeOptions = [
+    {
+      value: "month" as const,
+      label: t("exportXlsxMonth", {
+        month: getMonthLabel(
+          Number(selectedMonth.slice(0, 4)),
+          Number(selectedMonth.slice(5, 7)) - 1,
+          locale,
+        ),
+      }),
+    },
+    { value: "year" as const, label: t("exportXlsxYear", { year: selectedYear }) },
+  ];
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8">
       {dialogTarget && (
@@ -435,7 +469,7 @@ function PaymentsPageInner() {
         </div>
 
         {/* Export */}
-        {(exportEnabled || shareAvailable) && (
+        {(exportEnabled || pdfEnabled || shareAvailable) && (
           <div className="mt-4 flex items-center justify-end gap-3">
             {shareSent && (
               <p role="status" className="text-sm text-green-600 dark:text-emerald-400">
@@ -474,23 +508,32 @@ function PaymentsPageInner() {
                   XLSX
                 </span>
               }
-              options={[
-                {
-                  value: "month",
-                  label: t("exportXlsxMonth", {
-                    month: getMonthLabel(
-                      Number(selectedMonth.slice(0, 4)),
-                      Number(selectedMonth.slice(5, 7)) - 1,
-                      locale,
-                    ),
-                  }),
-                },
-                { value: "year", label: t("exportXlsxYear", { year: selectedYear }) },
-              ]}
+              options={exportScopeOptions}
             />
             )}
-            {xlsxError && (
-              <p className="text-sm text-red-600 dark:text-red-400">{xlsxError}</p>
+            {pdfEnabled && (
+            <Dropdown<ExportScope | "">
+              variant="icon"
+              align="right"
+              value=""
+              onChange={(scope) => scope && handleExportPdf(scope)}
+              disabled={pdfLoading}
+              ariaLabel={t("exportPdf")}
+              placeholder={
+                <span className="flex items-center gap-1.5">
+                  {pdfLoading ? (
+                    <Loader2 size={14} className="animate-spin text-green-600 dark:text-emerald-400" />
+                  ) : (
+                    <FileText size={14} />
+                  )}
+                  PDF
+                </span>
+              }
+              options={exportScopeOptions}
+            />
+            )}
+            {(xlsxError || pdfError) && (
+              <p className="text-sm text-red-600 dark:text-red-400">{xlsxError ?? pdfError}</p>
             )}
           </div>
         )}
