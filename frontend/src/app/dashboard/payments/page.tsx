@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ChevronsUpDown, Download, Loader2, Share2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsUpDown, FileSpreadsheet, Loader2, Share2 } from "lucide-react";
 import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import {
@@ -458,20 +458,20 @@ function PaymentsPageInner() {
             )}
             {exportEnabled && (
             <Dropdown<ExportScope | "">
-              variant="pill-sm"
+              variant="icon"
               align="right"
               value=""
               onChange={(scope) => scope && handleExportXlsx(scope)}
               disabled={xlsxLoading}
               ariaLabel={t("exportXlsx")}
               placeholder={
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-1.5">
                   {xlsxLoading ? (
                     <Loader2 size={14} className="animate-spin text-green-600 dark:text-emerald-400" />
                   ) : (
-                    <Download size={14} />
+                    <FileSpreadsheet size={14} />
                   )}
-                  {xlsxLoading ? t("exportXlsxLoading") : t("exportXlsx")}
+                  XLSX
                 </span>
               }
               options={[
@@ -515,10 +515,10 @@ function PaymentsPageInner() {
             type="button"
             onClick={toggleCalendarOpen}
             aria-expanded={calendarOpen}
-            className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+            className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
           >
             <ChevronRight
-              size={14}
+              size={12}
               className={`transition-transform duration-150 ${calendarOpen ? "rotate-90" : ""}`}
             />
             {t("calendarTitle")}

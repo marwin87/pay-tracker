@@ -16,7 +16,12 @@ const PILL_TRIGGER_CLASS =
 
 const PILL_SM_TRIGGER_CLASS = PILL_TRIGGER_CLASS.replace("text-sm", "text-xs");
 
+// Icon-only square button, same look as the Share button on Payments.
+const ICON_TRIGGER_CLASS =
+  "flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-semibold text-slate-600 shadow-sm outline-none transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-400 dark:focus:border-green-600 dark:focus:ring-green-900/40 aria-expanded:border-green-300 aria-expanded:bg-green-50 aria-expanded:text-green-700 dark:aria-expanded:border-green-700 dark:aria-expanded:bg-green-900/20 dark:aria-expanded:text-green-400 cursor-pointer";
+
 const TRIGGER_VARIANTS = {
+  icon: ICON_TRIGGER_CLASS,
   field: FIELD_TRIGGER_CLASS,
   pill: PILL_TRIGGER_CLASS,
   "pill-sm": PILL_SM_TRIGGER_CLASS,
@@ -26,6 +31,7 @@ const OPTION_TEXT_SIZE: Record<keyof typeof TRIGGER_VARIANTS, string> = {
   field: "text-sm",
   pill: "text-sm",
   "pill-sm": "text-xs",
+  icon: "text-xs",
 };
 
 interface Props<T extends string> {
@@ -127,6 +133,7 @@ export default function Dropdown<T extends string>({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={ariaLabel}
+        title={variant === "icon" ? ariaLabel : undefined}
         disabled={disabled}
         className={`${TRIGGER_VARIANTS[variant]} disabled:cursor-not-allowed disabled:opacity-50`}
       >

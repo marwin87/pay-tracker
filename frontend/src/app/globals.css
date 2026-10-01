@@ -112,6 +112,12 @@ button:not(:disabled) {
   border-color: #7d6636;
 }
 
+/* Payment row tiles: stronger status tint at the left end of the gradient. */
+.theme-vesperfall .dark\:from-red-500\/10 { --tw-gradient-from: rgb(225 30 25 / 0.15); }
+.theme-vesperfall .dark\:from-emerald-500\/10 { --tw-gradient-from: rgb(40 180 80 / 0.15); }
+.theme-vesperfall .dark\:from-orange-400\/10 { --tw-gradient-from: rgb(255 125 20 / 0.15); }
+.theme-vesperfall .dark\:from-blue-400\/10 { --tw-gradient-from: rgb(30 150 240 / 0.15); }
+
 /* Status tiles/badges (calendar days, tags): stronger tints so they read on brown. */
 .theme-vesperfall .dark\:bg-red-900\/30 { background-color: rgb(179 53 43 / 0.55); }
 .theme-vesperfall .dark\:bg-orange-900\/30 { background-color: rgb(194 100 30 / 0.55); }
