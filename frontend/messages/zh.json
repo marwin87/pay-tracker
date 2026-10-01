@@ -10,6 +10,7 @@
         "passwordPlaceholder": "请输入密码",
         "passwordHint": "至少 8 个字符",
         "passwordTooShort": "密码必须至少包含 8 个字符",
+        "passwordTooLong": "密码最多 72 字节（约 72 个字符）",
         "requiredField": "此字段为必填项。",
         "invalidEmail": "请输入有效的邮箱地址。",
         "signIn": "登录",
@@ -385,6 +386,7 @@
             "passwordHint": "输入当前密码，然后设置一个新密码。",
             "newPasswordPlaceholder": "新密码（至少 8 个字符）",
             "passwordTooShort": "密码必须至少包含 8 个字符。",
+            "passwordTooLong": "密码最多 72 字节（约 72 个字符）。",
             "wrongPassword": "当前密码不正确。",
             "emailTaken": "该邮箱已被注册。",
             "emailAndPasswordRequired": "请同时输入新邮箱地址和当前密码。"

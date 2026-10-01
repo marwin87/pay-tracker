@@ -10,6 +10,7 @@
         "passwordPlaceholder": "Inserisci la password",
         "passwordHint": "Minimo 8 caratteri",
         "passwordTooShort": "La password deve contenere almeno 8 caratteri",
+        "passwordTooLong": "La password può avere al massimo 72 byte (circa 72 caratteri)",
         "requiredField": "Questo campo è obbligatorio.",
         "invalidEmail": "Inserisci un indirizzo email valido.",
         "signIn": "Accedi",
@@ -385,6 +386,7 @@
             "passwordHint": "Inserisci la password attuale, quindi scegline una nuova.",
             "newPasswordPlaceholder": "Nuova password (min. 8 caratteri)",
             "passwordTooShort": "La password deve contenere almeno 8 caratteri.",
+            "passwordTooLong": "La password può avere al massimo 72 byte (circa 72 caratteri).",
             "wrongPassword": "La password attuale non è corretta.",
             "emailTaken": "Quell'email è già registrata.",
             "emailAndPasswordRequired": "Inserisci sia il nuovo indirizzo email sia la password attuale."

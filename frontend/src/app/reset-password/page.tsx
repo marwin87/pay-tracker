@@ -8,6 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LockKeyhole, ArrowRight, Loader2 } from "lucide-react";
 import { apiFetch } from "@/lib/api";
+import { passwordTooLong } from "@/lib/auth-validation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
@@ -33,6 +34,10 @@ function ResetPasswordForm() {
     // invalid/expired token — that would otherwise mislabel this case.
     if (newPassword.length < 8) {
       setError(t("passwordTooShort"));
+      return;
+    }
+    if (passwordTooLong(newPassword)) {
+      setError(t("passwordTooLong"));
       return;
     }
     if (newPassword !== confirmPassword) {

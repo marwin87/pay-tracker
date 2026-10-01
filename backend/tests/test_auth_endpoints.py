@@ -641,3 +641,38 @@ def test_theme_is_stored_per_user(client):
 
     r = client.patch("/auth/me", json={"theme": "neon"}, headers=auth(a))
     assert r.status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# bcrypt's 72-byte limit: rejected as 422, never a 500
+# ---------------------------------------------------------------------------
+
+_TOO_LONG = "a" * 73
+_TOO_LONG_MULTIBYTE = "ł" * 37  # 37 chars but 74 bytes
+
+
+@pytest.mark.parametrize("pw", [_TOO_LONG, _TOO_LONG_MULTIBYTE])
+def test_over_72_byte_password_returns_422(client, pw):
+    token = register_and_login(client, "longpw@test.com", _PASSWORD)
+    assert (
+        client.post(
+            "/auth/register", json={"email": "other@test.com", "password": pw}
+        ).status_code
+        == 422
+    )
+    assert (
+        client.post(
+            "/auth/login", json={"email": "longpw@test.com", "password": pw}
+        ).status_code
+        == 422
+    )
+    r = client.patch(
+        "/auth/change-password",
+        json={"current_password": _PASSWORD, "new_password": pw},
+        headers=auth(token),
+    )
+    assert r.status_code == 422
+    r = client.post(
+        "/auth/reset-password", json={"token": "whatever", "new_password": pw}
+    )
+    assert r.status_code == 422

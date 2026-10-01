@@ -4,6 +4,7 @@ import { KeyRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { changePassword } from "@/lib/user-api";
+import { passwordTooLong } from "@/lib/auth-validation";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { btnSaveClass as btnSave, btnCancelClass as btnCancel } from "@/components/ui/formButtonClasses";
 import { Tile } from "./Tile";
@@ -38,6 +39,10 @@ export function PasswordTile({
   async function savePassword() {
     if (newPassword.length < 8) {
       setPasswordError(tp("profile.passwordTooShort"));
+      return;
+    }
+    if (passwordTooLong(newPassword)) {
+      setPasswordError(tp("profile.passwordTooLong"));
       return;
     }
     setPasswordError(null);

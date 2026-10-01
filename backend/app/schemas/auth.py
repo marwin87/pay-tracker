@@ -15,6 +15,17 @@ def _check_language(v: str) -> str:
 
 SupportedLanguage = Annotated[str, AfterValidator(_check_language)]
 
+
+def _check_bcrypt_length(v: str) -> str:
+    # bcrypt 5 raises on >72 bytes (would surface as a 500); count bytes, not chars.
+    if len(v.encode()) > 72:
+        raise ValueError("Password must be at most 72 bytes")
+    return v
+
+
+# Any password the API accepts or checks must fit bcrypt's 72-byte limit.
+Password = Annotated[str, AfterValidator(_check_bcrypt_length)]
+
 Theme = Literal["light", "dark", "vesperfall"]
 
 EXPORT_FIELD_KEYS: tuple[str, ...] = (
@@ -60,12 +71,12 @@ def validate_export_fields(v: list[str] | None) -> list[str] | None:
 
 class RegisterRequest(BaseModel):
     email: EmailStr
-    password: Annotated[str, Field(min_length=8)]
+    password: Annotated[Password, Field(min_length=8)]
 
 
 class LoginRequest(BaseModel):
     email: EmailStr
-    password: str
+    password: Password
 
 
 class TokenResponse(BaseModel):
@@ -171,13 +182,13 @@ class UserProfileUpdate(BaseModel):
 
 
 class ChangePasswordRequest(BaseModel):
-    current_password: str
-    new_password: str
+    current_password: Password
+    new_password: Password
 
 
 class ChangeEmailRequest(BaseModel):
     new_email: EmailStr
-    current_password: str
+    current_password: Password
 
 
 class SendNotificationNowOut(BaseModel):
@@ -203,7 +214,7 @@ class ForgotPasswordRequest(BaseModel):
 
 class ResetPasswordRequest(BaseModel):
     token: str
-    new_password: str
+    new_password: Password
 
 
 class SmtpStatusResponse(BaseModel):

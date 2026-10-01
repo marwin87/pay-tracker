@@ -10,6 +10,7 @@
         "passwordPlaceholder": "Enter your password",
         "passwordHint": "Minimum 8 characters",
         "passwordTooShort": "Password must be at least 8 characters",
+        "passwordTooLong": "Password must be at most 72 bytes (about 72 characters)",
         "requiredField": "This field is required.",
         "invalidEmail": "Please enter a valid email address.",
         "signIn": "Sign in",
@@ -385,6 +386,7 @@
             "passwordHint": "Enter your current password, then choose a new one.",
             "newPasswordPlaceholder": "New password (min. 8 characters)",
             "passwordTooShort": "Password must be at least 8 characters.",
+            "passwordTooLong": "Password must be at most 72 bytes (about 72 characters).",
             "wrongPassword": "Current password is incorrect.",
             "emailTaken": "That email is already registered.",
             "emailAndPasswordRequired": "Please enter both a new email address and your current password."

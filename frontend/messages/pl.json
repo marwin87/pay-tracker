@@ -10,6 +10,7 @@
         "passwordPlaceholder": "Wpisz hasło",
         "passwordHint": "Minimum 8 znaków",
         "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków",
+        "passwordTooLong": "Hasło może mieć najwyżej 72 bajty (ok. 72 znaków)",
         "requiredField": "To pole jest wymagane.",
         "invalidEmail": "Podaj prawidłowy adres e-mail.",
         "signIn": "Zaloguj się",
@@ -385,6 +386,7 @@
             "passwordHint": "Wpisz aktualne hasło, a następnie wybierz nowe.",
             "newPasswordPlaceholder": "Nowe hasło (min. 8 znaków)",
             "passwordTooShort": "Hasło musi mieć co najmniej 8 znaków.",
+            "passwordTooLong": "Hasło może mieć najwyżej 72 bajty (ok. 72 znaków).",
             "wrongPassword": "Aktualne hasło jest nieprawidłowe.",
             "emailTaken": "Ten adres e-mail jest już zarejestrowany.",
             "emailAndPasswordRequired": "Podaj nowy adres e-mail oraz aktualne hasło."

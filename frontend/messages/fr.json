@@ -10,6 +10,7 @@
         "passwordPlaceholder": "Saisissez votre mot de passe",
         "passwordHint": "Minimum 8 caractères",
         "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères",
+        "passwordTooLong": "Le mot de passe ne peut pas dépasser 72 octets (environ 72 caractères)",
         "requiredField": "Ce champ est obligatoire.",
         "invalidEmail": "Veuillez saisir une adresse email valide.",
         "signIn": "Se connecter",
@@ -385,6 +386,7 @@
             "passwordHint": "Saisissez votre mot de passe actuel, puis choisissez-en un nouveau.",
             "newPasswordPlaceholder": "Nouveau mot de passe (min. 8 caractères)",
             "passwordTooShort": "Le mot de passe doit contenir au moins 8 caractères.",
+            "passwordTooLong": "Le mot de passe ne peut pas dépasser 72 octets (environ 72 caractères).",
             "wrongPassword": "Le mot de passe actuel est incorrect.",
             "emailTaken": "Cette adresse email est déjà enregistrée.",
             "emailAndPasswordRequired": "Veuillez saisir à la fois la nouvelle adresse email et votre mot de passe actuel."

@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import { Mail, LockKeyhole, ArrowRight, Loader2 } from "lucide-react";
 import { apiFetch, ApiError, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
-import { validateEmail } from "@/lib/auth-validation";
+import { passwordTooLong, validateEmail } from "@/lib/auth-validation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
@@ -30,7 +30,12 @@ export default function RegisterPage() {
     const password = form.get("password") as string;
 
     const emailErr = validateEmail(email, t);
-    const passwordErr = password.length < 8 ? t("passwordTooShort") : null;
+    const passwordErr =
+      password.length < 8
+        ? t("passwordTooShort")
+        : passwordTooLong(password)
+          ? t("passwordTooLong")
+          : null;
     setEmailError(emailErr);
     setPasswordError(passwordErr);
     if (emailErr || passwordErr) return;

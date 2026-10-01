@@ -13,3 +13,8 @@ export function validateEmail(value: string, t: (key: string) => string): string
   if (!value.trim()) return t("requiredField");
   return EMAIL_RE.test(value) ? null : t("invalidEmail");
 }
+
+// Mirrors the backend limit: bcrypt only accepts 72 *bytes*, not characters.
+export function passwordTooLong(value: string): boolean {
+  return new TextEncoder().encode(value).length > 72;
+}
