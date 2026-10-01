@@ -8,6 +8,7 @@ from app.core.config import settings
 from tests.conftest import auth, register_and_login
 
 _PASSWORD = "pw123456"  # pragma: allowlist secret
+_NEW_PASSWORD = "newpass123"  # pragma: allowlist secret
 
 
 # ---------------------------------------------------------------------------
@@ -126,3 +127,41 @@ def test_token_missing_audience_is_rejected(client):
     )
     r = client.get("/auth/me", headers=auth(bad_token))
     assert r.status_code == 401
+
+
+# ---------------------------------------------------------------------------
+# Password change / reset revoke other sessions
+# ---------------------------------------------------------------------------
+
+
+def test_change_password_revokes_other_sessions_but_keeps_current(client):
+    old = register_and_login(client, "chpw@test.com", _PASSWORD)
+    r = client.patch(
+        "/auth/change-password",
+        json={"current_password": _PASSWORD, "new_password": _NEW_PASSWORD},
+        headers=auth(old),
+    )
+    assert r.status_code == 200
+    assert client.get("/auth/me", headers=auth(old)).status_code == 401
+    # The browser session got a fresh cookie and keeps working.
+    assert client.get("/auth/me").status_code == 200
+
+
+def test_reset_password_revokes_existing_sessions(client_db):
+    from app.models.reset_token import PasswordResetToken
+    from tests.test_reset_password import _token_hash
+
+    client, db = client_db
+    old = register_and_login(client, "rspw@test.com", _PASSWORD)
+    known = "revoke-sessions-token-for-testing1"  # pragma: allowlist secret
+    from app.models.user import User
+
+    user = db.query(User).filter(User.email == "rspw@test.com").one()
+    db.add(PasswordResetToken(user_id=user.id, token_hash=_token_hash(known)))
+    db.commit()
+
+    r = client.post(
+        "/auth/reset-password", json={"token": known, "new_password": _NEW_PASSWORD}
+    )
+    assert r.status_code == 200
+    assert client.get("/auth/me", headers=auth(old)).status_code == 401

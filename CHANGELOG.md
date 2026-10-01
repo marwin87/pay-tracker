@@ -10,6 +10,10 @@ Notable changes to Pay Tracker, release by release.
 - Export payments to PDF for the month or the whole year (can be turned off in Settings)
 - New theme: Vesperfall
 
+### Security
+
+- Changing or resetting your password now signs out your other sessions
+
 ### Fixes
 
 - Theme choice is now remembered per account

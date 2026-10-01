@@ -174,6 +174,7 @@ def delete_me(
 @router.patch("/change-password", status_code=status.HTTP_200_OK)
 def change_password(
     body: ChangePasswordRequest,
+    response: Response,
     user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ):
@@ -185,7 +186,10 @@ def change_password(
             detail="New password must be at least 8 characters",
         )
     user.password_hash = hash_password(body.new_password)
+    # Revokes every other session; this one gets a fresh token so it stays logged in.
+    user.token_version += 1
     db.commit()
+    _set_auth_cookie(response, create_access_token(str(user.id), user.token_version))
 
 
 def _channel_or_400(user: User, name: str) -> Channel:
@@ -374,6 +378,7 @@ def reset_password(body: ResetPasswordRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid or expired reset token")
 
     user.password_hash = hash_password(body.new_password)
+    user.token_version += 1  # a reset implies possible compromise: drop all sessions
     db.delete(token_row)
     db.commit()
 
