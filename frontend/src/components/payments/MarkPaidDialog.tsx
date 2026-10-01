@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { CheckCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useLocale } from "@/context/locale-context";
+import { ApiError } from "@/lib/api";
 import { markPaid, updatePayment, type PaymentInstanceOut } from "@/lib/payments-api";
 import { formatAmount } from "@/lib/summary";
 import PaymentDateCalendar, { toISODate } from "./PaymentDateCalendar";
@@ -79,7 +80,16 @@ export default function MarkPaidDialog({
       onConfirm(updated);
     } catch (err) {
       if (!mounted.current) return;
-      setError(err instanceof Error ? err.message : t("saveFailed"));
+      // Another tab/device changed this payment since the list was loaded.
+      setError(
+        err instanceof ApiError && err.status === 404
+          ? t("paymentGone")
+          : err instanceof ApiError && err.status === 400 && !isEdit
+            ? t("alreadyPaid")
+            : err instanceof Error
+              ? err.message
+              : t("saveFailed"),
+      );
       setIsSubmitting(false);
     }
   }

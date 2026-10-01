@@ -40,6 +40,17 @@ def _check_category_ownership(db: Session, category_id: int, user_id: int) -> No
         raise HTTPException(status_code=403, detail="Not authorized")
 
 
+def _live_instance(db: Session, instance_id: int, user_id: int) -> PaymentInstance:
+    """A payment of the caller's that exists and wasn't deleted (a deleted one is
+    gone as far as the API is concerned, so it is a 404, not editable)."""
+    instance = db.get(PaymentInstance, instance_id)
+    if not instance or instance.is_deleted:
+        raise HTTPException(status_code=404, detail="Payment instance not found")
+    if instance.template.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+    return instance
+
+
 def _reject_future_paid_at(paid_at: date | None) -> None:
     """The client sends its own local date, which can be one day ahead of UTC
     (any UTC+ timezone shortly after local midnight), so allow tomorrow (UTC)."""
@@ -205,15 +216,13 @@ def mark_paid(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
-    instance = db.get(PaymentInstance, instance_id)
-    if not instance:
-        raise HTTPException(status_code=404, detail="Payment instance not found")
-
+    instance = _live_instance(db, instance_id, me.id)
+    if instance.status == PaymentStatus.paid:
+        # Another tab/device got there first; use PATCH to edit a paid payment.
+        raise HTTPException(status_code=400, detail="Payment is already marked as paid")
     template = (
         instance.template
     )  # read before commit; expire_on_commit would force a lazy re-load after
-    if template.user_id != me.id:
-        raise HTTPException(status_code=403, detail="Not authorized")
     _reject_future_paid_at(body.paid_at)
 
     now = datetime.now(timezone.utc)
@@ -244,11 +253,7 @@ def edit_payment(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
-    instance = db.get(PaymentInstance, instance_id)
-    if not instance:
-        raise HTTPException(status_code=404, detail="Payment instance not found")
-    if instance.template.user_id != me.id:
-        raise HTTPException(status_code=403, detail="Not authorized")
+    instance = _live_instance(db, instance_id, me.id)
     sent = body.model_fields_set
     is_paid = instance.status == PaymentStatus.paid
     # Each state has its own editable fields; reject the other state's so a
@@ -294,12 +299,7 @@ def revert_payment(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
-    instance = db.get(PaymentInstance, instance_id)
-    if not instance:
-        raise HTTPException(status_code=404, detail="Payment instance not found")
-    template = instance.template
-    if template.user_id != me.id:
-        raise HTTPException(status_code=403, detail="Not authorized")
+    instance = _live_instance(db, instance_id, me.id)
     if instance.status != PaymentStatus.paid:
         raise HTTPException(status_code=400, detail="Payment is not marked as paid")
 

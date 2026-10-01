@@ -284,7 +284,9 @@
         "cancel": "Anuluj",
         "confirm": "Oznacz jako opłacone",
         "confirming": "Zapisywanie…",
-        "saveFailed": "Nie udało się zapisać płatności."
+        "saveFailed": "Nie udało się zapisać płatności.",
+        "alreadyPaid": "Ta płatność jest już oznaczona jako opłacona. Odśwież stronę, aby zobaczyć aktualny stan.",
+        "paymentGone": "Ta płatność już nie istnieje. Odśwież stronę, aby zobaczyć aktualny stan."
     },
     "RestoreButton": {
         "ariaLabel": "Przywróć z kopii zapasowej",

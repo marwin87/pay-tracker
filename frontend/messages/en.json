@@ -284,7 +284,9 @@
         "cancel": "Cancel",
         "confirm": "Mark as Paid",
         "confirming": "Marking…",
-        "saveFailed": "Failed to record payment."
+        "saveFailed": "Failed to record payment.",
+        "alreadyPaid": "This payment is already marked as paid. Reload the page to see the latest state.",
+        "paymentGone": "This payment no longer exists. Reload the page to see the latest state."
     },
     "RestoreButton": {
         "ariaLabel": "Restore from backup",

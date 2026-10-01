@@ -326,3 +326,42 @@ def test_edit_payment_out_of_bounds_returns_422(client_db):
             f"/bills/payments/{instance_id}", json=body, headers=auth(token)
         )
         assert r.status_code == 422, body
+
+
+def test_mark_paid_twice_returns_400_and_keeps_the_first_payment(client_db):
+    client, db = client_db
+    token = register_and_login(client, "twice@test.com")
+    instance_id = _paid_instance(client, token)  # paid_amount 100.00, note "first"
+
+    r = client.post(
+        f"/bills/payments/{instance_id}/pay",
+        json={"paid_amount": "1.00", "notes": "second"},
+        headers=auth(token),
+    )
+    assert r.status_code == 400
+
+    period = date.today().strftime("%Y-%m")
+    [inst] = [
+        p
+        for p in client.get(
+            f"/bills/payments?month={period}", headers=auth(token)
+        ).json()
+        if p["id"] == instance_id
+    ]
+    assert inst["paid_amount"] == "100.00" and inst["notes"] == "first"
+
+
+def test_deleted_payment_cannot_be_paid_edited_or_reverted(client_db):
+    client, db = client_db
+    token = register_and_login(client, "gone@test.com")
+    instance_id = _instance_id(client, token, _create_bill(client, token))
+    assert (
+        client.delete(f"/bills/payments/{instance_id}", headers=auth(token)).status_code
+        == 204
+    )
+    url = f"/bills/payments/{instance_id}"
+    assert client.post(f"{url}/pay", json={}, headers=auth(token)).status_code == 404
+    assert (
+        client.patch(url, json={"notes": "x"}, headers=auth(token)).status_code == 404
+    )
+    assert client.post(f"{url}/unpay", headers=auth(token)).status_code == 404

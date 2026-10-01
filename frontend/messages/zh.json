@@ -284,7 +284,9 @@
         "cancel": "取消",
         "confirm": "标记为已付款",
         "confirming": "正在保存…",
-        "saveFailed": "记录付款失败。"
+        "saveFailed": "记录付款失败。",
+        "alreadyPaid": "此付款已标记为已付。请刷新页面查看最新状态。",
+        "paymentGone": "此付款已不存在。请刷新页面查看最新状态。"
     },
     "RestoreButton": {
         "ariaLabel": "从备份恢复",

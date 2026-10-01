@@ -284,7 +284,9 @@
         "cancel": "Annuler",
         "confirm": "Marquer comme payé",
         "confirming": "Enregistrement…",
-        "saveFailed": "Échec de l'enregistrement du paiement."
+        "saveFailed": "Échec de l'enregistrement du paiement.",
+        "alreadyPaid": "Ce paiement est déjà marqué comme payé. Rechargez la page pour voir l'état actuel.",
+        "paymentGone": "Ce paiement n'existe plus. Rechargez la page pour voir l'état actuel."
     },
     "RestoreButton": {
         "ariaLabel": "Restaurer depuis une sauvegarde",
