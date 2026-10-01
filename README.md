@@ -171,7 +171,7 @@ cd frontend && npm run lint
 cd backend && uv run pytest tests/ -v
 
 # New DB migration after changing a model
-docker compose exec backend uv run alembic revision --autogenerate -m "describe the change"
+docker compose exec backend alembic revision --autogenerate -m "describe the change"
 ```
 
 > **Migration note:** Always read the generated migration file before applying — autogenerate can miss new columns. For renames, write `add_column` + `UPDATE` + `drop_column` manually instead of relying on `alter_column(new_column_name=...)`.
