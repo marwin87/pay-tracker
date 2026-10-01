@@ -82,11 +82,11 @@ export function ChannelScheduleSection({
 }) {
   const tp = useTranslations("SettingsPage");
   const locale = useLocale();
-  // Server builds the summary for the current UTC month, so label it in UTC too.
+  // The server builds the summary for the current month in the user's own zone.
   const month = new Intl.DateTimeFormat(locale, {
     month: "long",
     year: "numeric",
-    timeZone: "UTC",
+    timeZone: profile.timezone,
   }).format(new Date());
   const k = CHANNEL_KEYS[channel];
   const b = (key: keyof UserProfile) => profile[key] as boolean;
@@ -234,14 +234,14 @@ export function ChannelScheduleSection({
 
         <div className="flex items-center gap-3 pt-1">
           <label className="text-sm font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
-            {tp("emailNotifications.sendTimeLabel")}
+            {tp("emailNotifications.sendTimeLabel", { zone: profile.timezone })}
           </label>
           <Dropdown
             variant="pill"
             value={String(sendMinute)}
             onChange={(v) => setSendMinute(Number(v))}
             options={SLOTS.map((h) => ({ value: String(h), label: fmtSlot(h) }))}
-            ariaLabel={tp("emailNotifications.sendTimeLabel")}
+            ariaLabel={tp("emailNotifications.sendTimeLabel", { zone: profile.timezone })}
             scrollable
           />
         </div>

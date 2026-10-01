@@ -46,7 +46,7 @@ All notifications are switched off for this account (email, Telegram, browser), 
 - **upcoming** — future periods ready to be paid
 - Amounts that differ from the template (real-world invoice variance)
 
-**Plus multi-currency history generated at seed time** (`inject_history` in `seed.py`): the 11 months before today get paid instances in EUR, PLN, USD and CHF (plus GBP/EUR annual insurance in single months), with varying utility amounts, so the dashboard's 12-month trend and currency chips have data whichever day you run the script. It only fills gaps: static rows for the same bill and month are kept. The account's default currency is set to EUR.
+**Plus multi-currency history generated at seed time** (`inject_history` in `seed.py`): the 11 months before today get paid instances in EUR, PLN, USD and CHF (plus GBP/EUR annual insurance in single months), with varying utility amounts, so the dashboard's 12-month trend and currency chips have data whichever day you run the script. It only fills gaps: static rows for the same bill and month are kept. The account's default currency is set to EUR and its time zone to Europe/Warsaw (seed dates such as "due today" are computed in that zone).
 
 **Plus 9 instances generated for the current month at seed time** (`inject_current_month_cases` in `seed.py`), since the static rows above are dated in fixed 2026 months that won't generally line up with whatever "today" is when you run the script. Whichever month the Payments page opens to by default, it shows every case at a glance: upcoming (due today), overdue, paid full amount with/without a note, and paid partial amount with/without a note.
 

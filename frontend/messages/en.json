@@ -409,6 +409,16 @@
             "customCurrencyAriaLabel": "Custom currency code",
             "customCurrencyPlaceholder": "e.g. CHF"
         },
+        "timeZone": {
+            "title": "Time zone",
+            "description": "Sets what “today” means for you and the time of day your reminders are sent.",
+            "ariaLabel": "Time zone",
+            "placeholder": "e.g. Europe/Warsaw",
+            "useBrowser": "Use my browser’s time zone ({zone})",
+            "hint": "Reminder send times are in this time zone, so changing it moves when they arrive.",
+            "unknown": "Pick a time zone from the list.",
+            "noMatches": "No matching time zone"
+        },
         "decimalSeparator": {
             "title": "Decimal Separator",
             "description": "Choose how prices are displayed.",
@@ -439,7 +449,7 @@
                 "notes": "Notes"
             }
         },
-        "notificationsServerTimeHint": "Notifications are sent based on server time (UTC). Current server time: <b>{time}</b>.",
+        "notificationsServerTimeHint": "Notifications are sent in your time zone (<b>{zone}</b>). It is now <b>{time}</b> there.",
         "emailNotifications": {
             "title": "Email Notifications",
             "description": "Choose when to receive email reminders for upcoming and overdue bills.",
@@ -448,7 +458,7 @@
             "onDay": "On the payment date",
             "oneDayAfter": "1 day after due date",
             "noneWarning": "Select at least one option to receive email reminders.",
-            "sendTimeLabel": "Send time (UTC)",
+            "sendTimeLabel": "Send time ({zone})",
             "masterToggle": "Enable email notifications",
             "sendNowButton": "Send reminders now",
             "sendNowSending": "Sending...",

@@ -27,6 +27,7 @@ import { Tile, TILE_STYLES, type TileColor } from "@/components/settings/Tile";
 import { ProfileTile } from "@/components/settings/ProfileTile";
 import { PasswordTile } from "@/components/settings/PasswordTile";
 import { CurrencyTile } from "@/components/settings/CurrencyTile";
+import { TimeZoneTile } from "@/components/settings/TimeZoneTile";
 import { DecimalSeparatorTile } from "@/components/settings/DecimalSeparatorTile";
 import { LanguagesTile } from "@/components/settings/LanguagesTile";
 import { ExportSettingsTile } from "@/components/settings/ExportSettingsTile";
@@ -87,6 +88,7 @@ export default function SettingsPage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [profileDirty, setProfileDirty] = useState(false);
   const [currencyDirty, setCurrencyDirty] = useState(false);
+  const [timeZoneDirty, setTimeZoneDirty] = useState(false);
   const [emailDirty, setEmailDirty] = useState(false);
   const [telegramDirty, setTelegramDirty] = useState(false);
   const [passwordDirty, setPasswordDirty] = useState(false);
@@ -103,10 +105,16 @@ export default function SettingsPage() {
   const [expandedMobile, setExpandedMobile] = useState<Set<TabKey>>(() => new Set([tabFromUrl()]));
 
   const isDirtyAny =
-    profileDirty || currencyDirty || emailDirty || telegramDirty || passwordDirty;
+    profileDirty ||
+    currencyDirty ||
+    timeZoneDirty ||
+    emailDirty ||
+    telegramDirty ||
+    passwordDirty;
 
   const onProfileDirty = useCallback((d: boolean) => setProfileDirty(d), []);
   const onCurrencyDirty = useCallback((d: boolean) => setCurrencyDirty(d), []);
+  const onTimeZoneDirty = useCallback((d: boolean) => setTimeZoneDirty(d), []);
   const onEmailDirty = useCallback((d: boolean) => setEmailDirty(d), []);
   const onTelegramDirty = useCallback((d: boolean) => setTelegramDirty(d), []);
   const onPasswordDirty = useCallback((d: boolean) => setPasswordDirty(d), []);
@@ -338,6 +346,12 @@ export default function SettingsPage() {
           onDirtyChange={onCurrencyDirty}
           t={t}
         />
+        <TimeZoneTile
+          profile={profile}
+          onProfileUpdate={setProfile}
+          onDirtyChange={onTimeZoneDirty}
+          t={t}
+        />
         <DecimalSeparatorTile t={t} />
         <LanguagesTile t={t} />
       </div>
@@ -373,7 +387,7 @@ export default function SettingsPage() {
           activeTab === "notifications" ? "sm:block" : "sm:hidden"
         }`}
       >
-        <ServerTimeNote />
+        <ServerTimeNote timeZone={profile.timezone} />
 
         <EmailNotificationsTile
           profile={profile}

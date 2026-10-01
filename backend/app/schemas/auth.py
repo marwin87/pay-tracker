@@ -2,9 +2,17 @@ import re
 from datetime import datetime
 from typing import Annotated, Literal
 
-from pydantic import AfterValidator, BaseModel, EmailStr, Field, field_validator
+from pydantic import (
+    AfterValidator,
+    BaseModel,
+    EmailStr,
+    Field,
+    field_validator,
+    model_validator,
+)
 
 from app.core.i18n import LOCALES
+from app.core.tz import is_valid_tz
 
 
 def _check_language(v: str) -> str:
@@ -33,6 +41,15 @@ def _normalize_email(v: str) -> str:
 
 
 NormalizedEmail = Annotated[EmailStr, AfterValidator(_normalize_email)]
+
+
+def _check_timezone(v: str) -> str:
+    if not is_valid_tz(v):
+        raise ValueError(f"Unknown time zone: {v}")
+    return v
+
+
+TimeZoneName = Annotated[str, AfterValidator(_check_timezone)]
 
 Theme = Literal["light", "dark", "vesperfall"]
 
@@ -80,6 +97,9 @@ def validate_export_fields(v: list[str] | None) -> list[str] | None:
 class RegisterRequest(BaseModel):
     email: NormalizedEmail
     password: Annotated[Password, Field(min_length=8)]
+    # The browser's zone. Advisory: an unknown value is ignored (the server default
+    # applies) rather than failing the sign-up.
+    timezone: str | None = None
 
 
 class LoginRequest(BaseModel):
@@ -100,6 +120,7 @@ class UserProfileOut(BaseModel):
     enabled_languages: list[SupportedLanguage]
     default_currency: str | None
     decimal_separator: Literal[".", ","]
+    timezone: str
     theme: Theme
     email_reminders_enabled: bool
     notify_2_days_before: bool
@@ -144,11 +165,23 @@ def normalize_bot_token(v: str | None) -> str | None:
     return v
 
 
+# Columns where null is a valid "clear it" (everything else is NOT NULL).
+_NULLABLE_PROFILE_FIELDS = frozenset(
+    {
+        "language_preference",
+        "default_currency",
+        "telegram_chat_id",
+        "telegram_bot_token",
+    }
+)
+
+
 class UserProfileUpdate(BaseModel):
     language_preference: SupportedLanguage | None = None
     enabled_languages: list[SupportedLanguage] | None = None
     default_currency: str | None = None
     decimal_separator: Literal[".", ","] | None = None
+    timezone: TimeZoneName | None = None
     theme: Theme | None = None
     email_reminders_enabled: bool | None = None
     notify_2_days_before: bool | None = None
@@ -172,6 +205,16 @@ class UserProfileUpdate(BaseModel):
     share_enabled: bool | None = None
     export_fields: list[ExportFieldKey] | None = None
     pdf_fields: list[ExportFieldKey] | None = None
+
+    @model_validator(mode="after")
+    def _no_null_on_required_fields(self) -> "UserProfileUpdate":
+        # Omitted = unchanged. An explicit null is only meaningful for the nullable
+        # columns (it clears them); on the NOT NULL ones it would reach the DB and
+        # fail as a 500.
+        for field in self.model_fields_set - _NULLABLE_PROFILE_FIELDS:
+            if getattr(self, field) is None:
+                raise ValueError(f"{field} cannot be null")
+        return self
 
     @field_validator("telegram_chat_id")
     @classmethod

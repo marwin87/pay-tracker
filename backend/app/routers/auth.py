@@ -13,6 +13,7 @@ from app.core import rate_limit
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
+from app.core.tz import is_valid_tz, today_for
 from app.core.security import (
     DUMMY_PASSWORD_HASH,
     create_access_token,
@@ -123,7 +124,10 @@ def register(
     # the register rate limit above is what bounds enumeration.
     if db.query(User).filter(User.email == body.email).first():
         raise HTTPException(status_code=409, detail="Email already registered")
-    user = User(email=body.email, password_hash=hash_password(body.password))
+    zone = body.timezone if is_valid_tz(body.timezone) else settings.default_timezone
+    user = User(
+        email=body.email, password_hash=hash_password(body.password), timezone=zone
+    )
     db.add(user)
     db.flush()
     seed_default_categories(db, user.id)
@@ -274,7 +278,7 @@ def send_monthly_summary_now(
     ch = _channel_or_400(user, channel)
     if not getattr(user, ch.enabled) or not getattr(user, ch.summary_enabled):
         return SendMonthlySummaryNowOut(sent=False)
-    current_month = datetime.now(timezone.utc).strftime("%Y-%m")
+    current_month = today_for(user).strftime("%Y-%m")
     sent = send_monthly_summary_for_user(db, user, current_month, ch)
     return SendMonthlySummaryNowOut(sent=sent)
 

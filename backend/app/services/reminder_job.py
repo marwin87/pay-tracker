@@ -9,6 +9,8 @@ from sqlalchemy.orm import Session, selectinload, sessionmaker
 
 from app.core.config import settings
 from app.core.i18n import t
+from app.core import tz
+from app.core.tz import user_tz
 from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
 from app.models.user import User
 from app.services.email import (
@@ -130,7 +132,10 @@ def send_monthly_summary_for_user(
                     "amount": inst.amount,
                     "paid_amount": inst.paid_amount,
                     "currency": currency,
-                    "paid_at": inst.paid_at,
+                    # the user's local date, not the UTC date of the instant
+                    "paid_at": (
+                        inst.paid_at.astimezone(user_tz(user)) if inst.paid_at else None
+                    ),
                 }
             )
         else:
@@ -190,9 +195,17 @@ def send_monthly_summary_for_user(
 
 
 def send_reminders_for_user(
-    db: Session, user: User, channel: Channel = EMAIL, *, force: bool = False
+    db: Session,
+    user: User,
+    channel: Channel = EMAIL,
+    *,
+    force: bool = False,
+    now_utc: datetime | None = None,
 ) -> int:
     """Send due reminders on one channel. Returns count of reminders sent.
+
+    "Today" is the user's own calendar day (their time zone), so a payment due on
+    the 10th is "on the day" for them on the 10th wherever the server runs.
 
     force=True (manual "send now") is ad hoc: it ignores the already-sent flags
     and records nothing, so it never affects the scheduler or the payment icons.
@@ -200,8 +213,7 @@ def send_reminders_for_user(
     if not channel_available(user, channel):
         logger.debug("No %s delivery for user %s, skipping", channel.name, user.id)
         return 0
-    now_utc = datetime.now(timezone.utc)
-    today = now_utc.date()
+    today = (now_utc or tz._utcnow()).astimezone(user_tz(user)).date()
     due_by_kind = {
         "2_days_before": today + timedelta(days=2),
         "upcoming": today + timedelta(days=1),
@@ -254,89 +266,108 @@ def send_reminders_for_user(
     return sent
 
 
-def _users_due(db: Session, channel: Channel, minute_cond) -> list[User]:
+_TICK_MINUTES = 30  # the scheduler runs on :00 and :30 (see main.py)
+
+
+def _users_with_channel(db: Session, channel: Channel) -> list[User]:
     enabled = getattr(User, channel.enabled)
     any_window = or_(*[getattr(User, uf).is_(True) for _, uf, _ in channel.windows])
     return (
         db.query(User)
-        .filter(User.is_active.is_(True), enabled.is_(True), minute_cond, any_window)
+        .filter(User.is_active.is_(True), enabled.is_(True), any_window)
         .all()
     )
 
 
-def _run_jobs(SessionLocal: sessionmaker, current_minute: int, *, exact: bool) -> int:
-    """Shared body of the 30-minute job (exact minute match) and the startup
-    catch-up (every send time already passed today), run per channel."""
-    today = datetime.now(timezone.utc).date()
-    is_last_day = today.day == calendar.monthrange(today.year, today.month)[1]
-    current_month = today.strftime("%Y-%m")
+def _minute_of_day(moment: datetime) -> int:
+    return moment.hour * 60 + moment.minute
 
+
+def _send_time_reached(send_minute: int, local_minute: int, *, exact: bool) -> bool:
+    """Is it this user's send time? The send minute is local time of day.
+
+    exact (the 30-minute tick): the tick that falls in [send_minute, +30). A window
+    rather than equality, because in a zone with a :15/:45 offset the local clock
+    never reads a multiple of 30 at a tick. Each instance's sent flag keeps a window
+    from sending twice. Catch-up (not exact): any time already passed today."""
+    if exact:
+        return 0 <= local_minute - send_minute < _TICK_MINUTES
+    return send_minute <= local_minute
+
+
+def _run_jobs(SessionLocal: sessionmaker, now_utc: datetime, *, exact: bool) -> int:
+    """Shared body of the 30-minute job and the startup catch-up, run per channel.
+    Everything about "when" is evaluated in each user's own time zone."""
     db: Session = SessionLocal()
     sent = 0
     try:
         for ch in CHANNELS:
-            minute_col = getattr(User, ch.send_minute)
-            cond = (
-                minute_col == current_minute if exact else minute_col <= current_minute
-            )
-            for user in _users_due(db, ch, cond):
-                sent += send_reminders_for_user(db, user, ch)
+            for user in _users_with_channel(db, ch):
+                local = now_utc.astimezone(user_tz(user))
+                if _send_time_reached(
+                    getattr(user, ch.send_minute), _minute_of_day(local), exact=exact
+                ):
+                    sent += send_reminders_for_user(db, user, ch, now_utc=now_utc)
 
-            # On the last day of the month, send summaries to all eligible users
-            # regardless of send minute — natural retry every 30 min.
-            # Note: the query-then-flag pattern is not atomic; two concurrent
-            # scheduler runs could both see last_sent=NULL and both send.
-            # Acceptable at household scale given the 30-min cadence.
-            if not is_last_day:
-                continue
-            last_sent = getattr(User, ch.summary_last_sent)
+            # On a user's last day of the month (their calendar), send the summary
+            # regardless of send minute: a natural retry every 30 min until it
+            # succeeds. Note: the query-then-flag pattern is not atomic; two
+            # concurrent scheduler runs could both see last_sent unset and both
+            # send. Acceptable at household scale given the 30-min cadence.
+            last_sent_col = getattr(User, ch.summary_last_sent)
             summary_users = (
                 db.query(User)
                 .filter(
                     User.is_active.is_(True),
                     getattr(User, ch.enabled).is_(True),
                     getattr(User, ch.summary_enabled).is_(True),
-                    last_sent.is_(None) | (last_sent != current_month),
                 )
                 .all()
             )
             for u in summary_users:
-                if send_monthly_summary_for_user(db, u, current_month, ch):
-                    setattr(u, ch.summary_last_sent, current_month)
+                today = now_utc.astimezone(user_tz(u)).date()
+                if today.day != calendar.monthrange(today.year, today.month)[1]:
+                    continue
+                month = today.strftime("%Y-%m")
+                if getattr(u, ch.summary_last_sent) == month:
+                    continue
+                if send_monthly_summary_for_user(db, u, month, ch):
+                    setattr(u, ch.summary_last_sent, month)
                     db.commit()
     finally:
         db.close()
     return sent
 
 
+def _scheduler_now(send_minute: int | None) -> datetime:
+    """The scheduler's "now" in UTC. send_minute (tests) pins the UTC time of day."""
+    now_utc = tz._utcnow()
+    if send_minute is not None:
+        now_utc = now_utc.replace(
+            hour=send_minute // 60, minute=send_minute % 60, second=0, microsecond=0
+        )
+    return now_utc
+
+
 def send_daily_reminders(
     SessionLocal: sessionmaker, send_minute: int | None = None
 ) -> None:
-    now_utc = datetime.now(timezone.utc)
-    current_minute = (
-        send_minute if send_minute is not None else now_utc.hour * 60 + now_utc.minute
-    )
-    logger.info(
-        "Reminder job started (today=%s UTC, minute=%d)", now_utc.date(), current_minute
-    )
-    sent = _run_jobs(SessionLocal, current_minute, exact=True)
+    now_utc = _scheduler_now(send_minute)
+    logger.info("Reminder job started (now=%s UTC)", now_utc.strftime("%Y-%m-%d %H:%M"))
+    sent = _run_jobs(SessionLocal, now_utc, exact=True)
     logger.info("Reminder job finished: %d reminder(s) sent", sent)
 
 
 def send_catchup_reminders(
     SessionLocal: sessionmaker, send_minute: int | None = None
 ) -> None:
-    """Run on startup: send reminders for all users whose scheduled time has already passed today."""
-    now_utc = datetime.now(timezone.utc)
-    current_minute = (
-        send_minute if send_minute is not None else now_utc.hour * 60 + now_utc.minute
-    )
+    """Run on startup: send reminders for all users whose scheduled time (in their
+    own zone) has already passed today."""
+    now_utc = _scheduler_now(send_minute)
     logger.info(
-        "Catch-up reminders started (today=%s UTC, up to minute=%d)",
-        now_utc.date(),
-        current_minute,
+        "Catch-up reminders started (now=%s UTC)", now_utc.strftime("%Y-%m-%d %H:%M")
     )
-    sent = _run_jobs(SessionLocal, current_minute, exact=False)
+    sent = _run_jobs(SessionLocal, now_utc, exact=False)
     logger.info("Catch-up reminders finished: %d reminder(s) sent", sent)
 
 

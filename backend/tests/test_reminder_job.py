@@ -443,14 +443,18 @@ def test_monthly_summary_idempotency_via_last_sent_flag(
     with (
         patch("app.services.reminder_job.settings") as mock_settings,
         patch(
-            "app.services.reminder_job.datetime",
-            wraps=__import__("datetime", fromlist=["datetime"]).datetime,
-        ) as mock_dt,
+            "app.core.tz._utcnow",
+            return_value=datetime(
+                fake_today.year,
+                fake_today.month,
+                fake_today.day,
+                8,
+                0,
+                tzinfo=timezone.utc,
+            ),
+        ),
     ):
         _smtp_settings(mock_settings)
-        mock_dt.now.return_value = datetime(
-            fake_today.year, fake_today.month, fake_today.day, 8, 0, tzinfo=timezone.utc
-        )
         send_daily_reminders(db_sessionmaker, send_minute=480)
 
     mock_send.assert_not_called()
@@ -479,14 +483,18 @@ def test_monthly_summary_sent_and_flag_updated_on_last_day(
     with (
         patch("app.services.reminder_job.settings") as mock_settings,
         patch(
-            "app.services.reminder_job.datetime",
-            wraps=__import__("datetime", fromlist=["datetime"]).datetime,
-        ) as mock_dt,
+            "app.core.tz._utcnow",
+            return_value=datetime(
+                fake_today.year,
+                fake_today.month,
+                fake_today.day,
+                8,
+                0,
+                tzinfo=timezone.utc,
+            ),
+        ),
     ):
         _smtp_settings(mock_settings)
-        mock_dt.now.return_value = datetime(
-            fake_today.year, fake_today.month, fake_today.day, 8, 0, tzinfo=timezone.utc
-        )
         send_daily_reminders(db_sessionmaker, send_minute=480)
 
     mock_send.assert_called_once()
@@ -560,14 +568,18 @@ def test_master_toggle_off_skips_monthly_summary_scheduler(
     with (
         patch("app.services.reminder_job.settings") as mock_settings,
         patch(
-            "app.services.reminder_job.datetime",
-            wraps=__import__("datetime", fromlist=["datetime"]).datetime,
-        ) as mock_dt,
+            "app.core.tz._utcnow",
+            return_value=datetime(
+                fake_today.year,
+                fake_today.month,
+                fake_today.day,
+                8,
+                0,
+                tzinfo=timezone.utc,
+            ),
+        ),
     ):
         _smtp_settings(mock_settings)
-        mock_dt.now.return_value = datetime(
-            fake_today.year, fake_today.month, fake_today.day, 8, 0, tzinfo=timezone.utc
-        )
         send_daily_reminders(db_sessionmaker, send_minute=480)
 
     mock_send.assert_not_called()

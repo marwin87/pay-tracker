@@ -126,7 +126,12 @@ def test_export_default_is_full(client):
         "share_enabled": False,
     }
     assert body["telegram"]["bot_token"] == _TOKEN
-    assert set(body["notifications"]) == {"email", "telegram", "browser_enabled"}
+    assert set(body["notifications"]) == {
+        "email",
+        "telegram",
+        "browser_enabled",
+        "timezone",
+    }
 
 
 @pytest.mark.parametrize("section", _ALL)
@@ -163,10 +168,10 @@ def test_export_email_excludes_telegram_and_vice_versa(client):
     tok = register_and_login(client, "chan@test.com")
     _seed(client, tok)
     email = _export(client, tok, ["email"])
-    assert set(email["notifications"]) == {"email", "browser_enabled"}
+    assert set(email["notifications"]) == {"email", "browser_enabled", "timezone"}
     assert "telegram" not in email
     tg = _export(client, tok, ["telegram"])
-    assert set(tg["notifications"]) == {"telegram"}
+    assert set(tg["notifications"]) == {"telegram", "timezone"}
     assert tg["telegram"]["chat_id"] == "42"
 
 

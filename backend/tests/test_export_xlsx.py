@@ -7,7 +7,13 @@ from datetime import date
 import openpyxl
 
 from app.core.i18n import LOCALES
-from tests.conftest import auth, category_id, register_and_login, sync_payments
+from tests.conftest import (
+    auth,
+    category_id,
+    register_and_login,
+    sync_payments,
+    today_utc,
+)
 
 _BILL_A = {
     "name": "Electric",
@@ -50,7 +56,7 @@ def test_xlsx_backfills_full_year_not_just_visited_months(client):
     )
     assert r1.status_code == 201
 
-    current_year = date.today().year
+    current_year = today_utc().year
     r = client.get(f"/export/xlsx?year={current_year}", headers=auth(tok))
     assert r.status_code == 200
     assert "spreadsheetml" in r.headers["content-type"]
@@ -70,7 +76,7 @@ def test_xlsx_excludes_months_before_bill_start(client):
     )
     assert r1.status_code == 201
 
-    current_year = date.today().year
+    current_year = today_utc().year
     r = client.get(f"/export/xlsx?year={current_year}", headers=auth(tok))
     assert r.status_code == 200
     assert _data_rows(r.content) == 1
@@ -79,7 +85,7 @@ def test_xlsx_excludes_months_before_bill_start(client):
 def test_xlsx_excludes_deleted_instances(client):
     """Soft-deleted instances are excluded from the XLSX export (Phase 1 filter check)."""
     tok = register_and_login(client, "xlsx_del@test.com")
-    current_year = date.today().year
+    current_year = today_utc().year
 
     r = client.post(
         "/bills",
@@ -107,7 +113,7 @@ def test_xlsx_partial_deletion(client):
     """Deleting one of two instances leaves exactly one row — proves filter is scoped, not blanket."""
     tok = register_and_login(client, "xlsx_partial@test.com")
     cat_id = category_id(client, tok)
-    current_year = date.today().year
+    current_year = today_utc().year
 
     r1 = client.post(
         "/bills",
@@ -146,7 +152,7 @@ def test_xlsx_lang_translates_headers_and_sheet_names(client):
     )
     assert r1.status_code == 201
 
-    current_year = date.today().year
+    current_year = today_utc().year
     r = client.get(f"/export/xlsx?year={current_year}&lang=pl", headers=auth(tok))
     assert r.status_code == 200
     assert f"pay-tracker-pl-{current_year}.xlsx" in r.headers["content-disposition"]
@@ -166,7 +172,7 @@ def test_xlsx_defaults_to_english_for_unknown_lang(client):
     )
     assert r1.status_code == 201
 
-    current_year = date.today().year
+    current_year = today_utc().year
     r = client.get(f"/export/xlsx?year={current_year}&lang=xx", headers=auth(tok))
     assert r.status_code == 200
     assert f"pay-tracker-en-{current_year}.xlsx" in r.headers["content-disposition"]
@@ -175,7 +181,7 @@ def test_xlsx_defaults_to_english_for_unknown_lang(client):
 def test_xlsx_shows_per_payment_amount_for_unpaid(client):
     """An unpaid payment with its own amount appears in the export with that amount."""
     tok = register_and_login(client, "xlsx_ovr@test.com")
-    today = date.today()
+    today = today_utc()
     r = client.post(
         "/bills",
         json={
@@ -219,7 +225,7 @@ def test_xlsx_amount_uses_chosen_decimal_separator_and_is_text(client):
     r = client.patch("/auth/me", json={"decimal_separator": ","}, headers=auth(tok))
     assert r.status_code == 200
 
-    today = date.today()
+    today = today_utc()
     r = client.post(
         "/bills",
         json={
@@ -262,7 +268,7 @@ def _monthly_bill_from_january(client, email):
 def test_xlsx_month_param_exports_single_month(client):
     """?month=N yields one sheet with only that month's rows, and a month-suffixed filename."""
     tok = _monthly_bill_from_january(client, "xlsx_month@test.com")
-    year = date.today().year
+    year = today_utc().year
 
     r = client.get(f"/export/xlsx?year={year}&month=3", headers=auth(tok))
     assert r.status_code == 200
@@ -278,7 +284,7 @@ def test_xlsx_without_month_exports_all_twelve_sheets(client):
     """Regression: the month query param must not leak into the whole-year export
     (it was once overwritten by a loop variable, yielding a single month)."""
     tok = _monthly_bill_from_january(client, "xlsx_allmonths@test.com")
-    year = date.today().year
+    year = today_utc().year
 
     r = client.get(f"/export/xlsx?year={year}", headers=auth(tok))
     assert r.status_code == 200
@@ -300,7 +306,7 @@ def test_xlsx_supports_every_frontend_locale(client):
     locales = LOCALES
     assert len(locales) >= 7
     tok = _monthly_bill_from_january(client, "xlsx_alllocales@test.com")
-    year = date.today().year
+    year = today_utc().year
 
     headers = {}
     for lang in locales:

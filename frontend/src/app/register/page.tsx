@@ -9,6 +9,7 @@ import { Mail, LockKeyhole, ArrowRight, Loader2 } from "lucide-react";
 import { apiFetch, ApiError, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import { passwordTooLong, validateEmail } from "@/lib/auth-validation";
+import { browserTimeZone } from "@/lib/today";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 
@@ -44,7 +45,8 @@ export default function RegisterPage() {
     try {
       await apiFetch<TokenResponse>("/auth/register", {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        // The browser's zone becomes the account's time zone (editable in Settings)
+        body: JSON.stringify({ email, password, timezone: browserTimeZone() }),
       });
       login();
       router.push("/dashboard");

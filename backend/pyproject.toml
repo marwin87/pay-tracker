@@ -21,6 +21,7 @@ dependencies = [
     "pyasn1>=0.6.4",
     "apprise>=1.13.1",
     "fpdf2>=2.8.9",
+    "tzdata>=2026.2",
 ]
 
 [dependency-groups]

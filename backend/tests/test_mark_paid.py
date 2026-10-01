@@ -5,7 +5,7 @@ from datetime import date, datetime, timedelta, timezone
 from fastapi.testclient import TestClient
 
 from app.models.bill import PaymentInstance
-from tests.conftest import auth, category_id, register_and_login
+from tests.conftest import auth, category_id, register_and_login, today_utc
 
 _BILL = {
     "name": "Electricity",
@@ -26,7 +26,7 @@ def _create_bill(client: TestClient, token: str) -> int:
 
 
 def _instance_id(client: TestClient, token: str, bill_id: int) -> int:
-    period = date.today().strftime("%Y-%m")
+    period = today_utc().strftime("%Y-%m")
     client.post(f"/bills/sync-instances?month={period}", headers=auth(token))
     r = client.get(f"/bills/payments?month={period}", headers=auth(token))
     [inst] = [p for p in r.json() if p["bill_id"] == bill_id]
@@ -51,7 +51,7 @@ def test_mark_paid_with_past_date_is_recorded(client_db):
     token = register_and_login(client, "mp2@test.com")
     bill_id = _create_bill(client, token)
     instance_id = _instance_id(client, token, bill_id)
-    past = (date.today() - timedelta(days=5)).isoformat()
+    past = (today_utc() - timedelta(days=5)).isoformat()
 
     r = client.post(
         f"/bills/payments/{instance_id}/pay",
@@ -148,7 +148,7 @@ def test_edit_paid_payment_future_date_and_other_user(client_db):
 
 
 def _amounts(client: TestClient, token: str, bill_id: int) -> dict:
-    period = date.today().strftime("%Y-%m")
+    period = today_utc().strftime("%Y-%m")
     r = client.get(f"/bills/payments?month={period}", headers=auth(token))
     [inst] = [p for p in r.json() if p["bill_id"] == bill_id]
     return inst
@@ -226,7 +226,7 @@ def test_editing_overdue_payment_keeps_overdue_status(client_db):
     bill_id = _create_bill(client, token)
     instance_id = _instance_id(client, token, bill_id)
     inst = db.get(PaymentInstance, instance_id)
-    inst.due_date = date.today() - timedelta(days=3)
+    inst.due_date = today_utc() - timedelta(days=3)
     db.commit()
     assert _amounts(client, token, bill_id)["status"] == "overdue"
 
@@ -241,7 +241,7 @@ def test_edit_due_date_on_unpaid_instance(client_db):
     token = register_and_login(client, "dd1@test.com")
     bill_id = _create_bill(client, token)
     instance_id = _instance_id(client, token, bill_id)
-    period = date.today().strftime("%Y-%m")
+    period = today_utc().strftime("%Y-%m")
     new_due = f"{period}-20"
 
     r = client.patch(
@@ -259,7 +259,7 @@ def test_edit_due_date_on_overdue_instance(client_db):
     bill_id = _create_bill(client, token)
     instance_id = _instance_id(client, token, bill_id)
     inst = db.get(PaymentInstance, instance_id)
-    inst.due_date = date.today() - timedelta(days=3)
+    inst.due_date = today_utc() - timedelta(days=3)
     db.commit()
     period = inst.period
     new_due = f"{period}-20"
@@ -277,7 +277,7 @@ def test_edit_due_date_rejected_when_paid(client_db):
     client, db = client_db
     token = register_and_login(client, "dd3@test.com")
     instance_id = _paid_instance(client, token)
-    period = date.today().strftime("%Y-%m")
+    period = today_utc().strftime("%Y-%m")
 
     r = client.patch(
         f"/bills/payments/{instance_id}",
@@ -293,7 +293,7 @@ def test_edit_due_date_rejected_outside_period_month(client_db):
     bill_id = _create_bill(client, token)
     instance_id = _instance_id(client, token, bill_id)
 
-    other_month = date.today().replace(day=1) + timedelta(days=40)
+    other_month = today_utc().replace(day=1) + timedelta(days=40)
     r = client.patch(
         f"/bills/payments/{instance_id}",
         json={"due_date": other_month.replace(day=1).isoformat()},
@@ -340,7 +340,7 @@ def test_mark_paid_twice_returns_400_and_keeps_the_first_payment(client_db):
     )
     assert r.status_code == 400
 
-    period = date.today().strftime("%Y-%m")
+    period = today_utc().strftime("%Y-%m")
     [inst] = [
         p
         for p in client.get(

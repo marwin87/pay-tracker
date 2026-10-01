@@ -28,6 +28,7 @@ export interface UserProfile {
   enabled_languages: Locale[];
   default_currency: string | null;
   decimal_separator: "." | ",";
+  timezone: string;
   theme: Theme;
   email_reminders_enabled: boolean;
   notify_2_days_before: boolean;
@@ -66,6 +67,7 @@ export function updateMe(
       | "enabled_languages"
       | "default_currency"
       | "decimal_separator"
+      | "timezone"
       | "theme"
       | "email_reminders_enabled"
       | "notify_2_days_before"

@@ -262,6 +262,7 @@ class BackupNotifications(BaseModel):
     email: BackupChannelSchedule | None = None
     telegram: BackupChannelSchedule | None = None
     browser_enabled: bool | None = None
+    timezone: str | None = Field(default=None, max_length=64)
 
 
 class BackupPreferences(BaseModel):

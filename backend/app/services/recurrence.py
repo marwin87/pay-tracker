@@ -105,7 +105,24 @@ def backfill_template_instances(
 
 
 def ensure_current_period_instances(db: Session, period: str, user_id: int) -> None:
-    """Idempotently seed payment instances for eligible templates that are due in period."""
+    """Idempotently seed payment instances for eligible templates that are due in period.
+
+    Safe to call concurrently (two tabs, strict-mode double effects): the unique
+    (bill_id, period) constraint rejects the loser's insert, which is rolled back and
+    retried once, and the retry sees the winner's rows.
+    """
+    for attempt in range(2):
+        _seed_period(db, period, user_id)
+        try:
+            db.commit()
+            return
+        except IntegrityError:
+            db.rollback()
+            if attempt:
+                raise
+
+
+def _seed_period(db: Session, period: str, user_id: int) -> None:
     templates = (
         db.query(BillTemplate)
         .filter(
@@ -129,16 +146,15 @@ def ensure_current_period_instances(db: Session, period: str, user_id: int) -> N
         )
         if existing:
             continue
-        instance = PaymentInstance(
-            bill_id=template.id,
-            period=period,
-            due_date=_due_date_for_period(period, template.due_day),
-            amount=template.amount,
-            status=PaymentStatus.upcoming,
+        db.add(
+            PaymentInstance(
+                bill_id=template.id,
+                period=period,
+                due_date=_due_date_for_period(period, template.due_day),
+                amount=template.amount,
+                status=PaymentStatus.upcoming,
+            )
         )
-        db.add(instance)
-    if db.new:
-        db.commit()
 
 
 def generate_next_instance(

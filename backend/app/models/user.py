@@ -35,6 +35,10 @@ class User(Base):
         nullable=False,
         server_default="{en,pl,de,es,it,fr,zh}",
     )
+    # IANA zone name; "today", the month and the reminder send time follow it.
+    timezone: Mapped[str] = mapped_column(
+        String(64), nullable=False, default="UTC", server_default="UTC"
+    )
     default_currency: Mapped[str | None] = mapped_column(
         String(10), nullable=True, default=None
     )

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import { fetchPayments } from "@/lib/payments-api";
 import { fetchMe, updateMe } from "@/lib/user-api";
+import { todayIn } from "@/lib/today";
 
 const notificationsSupported =
   typeof window !== "undefined" && "Notification" in window;
@@ -69,7 +70,7 @@ export function useNotifications(initialPref = false): {
     const me = await fetchMe().catch(() => null);
     if (!me?.browser_notifications_enabled) return;
 
-    const today = new Date().toLocaleDateString("en-CA"); // YYYY-MM-DD in local timezone
+    const today = todayIn(me.timezone); // YYYY-MM-DD in the profile zone
     const month = today.slice(0, 7); // YYYY-MM
 
     let payments;

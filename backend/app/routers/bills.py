@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session, selectinload
 
 from app.core.database import get_db
 from app.core.deps import current_user
+from app.core.tz import now_for, today_for, user_tz
 from app.models.bill import BillTemplate, PaymentInstance, PaymentStatus
 from app.models.category import Category
 from app.models.user import User
@@ -51,29 +52,29 @@ def _live_instance(db: Session, instance_id: int, user_id: int) -> PaymentInstan
     return instance
 
 
-def _reject_future_paid_at(paid_at: date | None) -> None:
-    """The client sends its own local date, which can be one day ahead of UTC
-    (any UTC+ timezone shortly after local midnight), so allow tomorrow (UTC)."""
-    if paid_at is not None and paid_at > (
-        datetime.now(timezone.utc).date() + timedelta(days=1)
-    ):
+def _reject_future_paid_at(paid_at: date | None, user: User) -> None:
+    """The client sends the date picked in its browser, whose zone can differ from
+    the profile's (travelling, or a stale profile) by up to a day, so allow tomorrow
+    in the user's own zone."""
+    if paid_at is not None and paid_at > today_for(user) + timedelta(days=1):
         raise HTTPException(
             status_code=400, detail="Payment date cannot be in the future"
         )
 
 
-def _paid_at_datetime(day: date) -> datetime:
-    """A picked calendar day as noon UTC, so it shows as that same day in every
-    timezone from UTC-12 to UTC+11 (a "now" time-of-day could land on the next
-    local day, or in the future, and shift the date on the next edit)."""
-    return datetime.combine(day, time(12), tzinfo=timezone.utc)
+def _paid_at_datetime(day: date, user: User) -> datetime:
+    """A picked calendar day as noon in the user's zone, so it reads back as that
+    same day there (a "now" time-of-day could land on the next local day, or in the
+    future, and shift the date on the next edit)."""
+    return datetime.combine(day, time(12), tzinfo=user_tz(user))
 
 
-def _to_out(inst: PaymentInstance) -> PaymentInstanceOut:
-    # Dynamic overdue: reported in every response without writing to the DB.
+def _to_out(inst: PaymentInstance, today: date) -> PaymentInstanceOut:
+    # Dynamic overdue (relative to the caller's today): reported in every response
+    # without writing to the DB.
     status = (
         PaymentStatus.overdue
-        if inst.status == PaymentStatus.upcoming and inst.due_date < date.today()
+        if inst.status == PaymentStatus.upcoming and inst.due_date < today
         else inst.status
     )
     # Unpaid instances follow the per-payment override, else the template's
@@ -127,7 +128,7 @@ def create_bill(
 
     _check_category_ownership(db, body.category_id, me.id)
 
-    now = datetime.now(timezone.utc)
+    now = now_for(me)
     if body.due_month and body.frequency == BF.annual:
         year = now.year if body.due_month >= now.month else now.year + 1
         start_period = f"{year:04d}-{body.due_month:02d}"
@@ -174,7 +175,7 @@ def list_payments(
     db: Session = Depends(get_db),
     me: User = Depends(current_user),
 ):
-    today = date.today()
+    today = today_for(me)
     current_month = today.strftime("%Y-%m")
     if month is None:
         month = current_month
@@ -195,7 +196,7 @@ def list_payments(
         .all()
     )
 
-    result = [_to_out(inst) for inst in instances]
+    result = [_to_out(inst, today) for inst in instances]
     return result
 
 
@@ -206,7 +207,7 @@ def payments_trend(
     me: User = Depends(current_user),
 ):
     """Paid vs unpaid totals per currency for the 12 months ending at `month`."""
-    return payment_trend(db, me.id, month or date.today().strftime("%Y-%m"))
+    return payment_trend(db, me.id, month or today_for(me).strftime("%Y-%m"))
 
 
 @router.post("/payments/{instance_id}/pay", response_model=PaymentInstanceOut)
@@ -223,13 +224,13 @@ def mark_paid(
     template = (
         instance.template
     )  # read before commit; expire_on_commit would force a lazy re-load after
-    _reject_future_paid_at(body.paid_at)
+    _reject_future_paid_at(body.paid_at, me)
 
-    now = datetime.now(timezone.utc)
+    now = now_for(me)
     expected = instance.current_amount  # before status flips to paid
     instance.status = PaymentStatus.paid
     instance.paid_at = (
-        _paid_at_datetime(body.paid_at) if body.paid_at is not None else now
+        _paid_at_datetime(body.paid_at, me) if body.paid_at is not None else now
     )
     instance.paid_amount = (
         body.paid_amount if body.paid_amount is not None else expected
@@ -243,7 +244,7 @@ def mark_paid(
         generate_next_instance(db, template, instance.period)
 
     db.refresh(instance)
-    return _to_out(instance)
+    return _to_out(instance, today_for(me))
 
 
 @router.patch("/payments/{instance_id}", response_model=PaymentInstanceOut)
@@ -268,14 +269,14 @@ def edit_payment(
         )
     if not is_paid and sent & {"paid_amount", "paid_at"}:
         raise HTTPException(status_code=400, detail="Payment is not marked as paid")
-    _reject_future_paid_at(body.paid_at)
+    _reject_future_paid_at(body.paid_at, me)
     if body.due_date is not None and body.due_date.strftime("%Y-%m") != instance.period:
         raise HTTPException(
             status_code=400, detail="Due date must fall within the payment's period"
         )
 
     if body.paid_at is not None:
-        instance.paid_at = _paid_at_datetime(body.paid_at)
+        instance.paid_at = _paid_at_datetime(body.paid_at, me)
     if body.paid_amount is not None:
         instance.paid_amount = body.paid_amount
     if body.due_date is not None:
@@ -290,7 +291,7 @@ def edit_payment(
         instance.notes = body.notes or None
     db.commit()
     db.refresh(instance)
-    return _to_out(instance)
+    return _to_out(instance, today_for(me))
 
 
 @router.post("/payments/{instance_id}/unpay", response_model=PaymentInstanceOut)
@@ -303,7 +304,7 @@ def revert_payment(
     if instance.status != PaymentStatus.paid:
         raise HTTPException(status_code=400, detail="Payment is not marked as paid")
 
-    today = date.today()
+    today = today_for(me)
     instance.status = (
         PaymentStatus.overdue if instance.due_date < today else PaymentStatus.upcoming
     )
@@ -311,7 +312,7 @@ def revert_payment(
     instance.paid_amount = None
     db.commit()
     db.refresh(instance)
-    return _to_out(instance)
+    return _to_out(instance, today_for(me))
 
 
 @router.delete("/payments/{instance_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -350,7 +351,7 @@ def sync_instances(
 ):
     """Explicitly seed payment instances for the given month (or current month).
     Replaces the previous seed-on-read side effect in list_payments."""
-    today = date.today()
+    today = today_for(me)
     current_month = today.strftime("%Y-%m")
     target = month or current_month
     if target >= current_month:
@@ -366,7 +367,7 @@ def has_deleted_future(
     bill = db.get(BillTemplate, bill_id)
     if not bill or bill.user_id != me.id:
         raise HTTPException(status_code=404, detail="Bill not found")
-    current_period = date.today().strftime("%Y-%m")
+    current_period = today_for(me).strftime("%Y-%m")
     exists = (
         db.query(PaymentInstance)
         .filter(
@@ -409,7 +410,7 @@ def update_bill(
     # Recalculate start_period when due_month changes for annual/one_off
     effective_frequency = updates.get("frequency", bill.frequency)
     if due_month is not None and effective_frequency in (BF.annual, BF.one_off):
-        now = datetime.now(timezone.utc)
+        now = now_for(me)
         year = now.year if due_month >= now.month else now.year + 1
         bill.start_period = f"{year:04d}-{due_month:02d}"
 
@@ -435,7 +436,7 @@ def update_bill(
             inst.due_date = _due_date_for_period(inst.period, bill.due_day)
 
     if body.recreate_deleted_future:
-        current_period = date.today().strftime("%Y-%m")
+        current_period = today_for(me).strftime("%Y-%m")
         tombstones = (
             db.query(PaymentInstance)
             .filter(

@@ -8,7 +8,8 @@ import { useLocale } from "@/context/locale-context";
 import { ApiError } from "@/lib/api";
 import { markPaid, updatePayment, type PaymentInstanceOut } from "@/lib/payments-api";
 import { formatAmount } from "@/lib/summary";
-import PaymentDateCalendar, { toISODate } from "./PaymentDateCalendar";
+import { todayIn } from "@/lib/today";
+import PaymentDateCalendar from "./PaymentDateCalendar";
 
 interface Props {
   instance: PaymentInstanceOut;
@@ -27,7 +28,7 @@ export default function MarkPaidDialog({
   onConfirm,
 }: Props) {
   const t = useTranslations("MarkPaidDialog");
-  const { decimalSeparator } = useLocale();
+  const { decimalSeparator, timeZone } = useLocale();
 
   const isEdit = mode === "edit";
   const isPaid = instance.status === "paid";
@@ -47,7 +48,9 @@ export default function MarkPaidDialog({
     return raw ? formatAmount(raw, decimalSeparator) : "";
   });
   const [paidDate, setPaidDate] = useState(
-    toISODate(isEdit && instance.paid_at ? new Date(instance.paid_at) : new Date()),
+    isEdit && instance.paid_at
+      ? todayIn(timeZone, new Date(instance.paid_at))
+      : todayIn(timeZone),
   );
   const [dueDate, setDueDate] = useState(instance.due_date);
   const [notes, setNotes] = useState(instance.notes ?? "");
@@ -58,7 +61,14 @@ export default function MarkPaidDialog({
     paidAmount === "" ||
     (!isNaN(Number(paidAmount.replace(",", "."))) && Number(paidAmount.replace(",", ".")) >= 0);
   const mounted = useRef(true);
-  useEffect(() => () => { mounted.current = false; }, []);
+  // Re-arm on mount: React strict mode (dev) runs mount, cleanup, mount, and a
+  // cleanup-only effect would leave the ref false, so results would be dropped.
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   if (!isOpen) return null;
 

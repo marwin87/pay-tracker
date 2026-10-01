@@ -9,6 +9,7 @@ Notable changes to Pay Tracker, release by release.
 - Share the month summary by email (opt-in in the Settings Reports tab)
 - Export payments to PDF for the month or the whole year (can be turned off in Settings)
 - New theme: Vesperfall
+- Time zone setting: reminders and “today” now follow your own time zone
 
 ### Security
 
@@ -25,6 +26,8 @@ Notable changes to Pay Tracker, release by release.
 - A payment already marked as paid, or one that was deleted, can no longer be paid again from a stale page
 - Restoring deleted payments keeps already paid ones paid
 - Restoring from a file that isn't a valid backup now shows an error instead of failing
+- Opening Payments in several tabs at once no longer fails with an error
+- Invalid values in profile settings now show an error instead of failing
 - Excel export prints in landscape, fitted to page width, with a footer
 
 ## v1.2.0 — 30-09-2026

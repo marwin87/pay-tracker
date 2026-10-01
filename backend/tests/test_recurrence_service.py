@@ -394,6 +394,44 @@ def test_ensure_creates_instance_for_active_template(db_session) -> None:
     assert db_session.query(PaymentInstance).filter_by(period="2026-06").count() == 1
 
 
+def test_ensure_survives_a_concurrent_request_seeding_the_same_period(
+    db_session, db_sessionmaker, monkeypatch
+) -> None:
+    """Two requests seeding one month at once (two tabs, React strict-mode effects)
+    race on uq_payment_instance_bill_period; the loser must not fail with a 500."""
+    user = _make_user(db_session)
+    bill = _make_bill(db_session, user.id, frequency=BillFrequency.monthly)
+    user_id, bill_id = user.id, bill.id
+    db_session.commit()
+
+    real_commit = db_session.commit
+    raced = []
+
+    def commit_after_a_rival_insert():
+        if not raced:  # the rival commits its row just before our first commit
+            raced.append(True)
+            rival = db_sessionmaker()
+            rival.add(
+                PaymentInstance(
+                    bill_id=bill_id,
+                    period="2026-06",
+                    due_date=date(2026, 6, 15),
+                    amount=Decimal("10"),
+                    status=PaymentStatus.upcoming,
+                )
+            )
+            rival.commit()
+            rival.close()
+        return real_commit()
+
+    monkeypatch.setattr(db_session, "commit", commit_after_a_rival_insert)
+
+    ensure_current_period_instances(db_session, "2026-06", user_id)  # must not raise
+
+    assert raced
+    assert db_session.query(PaymentInstance).filter_by(period="2026-06").count() == 1
+
+
 def test_ensure_skips_archived_template(db_session) -> None:
     user = _make_user(db_session)
     _make_bill(db_session, user.id, frequency=BillFrequency.monthly, is_archived=True)

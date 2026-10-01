@@ -409,6 +409,16 @@
             "customCurrencyAriaLabel": "Benutzerdefinierter Währungscode",
             "customCurrencyPlaceholder": "z. B. CHF"
         },
+        "timeZone": {
+            "title": "Zeitzone",
+            "description": "Legt fest, was „heute“ für dich bedeutet und zu welcher Uhrzeit Erinnerungen gesendet werden.",
+            "ariaLabel": "Zeitzone",
+            "placeholder": "z. B. Europe/Berlin",
+            "useBrowser": "Zeitzone meines Browsers verwenden ({zone})",
+            "hint": "Die Sendezeiten der Erinnerungen gelten in dieser Zeitzone; eine Änderung verschiebt also, wann sie ankommen.",
+            "unknown": "Wähle eine Zeitzone aus der Liste.",
+            "noMatches": "Keine passende Zeitzone"
+        },
         "decimalSeparator": {
             "title": "Dezimaltrennzeichen",
             "description": "Legt fest, wie Preise angezeigt werden.",
@@ -439,7 +449,7 @@
                 "notes": "Notizen"
             }
         },
-        "notificationsServerTimeHint": "Benachrichtigungen werden nach Serverzeit (UTC) gesendet. Aktuelle Serverzeit: <b>{time}</b>.",
+        "notificationsServerTimeHint": "Benachrichtigungen werden in deiner Zeitzone (<b>{zone}</b>) gesendet. Dort ist es jetzt <b>{time}</b>.",
         "emailNotifications": {
             "title": "E-Mail-Benachrichtigungen",
             "description": "Wählen Sie, wann Sie E-Mail-Erinnerungen für bevorstehende und überfällige Rechnungen erhalten möchten.",
@@ -448,7 +458,7 @@
             "onDay": "Am Zahlungstag",
             "oneDayAfter": "1 Tag nach Fälligkeit",
             "noneWarning": "Wählen Sie mindestens eine Option, um E-Mail-Erinnerungen zu erhalten.",
-            "sendTimeLabel": "Sendezeit (UTC)",
+            "sendTimeLabel": "Sendezeit ({zone})",
             "masterToggle": "E-Mail-Benachrichtigungen aktivieren",
             "sendNowButton": "Erinnerungen jetzt senden",
             "sendNowSending": "Wird gesendet...",

@@ -5,8 +5,9 @@ import json
 import os
 import random
 import sys
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
 try:
     import requests
@@ -18,6 +19,17 @@ BASE_URL = os.environ.get("SEED_BASE_URL", "http://localhost:8010")
 EMAIL = "demo@demo.com"
 PASSWORD = "demo1234"
 DATA_FILE = Path(__file__).parent / "seed_data.json"
+# The demo account's time zone. "Today" below is the calendar date in this zone, the same
+# one the app uses for this account, so "due today" isn't overdue when the script runs
+# near midnight UTC.
+DEMO_TIMEZONE = "Europe/Warsaw"
+
+
+def today_in_demo_zone() -> date:
+    try:
+        return datetime.now(ZoneInfo(DEMO_TIMEZONE)).date()
+    except ZoneInfoNotFoundError:  # e.g. Windows without the tzdata package
+        return date.today()
 
 
 def register(session: requests.Session) -> None:
@@ -47,7 +59,7 @@ def inject_current_month_cases(data: dict) -> dict:
     variety immediately on the month it opens to by default — regardless of
     which real-world date the script is run on. Static seed_data.json rows are
     dated in fixed 2026 months and won't generally line up with "today"."""
-    today = date.today()
+    today = today_in_demo_zone()
     period = today.strftime("%Y-%m")
     today_iso = today.isoformat()
     created_at = f"{today_iso}T09:00:00+00:00"
@@ -158,7 +170,7 @@ def inject_history(data: dict) -> dict:
     the dashboard trend chart is populated relative to whenever the script runs.
     Only fills gaps: a static instance for the same (bill_id, period) is kept, so
     the hand-written edge cases (overdue, partial, notes) survive."""
-    today = date.today()
+    today = today_in_demo_zone()
     rng = random.Random(42)  # deterministic: re-seeding gives the same chart
     taken = {(i["bill_id"], i["period"]) for i in data["payment_instances"]}
     next_id = 8000
@@ -215,12 +227,13 @@ def configure_profile(session: requests.Session, token: str) -> None:
             "browser_notifications_enabled": False,
             "enabled_languages": ["en", "pl", "es"],
             "default_currency": "EUR",
+            "timezone": DEMO_TIMEZONE,
         },
     )
     if r.status_code != 200:
         print(f"  Profile configuration failed ({r.status_code}): {r.text}")
         sys.exit(1)
-    print("  All notifications (email, Telegram, browser) disabled, languages set to en/pl/es, default currency EUR")
+    print(f"  All notifications (email, Telegram, browser) disabled, languages set to en/pl/es, default currency EUR, time zone {DEMO_TIMEZONE}")
 
 
 def restore(session: requests.Session, token: str) -> None:

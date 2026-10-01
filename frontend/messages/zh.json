@@ -409,6 +409,16 @@
             "customCurrencyAriaLabel": "自定义货币代码",
             "customCurrencyPlaceholder": "例如：CHF"
         },
+        "timeZone": {
+            "title": "时区",
+            "description": "决定对你而言“今天”是哪一天，以及提醒在一天中的几点发送。",
+            "ariaLabel": "时区",
+            "placeholder": "例如 Asia/Shanghai",
+            "useBrowser": "使用浏览器的时区（{zone}）",
+            "hint": "提醒的发送时间按此时区计算，因此更改时区会改变提醒到达的时刻。",
+            "unknown": "请从列表中选择一个时区。",
+            "noMatches": "没有匹配的时区"
+        },
         "decimalSeparator": {
             "title": "小数分隔符",
             "description": "选择价格的显示方式。",
@@ -439,7 +449,7 @@
                 "notes": "备注"
             }
         },
-        "notificationsServerTimeHint": "通知将按服务器时间（UTC）发送。当前服务器时间：<b>{time}</b>。",
+        "notificationsServerTimeHint": "通知按你的时区（<b>{zone}</b>）发送。当地现在是 <b>{time}</b>。",
         "emailNotifications": {
             "title": "邮件通知",
             "description": "选择何时接收即将到期和已逾期账单的邮件提醒。",
@@ -448,7 +458,7 @@
             "onDay": "付款当天",
             "oneDayAfter": "到期后 1 天",
             "noneWarning": "请至少选择一个选项以接收邮件提醒。",
-            "sendTimeLabel": "发送时间（UTC）",
+            "sendTimeLabel": "发送时间（{zone}）",
             "masterToggle": "开启邮件通知",
             "sendNowButton": "立即发送提醒",
             "sendNowSending": "正在发送…",

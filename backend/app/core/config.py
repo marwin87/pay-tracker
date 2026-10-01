@@ -3,6 +3,8 @@ import warnings
 from pydantic import SecretStr, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from app.core.tz import is_valid_tz
+
 _DEFAULT_JWT_SECRET = "changeme-use-a-long-random-string"
 _MIN_JWT_SECRET_LENGTH = 32
 
@@ -44,6 +46,10 @@ class Settings(BaseSettings):
     app_base_url: str = "http://localhost:3010"
     password_reset_token_expire_minutes: int = 60
 
+    # Time zone given to accounts that don't supply a valid one (and to existing
+    # accounts by the migration that introduced per-user zones). IANA name.
+    default_timezone: str = "UTC"
+
     # Brute-force / abuse protection on the auth endpoints (see core/rate_limit.py).
     rate_limit_enabled: bool = True
 
@@ -63,6 +69,16 @@ class Settings(BaseSettings):
                 "PASSWORD_RESET_TOKEN_EXPIRE_MINUTES=0: reset tokens never expire. "
                 "Only use this in development/testing.",
                 stacklevel=2,
+            )
+        return v
+
+    @field_validator("default_timezone")
+    @classmethod
+    def default_timezone_must_exist(cls, v: str) -> str:
+        if not is_valid_tz(v):
+            raise ValueError(
+                f"DEFAULT_TIMEZONE={v!r} is not a valid IANA time zone "
+                "(e.g. UTC or Europe/Warsaw)."
             )
         return v
 

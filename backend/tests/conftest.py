@@ -1,6 +1,7 @@
 """Test fixtures: PostgreSQL via testcontainers + FastAPI TestClient."""
 
 import os
+from datetime import date, datetime, timezone
 
 # Settings() runs at import time and warns on the weak default secret when ../.env isn't
 # found (cwd-relative, e.g. PyCharm running from the repo root).
@@ -24,6 +25,11 @@ from testcontainers.postgres import PostgresContainer
 from app.core import rate_limit
 from app.core.database import Base, get_db
 from app.main import app
+
+
+def today_utc() -> date:
+    """Today as the app computes it: users default to UTC, never the machine's zone."""
+    return datetime.now(timezone.utc).date()
 
 
 @pytest.fixture(autouse=True)

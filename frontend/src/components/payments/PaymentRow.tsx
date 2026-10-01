@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { AlertCircle, AtSign, CheckCircle, MessageSquare, Pencil, Undo2, Trash2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
+import { todayIn } from "@/lib/today";
 import type { PaymentInstanceOut } from "@/lib/payments-api";
 import { formatAmount } from "@/lib/summary";
 
@@ -28,7 +29,7 @@ interface Props {
 export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, onEdit, readOnly = false }: Props) {
   const t = useTranslations("PaymentRow");
   const locale = useLocale();
-  const { decimalSeparator } = useAppLocale();
+  const { decimalSeparator, timeZone } = useAppLocale();
   const [emailOpen, setEmailOpen] = useState(false);
   const emailRef = useRef<HTMLDivElement>(null);
 
@@ -54,9 +55,8 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
 
   const dueDateFormatted = formatDate(dueDate);
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const isDueToday = dueDate.getTime() === today.getTime();
+  // "Today" in the profile's zone, the same calendar the backend uses for overdue
+  const isDueToday = instance.due_date === todayIn(timeZone);
 
   function tileGradientClass(): string {
     const base = "bg-gradient-to-r from-0% to-70%";

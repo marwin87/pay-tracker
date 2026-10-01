@@ -409,6 +409,16 @@
             "customCurrencyAriaLabel": "Código de moneda personalizado",
             "customCurrencyPlaceholder": "p. ej. CHF"
         },
+        "timeZone": {
+            "title": "Zona horaria",
+            "description": "Define qué significa «hoy» para ti y a qué hora se envían tus recordatorios.",
+            "ariaLabel": "Zona horaria",
+            "placeholder": "p. ej. Europe/Madrid",
+            "useBrowser": "Usar la zona horaria de mi navegador ({zone})",
+            "hint": "Las horas de envío de los recordatorios están en esta zona horaria, así que cambiarla mueve el momento en que llegan.",
+            "unknown": "Elige una zona horaria de la lista.",
+            "noMatches": "No hay ninguna zona horaria que coincida"
+        },
         "decimalSeparator": {
             "title": "Separador decimal",
             "description": "Elige cómo se muestran los precios.",
@@ -439,7 +449,7 @@
                 "notes": "Notas"
             }
         },
-        "notificationsServerTimeHint": "Las notificaciones se envían según la hora del servidor (UTC). Hora actual del servidor: <b>{time}</b>.",
+        "notificationsServerTimeHint": "Las notificaciones se envían en tu zona horaria (<b>{zone}</b>). Allí son ahora las <b>{time}</b>.",
         "emailNotifications": {
             "title": "Notificaciones por correo",
             "description": "Elige cuándo recibir recordatorios por correo de facturas próximas y vencidas.",
@@ -448,7 +458,7 @@
             "onDay": "El día del pago",
             "oneDayAfter": "1 día después del vencimiento",
             "noneWarning": "Selecciona al menos una opción para recibir recordatorios por correo.",
-            "sendTimeLabel": "Hora de envío (UTC)",
+            "sendTimeLabel": "Hora de envío ({zone})",
             "masterToggle": "Activar notificaciones por correo",
             "sendNowButton": "Enviar recordatorios ahora",
             "sendNowSending": "Enviando...",

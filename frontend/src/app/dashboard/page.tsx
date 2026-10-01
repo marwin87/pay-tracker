@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { useLocale as useAppLocale } from "@/context/locale-context";
+import { monthIn } from "@/lib/today";
 import { SessionExpiredError } from "@/lib/api";
 import {
   fetchPayments,
@@ -16,15 +18,11 @@ import MonthSummaryCard from "@/components/dashboard/MonthSummaryCard";
 import CategoryDonut from "@/components/dashboard/CategoryDonut";
 import TrendChart from "@/components/dashboard/TrendChart";
 
-function currentMonthKey(): string {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
-}
-
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");
   const locale = useLocale();
-  const [month] = useState(currentMonthKey);
+  const { timeZone } = useAppLocale();
+  const [month] = useState(() => monthIn(timeZone));
   const [data, setData] = useState<{
     instances: PaymentInstanceOut[];
     trend: TrendPoint[];

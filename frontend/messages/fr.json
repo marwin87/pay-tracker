@@ -409,6 +409,16 @@
             "customCurrencyAriaLabel": "Code de devise personnalisé",
             "customCurrencyPlaceholder": "ex. CHF"
         },
+        "timeZone": {
+            "title": "Fuseau horaire",
+            "description": "Définit ce que signifie « aujourd’hui » pour vous et l’heure d’envoi de vos rappels.",
+            "ariaLabel": "Fuseau horaire",
+            "placeholder": "p. ex. Europe/Paris",
+            "useBrowser": "Utiliser le fuseau de mon navigateur ({zone})",
+            "hint": "Les heures d’envoi des rappels sont exprimées dans ce fuseau ; le modifier décale donc leur arrivée.",
+            "unknown": "Choisissez un fuseau horaire dans la liste.",
+            "noMatches": "Aucun fuseau horaire correspondant"
+        },
         "decimalSeparator": {
             "title": "Séparateur décimal",
             "description": "Choisissez comment les prix sont affichés.",
@@ -439,7 +449,7 @@
                 "notes": "Notes"
             }
         },
-        "notificationsServerTimeHint": "Les notifications sont envoyées selon l'heure du serveur (UTC). Heure actuelle du serveur : <b>{time}</b>.",
+        "notificationsServerTimeHint": "Les notifications sont envoyées dans votre fuseau horaire (<b>{zone}</b>). Il y est actuellement <b>{time}</b>.",
         "emailNotifications": {
             "title": "Notifications par email",
             "description": "Choisissez quand recevoir des rappels par email pour les factures à venir et en retard.",
@@ -448,7 +458,7 @@
             "onDay": "Le jour du paiement",
             "oneDayAfter": "1 jour après l'échéance",
             "noneWarning": "Sélectionnez au moins une option pour recevoir des rappels par email.",
-            "sendTimeLabel": "Heure d'envoi (UTC)",
+            "sendTimeLabel": "Heure d’envoi ({zone})",
             "masterToggle": "Activer les notifications par email",
             "sendNowButton": "Envoyer les rappels maintenant",
             "sendNowSending": "Envoi en cours...",

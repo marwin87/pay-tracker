@@ -1,4 +1,5 @@
 import { apiFetch, BASE_URL, extractApiError } from "./api";
+import { browserTimeZone, todayIn } from "@/lib/today";
 import { getCsrfToken } from "./auth";
 
 // `telegramTokenUnreadable`: the backup was made without the Telegram token because
@@ -30,7 +31,7 @@ export async function downloadBackup(
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayIn(browserTimeZone()); // the local date, not the UTC one
   a.download = `pay-tracker-backup-${today}.json`;
   a.click();
   URL.revokeObjectURL(url);

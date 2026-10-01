@@ -5,6 +5,8 @@ import Link from "next/link";
 import { ChevronLeft, ChevronRight, ChevronsUpDown, FileSpreadsheet, FileText, Loader2, Share2 } from "lucide-react";
 import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
+import { useLocale as useAppLocale } from "@/context/locale-context";
+import { todayIn } from "@/lib/today";
 import {
   fetchPayments,
   syncInstances,
@@ -44,11 +46,6 @@ import {
   usePaymentActions,
 } from "@/context/payment-context";
 
-function getCurrentMonth(): string {
-  const now = new Date();
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-}
-
 type ExportScope = "month" | "year";
 
 function getMonthLabel(year: number, monthIndex: number, locale: string): string {
@@ -60,12 +57,6 @@ function getMonthLabel(year: number, monthIndex: number, locale: string): string
 
 function monthKey(year: number, monthIndex: number): string {
   return `${year}-${String(monthIndex + 1).padStart(2, "0")}`;
-}
-
-function getTodayStr(): string {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 function CategorySummary({
@@ -128,11 +119,13 @@ function PaymentsPageInner() {
   const tFilters = useTranslations("Filters");
   const locale = useLocale();
 
-  const today = new Date();
-  const currentYear = today.getFullYear();
-  const currentMonth = getCurrentMonth();
+  // "Today" in the profile's zone, the same calendar the backend uses
+  const { timeZone } = useAppLocale();
+  const todayStr = todayIn(timeZone);
+  const currentYear = Number(todayStr.slice(0, 4));
+  const currentMonth = todayStr.slice(0, 7);
 
-  const [selectedMonth, setSelectedMonth] = useState<string>(getCurrentMonth);
+  const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
   const {
     dialogTarget,
     setDialogTarget,
@@ -265,7 +258,6 @@ function PaymentsPageInner() {
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
 
-  const todayStr = getTodayStr();
 
   // A day picked in a previous month has nothing to do with the month now
   // selected — treat it as cleared without a setState-in-effect round trip.

@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 
 from app.models.bill import PaymentInstance, PaymentStatus
 from app.services.recurrence import _due_date_for_period
-from tests.conftest import auth, category_id, register_and_login
+from tests.conftest import auth, category_id, register_and_login, today_utc
 
 _BILL = {
     "name": "Electricity",
@@ -51,12 +51,12 @@ def _insert_instance(
 
 
 def _current_period() -> str:
-    return date.today().strftime("%Y-%m")
+    return today_utc().strftime("%Y-%m")
 
 
 def _future_period() -> str:
     """One month ahead of today."""
-    today = date.today()
+    today = today_utc()
     month = today.month % 12 + 1
     year = today.year + (1 if today.month == 12 else 0)
     return f"{year}-{month:02d}"
@@ -64,7 +64,7 @@ def _future_period() -> str:
 
 def _past_period() -> str:
     """One month before today."""
-    today = date.today()
+    today = today_utc()
     month = today.month - 1 or 12
     year = today.year - (1 if today.month == 1 else 0)
     return f"{year}-{month:02d}"
@@ -92,7 +92,7 @@ def test_has_deleted_future_with_current_period_tombstone(client_db):
     token = register_and_login(client, "u2@test.com")
     bill_id = _create_bill(client, token)
     period = _current_period()
-    _insert_instance(db, bill_id, period, date.today(), is_deleted=True)
+    _insert_instance(db, bill_id, period, today_utc(), is_deleted=True)
 
     r = client.get(f"/bills/{bill_id}/has-deleted-future", headers=auth(token))
     assert r.status_code == 200
@@ -135,7 +135,7 @@ def test_patch_restore_flips_tombstone_to_active(client_db):
     token = register_and_login(client, "u4@test.com")
     bill_id = _create_bill(client, token)
     period = _current_period()
-    inst = _insert_instance(db, bill_id, period, date.today(), is_deleted=True)
+    inst = _insert_instance(db, bill_id, period, today_utc(), is_deleted=True)
 
     r = client.patch(
         f"/bills/{bill_id}",
@@ -157,7 +157,7 @@ def test_patch_restore_updates_amount(client_db):
     bill_id = _create_bill(client, token)
     period = _current_period()
     inst = _insert_instance(
-        db, bill_id, period, date.today(), is_deleted=True, amount="120.00"
+        db, bill_id, period, today_utc(), is_deleted=True, amount="120.00"
     )
 
     r = client.patch(
@@ -199,7 +199,7 @@ def test_patch_without_restore_flag_leaves_tombstone_intact(client_db):
     token = register_and_login(client, "u7@test.com")
     bill_id = _create_bill(client, token)
     period = _current_period()
-    inst = _insert_instance(db, bill_id, period, date.today(), is_deleted=True)
+    inst = _insert_instance(db, bill_id, period, today_utc(), is_deleted=True)
 
     r = client.patch(
         f"/bills/{bill_id}",
@@ -219,7 +219,7 @@ def test_patch_restore_no_tombstones_is_noop(client_db):
     bill_id = _create_bill(client, token)
     # active instance (not deleted)
     period = _current_period()
-    _insert_instance(db, bill_id, period, date.today(), is_deleted=False)
+    _insert_instance(db, bill_id, period, today_utc(), is_deleted=False)
 
     r = client.patch(
         f"/bills/{bill_id}",
@@ -273,7 +273,7 @@ def test_unpaid_instance_amount_follows_template_after_edit(client_db):
     token = register_and_login(client, "u10@test.com")
     bill_id = _create_bill(client, token, {"amount": "0"})
     period = _current_period()
-    _insert_instance(db, bill_id, period, date.today(), amount="0")
+    _insert_instance(db, bill_id, period, today_utc(), amount="0")
 
     r = client.patch(
         f"/bills/{bill_id}",
@@ -296,7 +296,7 @@ def test_paid_instance_amount_keeps_historical_snapshot(client_db):
     bill_id = _create_bill(client, token, {"amount": "100.00"})
     period = _current_period()
     _insert_instance(
-        db, bill_id, period, date.today(), status=PaymentStatus.paid, amount="100.00"
+        db, bill_id, period, today_utc(), status=PaymentStatus.paid, amount="100.00"
     )
 
     r = client.patch(

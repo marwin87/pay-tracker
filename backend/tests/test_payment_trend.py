@@ -4,7 +4,7 @@ from datetime import date
 
 from app.models.bill import PaymentInstance, PaymentStatus
 from app.services.trend import trend_periods
-from tests.conftest import auth, category_id, register_and_login
+from tests.conftest import auth, category_id, register_and_login, today_utc
 
 
 def _bill(client, token, name, currency, amount="100.00"):
@@ -54,7 +54,7 @@ def test_trend_splits_paid_unpaid_and_never_mixes_currencies(client_db):
     eur2 = _bill(client, token, "Gas", "EUR")
     eur3 = _bill(client, token, "Old", "EUR")
     pln = _bill(client, token, "Bus", "PLN")
-    month = date.today().strftime("%Y-%m")
+    month = today_utc().strftime("%Y-%m")
     # Wipe what bill creation auto-generated for this month, then set exact rows.
     db.query(PaymentInstance).delete()
     _inst(db, eur, month, PaymentStatus.paid, paid_amount=90)  # partial payment
@@ -77,7 +77,7 @@ def test_trend_is_scoped_to_the_user(client_db):
     a = register_and_login(client, "tr2a@test.com")
     b = register_and_login(client, "tr2b@test.com")
     _bill(client, a, "Rent", "EUR")
-    month = date.today().strftime("%Y-%m")
+    month = today_utc().strftime("%Y-%m")
     r = client.get(f"/bills/payments/trend?month={month}", headers=auth(b))
     assert r.status_code == 200 and r.json() == []
 

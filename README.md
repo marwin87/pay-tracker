@@ -116,7 +116,7 @@ Go to **Payments**. Use the month selector to browse any period. Click **Mark as
 
 Add SMTP credentials to `.env` (see the `# Reminders` section in `.env.example`), then restart (mail is delivered through [Apprise](https://github.com/caronc/apprise), which will also carry other channels later). Open the avatar menu (top right) → **Settings → Email Notifications** to configure when reminders are sent and which timing windows to use (2 days before, 1 day before, on the day, 1 day after).
 
-The settings page also shows the current server time (UTC) so you can set the send time relative to your timezone.
+Send times and "today" follow your own time zone: it is taken from your browser when you sign up and can be changed under **Settings → Preferences → Time zone**. The Notifications tab shows the current time in that zone.
 
 
 ## ⚙️ Environment variables
@@ -136,6 +136,7 @@ The settings page also shows the current server time (UTC) so you can set the se
 | `REMINDER_FROM` | no | From address for reminder emails |
 | `APP_BASE_URL` | no | Public URL of the frontend — used in password reset links (default: `http://localhost:3010`) |
 | `PASSWORD_RESET_TOKEN_EXPIRE_MINUTES` | no | How long a reset token is valid in minutes (default: 60; set to 0 for no expiry) |
+| `DEFAULT_TIMEZONE` | no (default: `UTC`) | IANA time zone (e.g. `Europe/Warsaw`) for accounts whose browser doesn't report one. **Set it before upgrading to the version that introduced per-user time zones:** the migration gives it to every existing account and converts their reminder send times (until then in UTC) so nothing is sent at a different moment. Changing it afterwards converts nothing |
 | `RESTORE_SNAPSHOT_RETENTION_DAYS` | no | Days a pre-restore snapshot stays recoverable before the cleanup job deletes it (default: 7) |
 
 Copy `.env.example` to `.env`. Never commit `.env`.

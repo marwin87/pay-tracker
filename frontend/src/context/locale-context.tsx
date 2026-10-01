@@ -13,6 +13,7 @@ import { useAuth } from "@/context/auth-context";
 import { fetchMe, updateMe } from "@/lib/user-api";
 import { setTheme } from "@/lib/theme";
 import { LOCALES, messagesMap, detectBrowserLocale, type Locale } from "@/lib/locales";
+import { browserTimeZone } from "@/lib/today";
 
 export type { Locale };
 
@@ -25,6 +26,9 @@ interface LocaleContextValue {
   setEnabledLocales: (langs: Locale[]) => void;
   decimalSeparator: DecimalSeparator;
   setDecimalSeparator: (s: DecimalSeparator) => void;
+  /** IANA zone of the profile (the browser's until the profile has loaded). */
+  timeZone: string;
+  setTimeZone: (zone: string) => void;
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null);
@@ -34,6 +38,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(detectBrowserLocale);
   const [enabledLocales, setEnabledLocalesState] = useState<Locale[]>(LOCALES);
   const [decimalSeparator, setDecimalSeparatorState] = useState<DecimalSeparator>(".");
+  const [timeZone, setTimeZone] = useState<string>(browserTimeZone);
 
   useEffect(() => {
     if (!isAuthenticated) return;
@@ -55,6 +60,7 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         );
         setEnabledLocalesState(enabled.length ? enabled : LOCALES);
         setDecimalSeparatorState(profile.decimal_separator);
+        if (profile.timezone) setTimeZone(profile.timezone);
         setTheme(profile.theme);
       })
       .catch(() => {});
@@ -112,6 +118,8 @@ export function LocaleProvider({ children }: { children: ReactNode }) {
         setEnabledLocales,
         decimalSeparator,
         setDecimalSeparator,
+        timeZone,
+        setTimeZone,
       }}
     >
       <NextIntlClientProvider locale={locale} messages={messagesMap[locale]}>

@@ -20,6 +20,7 @@ from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
 from app.core.i18n import resolve_locale, t
+from app.core.tz import is_valid_tz, today_for, user_tz
 from app.schemas.auth import EXPORT_FIELD_KEYS
 from app.models.bill import (
     BillFrequency,
@@ -197,6 +198,7 @@ def _rows_by_month(
     db: Session, me: User, lang: str, year: int
 ) -> dict[int, list[dict]]:
     _ensure_year_instances(db, me.id, year)
+    tz = user_tz(me)
 
     instances = (
         db.query(PaymentInstance)
@@ -228,7 +230,9 @@ def _rows_by_month(
                     if i.paid_amount
                     else None
                 ),
-                "Paid At": i.paid_at.date().isoformat() if i.paid_at else None,
+                "Paid At": (
+                    i.paid_at.astimezone(tz).date().isoformat() if i.paid_at else None
+                ),
                 "Notes": i.notes,
                 "_status_key": i.status,
                 "_category_color": i.template.category.color,
@@ -239,7 +243,7 @@ def _rows_by_month(
 
 @router.get("/xlsx")
 def export_xlsx(
-    year: int = Query(default_factory=lambda: date.today().year),
+    year: int | None = Query(default=None),  # None: the user's current year
     month: int | None = Query(default=None, ge=1, le=12),
     lang: str = Query(default="en"),
     db: Session = Depends(get_db),
@@ -247,6 +251,8 @@ def export_xlsx(
 ):
     if not me.export_enabled:
         raise HTTPException(status_code=403, detail="Excel export is disabled")
+    today = today_for(me)
+    year = year or today.year
 
     lang = resolve_locale(lang)
 
@@ -294,7 +300,7 @@ def export_xlsx(
             ws.sheet_properties.pageSetUpPr = PageSetupProperties(fitToPage=True)
             ws.page_setup.fitToWidth = 1
             ws.page_setup.fitToHeight = 0  # as many pages tall as needed
-            ws.oddFooter.left.text = f"{footer_text()} · {date.today().isoformat()}"
+            ws.oddFooter.left.text = f"{footer_text()} · {today.isoformat()}"
             ws.oddFooter.right.text = "&P / &N"
             for col_idx, header in enumerate(headers, start=1):
                 cell = ws.cell(row=1, column=col_idx)
@@ -331,7 +337,6 @@ def export_xlsx(
                         _AMOUNT_TEXT_FORMAT
                     )
 
-        today = date.today()
         active_month = today.month if year == today.year else 1
         writer.book.active = 0 if month else active_month - 1
     buf.seek(0)
@@ -354,11 +359,13 @@ def _rgb(hex_color: str) -> tuple[int, int, int]:
 
 
 class _ReportPDF(FPDF):
+    footer_date: date  # the report's "today" (the user's), set by the caller
+
     def footer(self) -> None:
         self.set_y(-10)
         self.set_font("DejaVu", "", 7)
         self.set_text_color(120, 120, 120)
-        self.cell(0, 5, f"{footer_text()} · {date.today().isoformat()}", align="L")
+        self.cell(0, 5, f"{footer_text()} · {self.footer_date.isoformat()}", align="L")
         self.set_x(self.l_margin)
         self.cell(0, 5, f"{self.page_no()} / {{nb}}", align="R")
         self.set_text_color(0, 0, 0)
@@ -366,7 +373,7 @@ class _ReportPDF(FPDF):
 
 @router.get("/pdf")
 def export_pdf(
-    year: int = Query(default_factory=lambda: date.today().year),
+    year: int | None = Query(default=None),  # None: the user's current year
     month: int | None = Query(default=None, ge=1, le=12),
     lang: str = Query(default="en"),
     db: Session = Depends(get_db),
@@ -374,6 +381,8 @@ def export_pdf(
 ):
     if not me.pdf_enabled:
         raise HTTPException(status_code=403, detail="PDF export is disabled")
+    today = today_for(me)
+    year = year or today.year
 
     lang = resolve_locale(lang)
     selected_keys = set(me.pdf_fields)
@@ -383,6 +392,7 @@ def export_pdf(
     by_month = _rows_by_month(db, me, lang, year)
 
     pdf = _ReportPDF(orientation="L", format="A4")
+    pdf.footer_date = today
     pdf.alias_nb_pages()
     pdf.add_font("DejaVu", "", str(_PDF_FONTS / "DejaVuSans.ttf"))
     pdf.add_font("DejaVu", "B", str(_PDF_FONTS / "DejaVuSans-Bold.ttf"))
@@ -519,6 +529,8 @@ def _build_backup_arrays(
     if "telegram" in sections:
         notifications["telegram"] = _schedule_out(user, TELEGRAM)
     if notifications:
+        # The send times are in this zone, so it travels with them.
+        notifications["timezone"] = user.timezone
         out["notifications"] = notifications
 
     prefs: dict = {}
@@ -632,7 +644,7 @@ def export_json(
     if token and me.telegram_chat_id:
         payload["telegram"] = {"bot_token": token, "chat_id": me.telegram_chat_id}
     headers = {
-        "Content-Disposition": f'attachment; filename="pay-tracker-backup-{datetime.now(timezone.utc).date()}.json"'
+        "Content-Disposition": f'attachment; filename="pay-tracker-backup-{today_for(me)}.json"'
     }
     if "telegram" in sections and me.telegram_bot_token_unreadable:
         # Stored but undecryptable (JWT_SECRET changed): the backup can't carry it.
@@ -801,6 +813,8 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
                 _apply_schedule(user, TELEGRAM, n.telegram)
             if n.browser_enabled is not None:
                 user.browser_notifications_enabled = n.browser_enabled
+            if n.timezone is not None and is_valid_tz(n.timezone):
+                user.timezone = n.timezone  # an unknown zone in a file is ignored
         if p := backup.preferences:
             if p.language_preference is not None:
                 user.language_preference = p.language_preference

@@ -3,7 +3,7 @@
 from datetime import date
 
 from app.core.i18n import LOCALES
-from tests.conftest import auth, category_id, register_and_login
+from tests.conftest import auth, category_id, register_and_login, today_utc
 
 _BILL = {
     "name": "Prąd żółć",
@@ -30,7 +30,7 @@ def _tok(client, email):
 
 def test_pdf_year_and_month(client):
     tok = _tok(client, "pdf_basic@test.com")
-    year = date.today().year
+    year = today_utc().year
     r = client.get(f"/export/pdf?year={year}", headers=auth(tok))
     assert r.status_code == 200
     assert r.content.startswith(b"%PDF")

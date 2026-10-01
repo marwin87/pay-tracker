@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
+import { todayIn } from "@/lib/today";
 import CategoryCombobox from "./CategoryCombobox";
 import MonthDayCalendar from "./MonthDayCalendar";
 import MonthYearPicker from "./MonthYearPicker";
@@ -52,7 +53,12 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
   const t = useTranslations("BillTemplateForm");
   const tFreq = useTranslations("Frequencies");
   const locale = useLocale();
-  const { decimalSeparator } = useAppLocale();
+  const { decimalSeparator, timeZone } = useAppLocale();
+  // "Today" in the profile's zone, the same calendar the backend uses
+  const todayStr = todayIn(timeZone);
+  const todayYear = Number(todayStr.slice(0, 4));
+  const todayMonth = Number(todayStr.slice(5, 7));
+  const todayDay = Number(todayStr.slice(8, 10));
   const [name, setName] = useState(initial?.name ?? "");
   const [categoryId, setCategoryId] = useState<number | "">(initial?.category_id ?? "");
   const [frequency, setFrequency] = useState<BillFrequency>(
@@ -66,10 +72,10 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
     initial?.currency ?? defaultCurrency ?? LOCALE_DEFAULT_CURRENCY[locale] ?? "EUR";
   const [currency, setCurrency] = useState(initialCurrency);
   const [dueDay, setDueDay] = useState(
-    initial?.due_day != null ? String(initial.due_day) : String(new Date().getDate()),
+    initial?.due_day != null ? String(initial.due_day) : String(todayDay),
   );
   const [dueMonth, setDueMonth] = useState(
-    initial?.due_month != null ? String(initial.due_month) : String(new Date().getMonth() + 1),
+    initial?.due_month != null ? String(initial.due_month) : String(todayMonth),
   );
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [endPeriod, setEndPeriod] = useState(initial?.end_period ?? "");
@@ -82,10 +88,9 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
   const isRecurring = RECURRING_FREQUENCIES.includes(frequency);
 
   // Recurring bills anchor to the current year + chosen month on create (mirrors the backend).
-  const now = new Date();
-  const currentPeriod = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+  const currentPeriod = todayStr.slice(0, 7);
   const effectiveStart =
-    startPeriod ?? `${now.getFullYear()}-${String(parseInt(dueMonth, 10) || now.getMonth() + 1).padStart(2, "0")}`;
+    startPeriod ?? `${todayYear}-${String(parseInt(dueMonth, 10) || todayMonth).padStart(2, "0")}`;
   const minEnd = effectiveStart > currentPeriod ? effectiveStart : currentPeriod;
   const maxInterval = frequency === "annual" ? 5 : 12;
   const effectiveInterval = frequency === "one_off" ? 1 : Math.min(interval, maxInterval);
@@ -244,8 +249,8 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
             {isRecurring ? t("startDateLabel") : t("dueDateLabel")}
           </label>
           <MonthDayCalendar
-            month={parseInt(dueMonth, 10) || new Date().getMonth() + 1}
-            day={parseInt(dueDay, 10) || new Date().getDate()}
+            month={parseInt(dueMonth, 10) || todayMonth}
+            day={parseInt(dueDay, 10) || todayDay}
             onChange={(m, d) => { setDueMonth(String(m)); setDueDay(String(d)); }}
           />
         </div>

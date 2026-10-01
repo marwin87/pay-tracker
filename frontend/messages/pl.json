@@ -409,6 +409,16 @@
             "customCurrencyAriaLabel": "Kod waluty niestandardowej",
             "customCurrencyPlaceholder": "np. CHF"
         },
+        "timeZone": {
+            "title": "Strefa czasowa",
+            "description": "Określa, co oznacza dla Ciebie „dzisiaj”, oraz o której godzinie wysyłane są przypomnienia.",
+            "ariaLabel": "Strefa czasowa",
+            "placeholder": "np. Europe/Warsaw",
+            "useBrowser": "Użyj strefy mojej przeglądarki ({zone})",
+            "hint": "Godziny wysyłki przypomnień są podawane w tej strefie, więc jej zmiana przesuwa moment ich otrzymania.",
+            "unknown": "Wybierz strefę czasową z listy.",
+            "noMatches": "Brak pasującej strefy czasowej"
+        },
         "decimalSeparator": {
             "title": "Separator dziesiętny",
             "description": "Wybierz, jak wyświetlane są ceny.",
@@ -439,7 +449,7 @@
                 "notes": "Notatki"
             }
         },
-        "notificationsServerTimeHint": "Powiadomienia są wysyłane według czasu serwera (UTC). Aktualny czas serwera: <b>{time}</b>.",
+        "notificationsServerTimeHint": "Powiadomienia są wysyłane w Twojej strefie czasowej (<b>{zone}</b>). Jest tam teraz <b>{time}</b>.",
         "emailNotifications": {
             "title": "Powiadomienia e-mail",
             "description": "Wybierz, kiedy otrzymywać przypomnienia e-mail o nadchodzących i zaległych rachunkach.",
@@ -448,7 +458,7 @@
             "onDay": "W dniu płatności",
             "oneDayAfter": "1 dzień po terminie",
             "noneWarning": "Wybierz co najmniej jedną opcję, aby otrzymywać przypomnienia e-mail.",
-            "sendTimeLabel": "Godzina wysyłki (UTC)",
+            "sendTimeLabel": "Godzina wysyłki ({zone})",
             "masterToggle": "Włącz powiadomienia e-mail",
             "sendNowButton": "Wyślij przypomnienia teraz",
             "sendNowSending": "Wysyłanie...",

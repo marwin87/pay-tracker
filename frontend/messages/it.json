@@ -409,6 +409,16 @@
             "customCurrencyAriaLabel": "Codice valuta personalizzato",
             "customCurrencyPlaceholder": "es. CHF"
         },
+        "timeZone": {
+            "title": "Fuso orario",
+            "description": "Stabilisce cosa significa «oggi» per te e a che ora vengono inviati i promemoria.",
+            "ariaLabel": "Fuso orario",
+            "placeholder": "es. Europe/Rome",
+            "useBrowser": "Usa il fuso orario del mio browser ({zone})",
+            "hint": "Gli orari di invio dei promemoria sono in questo fuso orario, quindi cambiarlo sposta il momento in cui arrivano.",
+            "unknown": "Scegli un fuso orario dall’elenco.",
+            "noMatches": "Nessun fuso orario corrispondente"
+        },
         "decimalSeparator": {
             "title": "Separatore decimale",
             "description": "Scegli come vengono mostrati i prezzi.",
@@ -439,7 +449,7 @@
                 "notes": "Note"
             }
         },
-        "notificationsServerTimeHint": "Le notifiche vengono inviate in base all'ora del server (UTC). Ora attuale del server: <b>{time}</b>.",
+        "notificationsServerTimeHint": "Le notifiche vengono inviate nel tuo fuso orario (<b>{zone}</b>). Lì ora sono le <b>{time}</b>.",
         "emailNotifications": {
             "title": "Notifiche via email",
             "description": "Scegli quando ricevere promemoria via email per bollette in scadenza e scadute.",
@@ -448,7 +458,7 @@
             "onDay": "Il giorno del pagamento",
             "oneDayAfter": "1 giorno dopo la scadenza",
             "noneWarning": "Seleziona almeno un'opzione per ricevere promemoria via email.",
-            "sendTimeLabel": "Orario di invio (UTC)",
+            "sendTimeLabel": "Orario di invio ({zone})",
             "masterToggle": "Attiva notifiche via email",
             "sendNowButton": "Invia promemoria ora",
             "sendNowSending": "Invio in corso...",

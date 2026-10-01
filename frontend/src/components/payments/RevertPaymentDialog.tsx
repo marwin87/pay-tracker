@@ -23,7 +23,14 @@ export default function RevertPaymentDialog({
   const [isReverting, setIsReverting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const mounted = useRef(true);
-  useEffect(() => () => { mounted.current = false; }, []);
+  // Re-arm on mount: React strict mode (dev) runs mount, cleanup, mount, and a
+  // cleanup-only effect would leave the ref false, so results would be dropped.
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   if (!isOpen) return null;
 
