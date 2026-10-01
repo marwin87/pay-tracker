@@ -9,6 +9,7 @@ from tests.conftest import auth, register_and_login
 
 _PASSWORD = "pw123456"  # pragma: allowlist secret
 _NEW_PASSWORD = "newpass123"  # pragma: allowlist secret
+_WRONG_PASSWORD = "wrong-pass"  # pragma: allowlist secret
 
 
 # ---------------------------------------------------------------------------
@@ -165,3 +166,32 @@ def test_reset_password_revokes_existing_sessions(client_db):
     )
     assert r.status_code == 200
     assert client.get("/auth/me", headers=auth(old)).status_code == 401
+
+
+# ---------------------------------------------------------------------------
+# Login does the same bcrypt work for unknown and known emails
+# ---------------------------------------------------------------------------
+
+
+def test_login_unknown_email_still_runs_a_password_check(client):
+    from unittest.mock import patch
+
+    from app.core.security import DUMMY_PASSWORD_HASH
+
+    with patch("app.routers.auth.verify_password", return_value=False) as check:
+        r = client.post(
+            "/auth/login", json={"email": "nobody@test.com", "password": _PASSWORD}
+        )
+    assert r.status_code == 401
+    check.assert_called_once_with(_PASSWORD, DUMMY_PASSWORD_HASH)
+
+
+def test_login_unknown_and_wrong_password_look_identical(client):
+    register_and_login(client, "known@test.com", _PASSWORD)
+    wrong = client.post(
+        "/auth/login", json={"email": "known@test.com", "password": _WRONG_PASSWORD}
+    )
+    unknown = client.post(
+        "/auth/login", json={"email": "nobody@test.com", "password": _WRONG_PASSWORD}
+    )
+    assert (wrong.status_code, wrong.json()) == (unknown.status_code, unknown.json())

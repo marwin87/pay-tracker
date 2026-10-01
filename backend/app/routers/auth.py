@@ -13,7 +13,12 @@ from app.core import rate_limit
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
-from app.core.security import create_access_token, hash_password, verify_password
+from app.core.security import (
+    DUMMY_PASSWORD_HASH,
+    create_access_token,
+    hash_password,
+    verify_password,
+)
 from app.models.reset_token import PasswordResetToken
 from app.models.user import User
 from app.services.categories import seed_default_categories
@@ -112,6 +117,9 @@ def register(
     rate_limit.hit(
         f"register:{rate_limit.client_ip(request)}", _REGISTER_PER_IP_HOUR, _HOUR
     )
+    # Deliberately says so: a signup form that can't tell you the address is taken is
+    # worse UX. This leaks account existence; hiding it needs email verification, and
+    # the register rate limit above is what bounds enumeration.
     if db.query(User).filter(User.email == body.email).first():
         raise HTTPException(status_code=409, detail="Email already registered")
     user = User(email=body.email, password_hash=hash_password(body.password))
@@ -139,7 +147,12 @@ def login(
     rate_limit.check(ip_key, _LOGIN_FAILS_PER_IP, _LOGIN_WINDOW)
     rate_limit.check(email_key, _LOGIN_FAILS_PER_EMAIL, _LOGIN_WINDOW)
     user = db.query(User).filter(User.email == body.email).first()
-    if not user or not verify_password(body.password, user.password_hash):
+    # Always run one bcrypt check (against a dummy hash if there is no such user),
+    # so a missing account isn't distinguishable by response time.
+    password_ok = verify_password(
+        body.password, user.password_hash if user else DUMMY_PASSWORD_HASH
+    )
+    if not user or not password_ok:
         rate_limit.record(ip_key, _LOGIN_WINDOW)
         rate_limit.record(email_key, _LOGIN_WINDOW)
         raise HTTPException(status_code=401, detail="Invalid credentials")

@@ -21,6 +21,11 @@ def verify_password(plain: str, hashed: str) -> bool:
     return bcrypt.checkpw(plain.encode(), hashed.encode())
 
 
+# Verified against when a login names an unknown email, so that path costs a bcrypt
+# check like a real one and response time doesn't reveal whether the account exists.
+DUMMY_PASSWORD_HASH = hash_password("not-a-real-password")
+
+
 def create_access_token(subject: str, token_version: int) -> str:
     expire = datetime.now(timezone.utc) + timedelta(
         minutes=settings.access_token_expire_minutes
