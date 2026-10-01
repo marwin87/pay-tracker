@@ -127,6 +127,9 @@ jobs:
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml build
 
       - name: Start stack
+        env:
+          # e2e registers dozens of accounts from one IP in a minute
+          RATE_LIMIT_ENABLED: "false"
         run: docker compose up -d --wait --timeout 120 postgres backend frontend demo-data
 
       - name: Run e2e tests

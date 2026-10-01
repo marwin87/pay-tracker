@@ -16,6 +16,7 @@
         "signIn": "Anmelden",
         "signingIn": "Anmeldung…",
         "loginFailed": "Anmeldung fehlgeschlagen",
+        "tooManyAttempts": "Zu viele Versuche. Bitte warte einige Minuten und versuche es erneut.",
         "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
         "noAccount": "Noch kein Konto?",
         "register": "Konto erstellen",

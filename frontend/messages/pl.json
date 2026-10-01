@@ -16,6 +16,7 @@
         "signIn": "Zaloguj się",
         "signingIn": "Logowanie…",
         "loginFailed": "Logowanie nie powiodło się",
+        "tooManyAttempts": "Zbyt wiele prób. Odczekaj kilka minut i spróbuj ponownie.",
         "sessionExpired": "Twoja sesja wygasła. Zaloguj się ponownie.",
         "noAccount": "Nie masz jeszcze konta?",
         "register": "Załóż konto",

@@ -52,7 +52,9 @@ export default function RegisterPage() {
       setError(
         err instanceof ApiError && err.status === 409
           ? t("emailAlreadyRegistered")
-          : t("registrationFailed"),
+          : err instanceof ApiError && err.status === 429
+            ? t("tooManyAttempts")
+            : t("registrationFailed"),
       );
     } finally {
       setLoading(false);

@@ -16,6 +16,7 @@
         "signIn": "Sign in",
         "signingIn": "Signing in…",
         "loginFailed": "Login failed",
+        "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again.",
         "sessionExpired": "Your session expired. Please sign in again.",
         "noAccount": "Don't have an account yet?",
         "register": "Create account",

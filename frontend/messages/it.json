@@ -16,6 +16,7 @@
         "signIn": "Accedi",
         "signingIn": "Accesso in corso…",
         "loginFailed": "Accesso non riuscito",
+        "tooManyAttempts": "Troppi tentativi. Attendi qualche minuto e riprova.",
         "sessionExpired": "La sessione è scaduta. Accedi di nuovo.",
         "noAccount": "Non hai ancora un account?",
         "register": "Crea un account",

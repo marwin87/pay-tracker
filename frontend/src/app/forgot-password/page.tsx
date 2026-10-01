@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Mail, ArrowRight, Loader2 } from "lucide-react";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, ApiError } from "@/lib/api";
 import { validateEmail } from "@/lib/auth-validation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -34,8 +34,12 @@ export default function ForgotPasswordPage() {
         body: JSON.stringify({ email }),
       });
       setSent(true);
-    } catch {
-      setError(t("forgotPasswordFailed"));
+    } catch (err) {
+      setError(
+        err instanceof ApiError && err.status === 429
+          ? t("tooManyAttempts")
+          : t("forgotPasswordFailed"),
+      );
     } finally {
       setLoading(false);
     }

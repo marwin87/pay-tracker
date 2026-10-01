@@ -44,6 +44,9 @@ class Settings(BaseSettings):
     app_base_url: str = "http://localhost:3010"
     password_reset_token_expire_minutes: int = 60
 
+    # Brute-force / abuse protection on the auth endpoints (see core/rate_limit.py).
+    rate_limit_enabled: bool = True
+
     # Restore safety net — how long a pre-restore snapshot stays recoverable
     restore_snapshot_retention_days: int = 7
 

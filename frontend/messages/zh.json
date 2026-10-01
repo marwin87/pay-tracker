@@ -16,6 +16,7 @@
         "signIn": "登录",
         "signingIn": "正在登录…",
         "loginFailed": "登录失败",
+        "tooManyAttempts": "尝试次数过多，请等待几分钟后重试。",
         "sessionExpired": "您的会话已过期，请重新登录。",
         "noAccount": "还没有账户？",
         "register": "创建账户",

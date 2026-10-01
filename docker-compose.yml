@@ -29,6 +29,8 @@ services:
     env_file: .env
     environment:
       DATABASE_URL: "postgresql://${POSTGRES_USER:-paytracker}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-paytracker}"
+      # Passed through explicitly so a shell variable (e.g. set by the e2e run) beats .env.
+      RATE_LIMIT_ENABLED: ${RATE_LIMIT_ENABLED:-true}
     depends_on:
       postgres:
         condition: service_healthy

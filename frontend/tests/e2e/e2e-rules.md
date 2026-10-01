@@ -9,6 +9,7 @@
 - Each test must be independently runnable — no shared state between tests.
 - Each test creates its own user via `loginNewUser(page)` (API call, not UI login).
 - Use `Date.now()` in test data names to avoid collisions in parallel runs.
+- Auth endpoints are rate limited, so e2e forces `RATE_LIMIT_ENABLED=false` regardless of `.env` (`global-setup.ts` locally, the start step in `ci.yml`). See the comment in `global-setup.ts`.
 
 ## Waiting
 - Never use `page.waitForTimeout()`.

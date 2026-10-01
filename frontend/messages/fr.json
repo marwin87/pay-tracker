@@ -16,6 +16,7 @@
         "signIn": "Se connecter",
         "signingIn": "Connexion en cours…",
         "loginFailed": "Échec de la connexion",
+        "tooManyAttempts": "Trop de tentatives. Patientez quelques minutes puis réessayez.",
         "sessionExpired": "Votre session a expiré. Veuillez vous reconnecter.",
         "noAccount": "Pas encore de compte ?",
         "register": "Créer un compte",

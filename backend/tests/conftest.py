@@ -21,8 +21,17 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import NullPool
 from testcontainers.postgres import PostgresContainer
 
+from app.core import rate_limit
 from app.core.database import Base, get_db
 from app.main import app
+
+
+@pytest.fixture(autouse=True)
+def _fresh_rate_limits():
+    """The limiter is process-global state; every test starts with a clean slate."""
+    rate_limit.reset()
+    yield
+    rate_limit.reset()
 
 
 @pytest.fixture(scope="session")

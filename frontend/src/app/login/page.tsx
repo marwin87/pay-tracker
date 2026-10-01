@@ -6,7 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Mail, LockKeyhole, ArrowRight, Loader2 } from "lucide-react";
-import { apiFetch, type TokenResponse } from "@/lib/api";
+import { apiFetch, ApiError, type TokenResponse } from "@/lib/api";
 import { useAuth } from "@/context/auth-context";
 import { useNotifications } from "@/hooks/useNotifications";
 import { SESSION_EXPIRED_KEY } from "@/lib/auth";
@@ -83,8 +83,12 @@ export default function LoginPage() {
       login();
       void notifyDueToday();
       router.push("/dashboard");
-    } catch {
-      setError(t("loginFailed"));
+    } catch (err) {
+      setError(
+        err instanceof ApiError && err.status === 429
+          ? t("tooManyAttempts")
+          : t("loginFailed"),
+      );
     } finally {
       setLoading(false);
     }

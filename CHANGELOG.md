@@ -13,6 +13,7 @@ Notable changes to Pay Tracker, release by release.
 ### Security
 
 - Changing or resetting your password now signs out your other sessions
+- Repeated failed logins and sign-up or password-reset spam are now blocked for a while
 
 ### Fixes
 

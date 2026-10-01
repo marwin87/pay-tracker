@@ -6,9 +6,10 @@ from typing import Literal
 
 _logger = logging.getLogger(__name__)
 
-from fastapi import APIRouter, Depends, HTTPException, Response, status
+from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy.orm import Session
 
+from app.core import rate_limit
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
@@ -46,6 +47,15 @@ from app.services.reminder_job import (
 )
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+_HOUR = 3600
+_LOGIN_WINDOW = 900  # 15 min
+_LOGIN_FAILS_PER_EMAIL = 10
+_LOGIN_FAILS_PER_IP = 100  # generous: a shared proxy/NAT address can front many users
+_REGISTER_PER_IP_HOUR = 10
+_FORGOT_PER_IP_HOUR = 10
+_FORGOT_PER_EMAIL_HOUR = 3  # stops mail-bombing one victim
+_RESET_PER_IP_WINDOW = 20
 
 
 def _set_auth_cookie(response: Response, token: str) -> None:
@@ -93,7 +103,15 @@ def _clear_auth_cookies(response: Response) -> None:
 @router.post(
     "/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED
 )
-def register(body: RegisterRequest, response: Response, db: Session = Depends(get_db)):
+def register(
+    body: RegisterRequest,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+):
+    rate_limit.hit(
+        f"register:{rate_limit.client_ip(request)}", _REGISTER_PER_IP_HOUR, _HOUR
+    )
     if db.query(User).filter(User.email == body.email).first():
         raise HTTPException(status_code=409, detail="Email already registered")
     user = User(email=body.email, password_hash=hash_password(body.password))
@@ -108,9 +126,22 @@ def register(body: RegisterRequest, response: Response, db: Session = Depends(ge
 
 
 @router.post("/login", response_model=TokenResponse)
-def login(body: LoginRequest, response: Response, db: Session = Depends(get_db)):
+def login(
+    body: LoginRequest,
+    request: Request,
+    response: Response,
+    db: Session = Depends(get_db),
+):
+    # Only failures count, keyed by the submitted email whether or not it exists,
+    # so neither a legitimate user nor account existence is affected/revealed.
+    ip_key = f"login:ip:{rate_limit.client_ip(request)}"
+    email_key = f"login:email:{body.email}"
+    rate_limit.check(ip_key, _LOGIN_FAILS_PER_IP, _LOGIN_WINDOW)
+    rate_limit.check(email_key, _LOGIN_FAILS_PER_EMAIL, _LOGIN_WINDOW)
     user = db.query(User).filter(User.email == body.email).first()
     if not user or not verify_password(body.password, user.password_hash):
+        rate_limit.record(ip_key, _LOGIN_WINDOW)
+        rate_limit.record(email_key, _LOGIN_WINDOW)
         raise HTTPException(status_code=401, detail="Invalid credentials")
     token = create_access_token(str(user.id), user.token_version)
     _set_auth_cookie(response, token)
@@ -300,7 +331,13 @@ _FORGOT_PASSWORD_RESPONSE = MessageResponse(
 
 
 @router.post("/forgot-password", response_model=MessageResponse)
-def forgot_password(body: ForgotPasswordRequest, db: Session = Depends(get_db)):
+def forgot_password(
+    body: ForgotPasswordRequest, request: Request, db: Session = Depends(get_db)
+):
+    rate_limit.hit(
+        f"forgot:ip:{rate_limit.client_ip(request)}", _FORGOT_PER_IP_HOUR, _HOUR
+    )
+    rate_limit.hit(f"forgot:email:{body.email}", _FORGOT_PER_EMAIL_HOUR, _HOUR)
     user = db.query(User).filter(User.email == body.email).first()
     if not user:
         return _FORGOT_PASSWORD_RESPONSE
@@ -353,7 +390,12 @@ def forgot_password(body: ForgotPasswordRequest, db: Session = Depends(get_db)):
 
 
 @router.post("/reset-password", response_model=MessageResponse)
-def reset_password(body: ResetPasswordRequest, db: Session = Depends(get_db)):
+def reset_password(
+    body: ResetPasswordRequest, request: Request, db: Session = Depends(get_db)
+):
+    rate_limit.hit(
+        f"reset:ip:{rate_limit.client_ip(request)}", _RESET_PER_IP_WINDOW, _LOGIN_WINDOW
+    )
     token_hash = hashlib.sha256(body.token.encode()).hexdigest()
     token_row = (
         db.query(PasswordResetToken)

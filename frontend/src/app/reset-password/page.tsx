@@ -7,7 +7,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { LockKeyhole, ArrowRight, Loader2 } from "lucide-react";
-import { apiFetch } from "@/lib/api";
+import { apiFetch, ApiError } from "@/lib/api";
 import { passwordTooLong } from "@/lib/auth-validation";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
@@ -52,8 +52,10 @@ function ResetPasswordForm() {
         body: JSON.stringify({ token, new_password: newPassword }),
       });
       router.push("/login");
-    } catch {
-      setTokenInvalid(true);
+    } catch (err) {
+      // 429 means "slow down", not "this link is bad".
+      if (err instanceof ApiError && err.status === 429) setError(t("tooManyAttempts"));
+      else setTokenInvalid(true);
     } finally {
       setLoading(false);
     }

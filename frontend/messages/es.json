@@ -16,6 +16,7 @@
         "signIn": "Iniciar sesión",
         "signingIn": "Iniciando sesión…",
         "loginFailed": "Error al iniciar sesión",
+        "tooManyAttempts": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
         "sessionExpired": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
         "noAccount": "¿Aún no tienes cuenta?",
         "register": "Crear cuenta",
