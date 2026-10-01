@@ -300,3 +300,29 @@ def test_edit_due_date_rejected_outside_period_month(client_db):
         headers=auth(token),
     )
     assert r.status_code == 400
+
+
+def test_mark_paid_out_of_bounds_returns_422(client_db):
+    client, db = client_db
+    token = register_and_login(client, "mpb@test.com")
+    instance_id = _instance_id(client, token, _create_bill(client, token))
+    for body in (
+        {"paid_amount": "-1"},
+        {"paid_amount": "10000000000"},
+        {"notes": "x" * 2001},
+    ):
+        r = client.post(
+            f"/bills/payments/{instance_id}/pay", json=body, headers=auth(token)
+        )
+        assert r.status_code == 422, body
+
+
+def test_edit_payment_out_of_bounds_returns_422(client_db):
+    client, db = client_db
+    token = register_and_login(client, "epb@test.com")
+    instance_id = _instance_id(client, token, _create_bill(client, token))
+    for body in ({"amount": "10000000000"}, {"amount": "-1"}, {"notes": "x" * 2001}):
+        r = client.patch(
+            f"/bills/payments/{instance_id}", json=body, headers=auth(token)
+        )
+        assert r.status_code == 422, body

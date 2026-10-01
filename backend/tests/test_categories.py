@@ -166,3 +166,16 @@ def test_bill_with_other_users_category_id_returns_403(client):
         headers=auth(tok_b),
     )
     assert r.status_code == 403
+
+
+def test_category_name_length_is_validated(client):
+    tok = register_and_login(client, "catlen@test.com")
+    for name in ("", "x" * 51):
+        r = client.post(
+            "/categories", json={"name": name, "color": "blue"}, headers=auth(tok)
+        )
+        assert r.status_code == 422, name
+    r = client.post(
+        "/categories", json={"name": "x" * 50, "color": "blue"}, headers=auth(tok)
+    )
+    assert r.status_code == 201

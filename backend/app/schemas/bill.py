@@ -1,6 +1,6 @@
 from datetime import date, datetime
 from decimal import Decimal
-from typing import Literal
+from typing import Annotated, Literal
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 from app.models.bill import BillFrequency, PaymentStatus
 from app.schemas.auth import (
@@ -12,6 +12,13 @@ from app.schemas.category import CategoryOut
 
 _PERIOD_RE = r"^\d{4}-(0[1-9]|1[0-2])$"
 
+# Bounds mirror the DB columns (Numeric(12,2), String(255)/String(10)); without
+# them an oversized value passes validation and fails as a 500 at commit.
+Money = Annotated[Decimal, Field(ge=0, le=Decimal("9999999999.99"))]
+BillName = Annotated[str, Field(min_length=1, max_length=255)]
+Currency = Annotated[str, Field(max_length=10)]
+Notes = Annotated[str, Field(max_length=2000)]
+
 
 def check_interval(frequency: BillFrequency, interval: int) -> None:
     """monthly: 1-12 months, annual: 1-5 years, one_off: always 1."""
@@ -21,16 +28,16 @@ def check_interval(frequency: BillFrequency, interval: int) -> None:
 
 
 class BillTemplateCreate(BaseModel):
-    name: str
+    name: BillName
     category_id: int
     frequency: BillFrequency
     interval: int = Field(1, ge=1, le=12)
-    amount: Decimal = Decimal("0")
-    currency: str = "PLN"
+    amount: Money = Decimal("0")
+    currency: Currency = "PLN"
     due_day: int | None = Field(None, ge=1, le=31)
     due_month: int | None = Field(None, ge=1, le=12)  # month for annual/one_off
     end_period: str | None = Field(None, pattern=_PERIOD_RE)  # last recurring month
-    notes: str | None = None
+    notes: Notes | None = None
     is_paused: bool = False
 
     @model_validator(mode="after")
@@ -39,19 +46,33 @@ class BillTemplateCreate(BaseModel):
         return self
 
 
+_REQUIRED_ON_UPDATE = frozenset(
+    {"name", "category_id", "frequency", "amount", "currency", "is_paused"}
+)
+
+
 class BillTemplateUpdate(BaseModel):
-    name: str | None = None
+    name: BillName | None = None
     category_id: int | None = None
     frequency: BillFrequency | None = None
     interval: int | None = Field(None, ge=1, le=12)
-    amount: Decimal | None = None
-    currency: str | None = None
+    amount: Money | None = None
+    currency: Currency | None = None
     due_day: int | None = Field(None, ge=1, le=31)
     due_month: int | None = Field(None, ge=1, le=12)  # month for annual/one_off
     end_period: str | None = Field(None, pattern=_PERIOD_RE)  # null clears the end
-    notes: str | None = None
+    notes: Notes | None = None
     is_paused: bool | None = None
     recreate_deleted_future: bool = False  # transient control flag — not persisted
+
+    @model_validator(mode="after")
+    def _no_null_on_required_fields(self) -> "BillTemplateUpdate":
+        # Omitted = unchanged; an explicit null on a NOT NULL column would
+        # otherwise reach the DB and fail as a 500 (or a misleading 404).
+        for field in _REQUIRED_ON_UPDATE & self.model_fields_set:
+            if getattr(self, field) is None:
+                raise ValueError(f"{field} cannot be null")
+        return self
 
 
 class BillTemplateOut(BaseModel):
@@ -110,8 +131,8 @@ class TrendPointOut(BaseModel):
 
 
 class MarkPaidRequest(BaseModel):
-    paid_amount: Decimal | None = None  # defaults to template amount when None
-    notes: str | None = None
+    paid_amount: Money | None = None  # defaults to template amount when None
+    notes: Notes | None = None
     paid_at: date | None = None  # defaults to now() when None; must not be future
 
 
@@ -123,9 +144,9 @@ class PaymentInstanceUpdate(BaseModel):
     bill's amount).
     """
 
-    amount: Decimal | None = Field(default=None, ge=0)
-    paid_amount: Decimal | None = None
-    notes: str | None = None  # sent as null/"" clears the note
+    amount: Money | None = None
+    paid_amount: Money | None = None
+    notes: Notes | None = None  # sent as null/"" clears the note
     paid_at: date | None = None  # must not be future
     due_date: date | None = (
         None  # unpaid only; must fall within the instance's period month

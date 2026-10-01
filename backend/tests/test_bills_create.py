@@ -206,15 +206,12 @@ def test_create_bill_due_month_13_returns_422(client):
     assert r.status_code == 422
 
 
-def test_create_bill_negative_amount_is_accepted_as_zero_floor(client):
-    """amount has no lower-bound validator — Decimal accepts negatives; document the behavior."""
+def test_create_bill_negative_amount_returns_422(client):
     token = register_and_login(client, "val_neg@test.com")
     r = client.post(
         "/bills", json=_bill(client, token, amount="-50.00"), headers=auth(token)
     )
-    # Current schema has no non-negative constraint; this test documents that.
-    # If a validator is added later, update this to assert 422 instead.
-    assert r.status_code == 201
+    assert r.status_code == 422
 
 
 def test_create_bill_nonexistent_category_id_returns_404(client):
@@ -271,3 +268,74 @@ def test_patch_bill_interval_validated_against_frequency(client):
         f"/bills/{bill_id}", json={"frequency": "one_off"}, headers=auth(token)
     )
     assert r.status_code == 422
+
+
+# ---------------------------------------------------------------------------
+# Input bounds — oversized values are a 422, never a 500 from the DB
+# ---------------------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"name": ""},
+        {"name": "x" * 256},
+        {"currency": "x" * 11},
+        {"notes": "x" * 2001},
+        {"amount": "-1"},
+        {"amount": "10000000000"},
+    ],
+)
+def test_create_bill_out_of_bounds_returns_422(client, overrides):
+    token = register_and_login(client, "bounds@test.com")
+    r = client.post(
+        "/bills", json=_bill(client, token, **overrides), headers=auth(token)
+    )
+    assert r.status_code == 422
+
+
+def test_create_bill_at_the_limits_succeeds(client):
+    token = register_and_login(client, "limits@test.com")
+    body = _bill(
+        client,
+        token,
+        name="x" * 255,
+        currency="x" * 10,
+        notes="x" * 2000,
+        amount="9999999999.99",
+    )
+    assert client.post("/bills", json=body, headers=auth(token)).status_code == 201
+
+
+def test_update_bill_out_of_bounds_returns_422(client):
+    token = register_and_login(client, "bounds2@test.com")
+    bill_id = client.post(
+        "/bills", json=_bill(client, token), headers=auth(token)
+    ).json()["id"]
+    for patch in ({"amount": "-5"}, {"name": ""}, {"notes": "x" * 2001}):
+        r = client.patch(f"/bills/{bill_id}", json=patch, headers=auth(token))
+        assert r.status_code == 422, patch
+
+
+@pytest.mark.parametrize(
+    "field", ["name", "category_id", "frequency", "amount", "currency", "is_paused"]
+)
+def test_update_bill_null_on_required_field_returns_422(client, field):
+    token = register_and_login(client, "nullreq@test.com")
+    bill_id = client.post(
+        "/bills", json=_bill(client, token), headers=auth(token)
+    ).json()["id"]
+    r = client.patch(f"/bills/{bill_id}", json={field: None}, headers=auth(token))
+    assert r.status_code == 422
+
+
+def test_update_bill_null_clears_optional_fields(client):
+    token = register_and_login(client, "nullopt@test.com")
+    bill_id = client.post(
+        "/bills", json=_bill(client, token, notes="hi"), headers=auth(token)
+    ).json()["id"]
+    r = client.patch(
+        f"/bills/{bill_id}", json={"notes": None, "due_day": None}, headers=auth(token)
+    )
+    assert r.status_code == 200
+    assert r.json()["notes"] is None and r.json()["due_day"] is None

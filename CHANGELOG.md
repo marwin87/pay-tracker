@@ -18,6 +18,8 @@ Notable changes to Pay Tracker, release by release.
 
 - Theme choice is now remembered per account
 - Email addresses are no longer case-sensitive when signing up and logging in
+- Passwords that are too long are rejected with a clear message
+- Invalid or oversized values in bills and payments now show an error instead of failing
 - Excel export prints in landscape, fitted to page width, with a footer
 
 ## v1.2.0 — 30-09-2026
