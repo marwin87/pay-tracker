@@ -61,7 +61,7 @@ export default function PaymentsCalendar({
   // Short weekday headers starting Monday (year-agnostic, only the label matters)
   const weekdayHeaders = Array.from({ length: 7 }, (_, i) =>
     new Intl.DateTimeFormat(locale, { weekday: "short" })
-      .format(new Date(2024, 0, 6 + i)) // Jan 6 2024 = Monday
+      .format(new Date(2024, 0, 1 + i)) // Jan 1 2024 = Monday
       .slice(0, 2),
   );
 
