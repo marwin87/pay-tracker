@@ -61,11 +61,86 @@ button:not(:disabled) {
   --color-green-900: #3f2e11;
   --color-green-950: #261b09;
 
-  --color-red-400: #d05a4e;
-  --color-red-500: #b3352b;
-  --color-red-600: #9a2a22;
-  --color-red-700: #7f211b;
-  --color-red-900: #3d100d;
+  /* Semantic tokens: the only status/accent hues. Green = paid, blue = upcoming,
+     red = overdue, bronze = everything neutral. `-text` is a lighter tone for small
+     text on dark (AA contrast); `-bg` is the subtle badge/tile tint. */
+  --color-semantic-red: #a94436;
+  --color-semantic-red-bright: #c75a48;
+  --color-semantic-red-muted: #6f3a34;
+  --color-semantic-red-bg: rgba(169, 68, 54, 0.12);
+  --color-semantic-red-text: #e58a78;
+  --color-semantic-blue: #42649a;
+  --color-semantic-blue-bright: #5b7fbd;
+  --color-semantic-blue-muted: #344d76;
+  --color-semantic-blue-bg: rgba(66, 100, 154, 0.14);
+  --color-semantic-blue-text: #93aedc;
+  --color-semantic-green: #3f7659;
+  --color-semantic-green-bright: #55a477;
+  --color-semantic-green-muted: #315a46;
+  --color-semantic-green-bg: rgba(63, 118, 89, 0.14);
+  --color-semantic-green-text: #82c79f;
+  --color-semantic-neutral: #806846;
+  --color-semantic-neutral-bright: #a58a5d;
+  --color-semantic-neutral-muted: #5d4d37;
+  --color-semantic-neutral-bg: rgba(128, 104, 70, 0.12);
+  --color-semantic-neutral-text: #c8ad7c;
+
+  /* Tailwind's red/emerald/blue/orange/amber follow the tokens (utilities in the
+     components stay untouched). 300/400 = text tone, 500 = bright, 600 = base. */
+  --color-red-50: #f6e4e0;
+  --color-red-100: #ecc9c2;
+  --color-red-200: #dca79c;
+  --color-red-300: #f0a595;
+  --color-red-400: var(--color-semantic-red-text);
+  --color-red-500: var(--color-semantic-red-bright);
+  --color-red-600: var(--color-semantic-red);
+  --color-red-700: #8c392d;
+  --color-red-800: var(--color-semantic-red-muted);
+  --color-red-900: #3d211e;
+
+  --color-blue-50: #e4eaf4;
+  --color-blue-100: #c9d5e9;
+  --color-blue-200: #a8bbdb;
+  --color-blue-300: #a9c0e6;
+  --color-blue-400: var(--color-semantic-blue-text);
+  --color-blue-500: var(--color-semantic-blue-bright);
+  --color-blue-600: var(--color-semantic-blue);
+  --color-blue-700: #384f7a;
+  --color-blue-800: var(--color-semantic-blue-muted);
+  --color-blue-900: #232f47;
+
+  --color-emerald-50: #e3efe8;
+  --color-emerald-100: #c5ddcf;
+  --color-emerald-200: #a2c8b2;
+  --color-emerald-300: #9cd6b4;
+  --color-emerald-400: var(--color-semantic-green-text);
+  --color-emerald-500: var(--color-semantic-green-bright);
+  --color-emerald-600: var(--color-semantic-green);
+  --color-emerald-700: #346149;
+  --color-emerald-800: var(--color-semantic-green-muted);
+  --color-emerald-900: #1f3629;
+
+  /* "Due today" / caution: the neutral bronze family, not another hue. */
+  --color-orange-50: #f1ebe0;
+  --color-orange-100: #e2d6bf;
+  --color-orange-200: #d2bf9d;
+  --color-orange-300: #d6bd8e;
+  --color-orange-400: var(--color-semantic-neutral-text);
+  --color-orange-500: var(--color-semantic-neutral-bright);
+  --color-orange-600: var(--color-semantic-neutral);
+  --color-orange-700: #6b563a;
+  --color-orange-800: var(--color-semantic-neutral-muted);
+  --color-orange-900: #3a3023;
+  --color-amber-50: var(--color-orange-50);
+  --color-amber-100: var(--color-orange-100);
+  --color-amber-200: var(--color-orange-200);
+  --color-amber-300: var(--color-orange-300);
+  --color-amber-400: var(--color-orange-400);
+  --color-amber-500: var(--color-orange-500);
+  --color-amber-600: var(--color-orange-600);
+  --color-amber-700: var(--color-orange-700);
+  --color-amber-800: var(--color-orange-800);
+  --color-amber-900: var(--color-orange-900);
 }
 
 /* Angular, iron-bound panels instead of soft rounded cards. */
@@ -80,8 +155,8 @@ button:not(:disabled) {
 .theme-vesperfall body {
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .8 0 0 0 0 .65 0 0 0 0 .4 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    radial-gradient(ellipse at top, #6e5b3d 0%, transparent 65%),
-    radial-gradient(ellipse at bottom, #5a2f26 0%, transparent 60%);
+    radial-gradient(ellipse at top, #58472f 0%, transparent 65%),
+    radial-gradient(ellipse at bottom, #45261f 0%, transparent 60%);
   background-attachment: fixed;
 }
 
@@ -112,22 +187,39 @@ button:not(:disabled) {
   border-color: #7d6636;
 }
 
-/* Payment row tiles: stronger status tint at the left end of the gradient. */
-.theme-vesperfall .dark\:from-red-500\/10 { --tw-gradient-from: rgb(225 30 25 / 0.15); }
-.theme-vesperfall .dark\:from-emerald-500\/10 { --tw-gradient-from: rgb(40 180 80 / 0.15); }
-.theme-vesperfall .dark\:from-orange-400\/10 { --tw-gradient-from: rgb(255 125 20 / 0.15); }
-.theme-vesperfall .dark\:from-blue-400\/10 { --tw-gradient-from: rgb(30 150 240 / 0.15); }
+/* Payment row tiles: neutral card, only a faint semantic tint at the left end. */
+.theme-vesperfall .dark\:from-red-500\/10 { --tw-gradient-from: color-mix(in srgb, var(--color-semantic-red) 26%, transparent); }
+.theme-vesperfall .dark\:from-emerald-500\/10 { --tw-gradient-from: color-mix(in srgb, var(--color-semantic-green) 26%, transparent); }
+.theme-vesperfall .dark\:from-orange-400\/10 { --tw-gradient-from: color-mix(in srgb, var(--color-semantic-neutral) 24%, transparent); }
+.theme-vesperfall .dark\:from-blue-400\/10 { --tw-gradient-from: color-mix(in srgb, var(--color-semantic-blue) 26%, transparent); }
 
-/* Status tiles/badges (calendar days, tags): stronger tints so they read on brown. */
-.theme-vesperfall .dark\:bg-red-900\/30 { background-color: rgb(179 53 43 / 0.55); }
-.theme-vesperfall .dark\:bg-orange-900\/30 { background-color: rgb(194 100 30 / 0.55); }
-.theme-vesperfall .dark\:bg-blue-900\/30 { background-color: rgb(59 100 180 / 0.55); }
-.theme-vesperfall .dark\:bg-emerald-900\/30 { background-color: rgb(30 130 90 / 0.55); }
-.theme-vesperfall .dark\:bg-amber-900\/30 { background-color: rgb(180 120 20 / 0.55); }
-.theme-vesperfall .dark\:text-red-300,
-.theme-vesperfall .dark\:text-orange-300,
-.theme-vesperfall .dark\:text-blue-300,
-.theme-vesperfall .dark\:text-emerald-300 { color: #fff3dc; }
+/* Status badges / calendar days / icon discs: subtle tint + 1px semantic ring + text-tone
+   label (set by the remapped palette above, so the label never relies on color alone). */
+.theme-vesperfall .dark\:bg-red-900\/30 { background-color: color-mix(in srgb, var(--color-semantic-red) 28%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-semantic-red) 70%, transparent); }
+.theme-vesperfall .dark\:bg-blue-900\/30 { background-color: color-mix(in srgb, var(--color-semantic-blue) 28%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-semantic-blue) 70%, transparent); }
+.theme-vesperfall .dark\:bg-emerald-900\/30 { background-color: color-mix(in srgb, var(--color-semantic-green) 28%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-semantic-green) 70%, transparent); }
+.theme-vesperfall .dark\:bg-orange-900\/30,
+.theme-vesperfall .dark\:bg-amber-900\/30 { background-color: color-mix(in srgb, var(--color-semantic-neutral) 26%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-semantic-neutral) 70%, transparent); }
+.theme-vesperfall .dark\:hover\:bg-red-900\/50:hover { background-color: color-mix(in srgb, var(--color-semantic-red) 24%, transparent); }
+.theme-vesperfall .dark\:hover\:bg-blue-900\/50:hover { background-color: color-mix(in srgb, var(--color-semantic-blue) 26%, transparent); }
+.theme-vesperfall .dark\:hover\:bg-emerald-900\/50:hover { background-color: color-mix(in srgb, var(--color-semantic-green) 26%, transparent); }
+.theme-vesperfall .dark\:hover\:bg-orange-900\/50:hover { background-color: color-mix(in srgb, var(--color-semantic-neutral) 24%, transparent); }
+
+/* The tint rule above replaces Tailwind's ring (also a box-shadow) on calendar days: redraw it. */
+.theme-vesperfall button[data-today] { box-shadow: inset 0 0 0 2px var(--color-slate-300); }
+.theme-vesperfall button[data-selected] { box-shadow: 0 0 0 2px #e3cb85, 0 0 10px rgba(227, 203, 133, 0.45); }
+
+/* Categories carry no color of their own here: left accents and donut/legend use bronze
+   tones only (the DB color still drives the other themes and the settings picker). */
+.theme-vesperfall .bill-row:not([class*="border-l-amber"]) { border-left-color: var(--color-semantic-neutral); }
+.theme-vesperfall .donut-seg:nth-of-type(4n + 1) { stroke: var(--color-semantic-neutral-bright); }
+.theme-vesperfall .donut-seg:nth-of-type(4n + 2) { stroke: var(--color-semantic-neutral-muted); }
+.theme-vesperfall .donut-seg:nth-of-type(4n + 3) { stroke: var(--color-semantic-neutral); }
+.theme-vesperfall .donut-seg:nth-of-type(4n) { stroke: var(--color-semantic-neutral-text); }
+.theme-vesperfall .donut-swatch:nth-child(4n + 1) .donut-dot { background-color: var(--color-semantic-neutral-bright); }
+.theme-vesperfall .donut-swatch:nth-child(4n + 2) .donut-dot { background-color: var(--color-semantic-neutral-muted); }
+.theme-vesperfall .donut-swatch:nth-child(4n + 3) .donut-dot { background-color: var(--color-semantic-neutral); }
+.theme-vesperfall .donut-swatch:nth-child(4n) .donut-dot { background-color: var(--color-semantic-neutral-text); }
 
 /* Form headers (New Bill etc.): a gold band with a bright rule, so the form's edges read. */
 .theme-vesperfall .dark\:bg-green-900\/20 {
@@ -155,8 +247,8 @@ button:not(:disabled) {
   box-shadow: inset 0 1px 0 rgba(255, 240, 190, 0.35), 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 .theme-vesperfall .bg-red-600 {
-  background-image: linear-gradient(180deg, #b3352b, #6e1a15);
-  border-color: #d05a4e;
+  background-image: linear-gradient(180deg, var(--color-semantic-red), var(--color-semantic-red-muted));
+  border-color: var(--color-semantic-red-bright);
   box-shadow: inset 0 1px 0 rgba(255, 200, 190, 0.25), 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
@@ -196,3 +288,14 @@ html.dark:not(.theme-vesperfall) body {
 @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
 .page-in { animation: page-in 150ms ease-out; }
 @media (prefers-reduced-motion: reduce) { .page-in { animation: none; } }
+
+/* Browser autofill/autocomplete paints inputs light; keep them dark in Vesperfall.
+   The long background transition (rather than an inset box-shadow) leaves the focus ring intact. */
+.theme-vesperfall input:-webkit-autofill,
+.theme-vesperfall input:-webkit-autofill:hover,
+.theme-vesperfall input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-slate-100);
+  caret-color: var(--color-slate-100);
+  transition: background-color 600000s 0s, color 600000s 0s;
+}
+.theme-vesperfall { color-scheme: dark; }

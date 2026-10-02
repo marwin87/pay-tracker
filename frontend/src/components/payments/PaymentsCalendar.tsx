@@ -103,6 +103,8 @@ export default function PaymentsCalendar({
               key={d}
               type="button"
               disabled={!hasBills}
+              data-selected={isSelected || undefined}
+              data-today={isToday || undefined}
               onClick={() => onSelectDay(dateStr)}
               className={`relative flex h-8 items-center justify-center rounded-lg text-xs font-medium transition-all ${
                 status

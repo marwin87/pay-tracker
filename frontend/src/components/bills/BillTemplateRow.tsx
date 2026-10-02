@@ -73,7 +73,7 @@ export default function BillTemplateRow({
 
   return (
     <div
-      className={`group rounded-xl border border-slate-200 bg-white shadow-sm dark:bg-slate-800 dark:border-slate-700 border-l-4 ${leftBorder}`}
+      className={`bill-row group rounded-xl border border-slate-200 bg-white shadow-sm dark:bg-slate-800 dark:border-slate-700 border-l-4 ${leftBorder}`}
     >
       {/* Collapsed row */}
       <div

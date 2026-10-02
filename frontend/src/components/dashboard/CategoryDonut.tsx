@@ -50,7 +50,7 @@ export default function CategoryDonut({ rows, currency, monthLabel }: { rows: Ca
                   strokeDashoffset={-starts[i]}
                   transform="rotate(-90 100 100)"
                   opacity={selectedId && selectedId !== r.category.id ? 0.3 : 1}
-                  className={`cursor-pointer transition-opacity ${categoryStrokeClass(r.category.color)}`}
+                  className={`donut-seg cursor-pointer transition-opacity ${categoryStrokeClass(r.category.color)}`}
                   onClick={() => setSelectedId(selectedId === r.category.id ? null : r.category.id)}
                 />
               );
@@ -68,7 +68,7 @@ export default function CategoryDonut({ rows, currency, monthLabel }: { rows: Ca
               const pctPaid = r.total ? (r.paid / r.total) * 100 : 0;
               const active = selectedId === r.category.id;
               return (
-                <li key={r.category.id}>
+                <li key={r.category.id} className="donut-swatch">
                   <button
                     type="button"
                     aria-pressed={active}
@@ -77,7 +77,7 @@ export default function CategoryDonut({ rows, currency, monthLabel }: { rows: Ca
                       active ? "bg-slate-50 dark:bg-slate-700/50" : ""
                     }`}
                   >
-                    <span className={`h-2.5 w-2.5 rounded-sm ${CATEGORY_COLOR_SWATCH[r.category.color as CategoryColor] ?? CATEGORY_COLOR_SWATCH.slate}`} />
+                    <span className={`donut-dot h-2.5 w-2.5 rounded-sm ${CATEGORY_COLOR_SWATCH[r.category.color as CategoryColor] ?? CATEGORY_COLOR_SWATCH.slate}`} />
                     <span className="min-w-0">
                       <span className="block truncate text-sm text-slate-800 dark:text-slate-100">
                         {categoryLabel(r.category, tCat)}
