@@ -11,7 +11,7 @@ const R = 76;
 const CIRC = 2 * Math.PI * R;
 const GAP = 1; // px of space between segments
 
-export default function CategoryDonut({ rows, currency }: { rows: CategoryTotal[]; currency: string }) {
+export default function CategoryDonut({ rows, currency, monthLabel }: { rows: CategoryTotal[]; currency: string; monthLabel: string }) {
   const t = useTranslations("Dashboard.categories");
   const tCat = useTranslations("Categories");
   const locale = useLocale();
@@ -59,7 +59,7 @@ export default function CategoryDonut({ rows, currency }: { rows: CategoryTotal[
               {money(selected ? selected.total : total)}
             </text>
             <text x={100} y={117} textAnchor="middle" className="fill-slate-500 text-[11px] dark:fill-slate-400">
-              {selected ? categoryLabel(selected.category, tCat) : t("thisMonth")}
+              {selected ? categoryLabel(selected.category, tCat) : monthLabel}
             </text>
           </svg>
 

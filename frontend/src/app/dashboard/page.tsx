@@ -14,16 +14,21 @@ import {
 } from "@/lib/payments-api";
 import { fetchMe } from "@/lib/user-api";
 import { currenciesByVolume, pickCurrency, summarize } from "@/lib/summary";
-import MonthSummaryCard from "@/components/dashboard/MonthSummaryCard";
+import MonthSummaryCard, { CARD_CLASS } from "@/components/dashboard/MonthSummaryCard";
 import CategoryDonut from "@/components/dashboard/CategoryDonut";
 import TrendChart from "@/components/dashboard/TrendChart";
+import MonthNav from "@/components/dashboard/MonthNav";
 
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");
   const locale = useLocale();
   const { timeZone } = useAppLocale();
-  const [month] = useState(() => monthIn(timeZone));
+  const currentMonth = monthIn(timeZone);
+  // Same reach as the Payments page year switcher: two years back from this year.
+  const minMonth = `${Number(currentMonth.slice(0, 4)) - 2}-01`;
+  const [month, setMonth] = useState(currentMonth);
   const [data, setData] = useState<{
+    month: string;
     instances: PaymentInstanceOut[];
     trend: TrendPoint[];
     defaultCurrency: string | null;
@@ -34,8 +39,8 @@ export default function DashboardPage() {
   useEffect(() => {
     let cancelled = false;
     // Sync first so this month's payments exist, exactly like the Payments page.
-    syncInstances(month)
-      .catch(() => {})
+    // Past months are history: never generate instances for them.
+    (month >= currentMonth ? syncInstances(month).catch(() => {}) : Promise.resolve())
       .then(() =>
         Promise.all([
           fetchPayments(month),
@@ -44,7 +49,7 @@ export default function DashboardPage() {
         ]),
       )
       .then(([instances, trend, defaultCurrency]) => {
-        if (!cancelled) setData({ instances, trend, defaultCurrency });
+        if (!cancelled) setData({ month, instances, trend, defaultCurrency });
       })
       .catch((err: unknown) => {
         if (err instanceof SessionExpiredError || cancelled) return;
@@ -53,12 +58,14 @@ export default function DashboardPage() {
     return () => {
       cancelled = true;
     };
-  }, [month, t]);
+  }, [month, currentMonth, t]);
 
   const currencies = data ? currenciesByVolume(data.instances, data.trend) : [];
   const currency = data ? pickCurrency(selectedCurrency, currencies, data.defaultCurrency) : null;
   const summary = data && currency ? summarize(data.instances, currency) : null;
-  const [yy, mm] = month.split("-").map(Number);
+  // Label and chart follow the month the data was loaded for, not the one just clicked.
+  const shownMonth = data?.month ?? month;
+  const [yy, mm] = shownMonth.split("-").map(Number);
   const monthLabel = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date(yy, mm - 1));
 
   return (
@@ -80,6 +87,13 @@ export default function DashboardPage() {
           <div className="h-48 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
           <div className="h-64 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
         </div>
+      )}
+      {data && !currency && (
+        // No payments in any currency for this window: keep the month nav so you can go back
+        <section className={CARD_CLASS}>
+          <MonthNav month={month} currentMonth={currentMonth} minMonth={minMonth} monthLabel={monthLabel} onChange={setMonth} />
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{t("summary.emptyMonth")}</p>
+        </section>
       )}
       {data && summary && currency && (
         <div className="mb-8 flex flex-col gap-4">
@@ -107,9 +121,21 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
-          <MonthSummaryCard summary={summary} currency={currency} monthLabel={monthLabel} />
-          <CategoryDonut rows={summary.byCategory} currency={currency} />
-          <TrendChart points={data.trend} currency={currency} month={month} />
+          <MonthSummaryCard
+            summary={summary}
+            currency={currency}
+            title={
+              <MonthNav
+                month={shownMonth}
+                currentMonth={currentMonth}
+                minMonth={minMonth}
+                monthLabel={monthLabel}
+                onChange={setMonth}
+              />
+            }
+          />
+          <CategoryDonut rows={summary.byCategory} currency={currency} monthLabel={monthLabel} />
+          <TrendChart points={data.trend} currency={currency} month={shownMonth} />
         </div>
       )}
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
 import { formatMoney, type MonthSummary } from "@/lib/summary";
@@ -7,13 +8,14 @@ import { formatMoney, type MonthSummary } from "@/lib/summary";
 interface Props {
   summary: MonthSummary;
   currency: string;
-  monthLabel: string;
+  /** The card's title row content (month label, optionally with navigation). */
+  title: ReactNode;
 }
 
 export const CARD_CLASS =
   "rounded-xl border border-slate-200 bg-white p-5 shadow-sm dark:bg-slate-800 dark:border-slate-700";
 
-export default function MonthSummaryCard({ summary, currency, monthLabel }: Props) {
+export default function MonthSummaryCard({ summary, currency, title }: Props) {
   const t = useTranslations("Dashboard.summary");
   const locale = useLocale();
   const { decimalSeparator } = useAppLocale();
@@ -31,9 +33,7 @@ export default function MonthSummaryCard({ summary, currency, monthLabel }: Prop
   return (
     <section className={CARD_CLASS} aria-labelledby="month-summary-title">
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-        <h2 id="month-summary-title" className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-          {monthLabel}
-        </h2>
+        {title}
         <span className="text-xs text-slate-400 dark:text-slate-500">
           {t("counts", { paid: summary.paidCount, total: count })}
         </span>

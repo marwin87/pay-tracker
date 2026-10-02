@@ -73,13 +73,18 @@
             "remaining": "Noch zu zahlen",
             "loadError": "Die Übersicht konnte nicht geladen werden. Bitte erneut versuchen.",
             "loading": "Übersicht wird geladen",
-            "currency": "Zusammenfassung anzeigen in:"
+            "currency": "Zusammenfassung anzeigen in:",
+            "emptyMonth": "Keine Zahlungen in diesem Monat."
+        },
+        "nav": {
+            "prev": "Vorheriger Monat",
+            "next": "Nächster Monat",
+            "today": "Heute"
         },
         "categories": {
             "title": "Nach Kategorie",
             "empty": "Keine Zahlungen in diesem Monat in dieser Währung.",
             "chartLabel": "Ausgaben nach Kategorie",
-            "thisMonth": "diesen Monat",
             "paidOf": "{paid} von {total} bezahlt"
         },
         "trend": {

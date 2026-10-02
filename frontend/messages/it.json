@@ -73,13 +73,18 @@
             "remaining": "Ancora da pagare",
             "loadError": "Impossibile caricare il riepilogo. Riprova.",
             "loading": "Caricamento del riepilogo",
-            "currency": "Mostra riepilogo in:"
+            "currency": "Mostra riepilogo in:",
+            "emptyMonth": "Nessun pagamento questo mese."
+        },
+        "nav": {
+            "prev": "Mese precedente",
+            "next": "Mese successivo",
+            "today": "Oggi"
         },
         "categories": {
             "title": "Per categoria",
             "empty": "Nessun pagamento questo mese in questa valuta.",
             "chartLabel": "Spese per categoria",
-            "thisMonth": "questo mese",
             "paidOf": "pagato {paid} di {total}"
         },
         "trend": {

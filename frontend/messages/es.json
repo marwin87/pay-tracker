@@ -73,13 +73,18 @@
             "remaining": "Falta por pagar",
             "loadError": "No se pudo cargar el resumen. Inténtalo de nuevo.",
             "loading": "Cargando resumen",
-            "currency": "Mostrar resumen en:"
+            "currency": "Mostrar resumen en:",
+            "emptyMonth": "No hay pagos este mes."
+        },
+        "nav": {
+            "prev": "Mes anterior",
+            "next": "Mes siguiente",
+            "today": "Hoy"
         },
         "categories": {
             "title": "Por categoría",
             "empty": "No hay pagos este mes en esta moneda.",
             "chartLabel": "Gasto por categoría",
-            "thisMonth": "este mes",
             "paidOf": "pagado {paid} de {total}"
         },
         "trend": {

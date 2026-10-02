@@ -97,6 +97,13 @@ export function formatMoney(
   }
 }
 
+/** `month` ("YYYY-MM") moved by `delta` months. */
+export function shiftMonth(month: string, delta: number): string {
+  const [y, m] = month.split("-").map(Number);
+  const idx = y * 12 + m - 1 + delta;
+  return `${Math.floor(idx / 12)}-${String((idx % 12) + 1).padStart(2, "0")}`;
+}
+
 /** The 12 "YYYY-MM" periods ending at `month`, oldest first (mirrors the backend). */
 export function trendPeriods(month: string): string[] {
   const [y, m] = month.split("-").map(Number);

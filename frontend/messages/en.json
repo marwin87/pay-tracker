@@ -73,13 +73,18 @@
             "remaining": "Still to pay",
             "loadError": "Couldn't load the summary. Please try again.",
             "loading": "Loading summary",
-            "currency": "Show summary in:"
+            "currency": "Show summary in:",
+            "emptyMonth": "No payments this month."
+        },
+        "nav": {
+            "prev": "Previous month",
+            "next": "Next month",
+            "today": "Today"
         },
         "categories": {
             "title": "By category",
             "empty": "No payments this month in this currency.",
             "chartLabel": "Spending by category",
-            "thisMonth": "this month",
             "paidOf": "paid {paid} of {total}"
         },
         "trend": {

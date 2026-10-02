@@ -73,13 +73,18 @@
             "remaining": "仍需支付",
             "loadError": "无法加载概览，请重试。",
             "loading": "正在加载概览",
-            "currency": "显示摘要币种："
+            "currency": "显示摘要币种：",
+            "emptyMonth": "本月没有付款记录。"
+        },
+        "nav": {
+            "prev": "上个月",
+            "next": "下个月",
+            "today": "今天"
         },
         "categories": {
             "title": "按类别",
             "empty": "本月此币种暂无付款。",
             "chartLabel": "按类别的支出",
-            "thisMonth": "本月",
             "paidOf": "已付 {paid} / {total}"
         },
         "trend": {

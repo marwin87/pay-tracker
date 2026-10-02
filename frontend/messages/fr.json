@@ -73,13 +73,18 @@
             "remaining": "Reste à payer",
             "loadError": "Impossible de charger le résumé. Veuillez réessayer.",
             "loading": "Chargement du résumé",
-            "currency": "Afficher le résumé en :"
+            "currency": "Afficher le résumé en :",
+            "emptyMonth": "Aucun paiement ce mois-ci."
+        },
+        "nav": {
+            "prev": "Mois précédent",
+            "next": "Mois suivant",
+            "today": "Aujourd'hui"
         },
         "categories": {
             "title": "Par catégorie",
             "empty": "Aucun paiement ce mois-ci dans cette devise.",
             "chartLabel": "Dépenses par catégorie",
-            "thisMonth": "ce mois-ci",
             "paidOf": "payé {paid} sur {total}"
         },
         "trend": {

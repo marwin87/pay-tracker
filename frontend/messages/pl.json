@@ -73,13 +73,18 @@
             "remaining": "Do zapłaty jeszcze",
             "loadError": "Nie udało się wczytać podsumowania. Spróbuj ponownie.",
             "loading": "Wczytywanie podsumowania",
-            "currency": "Pokaż podsumowanie w:"
+            "currency": "Pokaż podsumowanie w:",
+            "emptyMonth": "Brak płatności w tym miesiącu."
+        },
+        "nav": {
+            "prev": "Poprzedni miesiąc",
+            "next": "Następny miesiąc",
+            "today": "Dziś"
         },
         "categories": {
             "title": "Wg kategorii",
             "empty": "Brak płatności w tym miesiącu w tej walucie.",
             "chartLabel": "Wydatki wg kategorii",
-            "thisMonth": "w tym miesiącu",
             "paidOf": "zapłacono {paid} z {total}"
         },
         "trend": {
