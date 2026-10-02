@@ -168,6 +168,7 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
           </label>
           <input
             id="bill-name"
+            maxLength={255}
             value={name}
             onChange={(e) => handleNameChange(e.target.value)}
             placeholder={t("namePlaceholder")}
@@ -295,6 +296,7 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
           <label htmlFor="bill-notes" className={labelClass}>{t("notesLabel")}</label>
           <textarea
             id="bill-notes"
+            maxLength={2000}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}

@@ -5,10 +5,14 @@
  * register form flow itself. Subsequent tests authenticate via API.
  */
 import { test, expect } from '@playwright/test';
+import { trackUser } from './helpers';
 
 test('register via UI then see empty dashboard', async ({ page }) => {
   const email = `e2e-reg-${Date.now()}@test.com`;
   const password = 'testpass123'; // pragma: allowlist secret
+
+  // Tracked up front so teardown deletes the account even if an assertion fails.
+  trackUser(email, password);
 
   // Step: navigate to register page
   await page.goto('/register');

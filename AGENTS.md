@@ -52,6 +52,7 @@ pre-commit install --hook-type commit-msg   # conventional-commit lint on commit
 
 Hooks defined in `.pre-commit-config.yaml`:
 - `detect-secrets` — prevents accidental secret commits; baseline in `.secrets.baseline`
+- Test passwords/tokens (any literal near `password`, `secret`, `token`) trip `detect-secrets`: define each once as a module constant with `# pragma: allowlist secret` (see `_PASSWORD` in `backend/tests/test_rate_limit.py`) and reuse it. The pragma must sit on the line holding the literal — formatters move it when they reflow multi-line statements. Check before staging: `git diff --cached --name-only | xargs detect-secrets-hook --baseline .secrets.baseline`.
 - `conventional-pre-commit` — enforces Conventional Commits message format
 
 To update the secrets baseline after an intentional addition: `detect-secrets scan > .secrets.baseline`.

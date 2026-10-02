@@ -59,6 +59,7 @@ _HOUR = 3600
 _LOGIN_WINDOW = 900  # 15 min
 _LOGIN_FAILS_PER_EMAIL = 10
 _LOGIN_FAILS_PER_IP = 100  # generous: a shared proxy/NAT address can front many users
+_PASSWORD_FAILS_PER_USER = 10  # change-password + delete-account share one budget
 _REGISTER_PER_IP_HOUR = 10
 _FORGOT_PER_IP_HOUR = 10
 _FORGOT_PER_EMAIL_HOUR = 3  # stops mail-bombing one victim
@@ -209,6 +210,16 @@ def update_me(
     return user
 
 
+def _check_current_password(user: User, password: str) -> None:
+    # Only failures count, so a stolen session can't brute-force the password
+    # through these re-auth endpoints.
+    key = f"pwd:user:{user.id}"
+    rate_limit.check(key, _PASSWORD_FAILS_PER_USER, _LOGIN_WINDOW)
+    if not verify_password(password, user.password_hash):
+        rate_limit.record(key, _LOGIN_WINDOW)
+        raise HTTPException(status_code=401, detail="Current password is incorrect")
+
+
 @router.delete("/users/me", status_code=status.HTTP_204_NO_CONTENT)
 def delete_me(
     body: DeleteAccountRequest,
@@ -217,8 +228,7 @@ def delete_me(
     db: Session = Depends(get_db),
 ):
     # Irreversible, so a stolen session alone must not be enough.
-    if not verify_password(body.current_password, user.password_hash):
-        raise HTTPException(status_code=401, detail="Current password is incorrect")
+    _check_current_password(user, body.current_password)
     db.delete(user)
     db.commit()
     _clear_auth_cookies(response)
@@ -231,8 +241,7 @@ def change_password(
     user: User = Depends(current_user),
     db: Session = Depends(get_db),
 ):
-    if not verify_password(body.current_password, user.password_hash):
-        raise HTTPException(status_code=401, detail="Current password is incorrect")
+    _check_current_password(user, body.current_password)
     if len(body.new_password) < 8:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,

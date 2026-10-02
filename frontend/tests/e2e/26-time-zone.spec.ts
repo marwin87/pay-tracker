@@ -16,12 +16,12 @@ test.describe('registered from a browser in Tokyo', () => {
     const email = `e2e-tz-${Date.now()}@test.com`;
     const password = 'testpass123'; // pragma: allowlist secret
 
+    trackUser(email, password); // before the UI flow, so a failure can't leak the account
     await page.goto('/register');
     await page.getByLabel('Email').fill(email);
     await page.getByLabel('Password').fill(password);
     await page.getByRole('button', { name: 'Create account' }).click();
     await page.waitForURL('**/dashboard');
-    trackUser(email, password);
 
     const me = await (await page.request.get(`${API}/auth/me`)).json();
     expect(me.timezone).toBe('Asia/Tokyo');

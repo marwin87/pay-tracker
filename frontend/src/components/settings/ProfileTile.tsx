@@ -86,6 +86,7 @@ export function ProfileTile({
         <p className="text-xs text-slate-400 dark:text-slate-500">{tp("profile.emailHint")}</p>
         <input
           type="email"
+          maxLength={254}
           value={emailInput}
           onChange={(e) => setEmailInput(e.target.value)}
           placeholder={tp("profile.emailPlaceholder")}

@@ -188,6 +188,7 @@ export default function MarkPaidDialog({
           </label>
           <textarea
             id="paid-notes"
+            maxLength={2000}
             rows={2}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}

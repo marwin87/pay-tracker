@@ -116,6 +116,7 @@ export default function RegisterPage() {
                 id="email"
                 name="email"
                 type="email"
+                maxLength={254}
                 autoComplete="email"
                 size="lg"
                 icon={Mail}

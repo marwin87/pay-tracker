@@ -8,6 +8,7 @@ from tests.conftest import register_and_login
 
 _PASSWORD = "pw123456"  # pragma: allowlist secret
 _NEW_PASSWORD = "newpass123"  # pragma: allowlist secret
+_WRONG = "wrong-pass"  # pragma: allowlist secret
 
 
 def _login(client, email, password):
@@ -106,3 +107,20 @@ def test_memory_is_pruned_when_many_distinct_keys(monkeypatch):
     clock[0] = 100.0
     rate_limit.record("fresh", 10)
     assert list(rate_limit._hits) == ["fresh"]
+
+
+def test_wrong_current_password_is_limited_across_change_and_delete(client):
+    token = register_and_login(client, "pw@test.com", _PASSWORD)
+    h = {"Authorization": f"Bearer {token}"}
+    bad = {"current_password": _WRONG, "new_password": _NEW_PASSWORD}
+    for _ in range(5):
+        r = client.patch("/auth/change-password", json=bad, headers=h)
+        assert r.status_code == 401
+    for _ in range(5):
+        r = client.request(
+            "DELETE", "/auth/users/me", json={"current_password": _WRONG}, headers=h
+        )
+        assert r.status_code == 401
+    good = {"current_password": _PASSWORD, "new_password": _NEW_PASSWORD}
+    r = client.patch("/auth/change-password", json=good, headers=h)
+    assert r.status_code == 429

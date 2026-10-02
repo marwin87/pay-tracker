@@ -76,6 +76,7 @@ export default function ShareMonthDialog({ month, monthLabel, onClose, onSent }:
           <Input
             id="share-month-email"
             type="email"
+            maxLength={254}
             autoComplete="off"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
