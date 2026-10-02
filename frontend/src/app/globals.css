@@ -175,6 +175,12 @@ button:not(:disabled) {
   text-shadow: 0 0 12px rgba(194, 154, 63, 0.35), 0 1px 0 #000;
 }
 
+/* Logo wordmark: Cinzel like the headings; colors stay as set on the inner spans. */
+.theme-vesperfall .brand-wordmark {
+  font-family: var(--font-cinzel), Georgia, serif;
+  letter-spacing: 0.06em;
+}
+
 /* Panels: leather gradient, gold hairline, inner bevel. Utilities are `dark:`-prefixed
    (the theme keeps the `dark` class), so match those. Elements carrying a
    `border-l-*` category accent are skipped so their color survives. */
@@ -277,9 +283,10 @@ html.dark:not(.theme-vesperfall) body {
 }
 .theme-vesperfall .app-footer {
   font-family: var(--font-cinzel), Georgia, serif;
-  letter-spacing: 0.08em;
-  color: #c29a3f;
-  text-shadow: 0 1px 0 #000;
+  font-size: 0.6875rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: #dcc27a;
   background-color: #241f1a;
   border-top-color: #c29a3f;
 }

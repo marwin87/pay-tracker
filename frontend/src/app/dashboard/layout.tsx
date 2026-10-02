@@ -11,7 +11,6 @@ import { getAuthToken } from "@/lib/auth";
 import { fetchMe } from "@/lib/user-api";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
-import { MENU_ROW_CLASS } from "@/components/menuRow";
 
 // Full class strings so Tailwind can see them; picked per user by hashing the email.
 const AVATAR_PALETTES = [
@@ -39,6 +38,13 @@ const NAV_ITEMS = [
 // Settings lives in the avatar menu on desktop and in the hamburger menu on mobile.
 const SETTINGS_ITEM = { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings, exact: false };
 const MOBILE_NAV_ITEMS = [...NAV_ITEMS, SETTINGS_ITEM];
+
+const sidebarLinkClass = (active: boolean) =>
+  `flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+    active
+      ? "border border-green-200 bg-green-50 text-green-800 shadow-sm dark:border-green-800 dark:bg-green-900/30 dark:text-green-300"
+      : "border border-transparent text-slate-600 hover:border-green-200 hover:bg-green-50 hover:text-green-700 dark:text-slate-400 dark:hover:border-green-800 dark:hover:bg-green-900/20 dark:hover:text-green-300"
+  }`;
 
 export default function DashboardLayout({
   children,
@@ -95,7 +101,7 @@ export default function DashboardLayout({
           className="flex items-center gap-2 px-4 py-4 transition-opacity hover:opacity-80"
         >
           <Image src="/pt-logo.png" alt="Pay Tracker" width={32} height={32} className="rounded-xl" />
-          <span className="text-lg font-bold tracking-tight">
+          <span className="brand-wordmark text-lg font-bold tracking-tight">
             <span className="text-[#10231A] dark:text-slate-100">Pay</span>
             <span className="text-[#079447] dark:text-emerald-500">Tracker</span>
           </span>
@@ -119,11 +125,7 @@ export default function DashboardLayout({
               <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
-                  active
-                    ? "border border-green-200 bg-green-50 text-green-800 shadow-sm dark:border-green-800 dark:bg-green-900/30 dark:text-green-300"
-                    : "border border-transparent text-slate-600 hover:border-green-200 hover:bg-green-50 hover:text-green-700 dark:text-slate-400 dark:hover:border-green-800 dark:hover:bg-green-900/20 dark:hover:text-green-300"
-                }`}
+                className={sidebarLinkClass(active)}
               >
                 <Icon size={16} />
                 {t(labelKey)}
@@ -135,7 +137,7 @@ export default function DashboardLayout({
         <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
 
         <div className="flex flex-col gap-0.5 overflow-y-auto p-3">
-          <Link href={SETTINGS_ITEM.href} className={MENU_ROW_CLASS}>
+          <Link href={SETTINGS_ITEM.href} className={sidebarLinkClass(pathname.startsWith(SETTINGS_ITEM.href))}>
             <Settings size={15} />
             {t(SETTINGS_ITEM.labelKey)}
           </Link>
@@ -174,7 +176,7 @@ export default function DashboardLayout({
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
           >
             <Image src="/pt-logo.png" alt="Pay Tracker" width={32} height={32} className="rounded-xl" />
-            <span className="text-lg font-bold tracking-tight">
+            <span className="brand-wordmark text-lg font-bold tracking-tight">
               <span className="text-[#10231A] dark:text-slate-100">Pay</span>
               <span className="text-[#079447] dark:text-emerald-500">Tracker</span>
             </span>
