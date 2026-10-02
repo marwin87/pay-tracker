@@ -50,10 +50,8 @@ export default function DashboardLayout({
   const router = useRouter();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const menuRef = useRef<HTMLElement>(null);
-  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // `isAuthenticated` is forced false for one render right after hydration
@@ -83,26 +81,87 @@ export default function DashboardLayout({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
-  // Close user dropdown on outside click
-  useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (userMenuRef.current && !userMenuRef.current.contains(e.target as Node)) {
-        setUserMenuOpen(false);
-      }
-    }
-    if (userMenuOpen) document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [userMenuOpen]);
-
   if (!isAuthenticated) return null;
 
   const initials = userEmail ? userEmail[0].toUpperCase() : "?";
   const palette = avatarPalette(userEmail);
 
   return (
-    <div className="flex min-h-screen flex-col">
-      {/* Top nav */}
-      <header ref={menuRef} className="relative sticky top-0 z-10 border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
+    <div className="flex min-h-screen flex-col md:-mb-9">
+      {/* Desktop sidebar */}
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-60 flex-col border-r border-slate-200 dark:border-slate-700 md:flex">
+        <Link
+          href="/dashboard"
+          className="flex items-center gap-2 px-4 py-4 transition-opacity hover:opacity-80"
+        >
+          <Image src="/pt-logo.png" alt="Pay Tracker" width={32} height={32} className="rounded-xl" />
+          <span className="text-lg font-bold tracking-tight">
+            <span className="text-[#10231A] dark:text-slate-100">Pay</span>
+            <span className="text-[#079447] dark:text-emerald-500">Tracker</span>
+          </span>
+        </Link>
+
+        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+
+        {userEmail && (
+          <div className="flex items-center gap-2.5 px-4 py-3">
+            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${palette.grad} text-sm font-bold text-white shadow-md ${palette.shadow}`}>
+              {initials}
+            </div>
+            <span className="truncate text-xs text-slate-500 dark:text-slate-400">{userEmail}</span>
+          </div>
+        )}
+        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+        <nav className="flex flex-col gap-1 p-3">
+          {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
+            const active = pathname === href || (!exact && pathname.startsWith(href + "/"));
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+                  active
+                    ? "border border-green-200 bg-green-50 text-green-800 shadow-sm dark:border-green-800 dark:bg-green-900/30 dark:text-green-300"
+                    : "border border-transparent text-slate-600 hover:border-green-200 hover:bg-green-50 hover:text-green-700 dark:text-slate-400 dark:hover:border-emerald-800 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
+                }`}
+              >
+                <Icon size={16} />
+                {t(labelKey)}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+
+        <div className="flex flex-col gap-0.5 overflow-y-auto p-3">
+          <Link href={SETTINGS_ITEM.href} className={MENU_ROW_CLASS}>
+            <Settings size={15} />
+            {t(SETTINGS_ITEM.labelKey)}
+          </Link>
+          <ThemeToggle />
+          <LanguageToggle />
+          <button
+            data-logout-trigger
+            onClick={logout}
+            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+          >
+            <LogOut size={14} />
+            {t("logOut")}
+          </button>
+        </div>
+
+        <div className="flex-1" />
+
+        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+
+        <div className="app-footer flex h-9 items-center justify-center text-xs text-slate-400 dark:text-slate-500">
+          © {new Date().getFullYear()} Pay Tracker · {process.env.NEXT_PUBLIC_APP_VERSION ?? "dev"}
+        </div>
+      </aside>
+
+      {/* Mobile top bar */}
+      <header ref={menuRef} className="relative sticky top-0 z-10 md:hidden border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
         <div className="mx-auto flex max-w-4xl items-center gap-4 px-4 py-3">
           {/* Brand */}
           <Link
@@ -115,78 +174,6 @@ export default function DashboardLayout({
               <span className="text-[#079447] dark:text-emerald-500">Tracker</span>
             </span>
           </Link>
-
-          {/* Desktop nav links */}
-          <nav className="hidden md:flex flex-1 items-center gap-1 ml-4">
-            {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
-              const active = pathname === href || (!exact && pathname.startsWith(href + "/"));
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
-                    active
-                      ? "border border-green-200 bg-green-50 text-green-800 shadow-sm dark:border-green-800 dark:bg-green-900/30 dark:text-green-300"
-                      : "border border-transparent text-slate-600 hover:border-green-200 hover:bg-green-50 hover:text-green-700 dark:text-slate-400 dark:hover:border-emerald-800 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
-                  }`}
-                >
-                  <Icon size={15} />
-                  {t(labelKey)}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* Desktop right side */}
-          <div className="hidden md:flex items-center gap-1 ml-auto">
-            {/* Avatar + dropdown */}
-            <div className="relative" ref={userMenuRef}>
-              <button
-                onClick={() => setUserMenuOpen((o) => !o)}
-                aria-label={t("userMenu")}
-                className={`flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br ${palette.grad} text-sm font-bold text-white shadow-md ${palette.shadow} transition-all hover:scale-110 dark:border-slate-800 ${
-                  userMenuOpen ? "scale-110 shadow-lg" : ""
-                }`}
-              >
-                {initials}
-              </button>
-
-              {/* Dropdown */}
-              {userMenuOpen && (
-                <div className="absolute right-0 top-full mt-2 z-50 w-64 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-800">
-                  <div className="border-b border-slate-100 px-4 py-3 dark:border-slate-700">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
-                      {t("signedInAs")}
-                    </p>
-                    <p className="mt-0.5 truncate text-sm font-medium text-slate-800 dark:text-slate-100">
-                      {userEmail}
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-0.5 p-2">
-                    <Link
-                      href={SETTINGS_ITEM.href}
-                      onClick={() => setUserMenuOpen(false)}
-                      className={MENU_ROW_CLASS}
-                    >
-                      <Settings size={15} />
-                      {t(SETTINGS_ITEM.labelKey)}
-                    </Link>
-                    <ThemeToggle />
-                    <LanguageToggle />
-                    <div className="my-1 border-t border-slate-100 dark:border-slate-700" />
-                    <button
-                      data-logout-trigger
-                      onClick={() => { setUserMenuOpen(false); logout(); }}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
-                    >
-                      <LogOut size={14} />
-                      {t("logOut")}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
 
           {/* Mobile: utility icons + hamburger */}
           <div className="flex md:hidden items-center gap-1 ml-auto">
@@ -252,7 +239,7 @@ export default function DashboardLayout({
       </header>
 
       {/* Page content */}
-      <main className="flex-1">{children}</main>
+      <main key={pathname} className="page-in flex-1 md:ml-60">{children}</main>
     </div>
   );
 }

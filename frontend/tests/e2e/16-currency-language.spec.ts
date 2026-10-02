@@ -34,8 +34,7 @@ test('switching language to Polski applies immediately and persists after reload
   await page.goto('/dashboard/payments');
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
 
-  // Step: switch via the language row in the avatar menu
-  await page.getByRole('button', { name: 'User menu' }).click();
+  // Step: switch via the language row in the sidebar
   await page.getByRole('button', { name: 'Switch language' }).click();
   await page.getByRole('option', { name: /Polski/ }).click();
 
@@ -50,7 +49,6 @@ test('switching language to Polski applies immediately and persists after reload
   await expect(page.locator('html')).toHaveAttribute('lang', 'pl');
 
   // Step: switch back to English
-  await page.getByRole('button', { name: /User menu|Menu użytkownika/ }).click();
   await page.getByRole('button', { name: /Switch language|Zmień język/ }).click();
   await page.getByRole('option', { name: /English/ }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');

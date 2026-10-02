@@ -45,7 +45,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Restore safety net** — before confirming a restore, see a comparison of your current data vs. the backup file (bill/payment counts, backup export date), with a warning if the backup would reduce your data. The server also auto-snapshots your current data immediately before any restore executes, so a mistaken restore can be undone from Settings — even if you proceeded past the warning or called the API directly.
 - **Password reset** — optional. When SMTP is configured, a "Forgot password?" link appears on the login page. Users receive a secure one-time reset link by email (expires after 60 minutes by default).
 - **Multilingual** — English, Polish, German, Spanish, Italian, French, Chinese. Language and the set of enabled languages are saved per account. The Excel export, emails and Telegram messages follow it.
-- **Themes** — light, dark and Vesperfall (a warm gold-and-leather dark theme). Switch from the avatar menu.
+- **Themes** — light, dark and Vesperfall (a warm gold-and-leather dark theme). Switch from the sidebar (or the menu on mobile).
 - **Installable as PWA** — works offline-first on mobile and desktop.
 
 
@@ -114,7 +114,7 @@ Go to **Payments**. Use the month selector to browse any period. Click **Mark as
 
 ### 6. Set up email reminders (optional)
 
-Add SMTP credentials to `.env` (see the `# Reminders` section in `.env.example`), then restart (mail is delivered through [Apprise](https://github.com/caronc/apprise), which will also carry other channels later). Open the avatar menu (top right) → **Settings → Email Notifications** to configure when reminders are sent and which timing windows to use (2 days before, 1 day before, on the day, 1 day after).
+Add SMTP credentials to `.env` (see the `# Reminders` section in `.env.example`), then restart (mail is delivered through [Apprise](https://github.com/caronc/apprise), which will also carry other channels later). Open **Settings** in the sidebar (or the menu on mobile) → **Email Notifications** to configure when reminders are sent and which timing windows to use (2 days before, 1 day before, on the day, 1 day after).
 
 Send times and "today" follow your own time zone: it is taken from your browser when you sign up and can be changed under **Settings → Preferences → Time zone**. The Notifications tab shows the current time in that zone.
 

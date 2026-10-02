@@ -268,7 +268,7 @@ export function ChannelScheduleSection({
           </div>
         )}
 
-        <div className="flex flex-col gap-2 pt-1 border-t border-slate-100 dark:border-slate-700">
+        <div className="flex flex-col gap-2 mt-3 pt-2 border-t border-slate-100 dark:border-slate-700">
           <div className="pt-1">
             <Switch
               checked={monthlySummary}

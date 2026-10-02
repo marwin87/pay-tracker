@@ -41,9 +41,8 @@ test('dashboard summarises each currency separately and is reachable from the lo
   await expect(page.getByRole('region', { name: 'By category' })).toContainText('Utilities');
   await expect(page.getByRole('region', { name: 'Last 12 months' })).toBeVisible();
 
-  // Step: Settings is not in the top bar any more; it is reachable from the avatar menu
+  // Step: Settings is not among the nav links; it sits in the sidebar's lower block
   await expect(page.getByRole('navigation').getByRole('link', { name: 'Settings' })).toHaveCount(0);
-  await page.getByRole('button', { name: 'User menu' }).click();
   await page.getByRole('link', { name: 'Settings' }).click();
   await expect(page).toHaveURL(/\/dashboard\/settings/);
 });

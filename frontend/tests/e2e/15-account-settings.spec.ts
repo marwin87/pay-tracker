@@ -14,7 +14,7 @@ test('changing email updates the account; wrong current password is rejected', a
   const newEmail = `e2e-changed-${Date.now()}@test.com`;
 
   await page.goto('/dashboard/settings');
-  await expect(page.getByText(email)).toBeVisible();
+  await expect(page.getByRole('main').getByText(email)).toBeVisible();
 
   // Step: wrong current password
   await page.getByPlaceholder('new@email.com').fill(newEmail);
@@ -23,7 +23,7 @@ test('changing email updates the account; wrong current password is rejected', a
 
   // Assert: rejected, email unchanged
   await expect(page.getByText('Current password is incorrect.')).toBeVisible();
-  await expect(page.getByText(email)).toBeVisible();
+  await expect(page.getByRole('main').getByText(email)).toBeVisible();
 
   // Step: correct current password
   await page.getByPlaceholder('Enter current password').first().fill('testpass123'); // pragma: allowlist secret
@@ -33,9 +33,9 @@ test('changing email updates the account; wrong current password is rejected', a
   updateTrackedUser(email, { email: newEmail });
 
   // Assert: profile now shows the new email, and it persists across reload
-  await expect(page.getByText(newEmail)).toBeVisible();
+  await expect(page.getByRole('main').getByText(newEmail)).toBeVisible();
   await page.reload();
-  await expect(page.getByText(newEmail)).toBeVisible();
+  await expect(page.getByRole('main').getByText(newEmail)).toBeVisible();
 });
 
 test('changing password: new one logs in, old one no longer does', async ({ page }) => {

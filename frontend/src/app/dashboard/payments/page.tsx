@@ -353,7 +353,7 @@ function PaymentsPageInner() {
   ];
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-6xl px-4 md:px-8 py-8">
       {dialogTarget && (
         <MarkPaidDialog
           instance={dialogTarget}

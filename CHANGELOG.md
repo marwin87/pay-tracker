@@ -11,6 +11,8 @@ Notable changes to Pay Tracker, release by release.
 - Export payments to PDF for the month or the whole year (can be turned off in Settings)
 - New theme: Vesperfall
 - Time zone setting: reminders and “today” now follow your own time zone
+- Vertical sidebar menu on desktop, with wider content on the dashboard and other pages
+- Smoother page changes, without the loading flicker
 
 ### Security
 
@@ -23,6 +25,7 @@ Notable changes to Pay Tracker, release by release.
 - Theme choice is now remembered per account
 - Email addresses are no longer case-sensitive when signing up and logging in
 - Passwords that are too long are rejected with a clear message
+- The current time in Notification settings now follows your language
 - Invalid or oversized values in bills and payments now show an error instead of failing
 - A payment already marked as paid, or one that was deleted, can no longer be paid again from a stale page
 - Restoring deleted payments keeps already paid ones paid

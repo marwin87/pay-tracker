@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { fetchServerTime } from "@/lib/user-api";
 
 /** Shared note for all server-sent notifications (email, Telegram, summary). */
 export function ServerTimeNote({ timeZone }: { timeZone: string }) {
   const tp = useTranslations("SettingsPage");
+  const locale = useLocale();
   const [now, setNow] = useState<string | null>(null);
 
   useEffect(() => {
@@ -14,7 +15,7 @@ export function ServerTimeNote({ timeZone }: { timeZone: string }) {
     // zone (not the clock) is what needs fixing.
     fetchServerTime()
       .then(({ server_time }) => {
-        const formatted = new Intl.DateTimeFormat("en-GB", {
+        const formatted = new Intl.DateTimeFormat(locale, {
           year: "numeric",
           month: "short",
           day: "numeric",
@@ -25,7 +26,7 @@ export function ServerTimeNote({ timeZone }: { timeZone: string }) {
         setNow(formatted);
       })
       .catch(() => {});
-  }, [timeZone]);
+  }, [timeZone, locale]);
 
   if (!now) return null;
   return (

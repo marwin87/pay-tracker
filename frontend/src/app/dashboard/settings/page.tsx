@@ -209,7 +209,7 @@ export default function SettingsPage() {
 
   if (!profile) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
+      <div className="mx-auto max-w-6xl px-4 md:px-8 py-8 space-y-4">
         {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="h-32 rounded-xl bg-slate-100 dark:bg-slate-700 animate-pulse" />
         ))}
@@ -218,7 +218,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 space-y-4">
+    <div className="mx-auto max-w-6xl px-4 md:px-8 py-8 space-y-4">
       <div>
         <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
           {t("pageTitle")}

@@ -69,7 +69,7 @@ export default function DashboardPage() {
   const monthLabel = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date(yy, mm - 1));
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-10">
+    <div className="mx-auto max-w-6xl px-4 md:px-8 py-10">
       <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
         {t("title")}
       </h1>
@@ -85,7 +85,10 @@ export default function DashboardPage() {
       {!data && !error && (
         <div className="mb-8 flex flex-col gap-4" aria-busy="true" aria-label={t("summary.loading")}>
           <div className="h-48 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
-          <div className="h-64 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
+          <div className="grid gap-4 xl:grid-cols-2">
+            <div className="h-64 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
+            <div className="h-64 animate-pulse rounded-xl bg-slate-100 dark:bg-slate-800" />
+          </div>
         </div>
       )}
       {data && !currency && (
@@ -134,8 +137,10 @@ export default function DashboardPage() {
               />
             }
           />
-          <CategoryDonut rows={summary.byCategory} currency={currency} monthLabel={monthLabel} />
-          <TrendChart points={data.trend} currency={currency} month={shownMonth} />
+          <div className="grid gap-4 xl:grid-cols-2">
+            <CategoryDonut rows={summary.byCategory} currency={currency} monthLabel={monthLabel} />
+            <TrendChart points={data.trend} currency={currency} month={shownMonth} />
+          </div>
         </div>
       )}
     </div>

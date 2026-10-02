@@ -173,23 +173,8 @@ export default function BillsPage() {
     });
   }
 
-  if (loading) {
-    return (
-      <div className="mx-auto max-w-4xl px-4 py-8">
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div
-              key={i}
-              className="h-16 rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse"
-            />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="mx-auto max-w-6xl px-4 md:px-8 py-8">
       {archiveTarget && (
         <ArchiveConfirmDialog
           billName={archiveTarget.name}
@@ -296,7 +281,13 @@ export default function BillsPage() {
       )}
 
       {/* Template list */}
-      {templates.length === 0 && expandedId !== "new" ? (
+      {loading ? (
+        <div className="space-y-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-16 rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
+          ))}
+        </div>
+      ) : templates.length === 0 && expandedId !== "new" ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 px-6 py-16 text-center">
           <div className="mb-3 rounded-full bg-green-100 dark:bg-green-900/30 p-4 text-green-700">
             <Plus size={28} />

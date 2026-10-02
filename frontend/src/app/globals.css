@@ -191,3 +191,8 @@ html.dark:not(.theme-vesperfall) body {
   background-color: #241f1a;
   border-top-color: #c29a3f;
 }
+
+/* Soft fade when switching dashboard pages (keyed by pathname on <main>). */
+@keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
+.page-in { animation: page-in 150ms ease-out; }
+@media (prefers-reduced-motion: reduce) { .page-in { animation: none; } }
