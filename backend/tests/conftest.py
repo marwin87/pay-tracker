@@ -6,6 +6,10 @@ from datetime import date, datetime, timezone
 # Settings() runs at import time and warns on the weak default secret when ../.env isn't
 # found (cwd-relative, e.g. PyCharm running from the repo root).
 os.environ.setdefault("JWT_SECRET", "x" * 32)  # pragma: allowlist secret
+# New users get DEFAULT_TIMEZONE. Pin it (assigned, not setdefault: an env var beats ../.env)
+# so the suite never depends on the developer's own .env, e.g. Europe/Warsaw, whose "today"
+# differs from UTC's for hours around midnight.
+os.environ["DEFAULT_TIMEZONE"] = "UTC"
 
 # Import models before app to (a) register them in Base.metadata for create_all
 # and (b) avoid shadowing the `app` FastAPI instance with the `app` package name.
