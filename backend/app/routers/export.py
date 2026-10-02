@@ -1,244 +1,36 @@
-import io
 import json
-from datetime import date, datetime, timedelta, timezone
-from decimal import Decimal
-
-import pandas as pd
-from fpdf import FPDF
-from pathlib import Path
-from typing import Literal
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from fastapi.responses import Response, StreamingResponse
-from openpyxl.styles import Border, Font, PatternFill, Side
-from openpyxl.utils import get_column_letter
-from openpyxl.worksheet.properties import PageSetupProperties
 from pydantic import ValidationError
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session
 
-from app.core.config import settings
 from app.core.database import get_db
 from app.core.deps import current_user
-from app.core.i18n import resolve_locale, t
-from app.core.tz import is_valid_tz, today_for, user_tz
-from app.schemas.auth import EXPORT_FIELD_KEYS
-from app.models.bill import (
-    BillFrequency,
-    BillTemplate,
-    PaymentInstance,
-    PaymentStatus,
-)
-from app.models.category import Category
+from app.core.i18n import resolve_locale
+from app.core.tz import today_for
+from app.models.bill import BillTemplate, PaymentInstance
 from app.models.restore_snapshot import RestoreSnapshot
 from app.models.user import User
 from app.schemas.bill import (
-    BackupChannelSchedule,
     BackupPayload,
     ExportSummaryOut,
     RestoreResultOut,
     RestoreSnapshotOut,
 )
-from app.services.categories import seed_default_categories
-from app.services.notify import decrypt_secret, encrypt_secret, footer_text
-from app.services.reminder_job import EMAIL, TELEGRAM, Channel
-from app.services.recurrence import backfill_template_instances
+from app.services.backup import (
+    ALL_SECTIONS,
+    Section,
+    _active_snapshot,
+    _apply_backup,
+    _build_backup_arrays,
+)
+from app.services.export_pdf import build_pdf
+from app.services.export_xlsx import build_xlsx
+from app.services.notify import decrypt_secret, encrypt_secret
 
 router = APIRouter(prefix="/export", tags=["export"])
-
-Section = Literal[
-    "bills",
-    "categories",
-    "email",
-    "telegram",
-    "languages",
-    "currency",
-    "export",
-    "pdf",
-    "share",
-]
-ALL_SECTIONS: tuple[Section, ...] = (
-    "bills",
-    "categories",
-    "email",
-    "telegram",
-    "languages",
-    "currency",
-    "export",
-    "pdf",
-    "share",
-)
-
-
-def _legacy_category_id(
-    db: Session,
-    user_id: int,
-    slug: str | None,
-    fallback_id: int,
-    name: str | None = None,
-) -> int:
-    """Backups without a `categories` section carry either the old free-text
-    category string (v2/v3, now used as `slug`) or `category_name`. Map to one
-    of the user's current categories by name, then slug, falling back to their
-    'other' category (or any category at all) if it was renamed/archived away."""
-    if name:
-        match = (
-            db.query(Category.id)
-            .filter(Category.user_id == user_id, Category.name == name)
-            .first()
-        )
-        if match:
-            return match[0]
-    if slug:
-        match = (
-            db.query(Category.id)
-            .filter(Category.user_id == user_id, Category.slug == slug)
-            .first()
-        )
-        if match:
-            return match[0]
-    return fallback_id
-
-
-def _fallback_category_id(db: Session, user_id: int) -> int:
-    other = (
-        db.query(Category.id)
-        .filter(Category.user_id == user_id, Category.slug == "other")
-        .first()
-    )
-    if other:
-        return other[0]
-    any_category = db.query(Category.id).filter(Category.user_id == user_id).first()
-    if any_category:
-        return any_category[0]
-    seeded = seed_default_categories(db, user_id)
-    return next(c.id for c in seeded if c.slug == "other")
-
-
-_COLUMNS = [
-    "Bill",
-    "Category",
-    "Period",
-    "Due Date",
-    "Amount",
-    "Currency",
-    "Status",
-    "Paid Amount",
-    "Paid At",
-    "Notes",
-]
-
-# Index-aligned with _COLUMNS: EXPORT_FIELD_KEYS[i] is the stable identifier for
-# _COLUMNS[i], stored on User.export_fields (snake_case, locale-independent).
-_COLUMN_KEYS = list(EXPORT_FIELD_KEYS)
-
-# Mirrors the status colors used in the frontend (PaymentsCalendar.tsx STATUS_TILE).
-_STATUS_STYLES: dict[str, tuple[str, str]] = {
-    "upcoming": ("DBEAFE", "1D4ED8"),  # blue-100 / blue-700
-    "overdue": ("FEE2E2", "B91C1C"),  # red-100 / red-700
-    "paid": ("DCFCE7", "15803D"),  # green-100 / green-700
-}
-_HEADER_FILL = PatternFill("solid", fgColor="F3F4F6")  # gray-100
-_HEADER_FONT = Font(bold=True)
-_MAX_COL_WIDTH = 40
-
-# Amount/Paid Amount are written as Text cells (not Number) using the user's chosen
-# decimal_separator, so the value renders identically regardless of the opening
-# machine's regional Excel locale. A "[$-LCID]0.00" Number format was tried instead
-# (to avoid Excel's "stored as text" warning) but the locale tag does NOT actually
-# control which glyph a plain numeric placeholder renders with — that's driven by
-# the opening machine's own regional settings regardless of any locale tag — so a
-# Polish-locale Excel showed a comma no matter which format was applied. Confirmed
-# working as Text; do not switch back without verifying in a real, non-US-locale
-# Excel first.
-_AMOUNT_TEXT_FORMAT = "@"
-
-# Mirrors CATEGORY_COLOR_BORDER's light-mode shades in frontend/src/lib/categories.ts —
-# a left-border accent instead of a full cell fill, so many categories don't turn
-# the sheet into a rainbow. Falls back to slate, same as the frontend's FALLBACK_COLOR.
-_CATEGORY_BORDER_HEX: dict[str, str] = {
-    "blue": "60A5FA",
-    "purple": "C084FC",
-    "rose": "FB7185",
-    "orange": "FB923C",
-    "slate": "94A3B8",
-    "violet": "A78BFA",
-    "cyan": "06B6D4",
-    "emerald": "34D399",
-    "slate-light": "CBD5E1",
-    "yellow": "FACC15",
-    "lime": "A3E635",
-    "pink": "F472B6",
-    "blue-dark": "1D4ED8",
-    "emerald-dark": "047857",
-    "rose-dark": "BE123C",
-    "orange-dark": "9A3412",
-}
-_CATEGORY_BORDER_FALLBACK = _CATEGORY_BORDER_HEX["slate"]
-
-
-def _ensure_year_instances(db: Session, user_id: int, year: int) -> None:
-    """Backfill missing payment instances for every eligible template across
-    the full year, so export isn't limited to months the user has already
-    visited in the UI (list_payments/sync-instances only seed on demand)."""
-    templates = (
-        db.query(BillTemplate)
-        .filter(
-            BillTemplate.user_id == user_id,
-            BillTemplate.is_archived.is_(False),
-            BillTemplate.is_paused.is_(False),
-            BillTemplate.frequency != BillFrequency.one_off,
-        )
-        .all()
-    )
-    for template in templates:
-        backfill_template_instances(db, template, f"{year}-01", f"{year}-12")
-
-
-def _rows_by_month(
-    db: Session, me: User, lang: str, year: int
-) -> dict[int, list[dict]]:
-    _ensure_year_instances(db, me.id, year)
-    tz = user_tz(me)
-
-    instances = (
-        db.query(PaymentInstance)
-        .options(selectinload(PaymentInstance.template))
-        .join(BillTemplate, PaymentInstance.bill_id == BillTemplate.id)
-        .filter(
-            BillTemplate.user_id == me.id,
-            PaymentInstance.period.startswith(f"{year}-"),
-            PaymentInstance.is_deleted.is_(False),
-        )
-        .order_by(PaymentInstance.due_date)
-        .all()
-    )
-
-    # Index instances by month number (1–12)
-    by_month: dict[int, list[dict]] = {m: [] for m in range(1, 13)}
-    for i in instances:
-        by_month[int(i.period[5:7])].append(
-            {
-                "Bill": i.template.name,
-                "Category": i.template.category.name,
-                "Period": i.period,
-                "Due Date": i.due_date.isoformat(),
-                "Amount": f"{i.current_amount:.2f}".replace(".", me.decimal_separator),
-                "Currency": i.template.currency,
-                "Status": t(lang, f"PaymentRow.status.{i.status}"),
-                "Paid Amount": (
-                    f"{i.paid_amount:.2f}".replace(".", me.decimal_separator)
-                    if i.paid_amount
-                    else None
-                ),
-                "Paid At": (
-                    i.paid_at.astimezone(tz).date().isoformat() if i.paid_at else None
-                ),
-                "Notes": i.notes,
-                "_status_key": i.status,
-                "_category_color": i.template.category.color,
-            }
-        )
-    return by_month
 
 
 @router.get("/xlsx")
@@ -253,93 +45,8 @@ def export_xlsx(
         raise HTTPException(status_code=403, detail="Excel export is disabled")
     today = today_for(me)
     year = year or today.year
-
     lang = resolve_locale(lang)
-
-    selected_keys = set(me.export_fields)
-    selected_columns = [
-        col for key, col in zip(_COLUMN_KEYS, _COLUMNS) if key in selected_keys
-    ]
-
-    by_month = _rows_by_month(db, me, lang, year)
-
-    headers = [
-        t(lang, f"SettingsPage.excelExport.fields.{key}")
-        for key in _COLUMN_KEYS
-        if key in selected_keys
-    ]
-    status_col_idx = (
-        selected_columns.index("Status") + 1 if "Status" in selected_columns else None
-    )
-    category_col_idx = (
-        selected_columns.index("Category") + 1
-        if "Category" in selected_columns
-        else None
-    )
-    amount_col_idxs = {
-        selected_columns.index(c) + 1
-        for c in ("Amount", "Paid Amount")
-        if c in selected_columns
-    }
-
-    buf = io.BytesIO()
-    with pd.ExcelWriter(buf, engine="openpyxl") as writer:
-        for m in [month] if month else range(1, 13):
-            sheet_name = f"{t(lang, f"ExcelExport.monthShort.{m}")} {year}"
-            rows = by_month[m]
-            df = (
-                pd.DataFrame(rows, columns=selected_columns)
-                if rows
-                else pd.DataFrame(columns=selected_columns)
-            )
-            df.columns = headers
-            df.to_excel(writer, index=False, sheet_name=sheet_name)
-
-            ws = writer.sheets[sheet_name]
-            ws.page_setup.orientation = "landscape"
-            ws.sheet_properties.pageSetUpPr = PageSetupProperties(fitToPage=True)
-            ws.page_setup.fitToWidth = 1
-            ws.page_setup.fitToHeight = 0  # as many pages tall as needed
-            ws.oddFooter.left.text = f"{footer_text()} · {today.isoformat()}"
-            ws.oddFooter.right.text = "&P / &N"
-            for col_idx, header in enumerate(headers, start=1):
-                cell = ws.cell(row=1, column=col_idx)
-                cell.font = _HEADER_FONT
-                cell.fill = _HEADER_FILL
-                max_len = len(header)
-                for row_idx in range(2, len(rows) + 2):
-                    value = ws.cell(row=row_idx, column=col_idx).value
-                    if value is not None:
-                        max_len = max(max_len, len(str(value)))
-                ws.column_dimensions[get_column_letter(col_idx)].width = min(
-                    max_len + 2, _MAX_COL_WIDTH
-                )
-
-            for row_idx, row in enumerate(rows, start=2):
-                if status_col_idx is not None:
-                    fill_color, font_color = _STATUS_STYLES.get(
-                        row["_status_key"], (None, None)
-                    )
-                    if fill_color:
-                        cell = ws.cell(row=row_idx, column=status_col_idx)
-                        cell.fill = PatternFill("solid", fgColor=fill_color)
-                        cell.font = Font(color=font_color)
-
-                if category_col_idx is not None:
-                    border_color = _CATEGORY_BORDER_HEX.get(
-                        row["_category_color"], _CATEGORY_BORDER_FALLBACK
-                    )
-                    cell = ws.cell(row=row_idx, column=category_col_idx)
-                    cell.border = Border(left=Side(style="thick", color=border_color))
-
-                for amount_col_idx in amount_col_idxs:
-                    ws.cell(row=row_idx, column=amount_col_idx).number_format = (
-                        _AMOUNT_TEXT_FORMAT
-                    )
-
-        active_month = today.month if year == today.year else 1
-        writer.book.active = 0 if month else active_month - 1
-    buf.seek(0)
+    buf = build_xlsx(db, me, today, year, month, lang)
 
     suffix = f"{year}-{month:02d}" if month else str(year)
     filename = f"pay-tracker-{lang}-{suffix}.xlsx"
@@ -348,27 +55,6 @@ def export_xlsx(
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
-
-
-_PDF_FONTS = Path(__file__).resolve().parent.parent / "assets" / "fonts"
-_PDF_HEADER_FILL = (243, 244, 246)
-
-
-def _rgb(hex_color: str) -> tuple[int, int, int]:
-    return tuple(int(hex_color[i : i + 2], 16) for i in (0, 2, 4))  # type: ignore[return-value]
-
-
-class _ReportPDF(FPDF):
-    footer_date: date  # the report's "today" (the user's), set by the caller
-
-    def footer(self) -> None:
-        self.set_y(-10)
-        self.set_font("DejaVu", "", 7)
-        self.set_text_color(120, 120, 120)
-        self.cell(0, 5, f"{footer_text()} · {self.footer_date.isoformat()}", align="L")
-        self.set_x(self.l_margin)
-        self.cell(0, 5, f"{self.page_no()} / {{nb}}", align="R")
-        self.set_text_color(0, 0, 0)
 
 
 @router.get("/pdf")
@@ -383,243 +69,16 @@ def export_pdf(
         raise HTTPException(status_code=403, detail="PDF export is disabled")
     today = today_for(me)
     year = year or today.year
-
     lang = resolve_locale(lang)
-    selected_keys = set(me.pdf_fields)
-    keys = [k for k in _COLUMN_KEYS if k in selected_keys]
-    columns = [c for k, c in zip(_COLUMN_KEYS, _COLUMNS) if k in selected_keys]
-    headers = [t(lang, f"SettingsPage.excelExport.fields.{k}") for k in keys]
-    by_month = _rows_by_month(db, me, lang, year)
-
-    pdf = _ReportPDF(orientation="L", format="A4")
-    pdf.footer_date = today
-    pdf.alias_nb_pages()
-    pdf.add_font("DejaVu", "", str(_PDF_FONTS / "DejaVuSans.ttf"))
-    pdf.add_font("DejaVu", "B", str(_PDF_FONTS / "DejaVuSans-Bold.ttf"))
-    # DejaVu has no CJK glyphs; NotoSC (GB2312 subset) covers zh text.
-    pdf.add_font("NotoSC", "", str(_PDF_FONTS / "NotoSansSC-Regular.ttf"))
-    pdf.add_font("NotoSC", "B", str(_PDF_FONTS / "NotoSansSC-Bold.ttf"))
-    pdf.set_fallback_fonts(["NotoSC"])
-    pdf.set_auto_page_break(auto=True, margin=12)
-    right_aligned = {"amount", "paid_amount"}
-    pad = 4  # total horizontal cell padding, mm
-    page_w = 277  # A4 landscape minus 2 * 10mm margins
-
-    def column_widths(rows: list[dict]) -> list[float]:
-        """Fit each column to its widest content (header or cell) plus padding;
-        if the table is wider than the page, shrink only the widest columns."""
-        natural = []
-        for h, col in zip(headers, columns):
-            pdf.set_font("DejaVu", "B", 8)
-            w = pdf.get_string_width(h)
-            pdf.set_font("DejaVu", "", 8)
-            for row in rows:
-                w = max(w, pdf.get_string_width(str(row[col] or "")))
-            natural.append(w + pad)
-        excess = sum(natural) - page_w
-        if excess <= 0:  # spread the spare width evenly
-            return [w - excess / len(natural) for w in natural]
-        if excess > 0:
-            # ponytail: shave proportionally from columns wider than the average
-            avg = page_w / len(natural)
-            wide = [i for i, w in enumerate(natural) if w > avg]
-            over = sum(natural[i] - avg for i in wide)
-            for i in wide:
-                natural[i] -= excess * (natural[i] - avg) / over
-        return natural
-
-    all_rows = [r for rs in by_month.values() for r in rs]
-    widths = column_widths(all_rows)
-
-    for m in [month] if month else range(1, 13):
-        rows = by_month[m]
-        if not month and not rows:
-            continue
-        pdf.add_page()
-        pdf.set_font("DejaVu", "B", 14)
-        pdf.cell(
-            0,
-            10,
-            f"{t(lang, f'Notifications.monthLong.{m}')[:1].upper()}"
-            f"{t(lang, f'Notifications.monthLong.{m}')[1:]} {year}",
-            new_x="LMARGIN",
-            new_y="NEXT",
-        )
-        pdf.set_font("DejaVu", "B", 8)
-        pdf.set_fill_color(*_PDF_HEADER_FILL)
-        for h, w in zip(headers, widths):
-            pdf.cell(w, 7, h, border=1, fill=True)
-        pdf.ln()
-        pdf.set_font("DejaVu", "", 8)
-        for row in rows:
-            for key, col, w in zip(keys, columns, widths):
-                text = str(row[col] if row[col] is not None else "")
-                pdf.set_fill_color(255, 255, 255)
-                pdf.set_text_color(0, 0, 0)
-                if key == "status":
-                    if style := _STATUS_STYLES.get(row["_status_key"]):
-                        pdf.set_fill_color(*_rgb(style[0]))
-                        pdf.set_text_color(*_rgb(style[1]))
-                # ponytail: only clips if a column had to shrink to fit the page
-                pdf.cell(
-                    w,
-                    6,
-                    text,
-                    border=1,
-                    fill=key == "status",
-                    align="R" if key in right_aligned else "L",
-                )
-            pdf.set_text_color(0, 0, 0)
-            pdf.ln()
-    if pdf.page == 0:
-        pdf.add_page()
+    content = build_pdf(db, me, today, year, month, lang)
 
     suffix = f"{year}-{month:02d}" if month else str(year)
     filename = f"pay-tracker-{lang}-{suffix}.pdf"
     return Response(
-        content=bytes(pdf.output()),
+        content=content,
         media_type="application/pdf",
         headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
-
-
-_WINDOW_FIELDS = (
-    "notify_2_days_before",
-    "notify_1_day_before",
-    "notify_on_day",
-    "notify_1_day_after",
-)
-
-
-def _schedule_out(user: User, ch: Channel) -> dict:
-    out = {
-        "enabled": getattr(user, ch.enabled),
-        "send_minute": getattr(user, ch.send_minute),
-        "monthly_summary_enabled": getattr(user, ch.summary_enabled),
-    }
-    for field, (_, user_attr, _) in zip(_WINDOW_FIELDS, ch.windows):
-        out[field] = getattr(user, user_attr)
-    return out
-
-
-def _apply_schedule(user: User, ch: Channel, s: BackupChannelSchedule) -> None:
-    setattr(user, ch.enabled, s.enabled)
-    setattr(user, ch.send_minute, s.send_minute)
-    setattr(user, ch.summary_enabled, s.monthly_summary_enabled)
-    for field, (_, user_attr, _) in zip(_WINDOW_FIELDS, ch.windows):
-        setattr(user, user_attr, getattr(s, field))
-
-
-def _build_backup_arrays(
-    db: Session,
-    user_id: int,
-    sections: tuple[Section, ...] | list[Section] = ALL_SECTIONS,
-) -> dict:
-    """Serialize the requested sections of a user's data into the backup shape
-    shared by GET /export/json and the pre-restore snapshot. Only selected
-    sections appear as keys."""
-    user = db.get(User, user_id)
-    assert user is not None
-    out: dict = {}
-
-    notifications: dict = {}
-    if "email" in sections:
-        notifications["email"] = _schedule_out(user, EMAIL)
-        notifications["browser_enabled"] = user.browser_notifications_enabled
-    if "telegram" in sections:
-        notifications["telegram"] = _schedule_out(user, TELEGRAM)
-    if notifications:
-        # The send times are in this zone, so it travels with them.
-        notifications["timezone"] = user.timezone
-        out["notifications"] = notifications
-
-    prefs: dict = {}
-    if "languages" in sections:
-        prefs["language_preference"] = user.language_preference
-        prefs["enabled_languages"] = list(user.enabled_languages)
-    if "currency" in sections:
-        prefs["default_currency"] = user.default_currency
-        prefs["decimal_separator"] = user.decimal_separator
-    if "export" in sections:
-        prefs["export_enabled"] = user.export_enabled
-        prefs["export_fields"] = list(user.export_fields)
-    if "pdf" in sections:
-        prefs["pdf_enabled"] = user.pdf_enabled
-        prefs["pdf_fields"] = list(user.pdf_fields)
-    if "share" in sections:
-        prefs["share_enabled"] = user.share_enabled
-    if prefs:
-        out["preferences"] = prefs
-
-    if "categories" in sections:
-        categories = db.query(Category).filter(Category.user_id == user_id).all()
-        out["categories"] = [
-            {
-                "id": c.id,
-                "name": c.name,
-                "slug": c.slug,
-                "color": c.color,
-                "sort_order": c.sort_order,
-                "is_default": c.is_default,
-                "is_archived": c.is_archived,
-            }
-            for c in categories
-        ]
-
-    if "bills" in sections:
-        templates = db.query(BillTemplate).filter(BillTemplate.user_id == user_id).all()
-        template_ids = [t.id for t in templates]
-        instances = (
-            db.query(PaymentInstance)
-            .filter(
-                PaymentInstance.bill_id.in_(template_ids),
-                PaymentInstance.is_deleted.is_(False),
-            )
-            .all()
-            if template_ids
-            else []
-        )
-        out["bill_templates"] = [
-            {
-                "id": t.id,
-                "name": t.name,
-                "category_id": t.category_id,
-                "category_name": t.category.name,
-                "frequency": t.frequency,
-                "interval": t.interval,
-                "amount": float(t.amount),
-                "currency": t.currency,
-                "due_day": t.due_day,
-                "notes": t.notes,
-                "is_archived": t.is_archived,
-                "is_paused": t.is_paused,
-                "start_period": t.start_period,
-                "end_period": t.end_period,
-                "created_at": t.created_at.isoformat(),
-            }
-            for t in templates
-        ]
-        out["payment_instances"] = [
-            {
-                "id": i.id,
-                "bill_id": i.bill_id,
-                "period": i.period,
-                "due_date": i.due_date.isoformat(),
-                "amount": float(i.amount),
-                "status": i.status,
-                "paid_at": i.paid_at.isoformat() if i.paid_at else None,
-                "paid_amount": float(i.paid_amount) if i.paid_amount else None,
-                "amount_override": (
-                    float(i.amount_override) if i.amount_override is not None else None
-                ),
-                "notes": i.notes,
-                "created_at": i.created_at.isoformat(),
-                "reminder_sent_upcoming": i.reminder_sent_upcoming,
-                "reminder_sent_overdue": i.reminder_sent_overdue,
-            }
-            for i in instances
-        ]
-    return out
 
 
 @router.get("/json")
@@ -677,173 +136,6 @@ def export_summary(
         else 0
     )
     return ExportSummaryOut(bill_count=bill_count, payment_count=payment_count)
-
-
-def _merge_categories(db: Session, user_id: int, backup: BackupPayload) -> None:
-    """Categories-only restore: existing bills reference the current categories,
-    so match by slug (else name) and update in place; create the missing ones.
-    Never deletes."""
-    existing = db.query(Category).filter(Category.user_id == user_id).all()
-    for bc in backup.categories:
-        match = next(
-            (
-                c
-                for c in existing
-                if (bc.slug and c.slug == bc.slug)
-                or (not bc.slug and c.name == bc.name)
-            ),
-            None,
-        )
-        if match is None:
-            match = Category(user_id=user_id, name=bc.name, slug=bc.slug)
-            db.add(match)
-            existing.append(match)
-        match.name = bc.name
-        match.color = bc.color
-        match.sort_order = bc.sort_order
-        match.is_default = bc.is_default
-        match.is_archived = bc.is_archived
-    db.flush()
-
-
-def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int, int]:
-    """Apply whatever sections the backup contains; absent sections leave the
-    user's current data untouched. Bills/payments are destructively replaced when
-    present. Shared by /restore and /restore-snapshot."""
-    templates_in = backup.bill_templates
-    if templates_in is None:
-        if backup.categories:
-            _merge_categories(db, user_id, backup)
-    else:
-        existing_ids = [
-            t.id
-            for t in db.query(BillTemplate.id)
-            .filter(BillTemplate.user_id == user_id)
-            .all()
-        ]
-        if existing_ids:
-            db.query(PaymentInstance).filter(
-                PaymentInstance.bill_id.in_(existing_ids)
-            ).delete(synchronize_session=False)
-            db.query(BillTemplate).filter(BillTemplate.user_id == user_id).delete(
-                synchronize_session=False
-            )
-
-        category_id_map: dict[int, int] = {}
-        if backup.categories:
-            db.query(Category).filter(Category.user_id == user_id).delete(
-                synchronize_session=False
-            )
-            for bc in backup.categories:
-                category_obj = Category(
-                    user_id=user_id,
-                    name=bc.name,
-                    slug=bc.slug,
-                    color=bc.color,
-                    sort_order=bc.sort_order,
-                    is_default=bc.is_default,
-                    is_archived=bc.is_archived,
-                )
-                db.add(category_obj)
-                db.flush()
-                category_id_map[bc.id] = category_obj.id
-
-        fallback_category_id = _fallback_category_id(db, user_id)
-
-        id_map: dict[int, int] = {}
-        for bt in templates_in:
-            if backup.categories:
-                category_id = (
-                    category_id_map.get(bt.category_id, fallback_category_id)
-                    if bt.category_id is not None
-                    else fallback_category_id
-                )
-            else:
-                category_id = _legacy_category_id(
-                    db, user_id, bt.category, fallback_category_id, bt.category_name
-                )
-            template_obj = BillTemplate(
-                name=bt.name,
-                category_id=category_id,
-                frequency=BillFrequency(bt.frequency),
-                interval=bt.interval,
-                amount=Decimal(str(bt.amount)),
-                currency=bt.currency,
-                due_day=bt.due_day,
-                notes=bt.notes,
-                is_archived=bt.is_archived,
-                is_paused=bt.is_paused,
-                start_period=bt.start_period,
-                end_period=bt.end_period,
-                user_id=user_id,
-            )
-            db.add(template_obj)
-            db.flush()
-            id_map[bt.id] = template_obj.id
-
-        for bi in backup.payment_instances or []:
-            instance_obj = PaymentInstance(
-                bill_id=id_map[bi.bill_id],
-                period=bi.period,
-                due_date=date.fromisoformat(bi.due_date),
-                amount=Decimal(str(bi.amount)),
-                status=PaymentStatus(bi.status),
-                paid_at=datetime.fromisoformat(bi.paid_at) if bi.paid_at else None,
-                paid_amount=(
-                    Decimal(str(bi.paid_amount)) if bi.paid_amount is not None else None
-                ),
-                amount_override=(
-                    Decimal(str(bi.amount_override))
-                    if bi.amount_override is not None
-                    else None
-                ),
-                notes=bi.notes,
-                reminder_sent_upcoming=bi.reminder_sent_upcoming,
-                reminder_sent_overdue=bi.reminder_sent_overdue,
-            )
-            db.add(instance_obj)
-
-    if backup.notifications or backup.preferences:
-        user = db.get(User, user_id)
-        assert user is not None
-        if n := backup.notifications:  # absent/partial: keep current settings
-            if n.email:
-                _apply_schedule(user, EMAIL, n.email)
-            if n.telegram:
-                _apply_schedule(user, TELEGRAM, n.telegram)
-            if n.browser_enabled is not None:
-                user.browser_notifications_enabled = n.browser_enabled
-            if n.timezone is not None and is_valid_tz(n.timezone):
-                user.timezone = n.timezone  # an unknown zone in a file is ignored
-        if p := backup.preferences:
-            if p.language_preference is not None:
-                user.language_preference = p.language_preference
-            if p.enabled_languages is not None:
-                user.enabled_languages = p.enabled_languages
-            if p.default_currency is not None:
-                user.default_currency = p.default_currency
-            if p.decimal_separator is not None:
-                user.decimal_separator = p.decimal_separator
-            if p.export_enabled is not None:
-                user.export_enabled = p.export_enabled
-            if p.pdf_enabled is not None:
-                user.pdf_enabled = p.pdf_enabled
-            if p.share_enabled is not None:
-                user.share_enabled = p.share_enabled
-            if p.export_fields is not None:
-                user.export_fields = p.export_fields
-            if p.pdf_fields is not None:
-                user.pdf_fields = p.pdf_fields
-            if (
-                user.language_preference
-                and user.language_preference not in user.enabled_languages
-            ):
-                raise HTTPException(
-                    status_code=422,
-                    detail="The active language must be one of the enabled languages",
-                )
-
-    return len(templates_in or []), len(backup.payment_instances or [])
 
 
 @router.post("/restore", response_model=RestoreResultOut)
@@ -912,22 +204,6 @@ def restore_json(
 
     return RestoreResultOut(
         restored_templates=restored_templates, restored_instances=restored_instances
-    )
-
-
-def _active_snapshot(db: Session, user_id: int) -> RestoreSnapshot | None:
-    """The user's snapshot if one exists and is still within the retention
-    window. Shared by /last-snapshot and /restore-snapshot so they can't
-    drift on what counts as "expired"."""
-    cutoff = datetime.now(timezone.utc) - timedelta(
-        days=settings.restore_snapshot_retention_days
-    )
-    return (
-        db.query(RestoreSnapshot)
-        .filter(
-            RestoreSnapshot.user_id == user_id, RestoreSnapshot.created_at >= cutoff
-        )
-        .first()
     )
 
 
