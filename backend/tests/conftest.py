@@ -19,6 +19,7 @@ import app.models.reset_token  # noqa: F401
 import app.models.restore_snapshot  # noqa: F401
 import app.models.user  # noqa: F401
 
+import bcrypt
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -34,6 +35,21 @@ from app.main import app
 def today_utc() -> date:
     """Today as the app computes it: users default to UTC, never the machine's zone."""
     return datetime.now(timezone.utc).date()
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _fast_bcrypt():
+    """bcrypt's default cost (12) is ~0.25s per hash and per check, and most tests register
+    and log in a user: that was over half the suite's runtime. Cost 4 is the bcrypt minimum;
+    checkpw reads the cost from the hash, so verification works the same."""
+    real_gensalt = bcrypt.gensalt
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setattr(
+            bcrypt,
+            "gensalt",
+            lambda rounds=4, prefix=b"2b": real_gensalt(rounds, prefix),
+        )
+        yield
 
 
 @pytest.fixture(autouse=True)
