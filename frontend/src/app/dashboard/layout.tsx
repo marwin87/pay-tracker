@@ -141,6 +141,13 @@ export default function DashboardLayout({
           </Link>
           <ThemeToggle />
           <LanguageToggle />
+        </div>
+
+        <div className="flex-1" />
+
+        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+
+        <div className="p-3">
           <button
             data-logout-trigger
             onClick={logout}
@@ -150,8 +157,6 @@ export default function DashboardLayout({
             {t("logOut")}
           </button>
         </div>
-
-        <div className="flex-1" />
 
         <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
 
