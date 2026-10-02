@@ -13,6 +13,7 @@ Notable changes to Pay Tracker, release by release.
 - Time zone setting: reminders and “today” now follow your own time zone
 - Vertical sidebar menu on desktop, with wider content on the dashboard and other pages
 - Smoother page changes, without the loading flicker
+- Installed app icon shows the number of overdue payments
 
 ### Security
 

@@ -201,6 +201,17 @@ function PaymentsPageInner() {
     };
   }, [selectedMonth, currentMonth, t]);
 
+  // Installed-PWA icon badge = overdue count of the current month; no-op where unsupported.
+  useEffect(() => {
+    if (selectedMonth !== currentMonth || loading) return;
+    const nav = navigator as Navigator & {
+      setAppBadge?: (count: number) => Promise<void>;
+      clearAppBadge?: () => Promise<void>;
+    };
+    const overdue = instances.filter((i) => i.status === "overdue").length;
+    (overdue > 0 ? nav.setAppBadge?.(overdue) : nav.clearAppBadge?.())?.catch(() => {});
+  }, [instances, selectedMonth, currentMonth, loading]);
+
   useEffect(() => {
     let cancelled = false;
     fetchMe()

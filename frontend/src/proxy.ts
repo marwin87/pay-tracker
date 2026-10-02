@@ -34,6 +34,10 @@ function withSecurityHeaders(response: NextResponse): NextResponse {
     "geolocation=(), camera=(), microphone=()",
   );
   response.headers.set("Content-Security-Policy", CONTENT_SECURITY_POLICY);
+  // Browsers ignore HSTS over plain http, so it's harmless for local/self-hosted http setups.
+  if (process.env.NODE_ENV === "production") {
+    response.headers.set("Strict-Transport-Security", "max-age=15552000");
+  }
   return response;
 }
 
