@@ -1,5 +1,6 @@
 "use client";
 
+import { setOverdueBadge } from "@/lib/app-badge";
 import {
   createContext,
   useContext,
@@ -84,6 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Proceed with client-side logout even if the request fails.
     }
+    setOverdueBadge(0);
     notifyAuthChange();
     router.refresh();
     router.push("/login");
@@ -98,6 +100,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // logout does) — clear it ourselves so the store's next read agrees
       // with the "logged out" UI we're about to show.
       clearAuthPresence();
+      setOverdueBadge(0);
       notifyAuthChange();
       router.refresh();
       router.push("/login");

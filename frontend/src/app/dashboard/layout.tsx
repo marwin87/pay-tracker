@@ -9,6 +9,10 @@ import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import { getAuthToken } from "@/lib/auth";
 import { fetchMe } from "@/lib/user-api";
+import { fetchPayments } from "@/lib/payments-api";
+import { setOverdueBadge } from "@/lib/app-badge";
+import { monthIn } from "@/lib/today";
+import { useLocale } from "@/context/locale-context";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
 
@@ -55,6 +59,7 @@ export default function DashboardLayout({
   const t = useTranslations("DashboardLayout");
   const router = useRouter();
   const pathname = usePathname();
+  const { timeZone } = useLocale();
   const [menuOpen, setMenuOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const menuRef = useRef<HTMLElement>(null);
@@ -75,6 +80,14 @@ export default function DashboardLayout({
       fetchMe().then((p) => setUserEmail(p.email)).catch(() => {});
     }
   }, [isAuthenticated]);
+
+  // Payments page sets the badge itself; the dashboard home needs it here.
+  useEffect(() => {
+    if (!isAuthenticated || pathname !== "/dashboard") return;
+    fetchPayments(monthIn(timeZone))
+      .then((list) => setOverdueBadge(list.filter((i) => i.status === "overdue").length))
+      .catch(() => {});
+  }, [isAuthenticated, pathname, timeZone]);
 
   // Close mobile menu on outside click
   useEffect(() => {
