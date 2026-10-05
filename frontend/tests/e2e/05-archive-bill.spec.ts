@@ -18,11 +18,11 @@ test('archived bill leaves active list and appears on archived page', async ({ p
 
   // Step: navigate to bills page
   await page.goto('/dashboard/bills');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: hover over the bill row to reveal the action buttons
   // (sm+ viewports show Edit/Archive on group-hover)
-  await page.getByText(billName).hover();
+  await page.getByText(billName, { exact: true }).hover();
 
   // Step: click "Archive" (aria-label on the archive button in BillTemplateRow)
   await page.getByRole('button', { name: 'Archive' }).click();
@@ -34,6 +34,9 @@ test('archived bill leaves active list and appears on archived page', async ({ p
   // Step: confirm archive
   await dialog.getByRole('button', { name: 'Archive' }).click();
 
+  // Assert: the user is told the bill was archived
+  await expect(page.getByRole('status')).toContainText(`“${billName}” archived`);
+
   // Assert: bill no longer on the active bills list
   // Wait for the dialog to close first, then check the list
   await expect(page.getByRole('dialog')).not.toBeVisible();
@@ -44,7 +47,7 @@ test('archived bill leaves active list and appears on archived page', async ({ p
   await page.goto('/dashboard/bills/archived');
 
   // Assert: bill appears in the archived list
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: click "Restore" (opens RestoreConfirmDialog)
   await page.getByRole('button', { name: 'Restore' }).click();
@@ -61,5 +64,5 @@ test('archived bill leaves active list and appears on archived page', async ({ p
 
   // Assert: bill is back on the active bills list
   await page.goto('/dashboard/bills');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 });

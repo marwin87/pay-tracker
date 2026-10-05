@@ -13,6 +13,7 @@ import { Switch } from "@/components/ui/Switch";
 import { btnSaveClass, btnCancelClass } from "@/components/ui/formButtonClasses";
 import { Checkbox } from "@/components/ui/Checkbox";
 import Dropdown from "@/components/ui/Dropdown";
+import { useToast } from "@/context/toast-context";
 
 export type Channel = "email" | "telegram";
 
@@ -81,6 +82,7 @@ export function ChannelScheduleSection({
   disabledHint?: string;
 }) {
   const tp = useTranslations("SettingsPage");
+  const showToast = useToast();
   const locale = useLocale();
   // The server builds the summary for the current month in the user's own zone.
   const month = new Intl.DateTimeFormat(locale, {
@@ -128,6 +130,7 @@ export function ChannelScheduleSection({
     setIsTogglingEnabled(true);
     try {
       onProfileUpdate(await updateMe({ [k.enabled]: value }));
+      showToast(tp("settingsSaved"));
     } catch {
       setEnabled(!value);
     } finally {
@@ -140,6 +143,7 @@ export function ChannelScheduleSection({
     setIsTogglingSummary(true);
     try {
       onProfileUpdate(await updateMe({ [k.summary]: value }));
+      showToast(tp("settingsSaved"));
     } catch {
       setMonthlySummary(!value);
     } finally {
@@ -169,6 +173,7 @@ export function ChannelScheduleSection({
           [k.minute]: sendMinute,
         }),
       );
+      showToast(tp("settingsSaved"));
     } catch {
       setSaveError(tp("saveFailed"));
     } finally {

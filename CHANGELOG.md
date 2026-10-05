@@ -14,7 +14,8 @@ Notable changes to Pay Tracker, release by release.
 - Vertical sidebar menu on desktop, with wider content on the dashboard and other pages
 - Smoother page changes, without the loading flicker
 - Installed app icon shows the number of overdue payments
-- The last payment month now shows on each bill; it replaces “Pause recurrence”
+- Last payment month shown on each bill, replacing “Pause recurrence”
+- Confirmation messages after saving; a saved bill is highlighted
 
 ### Security
 
@@ -29,7 +30,7 @@ Notable changes to Pay Tracker, release by release.
 - Passwords that are too long are rejected with a clear message
 - The current time in Notification settings now follows your language
 - Invalid or oversized values in bills and payments now show an error instead of failing
-- Setting a bill’s last payment month now removes the later unpaid payments
+- Setting a last payment month removes later unpaid payments
 - A payment already marked as paid, or one that was deleted, can no longer be paid again from a stale page
 - Restoring deleted payments keeps already paid ones paid
 - Restoring from a file that isn't a valid backup now shows an error instead of failing

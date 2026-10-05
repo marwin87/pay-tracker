@@ -15,10 +15,10 @@ test('editing a bill persists amount, category, frequency, due day and pause', a
   await createBillViaApi(page, billName); // utilities, monthly, 99.99 PLN, due day 15
 
   await page.goto('/dashboard/bills');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: open the inline edit form (Edit is hover-revealed on sm+)
-  await page.getByText(billName).hover();
+  await page.getByText(billName, { exact: true }).hover();
   await page.getByRole('button', { name: 'Edit' }).click();
 
   // Step: amount
@@ -39,6 +39,9 @@ test('editing a bill persists amount, category, frequency, due day and pause', a
 
   await page.getByRole('button', { name: 'Save' }).click();
 
+  // Assert: the user is told the changes were saved
+  await expect(page.getByRole('status')).toContainText('saved');
+
   // Assert: every edited field is reflected on the collapsed row
   await expect(page.getByText('150.00 PLN')).toBeVisible();
   await expect(page.getByText('Every 3 months')).toBeVisible();
@@ -46,7 +49,7 @@ test('editing a bill persists amount, category, frequency, due day and pause', a
 
   // Assert: persisted (not just optimistic) and regrouped under the new category
   await page.reload();
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
   await expect(page.getByText('150.00 PLN')).toBeVisible();
   await expect(page.getByText('Housing', { exact: true })).toBeVisible();
   await expect(page.getByText('Utilities', { exact: true })).not.toBeVisible();

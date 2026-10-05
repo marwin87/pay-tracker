@@ -21,6 +21,7 @@ import SearchInput from "@/components/SearchInput";
 import RestoreConfirmDialog from "@/components/bills/RestoreConfirmDialog";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
+import { useToast } from "@/context/toast-context";
 
 const CATEGORY_SORT_OPTIONS: CategorySortOrder[] = ["az", "za"];
 
@@ -29,6 +30,7 @@ export default function ArchivedBillsPage() {
   const frequencyLabel = useFrequencyLabel();
   const tCategories = useTranslations("Categories");
   const tFilters = useTranslations("Filters");
+  const showToast = useToast();
   const { decimalSeparator } = useLocale();
   const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
   const [loading, setLoading] = useState(true);
@@ -92,6 +94,7 @@ export default function ArchivedBillsPage() {
     setRestoring(true);
     try {
       await unarchiveBill(restoreTarget.id);
+      showToast(t("billRestored", { name: restoreTarget.name }));
       setTemplates((prev) => prev.filter((tmpl) => tmpl.id !== restoreTarget.id));
       setRestoreTarget(null);
     } catch (err: unknown) {

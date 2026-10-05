@@ -18,7 +18,7 @@ test('deleted payment row disappears from the payments list', async ({ page }) =
 
   // Step: navigate to payments page
   await page.goto('/dashboard/payments');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: click "Delete payment" (only one row → no ambiguity)
   await page.getByLabel('Delete payment').click();

@@ -19,6 +19,7 @@ import {
 } from "@/lib/categories";
 import { btnSaveClass, btnCancelClass } from "@/components/ui/formButtonClasses";
 import { Tile } from "./Tile";
+import { useToast } from "@/context/toast-context";
 
 const inputClass =
   "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
@@ -103,6 +104,7 @@ export function CategoriesTile({
   onToggle?: () => void;
 }) {
   const tc = useTranslations("SettingsPage");
+  const showToast = useToast();
   const tCategories = useTranslations("Categories");
 
   const [categories, setCategories] = useState<Category[]>([]);
@@ -189,6 +191,7 @@ export function CategoriesTile({
       }
       setEditingId(null);
       reload();
+      showToast(tc("categorySaved"));
     } catch (err) {
       setRowError(err instanceof Error ? err.message : tc("saveFailed"));
     } finally {
@@ -200,6 +203,7 @@ export function CategoriesTile({
     try {
       await (cat.is_archived ? unarchiveCategory(cat.id) : archiveCategory(cat.id));
       reload();
+      showToast(tc(cat.is_archived ? "categoryRestored" : "categoryArchived"));
     } catch (err) {
       setError(err instanceof Error ? err.message : tc("categories.loadError"));
     }

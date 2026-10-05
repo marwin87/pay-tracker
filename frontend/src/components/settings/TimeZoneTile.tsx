@@ -8,6 +8,7 @@ import { useLocale } from "@/context/locale-context";
 import { browserTimeZone, supportedTimeZones } from "@/lib/today";
 import { btnSaveClass as btnSave, btnCancelClass as btnCancel } from "@/components/ui/formButtonClasses";
 import { Tile } from "./Tile";
+import { useToast } from "@/context/toast-context";
 
 const inputClass =
   "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
@@ -186,6 +187,7 @@ export function TimeZoneTile({
   onToggle?: () => void;
 }) {
   const tp = useTranslations("SettingsPage");
+  const showToast = useToast();
   const { setTimeZone } = useLocale();
 
   const zones = useMemo(() => supportedTimeZones(), []);
@@ -215,6 +217,7 @@ export function TimeZoneTile({
       const updated = await updateMe({ timezone: trimmed });
       onProfileUpdate(updated);
       setTimeZone(updated.timezone);
+      showToast(tp("timeZoneSaved"));
     } catch {
       setSaveError(tp("saveFailed"));
     } finally {

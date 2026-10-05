@@ -15,6 +15,7 @@ import { monthIn } from "@/lib/today";
 import { useLocale } from "@/context/locale-context";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
+import { ToastProvider } from "@/context/toast-context";
 
 // Full class strings so Tailwind can see them; picked per user by hashing the email.
 const AVATAR_PALETTES = [
@@ -259,7 +260,9 @@ export default function DashboardLayout({
       </header>
 
       {/* Page content */}
-      <main key={pathname} className="page-in flex-1 md:ml-60">{children}</main>
+      <ToastProvider>
+        <main key={pathname} className="page-in flex-1 md:ml-60">{children}</main>
+      </ToastProvider>
     </div>
   );
 }

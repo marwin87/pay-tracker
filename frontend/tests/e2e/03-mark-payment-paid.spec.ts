@@ -18,7 +18,7 @@ test('marking a payment paid replaces Mark as Paid with Revert payment', async (
 
   // Step: navigate to payments page
   await page.goto('/dashboard/payments');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: click "Mark as Paid" (only one row → no ambiguity)
   await page.getByRole('button', { name: 'Mark as Paid' }).click();
@@ -27,6 +27,9 @@ test('marking a payment paid replaces Mark as Paid with Revert payment', async (
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
   await dialog.getByRole('button', { name: 'Mark as Paid' }).click();
+
+  // Assert: the user is told the payment was marked as paid
+  await expect(page.getByRole('status')).toContainText(`“${billName}” marked as paid`);
 
   // Assert: "Revert payment" button appears (status changed to paid)
   await expect(page.getByLabel('Revert payment')).toBeVisible();
@@ -44,7 +47,7 @@ test('paying a payment that another tab already paid shows a clear message', asy
 
   // The page loads with the payment still unpaid...
   await page.goto('/dashboard/payments');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // ...then it gets paid elsewhere (another tab/device), so this page is now stale.
   const month = new Date().toISOString().slice(0, 7);

@@ -16,7 +16,7 @@ test('reverting a paid payment makes it payable again and survives reload', asyn
   await syncPaymentsViaApi(page);
 
   await page.goto('/dashboard/payments');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: pay it
   await page.getByRole('button', { name: 'Mark as Paid' }).click();
@@ -38,7 +38,7 @@ test('reverting a paid payment makes it payable again and survives reload', asyn
 
   // Assert: the server agrees (not just optimistic state)
   await page.reload();
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Mark as Paid' })).toBeVisible();
   await expect(page.getByText(/Paid on/)).not.toBeVisible();
 });

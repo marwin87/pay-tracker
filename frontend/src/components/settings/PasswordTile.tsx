@@ -8,6 +8,7 @@ import { passwordTooLong } from "@/lib/auth-validation";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { btnSaveClass as btnSave, btnCancelClass as btnCancel } from "@/components/ui/formButtonClasses";
 import { Tile } from "./Tile";
+import { useToast } from "@/context/toast-context";
 
 const inputClass =
   "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
@@ -24,6 +25,7 @@ export function PasswordTile({
   onToggle?: () => void;
 }) {
   const tp = useTranslations("SettingsPage");
+  const showToast = useToast();
 
   const [curPassword, setCurPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -51,6 +53,7 @@ export function PasswordTile({
       await changePassword(curPassword, newPassword);
       setCurPassword("");
       setNewPassword("");
+      showToast(tp("passwordChanged"));
     } catch {
       setPasswordError(tp("profile.wrongPassword"));
     } finally {

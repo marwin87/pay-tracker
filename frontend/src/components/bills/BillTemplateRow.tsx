@@ -19,6 +19,7 @@ import { formatAmount } from "@/lib/summary";
 interface Props {
   template: BillTemplateOut;
   isExpanded: boolean;
+  highlighted?: boolean;
   onEditToggle: () => void;
   onSave: (data: BillTemplateUpdate) => Promise<void>;
   onArchive: () => void;
@@ -53,6 +54,7 @@ function formatDueLabel(template: BillTemplateOut, locale: string): string | nul
 export default function BillTemplateRow({
   template,
   isExpanded,
+  highlighted = false,
   onEditToggle,
   onSave,
   onArchive,
@@ -78,7 +80,10 @@ export default function BillTemplateRow({
 
   return (
     <div
-      className={`bill-row group rounded-xl border border-slate-200 bg-white shadow-sm dark:bg-slate-800 dark:border-slate-700 border-l-4 ${leftBorder}`}
+      id={`bill-${template.id}`}
+      className={`bill-row group rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow duration-500 dark:bg-slate-800 dark:border-slate-700 border-l-4 ${leftBorder} ${
+        highlighted ? "bill-row-highlight ring-2 ring-green-200 dark:ring-green-800" : ""
+      }`}
     >
       {/* Collapsed row */}
       <div className="flex items-center gap-3 px-4 py-3">

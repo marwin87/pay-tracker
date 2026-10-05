@@ -214,6 +214,8 @@ button:not(:disabled) {
 /* The tint rule above replaces Tailwind's ring (also a box-shadow) on calendar days: redraw it. */
 .theme-vesperfall button[data-today] { box-shadow: inset 0 0 0 2px var(--color-slate-300); }
 .theme-vesperfall button[data-selected] { box-shadow: 0 0 0 2px #e3cb85, 0 0 10px rgba(227, 203, 133, 0.45); }
+/* Just-saved bill highlight: same border color as the Toast (dark:border-green-800 above); the card rule would otherwise swallow the ring. */
+.theme-vesperfall .bill-row-highlight { box-shadow: 0 0 0 2px #c29a3f, 0 2px 10px rgba(0, 0, 0, 0.45); }
 
 /* Categories carry no color of their own here: left accents and donut/legend use bronze
    tones only (the DB color still drives the other themes and the settings picker). */

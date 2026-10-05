@@ -7,6 +7,7 @@ import { changeEmail, type UserProfile } from "@/lib/user-api";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { btnSaveClass as btnSave, btnCancelClass as btnCancel } from "@/components/ui/formButtonClasses";
 import { Tile } from "./Tile";
+import { useToast } from "@/context/toast-context";
 
 const inputClass =
   "w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
@@ -27,6 +28,7 @@ export function ProfileTile({
   onToggle?: () => void;
 }) {
   const tp = useTranslations("SettingsPage");
+  const showToast = useToast();
 
   const [emailInput, setEmailInput] = useState("");
   const [emailPassword, setEmailPassword] = useState("");
@@ -52,6 +54,7 @@ export function ProfileTile({
       onProfileUpdate(updated);
       setEmailInput("");
       setEmailPassword("");
+      showToast(tp("emailChanged"));
     } catch (err) {
       const msg = err instanceof Error ? err.message : "";
       setEmailError(

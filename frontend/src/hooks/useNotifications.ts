@@ -19,7 +19,7 @@ export function useNotifications(initialPref = false): {
   permission: NotificationPermission;
   isEnabled: boolean;
   requestPermission: () => Promise<void>;
-  setEnabled: (v: boolean) => void;
+  setEnabled: (v: boolean, onSaved?: () => void) => void;
   notifyDueToday: () => Promise<void>;
 } {
   const [permission, setPermission] = useState<NotificationPermission>(getPermission);
@@ -48,9 +48,9 @@ export function useNotifications(initialPref = false): {
 
   const isEnabled = enabledPref && permission === "granted";
 
-  function setEnabled(v: boolean) {
+  function setEnabled(v: boolean, onSaved?: () => void) {
     setEnabledPref(v);
-    updateMe({ browser_notifications_enabled: v }).catch(() => setEnabledPref(!v));
+    updateMe({ browser_notifications_enabled: v }).then(onSaved, () => setEnabledPref(!v));
   }
 
   async function requestPermission() {

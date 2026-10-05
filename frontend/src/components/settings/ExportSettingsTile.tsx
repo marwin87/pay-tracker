@@ -13,6 +13,7 @@ import {
 import { Switch } from "@/components/ui/Switch";
 import { Checkbox } from "@/components/ui/Checkbox";
 import { Tile } from "./Tile";
+import { useToast } from "@/context/toast-context";
 
 export function ExportSettingsTile({
   format = "excel",
@@ -26,6 +27,7 @@ export function ExportSettingsTile({
   t: ReturnType<typeof useTranslations>;
 }) {
   const tp = useTranslations("SettingsPage");
+  const showToast = useToast();
   const isPdf = format === "pdf";
   const enabledKey = isPdf ? "pdf_enabled" : "export_enabled";
   const fieldsKey = isPdf ? "pdf_fields" : "export_fields";
@@ -40,6 +42,7 @@ export function ExportSettingsTile({
     setIsTogglingEnabled(true);
     try {
       onProfileUpdate(await updateMe({ [enabledKey]: value }));
+      showToast(tp("settingsSaved"));
     } catch {
       setEnabled(!value);
     } finally {
@@ -54,6 +57,7 @@ export function ExportSettingsTile({
     setSavingField(key);
     try {
       onProfileUpdate(await updateMe({ [fieldsKey]: next }));
+      showToast(tp("settingsSaved"));
     } catch {
       setFields(previous);
     } finally {

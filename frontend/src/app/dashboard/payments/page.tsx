@@ -34,6 +34,7 @@ import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
+import { useToast } from "@/context/toast-context";
 
 type PaymentSortOption = "category-az" | "category-za" | "paid-first" | "unpaid-first";
 const PAYMENT_SORT_OPTIONS: PaymentSortOption[] = [
@@ -118,6 +119,7 @@ function PaymentsPageInner() {
   const tRow = useTranslations("PaymentRow");
   const tCategories = useTranslations("Categories");
   const tFilters = useTranslations("Filters");
+  const showToast = useToast();
   const locale = useLocale();
 
   // "Today" in the profile's zone, the same calendar the backend uses
@@ -230,6 +232,7 @@ function PaymentsPageInner() {
       prev.map((inst) => (inst.id === updated.id ? updated : inst)),
     );
     setDialogTarget(null);
+    showToast(t("paymentPaid", { name: updated.bill_name }));
   }
 
   function handleInstanceEdited(updated: PaymentInstanceOut) {
@@ -240,8 +243,10 @@ function PaymentsPageInner() {
   }
 
   function handleInstanceDeleted(id: number) {
+    const name = instances.find((inst) => inst.id === id)?.bill_name ?? "";
     setInstances((prev) => prev.filter((inst) => inst.id !== id));
     setDeleteTarget(null);
+    showToast(t("paymentDeleted", { name }));
   }
 
   function handleInstanceReverted(updated: PaymentInstanceOut) {
@@ -249,6 +254,7 @@ function PaymentsPageInner() {
       prev.map((inst) => (inst.id === updated.id ? updated : inst)),
     );
     setRevertTarget(null);
+    showToast(t("paymentReverted", { name: updated.bill_name }));
   }
 
   const [selectedYear, setSelectedYear] = useState(currentYear);

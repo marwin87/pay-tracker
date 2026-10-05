@@ -7,6 +7,7 @@ import { sendTelegramTest, updateMe, type UserProfile } from "@/lib/user-api";
 import { ChannelScheduleSection } from "./ChannelScheduleSection";
 import { PasswordInput } from "@/components/ui/PasswordInput";
 import { Tile } from "./Tile";
+import { useToast } from "@/context/toast-context";
 
 const INPUT_CLASS =
   "mt-1 w-full rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 placeholder:text-slate-400 outline-none transition-all focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-100 dark:focus:border-green-600 dark:focus:ring-green-900/40";
@@ -25,6 +26,7 @@ export function TelegramNotificationsTile({
   t: ReturnType<typeof useTranslations>;
 }) {
   const tp = useTranslations("SettingsPage");
+  const showToast = useToast();
   const [botToken, setBotToken] = useState("");
   const [chatId, setChatId] = useState(profile.telegram_chat_id ?? "");
   const [isSaving, setIsSaving] = useState(false);
@@ -54,6 +56,7 @@ export function TelegramNotificationsTile({
       setChatId(updated.telegram_chat_id ?? "");
       setBotToken("");
       setTestResult(null);
+      showToast(tp("telegramSaved"));
     } catch {
       setSaveError(tp("saveFailed"));
     } finally {

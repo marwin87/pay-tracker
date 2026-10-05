@@ -37,11 +37,11 @@ test('paying the last instalment of a fixed-term bill creates no further payment
   await page.getByRole('button', { name: monthShort, exact: true }).click();
   await expect(endPicker).not.toHaveText('---');
   await page.getByRole('button', { name: 'Save' }).click();
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: pay the (only, last) instalment on the payments page
   await page.goto('/dashboard/payments');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
   await page.getByRole('button', { name: 'Mark as Paid' }).click();
   await page.getByRole('dialog').getByRole('button', { name: 'Mark as Paid' }).click();
   await expect(page.getByLabel('Revert payment')).toBeVisible();
@@ -60,7 +60,7 @@ test('paying the last instalment of a fixed-term bill creates no further payment
 
   // Assert: the edit form shows the saved end month (not "---")
   await page.goto('/dashboard/bills');
-  await page.getByText(billName).hover();
+  await page.getByText(billName, { exact: true }).hover();
   await page.getByRole('button', { name: 'Edit' }).click();
   await expect(page.getByLabel('Last payment month (optional)')).toContainText(
     String(now.getUTCFullYear()),
@@ -130,6 +130,6 @@ test('the final instalment is labelled "Last payment" on the payments page', asy
   expect(res.ok()).toBeTruthy();
 
   await page.goto('/dashboard/payments');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
   await expect(page.getByText('Last payment', { exact: true })).toBeVisible();
 });

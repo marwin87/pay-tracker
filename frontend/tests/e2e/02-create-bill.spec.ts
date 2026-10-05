@@ -36,12 +36,15 @@ test('created bill appears in current month payments', async ({ page }) => {
   // Step: save the bill
   await page.getByRole('button', { name: 'Save' }).click();
 
+  // Assert: the user is told the bill was added
+  await expect(page.getByRole('status')).toContainText(`Bill “${billName}” added`);
+
   // Assert: form closes and bill appears in the list
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: navigate to payments page (triggers sync-instances on load)
   await page.goto('/dashboard/payments');
 
   // Assert: bill name visible in the current month's payment list
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 });

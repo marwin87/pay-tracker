@@ -6,6 +6,7 @@ import { useNotifications } from "@/hooks/useNotifications";
 import type { UserProfile } from "@/lib/user-api";
 import { Switch } from "@/components/ui/Switch";
 import { Tile } from "./Tile";
+import { useToast } from "@/context/toast-context";
 
 export function BrowserNotificationsTile({
   profile,
@@ -19,6 +20,7 @@ export function BrowserNotificationsTile({
   onToggle?: () => void;
 }) {
   const tp = useTranslations("SettingsPage");
+  const showToast = useToast();
   const { permission, isEnabled, requestPermission, setEnabled } = useNotifications(
     profile.browser_notifications_enabled,
   );
@@ -44,7 +46,7 @@ export function BrowserNotificationsTile({
         <div className="flex flex-col gap-2">
           <Switch
             checked={isEnabled}
-            onChange={setEnabled}
+            onChange={(v) => setEnabled(v, () => showToast(tp("settingsSaved")))}
             label={tp("browserNotifications.toggle")}
           />
           <p className="text-xs text-slate-400 dark:text-slate-500">

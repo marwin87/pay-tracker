@@ -7,6 +7,7 @@ import { apiFetch } from "@/lib/api";
 import { updateMe, type UserProfile } from "@/lib/user-api";
 import { Switch } from "@/components/ui/Switch";
 import { Tile } from "./Tile";
+import { useToast } from "@/context/toast-context";
 
 export function ShareSettingsTile({
   profile,
@@ -18,6 +19,7 @@ export function ShareSettingsTile({
   t: ReturnType<typeof useTranslations>;
 }) {
   const tp = useTranslations("SettingsPage");
+  const showToast = useToast();
   const tc = useTranslations("Common");
   const [enabled, setEnabled] = useState(profile.share_enabled);
   const [busy, setBusy] = useState(false);
@@ -34,6 +36,7 @@ export function ShareSettingsTile({
     setBusy(true);
     try {
       onProfileUpdate(await updateMe({ share_enabled: value }));
+      showToast(tp("settingsSaved"));
     } catch {
       setEnabled(!value);
     } finally {

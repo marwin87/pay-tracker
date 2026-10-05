@@ -28,6 +28,7 @@ import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
+import { useToast } from "@/context/toast-context";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
@@ -50,6 +51,8 @@ export default function BillsPage() {
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
   const [defaultCurrency, setDefaultCurrency] = useState<string | null>(null);
+  const showToast = useToast();
+  const [highlightId, setHighlightId] = useState<number | null>(null);
 
   useEffect(() => {
     fetchMe().then((p) => setDefaultCurrency(p.default_currency)).catch(() => {});
@@ -83,6 +86,18 @@ export default function BillsPage() {
     { value: "za", label: tFilters("sortCategoryDesc") },
   ];
 
+  // Scroll the saved bill into view (again after the refetch re-sorts the list), then fade the highlight.
+  useEffect(() => {
+    if (highlightId === null) return;
+    document.getElementById(`bill-${highlightId}`)?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [highlightId, templates, collapsed]);
+
+  useEffect(() => {
+    if (highlightId === null) return;
+    const id = setTimeout(() => setHighlightId(null), 2500);
+    return () => clearTimeout(id);
+  }, [highlightId]);
+
   useEffect(() => {
     let cancelled = false;
     fetchBills()
@@ -105,15 +120,28 @@ export default function BillsPage() {
     };
   }, [refreshKey, t]);
 
+  // Confirm a save: toast, and make sure the saved bill is on screen and highlighted
+  // (a new or recategorised bill may sit in a collapsed group or behind a filter).
+  function reveal(bill: BillTemplateOut, message: string) {
+    const key = String(bill.category.id);
+    if (searchQuery && !bill.name.toLowerCase().includes(searchQuery.toLowerCase())) setSearchQuery("");
+    if (categoryFilter.size > 0 && !categoryFilter.has(key)) setCategoryFilter(new Set());
+    if (collapsed.has(key)) toggle(key);
+    setHighlightId(bill.id);
+    showToast(message);
+  }
+
   async function handleCreate(data: BillTemplateCreate) {
-    await createBill(data);
+    const bill = await createBill(data);
     setExpandedId(null);
+    reveal(bill, t("billAdded", { name: bill.name }));
     setRefreshKey((k) => k + 1);
   }
 
   async function doUpdate(id: number, data: BillTemplateUpdate) {
-    await updateBill(id, data);
+    const bill = await updateBill(id, data);
     setExpandedId(null);
+    reveal(bill, t("billSaved", { name: bill.name }));
     setRefreshKey((k) => k + 1);
     setDeletedFutureMap((m) => { const copy = { ...m }; delete copy[id]; return copy; });
   }
@@ -154,6 +182,7 @@ export default function BillsPage() {
     setArchiving(true);
     try {
       await archiveBill(archiveTarget.id);
+      showToast(t("billArchived", { name: archiveTarget.name }));
       setArchiveTarget(null);
       setRefreshKey((k) => k + 1);
     } finally {
@@ -341,6 +370,7 @@ export default function BillsPage() {
                         key={tmpl.id}
                         template={tmpl}
                         isExpanded={expandedId === tmpl.id}
+                        highlighted={highlightId === tmpl.id}
                         onEditToggle={() => toggleExpand(tmpl.id)}
                         onSave={(data) => handleUpdate(tmpl.id, data)}
                         onArchive={() => setArchiveTarget(tmpl)}
