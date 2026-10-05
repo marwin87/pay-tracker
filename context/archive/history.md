@@ -1,6 +1,6 @@
 # Archive history
 
-Condensed record of every completed change (26 folders compressed on 2026-09-23). Full plans, research and reviews are in git history: `git log --all -- context/archive/<date>-<change-id>`.
+Condensed record of every completed change (26 folders compressed on 2026-09-23, later entries added as changes are folded in). Full plans, research and reviews are in git history: `git log --all -- context/archive/<date>-<change-id>`.
 
 Convention: `/10x-archive` still moves new changes into `context/archive/<date>-<id>/`. Periodically fold them into this file (one entry each, newest last) and delete the folders.
 
@@ -229,3 +229,16 @@ Follow-ups noted: review CLAUDE.md.scaffold/AGENTS.md, run npm audit (2 moderate
 - Flipping a model `default` broke tests that silently relied on it; added `enable_notifications` test helper. No migration needed (only Python-side defaults changed; existing users keep settings).
 - Test bot tokens need `# pragma: allowlist secret` (detect-secrets).
 **Files/areas:** backend/app/routers/export.py, schemas/bill.py, models/user.py, tests/test_backup_sections.py, frontend BackupButton/RestoreButton/PasswordInput, locale files.
+
+## remove-pause-show-end-period (2026-10-05)
+**Outcome:** Removed the "pause recurrence" flag (`is_paused`) end to end, since `end_period` already stops instance generation; the Bills tile now shows "Last payment: <month year>" when an end month is set. Same release: saving, paying, reverting, deleting and archiving now confirm with a toast, and a saved bill is scrolled into view and highlighted.
+**Key decisions:**
+- Migration `d8e9f0a1b2c3` turns each paused bill into an `end_period` (month of its last non-deleted instance, else this month; never before `start_period`, never later than an existing end), then drops the column. Downgrade re-adds the column but paused state is not restorable.
+- Setting `end_period` hard-deletes unpaid instances after it (system-made, regenerate if the end moves) instead of soft-deleting, so they don't show up as user tombstones in the "restore deleted payments" prompt. Paid ones stay; `is_last_instance` ignores periods past the end.
+- Old backups with `is_paused` are not converted (no such files existed); the field is just dropped from the backup schema.
+- Toasts live in a shared `ToastProvider` (`useToast()`) in the dashboard layout; Settings switches and Save forms use one generic "Settings saved" message, password/email changes have their own.
+**Pitfalls/lessons:**
+- Theme CSS that sets `box-shadow` (Vesperfall cards) swallows Tailwind `ring-*`; the bill highlight needed its own `bill-row-highlight` rule. Recorded in lessons.md.
+- Toast text contains the bill name, so e2e `getByText(billName)` must use `exact: true`.
+- Migration was verified with a one-off script against Postgres (4 cases), not a test in the repo.
+**Files/areas:** backend/alembic/versions/d8e9f0a1b2c3_*, backend/app/{models,schemas,routers/bills.py,services/{recurrence,backup,reminder_job,export_xlsx}.py}, frontend/src/{context/toast-context.tsx,components/ui/Toast.tsx,components/bills/,components/settings/,app/dashboard/{bills,payments}/}, frontend/messages/*.json, frontend/src/app/globals.css, demo/seed_data.json.

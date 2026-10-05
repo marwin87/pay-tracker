@@ -22,6 +22,7 @@ Notable changes to Pay Tracker, release by release.
 - Changing or resetting your password now signs out your other sessions
 - Repeated failed logins and sign-up or password-reset spam are now blocked for a while
 - Deleting your account now asks for your password
+- Updated Next.js and other dependencies to patch known vulnerabilities
 
 ### Fixes
 

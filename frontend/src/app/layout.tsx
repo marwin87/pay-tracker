@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, Cinzel } from "next/font/google";
 import { AuthProvider } from "@/context/auth-context";
 import { LocaleProvider } from "@/context/locale-context";
@@ -25,6 +25,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Pay Tracker",
   description: "Household bill tracking made simple",
+};
+
+export const viewport: Viewport = {
   themeColor: "#2563eb",
 };
 
