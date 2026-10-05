@@ -1,9 +1,10 @@
 ---
 change_id: remove-pause-show-end-period
 title: Remove "pause recurrence" and show last payment month on Bills tile
-status: implementing
+status: archived
 created: 2026-10-05
 updated: 2026-10-05
+archived_at: 2026-10-05T10:18:25Z
 ---
 
 ## Notes

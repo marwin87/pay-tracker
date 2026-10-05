@@ -219,7 +219,7 @@ button:not(:disabled) {
 
 /* Categories carry no color of their own here: left accents and donut/legend use bronze
    tones only (the DB color still drives the other themes and the settings picker). */
-.theme-vesperfall .bill-row:not([class*="border-l-amber"]) { border-left-color: var(--color-semantic-neutral); }
+.theme-vesperfall .bill-row { border-left-color: var(--color-semantic-neutral); }
 .theme-vesperfall .donut-seg:nth-of-type(4n + 1) { stroke: var(--color-semantic-neutral-bright); }
 .theme-vesperfall .donut-seg:nth-of-type(4n + 2) { stroke: var(--color-semantic-neutral-muted); }
 .theme-vesperfall .donut-seg:nth-of-type(4n + 3) { stroke: var(--color-semantic-neutral); }
