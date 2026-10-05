@@ -345,3 +345,38 @@ def test_update_bill_null_clears_optional_fields(client):
     )
     assert r.status_code == 200
     assert r.json()["notes"] is None and r.json()["due_day"] is None
+
+
+def test_update_end_period_removes_instances_after_it(client):
+    token = register_and_login(client, "endcut@test.com")
+    bill_id = client.post(
+        "/bills", json=_bill(client, token), headers=auth(token)
+    ).json()["id"]
+    today = today_utc()
+    nxt = f"{today.year + (today.month == 12)}-{today.month % 12 + 1:02d}"
+    sync_payments(client, token, nxt)
+    assert client.get(f"/bills/payments?month={nxt}", headers=auth(token)).json()
+
+    this = today.strftime("%Y-%m")
+    r = client.patch(
+        f"/bills/{bill_id}", json={"end_period": this}, headers=auth(token)
+    )
+    assert r.status_code == 200
+    assert client.get(f"/bills/payments?month={nxt}", headers=auth(token)).json() == []
+
+
+def test_end_period_cut_does_not_trigger_restore_prompt(client):
+    token = register_and_login(client, "endprompt@test.com")
+    bill_id = client.post(
+        "/bills", json=_bill(client, token), headers=auth(token)
+    ).json()["id"]
+    today = today_utc()
+    nxt = f"{today.year + (today.month == 12)}-{today.month % 12 + 1:02d}"
+    sync_payments(client, token, nxt)
+    client.patch(
+        f"/bills/{bill_id}",
+        json={"end_period": today.strftime("%Y-%m")},
+        headers=auth(token),
+    )
+    r = client.get(f"/bills/{bill_id}/has-deleted-future", headers=auth(token))
+    assert r.json() == {"has_deleted_future": False}

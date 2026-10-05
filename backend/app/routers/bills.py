@@ -422,6 +422,15 @@ def update_bill(
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
 
+    if bill.end_period:
+        # Unpaid instances seeded past the new end are system-made: hard delete, so they
+        # are not mistaken for user deletions (tombstones) and regenerate if the end moves.
+        db.query(PaymentInstance).filter(
+            PaymentInstance.bill_id == bill.id,
+            PaymentInstance.period > bill.end_period,
+            PaymentInstance.status != PaymentStatus.paid,
+        ).delete(synchronize_session=False)
+
     if due_day_changed:
         unpaid = (
             db.query(PaymentInstance)
