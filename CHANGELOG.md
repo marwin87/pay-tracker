@@ -9,13 +9,14 @@ Notable changes to Pay Tracker, release by release.
 - Browse the dashboard summary of previous months
 - Share the month summary by email (opt-in in the Settings Reports tab)
 - Export payments to PDF for the month or the whole year (can be turned off in Settings)
-- New theme: Vesperfall
 - Time zone setting: reminders and “today” now follow your own time zone
 - Vertical sidebar menu on desktop, with wider content on the dashboard and other pages
 - Smoother page changes, without the loading flicker
 - Installed app icon shows the number of overdue payments
 - Last payment month shown on each bill, replacing “Pause recurrence”
 - Confirmation messages after saving; a saved bill is highlighted
+- New theme: Vesperfall
+- New app logo
 
 ### Security
 
