@@ -140,7 +140,6 @@ export async function createBillViaApi(
       amount: opts.amount ?? '99.99',
       currency: opts.currency ?? 'PLN',
       due_day: 15,
-      is_paused: false,
     },
     headers: { 'Content-Type': 'application/json', ...(await getCsrfHeader(page)) },
   });

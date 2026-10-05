@@ -22,7 +22,6 @@ _BILL_A = {
     "currency": "PLN",
     "due_day": 10,
     "notes": None,
-    "is_paused": False,
 }
 
 _BILL_B = {
@@ -32,7 +31,6 @@ _BILL_B = {
     "currency": "PLN",
     "due_day": 15,
     "notes": None,
-    "is_paused": False,
 }
 
 

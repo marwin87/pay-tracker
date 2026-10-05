@@ -16,7 +16,6 @@ _BASE_BILL = {
     "amount": "100.00",
     "currency": "PLN",
     "due_day": 15,
-    "is_paused": False,
 }
 
 
@@ -324,7 +323,7 @@ def test_update_bill_out_of_bounds_returns_422(client):
 
 
 @pytest.mark.parametrize(
-    "field", ["name", "category_id", "frequency", "amount", "currency", "is_paused"]
+    "field", ["name", "category_id", "frequency", "amount", "currency"]
 )
 def test_update_bill_null_on_required_field_returns_422(client, field):
     token = register_and_login(client, "nullreq@test.com")

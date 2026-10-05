@@ -227,7 +227,6 @@ def send_reminders_for_user(
         .filter(
             BillTemplate.user_id == user.id,
             BillTemplate.is_archived.is_(False),
-            BillTemplate.is_paused.is_(False),
         )
         .all()
     ]

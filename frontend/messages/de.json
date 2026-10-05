@@ -145,10 +145,7 @@
         "notesLabel": "Notizen",
         "notesPlaceholder": "Optionale Notizen",
         "endPeriodLabel": "Letzter Zahlungsmonat (optional)",
-        "endPeriodLast": "Letzte Zahlung: {month}.",
         "endPeriodAdjusted": "Der Zyklus überspringt diesen Monat – die letzte Zahlung ist im {month}.",
-        "endPeriodPaused": "Diese Rechnung ist pausiert – während der Pause werden keine Zahlungen erstellt, und der Endmonat verschiebt sich nicht.",
-        "pauseRecurrence": "Wiederholung pausieren (keine neuen Instanzen)",
         "cancel": "Abbrechen",
         "save": "Speichern",
         "saving": "Speichern…",
@@ -156,7 +153,7 @@
     },
     "BillTemplateRow": {
         "dueOn": "Fällig am",
-        "paused": "Pausiert",
+        "lastPayment": "Letzte Zahlung: {month}",
         "close": "Schließen",
         "edit": "Bearbeiten",
         "archive": "Archivieren"

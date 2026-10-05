@@ -17,7 +17,6 @@ def _bill(client, token, name, currency, amount="100.00"):
             "currency": currency,
             "due_day": 5,
             "notes": None,
-            "is_paused": False,
             "category_id": category_id(client, token),
         },
         headers=auth(token),

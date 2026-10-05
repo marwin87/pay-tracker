@@ -8,7 +8,6 @@ import CategoryCombobox from "./CategoryCombobox";
 import MonthDayCalendar from "./MonthDayCalendar";
 import MonthYearPicker from "./MonthYearPicker";
 import CurrencyPicker from "@/components/CurrencyPicker";
-import { Checkbox } from "@/components/ui/Checkbox";
 import Dropdown from "@/components/ui/Dropdown";
 import { LOCALE_DEFAULT_CURRENCY } from "@/lib/currency";
 import { formatAmount } from "@/lib/summary";
@@ -79,7 +78,6 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
   );
   const [notes, setNotes] = useState(initial?.notes ?? "");
   const [endPeriod, setEndPeriod] = useState(initial?.end_period ?? "");
-  const [isPaused, setIsPaused] = useState(initial?.is_paused ?? false);
   const [errors, setErrors] = useState<Errors>({});
   const [submitAttempted, setSubmitAttempted] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -142,7 +140,6 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
         due_month: dueMonth ? parseInt(dueMonth, 10) : null,
         end_period: isRecurring ? endPeriod || null : null,
         notes: notes.trim() || null,
-        is_paused: isPaused,
       };
       await onSave(payload);
     } catch (err) {
@@ -259,23 +256,15 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
           <div>
             <label htmlFor="bill-end-period" className={labelClass}>{t("endPeriodLabel")}</label>
             <MonthYearPicker id="bill-end-period" value={endPeriod} min={minEnd} onChange={setEndPeriod} />
-            {endHint && (
-              <p
-                className={`mt-1.5 text-xs ${
-                  endHint.aligned
-                    ? "text-slate-500 dark:text-slate-400"
-                    : "text-amber-600 dark:text-amber-400"
-                }`}
-              >
-                {t(endHint.aligned ? "endPeriodLast" : "endPeriodAdjusted", {
+            {/* Only warn when the cycle skips the chosen month; an aligned pick needs no echo */}
+            {endHint && !endHint.aligned && (
+              <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400">
+                {t("endPeriodAdjusted", {
                   month: new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
                     new Date(endHint.year, endHint.month - 1, 1),
                   ),
                 })}
               </p>
-            )}
-            {endPeriod && isPaused && (
-              <p className="mt-1.5 text-xs text-amber-600 dark:text-amber-400">{t("endPeriodPaused")}</p>
             )}
           </div>
         )}
@@ -305,9 +294,6 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
           />
         </div>
       </div>
-
-      {/* Paused toggle */}
-      <Checkbox checked={isPaused} onChange={setIsPaused} label={t("pauseRecurrence")} />
 
       <div className="flex justify-end gap-3 border-t border-slate-100 pt-4 dark:border-slate-700">
         <button

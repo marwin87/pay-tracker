@@ -5,7 +5,6 @@ import {
   Pencil,
   Archive as ArchiveIcon,
   ChevronUp,
-  PauseCircle,
   NotebookPen,
   MoreHorizontal,
 } from "lucide-react";
@@ -66,32 +65,30 @@ export default function BillTemplateRow({
 
   const dueLabel = formatDueLabel(template, locale);
 
-  // Paused overrides category color with amber
-  const leftBorder = template.is_paused
-    ? "border-l-amber-400 dark:border-l-amber-500"
-    : categoryBorderClass(template.category.color);
+  const leftBorder = categoryBorderClass(template.category.color);
+  const lastPaymentLabel = template.end_period
+    ? new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
+        new Date(
+          Number(template.end_period.slice(0, 4)),
+          Number(template.end_period.slice(5, 7)) - 1,
+          1,
+        ),
+      )
+    : null;
 
   return (
     <div
       className={`bill-row group rounded-xl border border-slate-200 bg-white shadow-sm dark:bg-slate-800 dark:border-slate-700 border-l-4 ${leftBorder}`}
     >
       {/* Collapsed row */}
-      <div
-        className={`flex items-center gap-3 px-4 py-3 ${template.is_paused ? "opacity-60" : ""}`}
-      >
+      <div className="flex items-center gap-3 px-4 py-3">
         {/* Two-line content */}
         <div className="flex flex-1 flex-col min-w-0 gap-0.5">
-          {/* Line 1: name + paused badge */}
+          {/* Line 1: name */}
           <div className="flex items-center gap-2 min-w-0">
             <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">
               {template.name}
             </span>
-            {template.is_paused && (
-              <span className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 shrink-0">
-                <PauseCircle size={10} />
-                {t("paused")}
-              </span>
-            )}
           </div>
 
           {/* Line 2: amount · frequency · due */}
@@ -105,6 +102,11 @@ export default function BillTemplateRow({
             {dueLabel && (
               <span className="text-xs text-slate-400 dark:text-slate-500">
                 {t("dueOn")}&nbsp;{dueLabel}
+              </span>
+            )}
+            {lastPaymentLabel && (
+              <span className="text-xs text-slate-400 dark:text-slate-500">
+                {t("lastPayment", { month: lastPaymentLabel })}
               </span>
             )}
           </div>
@@ -171,7 +173,6 @@ export default function BillTemplateRow({
               due_month: template.due_month,
               end_period: template.end_period,
               notes: template.notes,
-              is_paused: template.is_paused,
             }}
             onSave={onSave}
             onCancel={onEditToggle}

@@ -95,7 +95,7 @@ household finance manager does not need to check the dashboard proactively.
 ### Bill Templates
 
 - FR-003: User can create a bill template with name, amount, currency, category, due day of month,
-  recurrence type, and paused flag. Priority: must-have
+  recurrence type, and optional last payment month. Priority: must-have
   > Currency is a per-template string (PLN / EUR / USD / custom); default is PLN.
   > Socratic: Category kept as must-have — needed for export reporting and filtering.
 
@@ -126,7 +126,7 @@ household finance manager does not need to check the dashboard proactively.
   > actual equals expected; override is available for variable bills (e.g., utilities).
 
 - FR-009: System auto-creates the next-period payment instance when the current one is
-  marked as paid; auto-creation is suppressed when the template's paused flag is set.
+  marked as paid; auto-creation stops after the template's last payment month.
   Priority: must-have
   > Socratic: Pause flag at template level allows stopping recurrence without deleting the
   > template or losing its payment history.
@@ -259,9 +259,9 @@ Two distinct rules compose this behavior:
 2. **Recurrence automation:** Given a bill template's recurrence schedule (its frequency and interval — monthly every 1–12 months, annual every 1–5 years —
    and scheduled due day within the month) and a payment instance that has been marked
    paid, the system derives the next period's due date and creates a new instance for that
-   period — unless the template's paused flag is set. The output is a new payment instance
+   period — unless the template's last payment month has passed. The output is a new payment instance
    ready to appear on the dashboard with `upcoming` status. Auto-creation does not occur
-   for one-time (non-recurring) bills or for templates with the paused flag set.
+   for one-time (non-recurring) bills or past a template's last payment month.
 
 ## Access Control
 

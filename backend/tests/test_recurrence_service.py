@@ -189,7 +189,6 @@ def _make_bill(
     due_day: int = 15,
     amount: Decimal = Decimal("100.00"),
     start_period: str = "2026-01",
-    is_paused: bool = False,
     is_archived: bool = False,
     end_period: str | None = None,
 ) -> BillTemplate:
@@ -207,7 +206,6 @@ def _make_bill(
         due_day=due_day,
         start_period=start_period,
         end_period=end_period,
-        is_paused=is_paused,
         is_archived=is_archived,
         category_id=category.id,
         user_id=user_id,
@@ -435,17 +433,6 @@ def test_ensure_survives_a_concurrent_request_seeding_the_same_period(
 def test_ensure_skips_archived_template(db_session) -> None:
     user = _make_user(db_session)
     _make_bill(db_session, user.id, frequency=BillFrequency.monthly, is_archived=True)
-    user_id = user.id
-    db_session.commit()
-
-    ensure_current_period_instances(db_session, "2026-06", user_id)
-
-    assert db_session.query(PaymentInstance).count() == 0
-
-
-def test_ensure_skips_paused_template(db_session) -> None:
-    user = _make_user(db_session)
-    _make_bill(db_session, user.id, frequency=BillFrequency.monthly, is_paused=True)
     user_id = user.id
     db_session.commit()
 

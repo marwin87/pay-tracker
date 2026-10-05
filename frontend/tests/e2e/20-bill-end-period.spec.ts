@@ -36,7 +36,6 @@ test('paying the last instalment of a fixed-term bill creates no further payment
   const monthShort = new Intl.DateTimeFormat('en', { month: 'short', timeZone: 'UTC' }).format(now);
   await page.getByRole('button', { name: monthShort, exact: true }).click();
   await expect(endPicker).not.toHaveText('---');
-  await expect(page.getByText(/^Last payment: /)).toBeVisible();
   await page.getByRole('button', { name: 'Save' }).click();
   await expect(page.getByText(billName)).toBeVisible();
 
@@ -89,18 +88,26 @@ test('every-3-months bill warns when the end month is off its schedule', async (
   await expect(page.getByText(/Your cycle skips that month/)).toBeVisible();
 });
 
-test('pausing a bill with an end month shows a warning under the end field', async ({ page }) => {
+test('a bill with an end month shows its last payment month on the Bills tile', async ({ page }) => {
+  const withEnd = `E2E Tile End ${Date.now()}`;
+  const withoutEnd = `E2E Tile Open ${Date.now()}`;
+
   await loginNewUser(page);
+  const categoryId = (await (await page.request.get(`${API}/categories`)).json())[0].id;
+  for (const [name, end_period] of [[withEnd, '2099-12'], [withoutEnd, undefined]] as const) {
+    const res = await page.request.post(`${API}/bills`, {
+      data: { name, category_id: categoryId, frequency: 'monthly', amount: '50.00', currency: 'PLN', due_day: 15, end_period },
+      headers: { 'Content-Type': 'application/json', ...(await getCsrfHeader(page)) },
+    });
+    expect(res.ok()).toBeTruthy();
+  }
+
   await page.goto('/dashboard/bills');
-  await page.getByRole('button', { name: 'New Bill' }).click();
-
-  await page.getByLabel('Last payment month (optional)').click();
-  await page.getByRole('button', { name: 'Dec', exact: true }).click();
-  await expect(page.getByText(/no payments are created while paused/)).not.toBeVisible();
-
-  // (custom checkbox: the native input is sr-only, so click its label text)
-  await page.getByText('Pause recurrence (no new instances created)').click();
-  await expect(page.getByText(/no payments are created while paused/)).toBeVisible();
+  await expect(page.getByText(withEnd)).toBeVisible();
+  await expect(page.getByText(withoutEnd)).toBeVisible();
+  // Only the bill with an end month carries the text (new user, two bills)
+  await expect(page.getByText(/^Last payment: /)).toHaveCount(1);
+  await expect(page.getByText('Last payment: December 2099')).toBeVisible();
 });
 
 test('the final instalment is labelled "Last payment" on the payments page', async ({ page }) => {

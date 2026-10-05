@@ -61,7 +61,6 @@ def test_rename_category_reflects_on_existing_bills(client):
             "amount": "100.00",
             "currency": "PLN",
             "due_day": 15,
-            "is_paused": False,
         },
         headers=auth(tok),
     )
@@ -93,7 +92,6 @@ def test_archive_category_hides_it_by_default_but_keeps_bill_reference(client):
             "amount": "10.00",
             "currency": "PLN",
             "due_day": 1,
-            "is_paused": False,
         },
         headers=auth(tok),
     )
@@ -161,7 +159,6 @@ def test_bill_with_other_users_category_id_returns_403(client):
             "amount": "10.00",
             "currency": "PLN",
             "due_day": 1,
-            "is_paused": False,
         },
         headers=auth(tok_b),
     )

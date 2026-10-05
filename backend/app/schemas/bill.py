@@ -38,7 +38,6 @@ class BillTemplateCreate(BaseModel):
     due_month: int | None = Field(None, ge=1, le=12)  # month for annual/one_off
     end_period: str | None = Field(None, pattern=_PERIOD_RE)  # last recurring month
     notes: Notes | None = None
-    is_paused: bool = False
 
     @model_validator(mode="after")
     def _interval_fits_frequency(self) -> "BillTemplateCreate":
@@ -47,7 +46,7 @@ class BillTemplateCreate(BaseModel):
 
 
 _REQUIRED_ON_UPDATE = frozenset(
-    {"name", "category_id", "frequency", "amount", "currency", "is_paused"}
+    {"name", "category_id", "frequency", "amount", "currency"}
 )
 
 
@@ -62,7 +61,6 @@ class BillTemplateUpdate(BaseModel):
     due_month: int | None = Field(None, ge=1, le=12)  # month for annual/one_off
     end_period: str | None = Field(None, pattern=_PERIOD_RE)  # null clears the end
     notes: Notes | None = None
-    is_paused: bool | None = None
     recreate_deleted_future: bool = False  # transient control flag — not persisted
 
     @model_validator(mode="after")
@@ -88,7 +86,6 @@ class BillTemplateOut(BaseModel):
     due_day: int | None
     notes: str | None
     is_archived: bool
-    is_paused: bool
     created_at: datetime
     start_period: str | None = None
     end_period: str | None = None
@@ -185,7 +182,6 @@ class BackupTemplate(BaseModel):
     due_day: int | None
     notes: str | None
     is_archived: bool
-    is_paused: bool
     start_period: str | None
     end_period: str | None = None
     created_at: str

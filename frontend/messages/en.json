@@ -145,10 +145,7 @@
         "notesLabel": "Notes",
         "notesPlaceholder": "Optional notes",
         "endPeriodLabel": "Last payment month (optional)",
-        "endPeriodLast": "Last payment: {month}.",
         "endPeriodAdjusted": "Your cycle skips that month — the last payment will be in {month}.",
-        "endPeriodPaused": "This bill is paused — no payments are created while paused, and the end month does not move.",
-        "pauseRecurrence": "Pause recurrence (no new instances created)",
         "cancel": "Cancel",
         "save": "Save",
         "saving": "Saving…",
@@ -156,7 +153,7 @@
     },
     "BillTemplateRow": {
         "dueOn": "Due on",
-        "paused": "Paused",
+        "lastPayment": "Last payment: {month}",
         "close": "Close",
         "edit": "Edit",
         "archive": "Archive"

@@ -17,7 +17,6 @@ export interface BillTemplateOut {
   end_period: string | null;
   notes: string | null;
   is_archived: boolean;
-  is_paused: boolean;
   created_at: string;
 }
 
@@ -32,7 +31,6 @@ export interface BillTemplateCreate {
   due_month?: number | null;
   end_period?: string | null;
   notes?: string | null;
-  is_paused?: boolean;
 }
 
 export type BillTemplateUpdate = Partial<BillTemplateCreate> & {

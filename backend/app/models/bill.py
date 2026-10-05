@@ -59,7 +59,6 @@ class BillTemplate(Base):
     )  # day-of-month for monthly bills
     notes: Mapped[str | None] = mapped_column(Text)
     is_archived: Mapped[bool] = mapped_column(Boolean, default=False)
-    is_paused: Mapped[bool] = mapped_column(Boolean, default=False)
     # Recurrence anchor: YYYY-MM string set at creation from UTC month.
     # Avoids UTC-vs-local off-by-one when created_at straddles a month boundary.
     # NULL for rows created before this column existed; code falls back to created_at.

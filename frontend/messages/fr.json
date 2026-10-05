@@ -145,10 +145,7 @@
         "notesLabel": "Notes",
         "notesPlaceholder": "Notes facultatives",
         "endPeriodLabel": "Dernier mois de paiement (facultatif)",
-        "endPeriodLast": "Dernier paiement : {month}.",
         "endPeriodAdjusted": "Le cycle saute ce mois – le dernier paiement aura lieu en {month}.",
-        "endPeriodPaused": "Cette facture est suspendue — aucun paiement n'est créé pendant la pause et le mois de fin ne se décale pas.",
-        "pauseRecurrence": "Suspendre la récurrence (aucune nouvelle occurrence créée)",
         "cancel": "Annuler",
         "save": "Enregistrer",
         "saving": "Enregistrement…",
@@ -156,7 +153,7 @@
     },
     "BillTemplateRow": {
         "dueOn": "Échéance le",
-        "paused": "En pause",
+        "lastPayment": "Dernier paiement : {month}",
         "close": "Fermer",
         "edit": "Modifier",
         "archive": "Archiver"

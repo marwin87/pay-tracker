@@ -30,7 +30,7 @@ All notifications are switched off for this account (email, Telegram, browser), 
 | Tyre Change | Transport | One-off | €180.00 | |
 | Old Music App | **Streaming (Old)** *(archived category)* | Monthly | €4.99 | bill stays active — category is what's archived |
 | Coworking Desk | **Side Hustle** *(custom category)* | Monthly | €120.00 | |
-| Newspaper Subscription | Subscriptions | Monthly | €12.00 | **paused**, with `end_period` 2026-12 (shows the pause warning on the end field) |
+| Newspaper Subscription | Subscriptions | Monthly | €12.00 | with `end_period` 2026-12 (shows the last payment month on the tile) |
 | Laptop Installments | Other | Monthly | €89.99 | **fixed term** (`end_period` 2026-06) — all 6 instalments paid, no further payments generated |
 | Phone Installments | Other | Monthly | 129.00 PLN | **fixed term** (`end_period` 2026-12) — no payments generated after the last month |
 | Yoga Studio Membership *(archived bill)* | Healthcare | Monthly | €60.00 | |

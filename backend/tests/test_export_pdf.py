@@ -12,7 +12,6 @@ _BILL = {
     "currency": "PLN",
     "due_day": 10,
     "notes": None,
-    "is_paused": False,
     "due_month": 1,
 }
 

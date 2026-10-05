@@ -37,16 +37,11 @@ test('editing a bill persists amount, category, frequency, due day and pause', a
   await page.getByRole('button', { name: new RegExp(`${monthName} 15|15 ${monthName}`) }).click();
   await page.getByRole('button', { name: '20', exact: true }).click();
 
-  // Step: pause
-  // (custom checkbox: the native input is sr-only, so click its label text)
-  await page.getByText('Pause recurrence (no new instances created)').click();
-
   await page.getByRole('button', { name: 'Save' }).click();
 
   // Assert: every edited field is reflected on the collapsed row
   await expect(page.getByText('150.00 PLN')).toBeVisible();
   await expect(page.getByText('Every 3 months')).toBeVisible();
-  await expect(page.getByText('Paused')).toBeVisible();
   await expect(page.getByText(/Due on/)).toContainText('20');
 
   // Assert: persisted (not just optimistic) and regrouped under the new category

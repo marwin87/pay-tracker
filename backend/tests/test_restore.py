@@ -14,7 +14,6 @@ _BILL = {
     "currency": "PLN",
     "due_day": 15,
     "notes": None,
-    "is_paused": False,
 }
 
 _BILL2 = {
@@ -25,7 +24,6 @@ _BILL2 = {
     "currency": "PLN",
     "due_day": 10,
     "notes": None,
-    "is_paused": False,
 }
 
 _BILL_ALPHA = {
@@ -36,7 +34,6 @@ _BILL_ALPHA = {
     "currency": "PLN",
     "due_day": 5,
     "notes": None,
-    "is_paused": False,
     "end_period": "2099-12",  # exercised by the round-trip test
 }
 
@@ -48,7 +45,6 @@ _BILL_BETA = {
     "currency": "EUR",
     "due_day": 20,
     "notes": "template note",
-    "is_paused": False,
 }
 
 
@@ -202,7 +198,6 @@ def test_restore_replaces_existing_data(client):
                 "due_day": _BILL["due_day"],
                 "notes": None,
                 "is_archived": False,
-                "is_paused": False,
                 "start_period": None,
                 "created_at": "2026-01-01T00:00:00+00:00",
             }
@@ -334,7 +329,6 @@ def test_v2_backup_defaults_reminder_fields(client):
         "due_day": _BILL_ALPHA["due_day"],
         "notes": None,
         "is_archived": False,
-        "is_paused": False,
         "start_period": None,
         "created_at": "2026-01-01T00:00:00+00:00",
     }
@@ -411,7 +405,6 @@ def test_v3_backup_preserves_reminder_flags(client):
         "due_day": _BILL_ALPHA["due_day"],
         "notes": None,
         "is_archived": False,
-        "is_paused": False,
         "start_period": None,
         "created_at": "2026-01-01T00:00:00+00:00",
     }
@@ -483,7 +476,6 @@ def test_legacy_restore_falls_back_to_other_for_unknown_category_slug(client):
         "due_day": 1,
         "notes": None,
         "is_archived": False,
-        "is_paused": False,
         "start_period": None,
         "created_at": "2026-01-01T00:00:00+00:00",
     }

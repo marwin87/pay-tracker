@@ -11,7 +11,6 @@
       "due_day": 1,
       "notes": "Bank transfer to landlord",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -26,7 +25,6 @@
       "due_day": 15,
       "notes": "City council payment",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -41,7 +39,6 @@
       "due_day": 15,
       "notes": null,
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -55,7 +52,6 @@
       "due_day": 5,
       "notes": "Fiber 500 Mbps",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -69,7 +65,6 @@
       "due_day": 20,
       "notes": "Direct debit",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -83,7 +78,6 @@
       "due_day": 1,
       "notes": "Policy no. 789012",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-03",
       "created_at": "2026-03-01T08:00:00+00:00"
     },
@@ -97,7 +91,6 @@
       "due_day": 1,
       "notes": "Policy no. A123456",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-08",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -111,7 +104,6 @@
       "due_day": 22,
       "notes": null,
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-03",
       "created_at": "2026-03-01T08:00:00+00:00"
     },
@@ -125,7 +117,6 @@
       "due_day": 15,
       "notes": null,
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-09",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -139,7 +130,6 @@
       "due_day": 18,
       "notes": "Family plan",
       "is_archived": true,
-      "is_paused": false,
       "start_period": "2026-05",
       "created_at": "2026-05-01T08:00:00+00:00"
     },
@@ -153,7 +143,6 @@
       "due_day": 25,
       "notes": "Local cinema membership",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-04",
       "created_at": "2026-04-01T08:00:00+00:00"
     },
@@ -167,7 +156,6 @@
       "due_day": 1,
       "notes": null,
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -181,7 +169,6 @@
       "due_day": 15,
       "notes": "Summer tyre swap",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-06",
       "created_at": "2026-06-01T08:00:00+00:00"
     },
@@ -195,7 +182,6 @@
       "due_day": 1,
       "notes": null,
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -209,7 +195,6 @@
       "due_day": 10,
       "notes": "Annual dental appointment",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-09",
       "created_at": "2026-06-01T08:00:00+00:00"
     },
@@ -223,7 +208,6 @@
       "due_day": 1,
       "notes": "Advanced Python for backend devs",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-07",
       "created_at": "2026-06-01T08:00:00+00:00"
     },
@@ -237,7 +221,6 @@
       "due_day": 3,
       "notes": null,
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -251,7 +234,6 @@
       "due_day": 5,
       "notes": "Covers vet visits and emergencies",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -265,7 +247,6 @@
       "due_day": 1,
       "notes": "Local food bank",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-12",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -279,7 +260,6 @@
       "due_day": 12,
       "notes": "Kept it for the offline downloads",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-02",
       "created_at": "2026-02-01T08:00:00+00:00"
     },
@@ -293,7 +273,6 @@
       "due_day": 1,
       "notes": "Hot desk, 2 days/week",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -305,9 +284,8 @@
       "amount": 12.0,
       "currency": "EUR",
       "due_day": 10,
-      "notes": "Paused while traveling",
+      "notes": "Ends in December",
       "is_archived": false,
-      "is_paused": true,
       "start_period": "2026-01",
       "end_period": "2026-12",
       "created_at": "2026-01-01T08:00:00+00:00"
@@ -322,7 +300,6 @@
       "due_day": 5,
       "notes": "Cancelled after moving",
       "is_archived": true,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -336,7 +313,6 @@
       "due_day": 8,
       "notes": "Switched to the free tier",
       "is_archived": true,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -350,7 +326,6 @@
       "due_day": 1,
       "notes": "Lease ended, car returned",
       "is_archived": true,
-      "is_paused": false,
       "start_period": "2026-01",
       "created_at": "2026-01-01T08:00:00+00:00"
     },
@@ -364,7 +339,6 @@
       "due_day": 10,
       "notes": "Kid stopped lessons",
       "is_archived": true,
-      "is_paused": false,
       "start_period": "2026-02",
       "created_at": "2026-02-01T08:00:00+00:00"
     },
@@ -378,7 +352,6 @@
       "due_day": 10,
       "notes": "6 instalments, fully paid - no further payments generated",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-01",
       "end_period": "2026-06",
       "created_at": "2026-01-01T08:00:00+00:00"
@@ -393,7 +366,6 @@
       "due_day": 12,
       "notes": "Fixed term: last instalment Dec 2026",
       "is_archived": false,
-      "is_paused": false,
       "start_period": "2026-04",
       "end_period": "2026-12",
       "created_at": "2026-04-01T08:00:00+00:00"

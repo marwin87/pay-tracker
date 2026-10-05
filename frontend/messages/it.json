@@ -145,10 +145,7 @@
         "notesLabel": "Note",
         "notesPlaceholder": "Note facoltative",
         "endPeriodLabel": "Ultimo mese di pagamento (facoltativo)",
-        "endPeriodLast": "Ultimo pagamento: {month}.",
         "endPeriodAdjusted": "Il ciclo salta quel mese: l'ultimo pagamento sarà a {month}.",
-        "endPeriodPaused": "Questa bolletta è in pausa: durante la pausa non vengono creati pagamenti e il mese finale non si sposta.",
-        "pauseRecurrence": "Metti in pausa la ricorrenza (nessuna nuova occorrenza creata)",
         "cancel": "Annulla",
         "save": "Salva",
         "saving": "Salvataggio…",
@@ -156,7 +153,7 @@
     },
     "BillTemplateRow": {
         "dueOn": "Scade il",
-        "paused": "In pausa",
+        "lastPayment": "Ultimo pagamento: {month}",
         "close": "Chiudi",
         "edit": "Modifica",
         "archive": "Archivia"
