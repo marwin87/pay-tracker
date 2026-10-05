@@ -213,6 +213,7 @@
     "PaymentsPage": {
         "title": "Pagos",
         "subtitle": "Controla y marca tus facturas mes a mes.",
+        "paymentEdited": "Pago «{name}» guardado",
         "paymentPaid": "«{name}» marcada como pagada",
         "paymentDeleted": "Pago «{name}» eliminado",
         "paymentReverted": "Pago «{name}» revertido",

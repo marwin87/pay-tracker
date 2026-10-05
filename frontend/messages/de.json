@@ -213,6 +213,7 @@
     "PaymentsPage": {
         "title": "Zahlungen",
         "subtitle": "Verfolgen und markieren Sie Ihre Rechnungen Monat für Monat.",
+        "paymentEdited": "Zahlung „{name}“ gespeichert",
         "paymentPaid": "„{name}“ als bezahlt markiert",
         "paymentDeleted": "Zahlung „{name}“ gelöscht",
         "paymentReverted": "Zahlung „{name}“ zurückgesetzt",

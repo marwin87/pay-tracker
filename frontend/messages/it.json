@@ -213,6 +213,7 @@
     "PaymentsPage": {
         "title": "Pagamenti",
         "subtitle": "Monitora e segna le tue bollette mese per mese.",
+        "paymentEdited": "Pagamento «{name}» salvato",
         "paymentPaid": "«{name}» segnata come pagata",
         "paymentDeleted": "Pagamento «{name}» eliminato",
         "paymentReverted": "Pagamento «{name}» annullato",

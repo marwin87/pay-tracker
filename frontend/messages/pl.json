@@ -213,6 +213,7 @@
     "PaymentsPage": {
         "title": "Płatności",
         "subtitle": "Śledź i oznaczaj swoje rachunki miesiąc po miesiącu.",
+        "paymentEdited": "Zapisano płatność „{name}”",
         "paymentPaid": "Zapłacono „{name}”",
         "paymentDeleted": "Usunięto płatność „{name}”",
         "paymentReverted": "Cofnięto płatność „{name}”",

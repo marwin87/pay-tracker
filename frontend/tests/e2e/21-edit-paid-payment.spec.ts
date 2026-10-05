@@ -16,7 +16,7 @@ test('editing a paid payment keeps it paid, saves new amount and note, survives 
   await syncPaymentsViaApi(page);
 
   await page.goto('/dashboard/payments');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: pay it with an initial amount and note
   await page.getByRole('button', { name: 'Mark as Paid' }).click();
@@ -63,7 +63,7 @@ test('editing an unpaid payment sets its own amount and note, then paying defaul
   await syncPaymentsViaApi(page);
 
   await page.goto('/dashboard/payments');
-  await expect(page.getByText(billName)).toBeVisible();
+  await expect(page.getByText(billName, { exact: true })).toBeVisible();
 
   // Step: set this payment's own amount + a note before paying (no date field)
   await page.getByLabel('Edit payment').click();

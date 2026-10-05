@@ -28,7 +28,7 @@
 
 ## Soft-delete is the correct tombstone for idempotent instance generation
 
-**Rule:** When a `PaymentInstance` is deleted by the user, set `is_deleted = True` rather than hard-deleting the row. Never use template-level flags (archived, paused, custom columns) to prevent instance regeneration as a side-effect of a payment action.
+**Rule:** When a `PaymentInstance` is deleted by the user, set `is_deleted = True` rather than hard-deleting the row. Never use template-level flags (archived, custom columns) to prevent instance regeneration as a side-effect of a payment action.
 
 **Why:** `ensure_current_period_instances` is idempotent — it skips a period if any row already exists for `(bill_id, period)`. A soft-deleted row satisfies this check automatically, making it a zero-cost tombstone. Hard-deleting the row removes the tombstone and the seeder regenerates the entry on the next page load. The alternative (setting `deleted_from_period` on `BillTemplate`) was implemented, shipped, and then reverted: it coupled instance lifecycle to template state, introduced a "reactivate" concept with no natural UX, and made a simple delete action require reasoning about two models simultaneously.
 
@@ -59,3 +59,11 @@
 **Why:** The CLAUDE.md commit protocol is a project-level hard rule. Skill instructions are general-purpose and do not know about project-specific constraints. When the two conflict, CLAUDE.md wins — always.
 
 **Applies to:** Every skill that includes a commit step (`/10x-implement`, `/10x-archive`, any future skill). The rule fires regardless of how mechanical or routine the commit appears.
+
+## Theme CSS that sets `box-shadow` swallows Tailwind `ring-*` utilities
+
+**Rule:** Tailwind draws `ring-*` as a `box-shadow`. Any theme override that sets `box-shadow` on the same element (Vesperfall does it for `.dark\:bg-slate-800` cards) wins over the ring, so the ring never shows. For a highlight or focus ring on such an element, add a dedicated class plus a rule in `globals.css` that redraws the shadow for the theme, and test it on every theme.
+
+**Why:** The just-saved bill highlight (`ring-2 ring-green-*` on the bill tile) was invisible on the Vesperfall theme because its card rule replaced the ring. The same trap is already handled for calendar days (`button[data-selected]`). Fixed with a `bill-row-highlight` class and a Vesperfall rule using the Toast's border color.
+
+**Applies to:** Any new ring, outline-as-shadow, or glow on cards, tiles, or buttons. Check it on Vesperfall, light, and dark before calling it done.

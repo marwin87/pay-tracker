@@ -213,6 +213,7 @@
     "PaymentsPage": {
         "title": "付款",
         "subtitle": "按月跟踪并标记您的账单。",
+        "paymentEdited": "已保存付款“{name}”",
         "paymentPaid": "已标记“{name}”为已付款",
         "paymentDeleted": "已删除付款“{name}”",
         "paymentReverted": "已撤销付款“{name}”",

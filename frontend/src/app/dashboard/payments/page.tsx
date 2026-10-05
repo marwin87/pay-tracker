@@ -240,6 +240,7 @@ function PaymentsPageInner() {
       prev.map((inst) => (inst.id === updated.id ? updated : inst)),
     );
     setEditTarget(null);
+    showToast(t("paymentEdited", { name: updated.bill_name }));
   }
 
   function handleInstanceDeleted(id: number) {

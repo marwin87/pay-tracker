@@ -664,6 +664,7 @@ def test_is_last_instance(db_session) -> None:
     assert is_last_instance(open_ended, "2026-03") is False
     assert is_last_instance(monthly, "2026-02") is False
     assert is_last_instance(monthly, "2026-03") is True
+    assert is_last_instance(monthly, "2026-04") is False
     # quarterly: Oct is the last scheduled before the Nov end
     assert is_last_instance(quarterly, "2026-07") is False
     assert is_last_instance(quarterly, "2026-10") is True

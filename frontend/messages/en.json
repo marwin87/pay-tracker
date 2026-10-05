@@ -213,6 +213,7 @@
     "PaymentsPage": {
         "title": "Payments",
         "subtitle": "Track and mark your bills month by month.",
+        "paymentEdited": "Payment “{name}” saved",
         "paymentPaid": "“{name}” marked as paid",
         "paymentDeleted": "Payment “{name}” deleted",
         "paymentReverted": "Payment “{name}” reverted",

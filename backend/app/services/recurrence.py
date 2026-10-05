@@ -23,6 +23,8 @@ def is_last_instance(template: BillTemplate, period: str) -> bool:
     """True if no further instance follows `period` because end_period cuts the schedule."""
     if not template.end_period or template.frequency == BillFrequency.one_off:
         return False
+    if period > template.end_period:
+        return False  # a paid leftover past the end is not the final instalment
     return (
         _next_period(period, template.frequency, template.interval)
         > template.end_period

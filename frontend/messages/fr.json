@@ -213,6 +213,7 @@
     "PaymentsPage": {
         "title": "Paiements",
         "subtitle": "Suivez et marquez vos factures mois par mois.",
+        "paymentEdited": "Paiement « {name} » enregistré",
         "paymentPaid": "« {name} » marquée comme payée",
         "paymentDeleted": "Paiement « {name} » supprimé",
         "paymentReverted": "Paiement « {name} » annulé",
