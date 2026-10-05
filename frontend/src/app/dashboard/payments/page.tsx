@@ -148,6 +148,7 @@ function PaymentsPageInner() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
   const [shareAvailable, setShareAvailable] = useState(false);
+  const [shareEmails, setShareEmails] = useState<string[]>([]);
   const [shareOpen, setShareOpen] = useState(false);
   const [shareSent, setShareSent] = useState(false);
   const [selectedDay, setSelectedDay] = useState<string | null>(null);
@@ -217,6 +218,7 @@ function PaymentsPageInner() {
         setExportEnabled(profile.export_enabled);
         setPdfEnabled(profile.pdf_enabled);
         if (!profile.share_enabled) return;
+        setShareEmails(profile.share_emails);
         return apiFetch<{ configured: boolean }>("/auth/smtp-status").then((d) => {
           if (!cancelled) setShareAvailable(d?.configured ?? false);
         });
@@ -546,6 +548,7 @@ function PaymentsPageInner() {
         {shareOpen && (
           <ShareMonthDialog
             month={selectedMonth}
+            savedEmails={shareEmails}
             monthLabel={new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
               new Date(Number(selectedMonth.slice(0, 4)), Number(selectedMonth.slice(5, 7)) - 1),
             )}

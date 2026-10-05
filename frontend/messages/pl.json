@@ -560,7 +560,11 @@
         "shareByEmail": {
             "title": "Udostępnianie miesiąca e-mailem",
             "description": "Dodaje na stronie Płatności przycisk wysyłający podsumowanie miesiąca na dowolny adres e-mail. Wymaga skonfigurowanego e-maila.",
-            "toggleLabel": "Włącz udostępnianie e-mailem"
+            "toggleLabel": "Włącz udostępnianie e-mailem",
+            "recipientsLabel": "Zapisani odbiorcy",
+            "addPlaceholder": "imie@example.com",
+            "add": "Dodaj adres",
+            "remove": "Usuń {email}"
         }
     },
     "Categories": {
@@ -663,6 +667,7 @@
         "monthYear": "{month} {year}"
     },
     "ShareMonthDialog": {
+        "savedLabel": "Zapisane adresy",
         "title": "Udostępnij e-mailem",
         "description": "Wyślij podsumowanie miesiąca {month} na adres e-mail.",
         "emailLabel": "Adres e-mail",

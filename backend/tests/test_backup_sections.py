@@ -124,6 +124,7 @@ def test_export_default_is_full(client):
         ],
         "pdf_enabled": True,
         "share_enabled": False,
+        "share_emails": [],
     }
     assert body["telegram"]["bot_token"] == _TOKEN
     assert set(body["notifications"]) == {
@@ -161,7 +162,10 @@ def test_export_prefs_sections_are_independent(client):
         "pdf_enabled",
         "pdf_fields",
     }
-    assert set(_export(client, tok, ["share"])["preferences"]) == {"share_enabled"}
+    assert set(_export(client, tok, ["share"])["preferences"]) == {
+        "share_enabled",
+        "share_emails",
+    }
 
 
 def test_export_email_excludes_telegram_and_vice_versa(client):
@@ -328,12 +332,22 @@ def test_snapshot_undo_restores_preferences(client):
 
 def test_share_enabled_round_trip_and_old_backup_leaves_it(client):
     tok = register_and_login(client, "share@test.com")
-    client.patch("/auth/me", json={"share_enabled": True}, headers=auth(tok))
+    client.patch(
+        "/auth/me",
+        json={"share_enabled": True, "share_emails": ["a@gmail.com"]},
+        headers=auth(tok),
+    )
     backup = _export(client, tok, ["share"])
     assert backup["preferences"]["share_enabled"] is True
-    client.patch("/auth/me", json={"share_enabled": False}, headers=auth(tok))
+    assert backup["preferences"]["share_emails"] == ["a@gmail.com"]
+    client.patch(
+        "/auth/me",
+        json={"share_enabled": False, "share_emails": []},
+        headers=auth(tok),
+    )
     assert _upload(client, tok, backup).status_code == 200
     assert _me(client, tok)["share_enabled"] is True
+    assert _me(client, tok)["share_emails"] == ["a@gmail.com"]
     old = {"schema_version": 6, "preferences": {"decimal_separator": ","}}
     assert _upload(client, tok, old).status_code == 200
     assert _me(client, tok)["share_enabled"] is True

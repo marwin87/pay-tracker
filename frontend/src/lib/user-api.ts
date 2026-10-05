@@ -52,6 +52,7 @@ export interface UserProfile {
   pdf_enabled: boolean;
   pdf_fields: ExportFieldKey[];
   share_enabled: boolean;
+  share_emails: string[];
   export_fields: ExportFieldKey[];
 }
 
@@ -89,6 +90,7 @@ export function updateMe(
       | "pdf_enabled"
       | "pdf_fields"
       | "share_enabled"
+      | "share_emails"
       | "export_fields"
     >
   > & { telegram_bot_token?: string }, // write-only; "" clears
@@ -129,12 +131,12 @@ export function sendMonthlySummaryNow(
 }
 
 export function shareMonthByEmail(
-  email: string,
+  emails: string[],
   month: string,
 ): Promise<{ sent: boolean }> {
   return apiFetch<{ sent: boolean }>("/auth/share-month", {
     method: "POST",
-    body: JSON.stringify({ email, month }),
+    body: JSON.stringify({ emails, month }),
   });
 }
 

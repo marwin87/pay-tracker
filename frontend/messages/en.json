@@ -560,7 +560,11 @@
         "shareByEmail": {
             "title": "Share month by email",
             "description": "Adds a share button on the Payments page that emails the month summary to any address. Requires e-mail to be configured.",
-            "toggleLabel": "Enable sharing by email"
+            "toggleLabel": "Enable sharing by email",
+            "recipientsLabel": "Saved recipients",
+            "addPlaceholder": "name@example.com",
+            "add": "Add email",
+            "remove": "Remove {email}"
         }
     },
     "Categories": {
@@ -663,6 +667,7 @@
         "monthYear": "{month} {year}"
     },
     "ShareMonthDialog": {
+        "savedLabel": "Saved addresses",
         "title": "Share by email",
         "description": "Send the summary of {month} to an email address.",
         "emailLabel": "Email address",

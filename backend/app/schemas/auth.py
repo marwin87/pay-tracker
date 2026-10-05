@@ -43,6 +43,16 @@ def _normalize_email(v: str) -> str:
 NormalizedEmail = Annotated[EmailStr, AfterValidator(_normalize_email)]
 
 
+def _dedupe(v: list[str]) -> list[str]:
+    return list(dict.fromkeys(v))
+
+
+# Saved share recipients, one per line in Settings and checkboxes in the share dialog.
+ShareEmails = Annotated[
+    list[NormalizedEmail], Field(max_length=20), AfterValidator(_dedupe)
+]
+
+
 def _check_timezone(v: str) -> str:
     if not is_valid_tz(v):
         raise ValueError(f"Unknown time zone: {v}")
@@ -143,6 +153,7 @@ class UserProfileOut(BaseModel):
     export_enabled: bool
     pdf_enabled: bool
     share_enabled: bool
+    share_emails: list[str]
     export_fields: list[ExportFieldKey]
     pdf_fields: list[ExportFieldKey]
 
@@ -203,6 +214,7 @@ class UserProfileUpdate(BaseModel):
     export_enabled: bool | None = None
     pdf_enabled: bool | None = None
     share_enabled: bool | None = None
+    share_emails: ShareEmails | None = None
     export_fields: list[ExportFieldKey] | None = None
     pdf_fields: list[ExportFieldKey] | None = None
 
@@ -255,7 +267,7 @@ class SendMonthlySummaryNowOut(BaseModel):
 
 
 class ShareMonthRequest(BaseModel):
-    email: NormalizedEmail
+    emails: Annotated[ShareEmails, Field(min_length=1)]
     month: Annotated[str, Field(pattern=r"^\d{4}-(0[1-9]|1[0-2])$")]
 
 

@@ -560,7 +560,11 @@
         "shareByEmail": {
             "title": "Monat per E-Mail teilen",
             "description": "Fügt auf der Zahlungsseite eine Schaltfläche hinzu, die die Monatsübersicht an eine beliebige Adresse sendet. Erfordert konfigurierte E-Mail.",
-            "toggleLabel": "Teilen per E-Mail aktivieren"
+            "toggleLabel": "Teilen per E-Mail aktivieren",
+            "recipientsLabel": "Gespeicherte Empfänger",
+            "addPlaceholder": "name@example.com",
+            "add": "Adresse hinzufügen",
+            "remove": "{email} entfernen"
         }
     },
     "Categories": {
@@ -663,6 +667,7 @@
         "monthYear": "{month} {year}"
     },
     "ShareMonthDialog": {
+        "savedLabel": "Gespeicherte Adressen",
         "title": "Per E-Mail teilen",
         "description": "Sende die Übersicht für {month} an eine E-Mail-Adresse.",
         "emailLabel": "E-Mail-Adresse",

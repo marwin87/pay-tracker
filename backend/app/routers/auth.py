@@ -305,15 +305,20 @@ def share_month(
     _channel_or_400(user, "email")
     if not user.share_enabled:
         raise HTTPException(status_code=403, detail="Sharing by email is disabled")
-    if _is_blocked_domain(body.email):
+    if any(_is_blocked_domain(e) for e in body.emails):
         raise HTTPException(status_code=400, detail="Recipient domain not allowed")
     # ponytail: per-process memory, resets on restart; move to DB/redis if multi-worker
     cutoff = datetime.now(timezone.utc) - timedelta(hours=1)
     recent = [ts for ts in _share_sent.get(user.id, []) if ts > cutoff]
-    if len(recent) >= _SHARE_LIMIT:
+    if len(recent) + len(body.emails) > _SHARE_LIMIT:
         raise HTTPException(status_code=429, detail="Too many shares, try later")
-    _share_sent[user.id] = recent + [datetime.now(timezone.utc)]
-    sent = send_monthly_summary_for_user(db, user, body.month, EMAIL, body.email)
+    now = datetime.now(timezone.utc)
+    _share_sent[user.id] = recent + [now] * len(body.emails)
+    results = [
+        send_monthly_summary_for_user(db, user, body.month, EMAIL, e)
+        for e in body.emails
+    ]
+    sent = all(results)
     return SendMonthlySummaryNowOut(sent=sent)
 
 

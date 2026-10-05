@@ -7,7 +7,7 @@ Notable changes to Pay Tracker, release by release.
 ### Features
 
 - Browse the dashboard summary of previous months
-- Share the month summary by email (opt-in in the Settings Reports tab)
+- Share the month summary by email, with saved recipients to pick from (opt-in in the Settings Reports tab)
 - Export payments to PDF for the month or the whole year (can be turned off in Settings)
 - Time zone setting: reminders and “today” now follow your own time zone
 - Vertical sidebar menu on desktop, with wider content on the dashboard and other pages

@@ -154,6 +154,7 @@ def _build_backup_arrays(
         prefs["pdf_fields"] = list(user.pdf_fields)
     if "share" in sections:
         prefs["share_enabled"] = user.share_enabled
+        prefs["share_emails"] = list(user.share_emails)
     if prefs:
         out["preferences"] = prefs
 
@@ -377,6 +378,8 @@ def _apply_backup(db: Session, user_id: int, backup: BackupPayload) -> tuple[int
                 user.pdf_enabled = p.pdf_enabled
             if p.share_enabled is not None:
                 user.share_enabled = p.share_enabled
+            if p.share_emails is not None:
+                user.share_emails = p.share_emails
             if p.export_fields is not None:
                 user.export_fields = p.export_fields
             if p.pdf_fields is not None:

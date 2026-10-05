@@ -560,7 +560,11 @@
         "shareByEmail": {
             "title": "Partager le mois par e-mail",
             "description": "Ajoute sur la page Paiements un bouton qui envoie le résumé du mois à n'importe quelle adresse. Nécessite un e-mail configuré.",
-            "toggleLabel": "Activer le partage par e-mail"
+            "toggleLabel": "Activer le partage par e-mail",
+            "recipientsLabel": "Destinataires enregistrés",
+            "addPlaceholder": "nom@example.com",
+            "add": "Ajouter une adresse",
+            "remove": "Retirer {email}"
         }
     },
     "Categories": {
@@ -663,6 +667,7 @@
         "monthYear": "{month} {year}"
     },
     "ShareMonthDialog": {
+        "savedLabel": "Adresses enregistrées",
         "title": "Partager par e-mail",
         "description": "Envoyer le résumé de {month} à une adresse e-mail.",
         "emailLabel": "Adresse e-mail",

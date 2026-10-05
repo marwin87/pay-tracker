@@ -560,7 +560,11 @@
         "shareByEmail": {
             "title": "Compartir el mes por correo",
             "description": "Añade en la página de Pagos un botón que envía el resumen del mes a cualquier dirección. Requiere el correo configurado.",
-            "toggleLabel": "Activar compartir por correo"
+            "toggleLabel": "Activar compartir por correo",
+            "recipientsLabel": "Destinatarios guardados",
+            "addPlaceholder": "nombre@example.com",
+            "add": "Añadir correo",
+            "remove": "Quitar {email}"
         }
     },
     "Categories": {
@@ -663,6 +667,7 @@
         "monthYear": "{month} {year}"
     },
     "ShareMonthDialog": {
+        "savedLabel": "Direcciones guardadas",
         "title": "Compartir por correo",
         "description": "Envía el resumen de {month} a una dirección de correo.",
         "emailLabel": "Dirección de correo",

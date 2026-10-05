@@ -560,7 +560,11 @@
         "shareByEmail": {
             "title": "通过邮件分享月份",
             "description": "在付款页面添加分享按钮，可将月度汇总发送到任意邮箱。需要已配置邮件。",
-            "toggleLabel": "启用邮件分享"
+            "toggleLabel": "启用邮件分享",
+            "recipientsLabel": "已保存的收件人",
+            "addPlaceholder": "name@example.com",
+            "add": "添加邮箱",
+            "remove": "移除 {email}"
         }
     },
     "Categories": {
@@ -663,6 +667,7 @@
         "monthYear": "{year}年{month}"
     },
     "ShareMonthDialog": {
+        "savedLabel": "已保存的地址",
         "title": "通过邮件分享",
         "description": "将 {month} 的汇总发送到一个邮箱地址。",
         "emailLabel": "邮箱地址",

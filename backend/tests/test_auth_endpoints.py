@@ -573,7 +573,7 @@ def test_new_user_has_all_notifications_disabled(client):
 # POST /auth/share-month
 # ---------------------------------------------------------------------------
 
-_SHARE = {"email": "friend@gmail.com", "month": "2026-09"}
+_SHARE = {"emails": ["friend@gmail.com"], "month": "2026-09"}
 
 
 def _share(client, token, body=None):
@@ -606,12 +606,46 @@ def test_share_month_sends_to_given_address(client):
     assert mock_send.call_args.args[2] == "2026-09"
 
 
+def test_share_month_sends_to_each_recipient(client):
+    from app.routers.auth import _share_sent
+
+    _share_sent.clear()
+    tok = register_and_login(client, "share_multi@test.com", _PASSWORD)
+    client.patch("/auth/me", json={"share_enabled": True}, headers=auth(tok))
+    body = {**_SHARE, "emails": ["a@gmail.com", "b@gmail.com"]}
+    r, mock_send = _share(client, tok, body)
+    assert r.status_code == 200 and r.json()["sent"] is True
+    assert [c.args[-1] for c in mock_send.call_args_list] == [
+        "a@gmail.com",
+        "b@gmail.com",
+    ]
+
+
+def test_share_emails_saved_normalized_and_validated(client):
+    tok = register_and_login(client, "share_list@test.com", _PASSWORD)
+    r = client.patch(
+        "/auth/me",
+        json={"share_emails": ["A@Gmail.com", "a@gmail.com", "b@gmail.com"]},
+        headers=auth(tok),
+    )
+    assert r.json()["share_emails"] == ["a@gmail.com", "b@gmail.com"]
+    bad = client.patch("/auth/me", json={"share_emails": ["nope"]}, headers=auth(tok))
+    assert bad.status_code == 422
+    many = [f"u{i}@gmail.com" for i in range(21)]
+    assert (
+        client.patch(
+            "/auth/me", json={"share_emails": many}, headers=auth(tok)
+        ).status_code
+        == 422
+    )
+
+
 def test_share_month_validation_and_blocked_domain(client):
     tok = register_and_login(client, "share_val@test.com", _PASSWORD)
     client.patch("/auth/me", json={"share_enabled": True}, headers=auth(tok))
-    assert _share(client, tok, {**_SHARE, "email": "nope"})[0].status_code == 422
+    assert _share(client, tok, {**_SHARE, "emails": ["nope"]})[0].status_code == 422
     assert _share(client, tok, {**_SHARE, "month": "2026-13"})[0].status_code == 422
-    blocked = {**_SHARE, "email": "x@example.com"}
+    blocked = {**_SHARE, "emails": ["x@example.com"]}
     assert _share(client, tok, blocked)[0].status_code == 400
 
 

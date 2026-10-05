@@ -111,6 +111,9 @@ class User(Base):
     share_enabled: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
     )
+    share_emails: Mapped[list[str]] = mapped_column(
+        ARRAY(String(254)), nullable=False, server_default="{}"
+    )
     export_fields: Mapped[list[str]] = mapped_column(
         ARRAY(String(20)),
         nullable=False,

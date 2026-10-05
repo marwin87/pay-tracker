@@ -4,6 +4,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, computed_field, field_validator, model_validator
 from app.models.bill import BillFrequency, PaymentStatus
 from app.schemas.auth import (
+    ShareEmails,
     normalize_bot_token,
     normalize_chat_id,
     validate_export_fields,
@@ -269,6 +270,7 @@ class BackupPreferences(BaseModel):
     export_enabled: bool | None = None
     pdf_enabled: bool | None = None
     share_enabled: bool | None = None
+    share_emails: ShareEmails | None = None
     export_fields: list[str] | None = None
     pdf_fields: list[str] | None = None
 

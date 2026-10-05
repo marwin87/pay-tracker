@@ -17,7 +17,7 @@ async function enableShare(page: import('@playwright/test').Page) {
 
 test('Share > hidden until opted in, then sends the selected month to the typed address', async ({ page }) => {
   await page.route('**/auth/smtp-status', (r) => r.fulfill({ json: { configured: true } }));
-  let posted: { email: string; month: string } | null = null;
+  let posted: { emails: string[]; month: string } | null = null;
   await page.route('**/auth/share-month', async (r) => {
     posted = r.request().postDataJSON();
     await r.fulfill({ json: { sent: true } });
@@ -39,7 +39,7 @@ test('Share > hidden until opted in, then sends the selected month to the typed 
   await send.click();
 
   await expect(page.getByText('Month summary sent')).toBeVisible();
-  expect(posted).toMatchObject({ email: 'friend@gmail.com', month: /^\d{4}-\d{2}$/ });
+  expect(posted).toMatchObject({ emails: ['friend@gmail.com'], month: /^\d{4}-\d{2}$/ });
 });
 
 test('Share > hidden when SMTP is not configured', async ({ page }) => {
@@ -77,4 +77,32 @@ test('Share > follows the year arrows: same month, new year', async ({ page }) =
 
   await expect(page.getByText('Month summary sent')).toBeVisible();
   expect(posted).toMatchObject({ month: `${lastYear}-${month}` });
+});
+
+test('Share > saved addresses are picked by checkbox and combined with a typed one', async ({ page }) => {
+  await page.route('**/auth/smtp-status', (r) => r.fulfill({ json: { configured: true } }));
+  let posted: { emails: string[] } | null = null;
+  await page.route('**/auth/share-month', async (r) => {
+    posted = r.request().postDataJSON();
+    await r.fulfill({ json: { sent: true } });
+  });
+
+  await loginNewUser(page);
+  const res = await page.request.patch(`${API}/auth/me`, {
+    data: { share_enabled: true, share_emails: ['a@gmail.com', 'b@gmail.com'] },
+    headers: await getCsrfHeader(page),
+  });
+  expect(res.ok()).toBeTruthy();
+  await page.goto('/dashboard/payments');
+  await page.getByRole('button', { name: 'Share by email' }).click();
+
+  const dialog = page.getByRole('dialog');
+  const send = dialog.getByRole('button', { name: 'Send', exact: true });
+  await expect(send).toBeDisabled();
+  await dialog.getByLabel('b@gmail.com').check({ force: true });
+  await dialog.getByLabel('Email address').fill('c@gmail.com');
+  await send.click();
+
+  await expect(page.getByText('Month summary sent')).toBeVisible();
+  expect(posted!.emails.sort()).toEqual(['b@gmail.com', 'c@gmail.com']);
 });

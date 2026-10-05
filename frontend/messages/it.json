@@ -560,7 +560,11 @@
         "shareByEmail": {
             "title": "Condividi il mese via e-mail",
             "description": "Aggiunge nella pagina Pagamenti un pulsante che invia il riepilogo del mese a qualsiasi indirizzo. Richiede l'e-mail configurata.",
-            "toggleLabel": "Attiva la condivisione via e-mail"
+            "toggleLabel": "Attiva la condivisione via e-mail",
+            "recipientsLabel": "Destinatari salvati",
+            "addPlaceholder": "nome@example.com",
+            "add": "Aggiungi indirizzo",
+            "remove": "Rimuovi {email}"
         }
     },
     "Categories": {
@@ -663,6 +667,7 @@
         "monthYear": "{month} {year}"
     },
     "ShareMonthDialog": {
+        "savedLabel": "Indirizzi salvati",
         "title": "Condividi via e-mail",
         "description": "Invia il riepilogo di {month} a un indirizzo e-mail.",
         "emailLabel": "Indirizzo e-mail",
