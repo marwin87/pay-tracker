@@ -107,9 +107,9 @@ export default function DashboardLayout({
   const palette = avatarPalette(userEmail);
 
   return (
-    <div className="flex min-h-screen flex-col md:-mb-9">
+    <div className="flex min-h-dvh flex-col md:-mb-9">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-50 hidden w-60 flex-col border-r border-slate-200 dark:border-slate-700 md:flex">
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-60 flex-col overflow-y-auto border-r border-slate-200 dark:border-slate-700 md:flex">
         <Link
           href="/dashboard"
           className="flex items-center gap-2 px-4 py-4 transition-opacity hover:opacity-80"
@@ -150,7 +150,7 @@ export default function DashboardLayout({
 
         <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
 
-        <div className="flex flex-col gap-0.5 overflow-y-auto p-3">
+        <div className="flex flex-col gap-0.5 p-3">
           <Link href={SETTINGS_ITEM.href} className={sidebarLinkClass(pathname.startsWith(SETTINGS_ITEM.href))}>
             <Settings size={15} />
             {t(SETTINGS_ITEM.labelKey)}

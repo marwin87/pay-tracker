@@ -143,7 +143,7 @@ export default function ResetPasswordPage() {
   const t = useTranslations("Auth");
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F6FAF8] py-10 dark:bg-slate-900">
+    <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-[#F6FAF8] py-10 dark:bg-slate-900">
       {/* Background decorations — purely decorative, never intercept clicks */}
       <div
         aria-hidden="true"

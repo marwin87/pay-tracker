@@ -140,7 +140,7 @@ export default function BillTemplateRow({
           <div
             className={`items-center gap-1 ${
               actionsOpen ? "flex" : "hidden"
-            } sm:flex sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100 sm:transition-opacity sm:duration-150`}
+            } sm:flex sm:[@media(hover:hover)]:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100 sm:transition-opacity sm:duration-150`}
           >
             <button
               onClick={onEditToggle}

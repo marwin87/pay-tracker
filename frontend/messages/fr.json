@@ -240,6 +240,8 @@
         "shareMonth": "Partager par e-mail",
         "shareSent": "Résumé du mois envoyé",
         "previousYear": "Année précédente",
+        "previousMonth": "Mois précédent",
+        "nextMonth": "Mois suivant",
         "nextYear": "Année suivante"
     },
     "PaymentRow": {

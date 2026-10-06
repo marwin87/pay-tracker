@@ -240,6 +240,8 @@
         "shareMonth": "通过邮件分享",
         "shareSent": "月度汇总已发送",
         "previousYear": "上一年",
+        "previousMonth": "上个月",
+        "nextMonth": "下个月",
         "nextYear": "下一年"
     },
     "PaymentRow": {

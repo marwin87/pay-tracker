@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, ChevronsUpDown, FileSpreadsheet, FileText, Loader2, Share2 } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, FileSpreadsheet, FileText, Loader2, Share2 } from "lucide-react";
 import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
@@ -54,6 +54,11 @@ function getMonthLabel(year: number, monthIndex: number, locale: string): string
   const label = new Intl.DateTimeFormat(locale, { month: "short" }).format(
     new Date(year, monthIndex),
   );
+  return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+function monthName(year: number, monthIndex: number, locale: string): string {
+  const label = new Intl.DateTimeFormat(locale, { month: "long" }).format(new Date(year, monthIndex));
   return label.charAt(0).toUpperCase() + label.slice(1);
 }
 
@@ -269,6 +274,17 @@ function PaymentsPageInner() {
     setSelectedMonth(monthKey(year, Number(selectedMonth.slice(5, 7)) - 1));
   }
 
+  // Mobile month picker: arrows step ±1 month (crossing years), the label opens a 4×3 grid.
+  const [monthGridOpen, setMonthGridOpen] = useState(false);
+  const selYear = Number(selectedMonth.slice(0, 4));
+  const selMonthIdx = Number(selectedMonth.slice(5, 7)) - 1;
+  function stepMonth(delta: number) {
+    const d = new Date(selYear, selMonthIdx + delta);
+    if (d.getFullYear() < currentYear - 2 || d.getFullYear() > currentYear + 1) return;
+    setSelectedYear(d.getFullYear());
+    setSelectedMonth(monthKey(d.getFullYear(), d.getMonth()));
+  }
+
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
@@ -415,6 +431,62 @@ function PaymentsPageInner() {
 
       {/* Month selector */}
       <div className="mb-6">
+        {/* Mobile: ‹ Month Year ▾ › + 4×3 grid */}
+        <div className="sm:hidden">
+          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-800">
+            <button
+              onClick={() => stepMonth(-1)}
+              aria-label={t("previousMonth")}
+              disabled={selYear <= currentYear - 2 && selMonthIdx === 0}
+              className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 disabled:opacity-30 dark:text-slate-400"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              onClick={() => setMonthGridOpen((o) => !o)}
+              aria-expanded={monthGridOpen}
+              className="flex h-12 flex-1 items-center justify-center gap-1.5 text-base font-semibold text-slate-700 dark:text-slate-200"
+            >
+              {monthName(selYear, selMonthIdx, locale)} {selYear}
+              <ChevronDown size={16} className={`transition-transform ${monthGridOpen ? "rotate-180" : ""}`} />
+            </button>
+            <button
+              onClick={() => stepMonth(1)}
+              aria-label={t("nextMonth")}
+              disabled={selYear >= currentYear + 1 && selMonthIdx === 11}
+              className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 disabled:opacity-30 dark:text-slate-400"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
+          {monthGridOpen && (
+            <div className="mt-2 grid grid-cols-4 gap-1.5 rounded-2xl border border-slate-200 bg-white p-2.5 dark:border-slate-700 dark:bg-slate-800">
+              {Array.from({ length: 12 }, (_, i) => {
+                const key = monthKey(selYear, i);
+                return (
+                  <button
+                    key={key}
+                    onClick={() => {
+                      setSelectedMonth(key);
+                      setMonthGridOpen(false);
+                    }}
+                    className={`rounded-xl py-3.5 text-sm font-medium ${
+                      key === selectedMonth
+                        ? "bg-green-100 text-green-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+                        : key === currentMonth
+                        ? "text-green-700 dark:text-emerald-400"
+                        : "text-slate-500 dark:text-slate-400"
+                    }`}
+                  >
+                    {getMonthLabel(selYear, i, locale)}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+
+        <div className="hidden sm:block">
         {/* Year navigation */}
         <div className="flex items-center gap-1 mb-3">
           <button
@@ -473,6 +545,8 @@ function PaymentsPageInner() {
               );
             })}
           </div>
+        </div>
+
         </div>
 
         {/* Export */}
