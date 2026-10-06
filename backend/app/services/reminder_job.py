@@ -265,7 +265,7 @@ def send_reminders_for_user(
     return sent
 
 
-_TICK_MINUTES = 30  # the scheduler runs on :00 and :30 (see main.py)
+_TICK_MINUTES = 1  # the scheduler runs every minute (see main.py)
 
 
 def _users_with_channel(db: Session, channel: Channel) -> list[User]:
@@ -285,17 +285,16 @@ def _minute_of_day(moment: datetime) -> int:
 def _send_time_reached(send_minute: int, local_minute: int, *, exact: bool) -> bool:
     """Is it this user's send time? The send minute is local time of day.
 
-    exact (the 30-minute tick): the tick that falls in [send_minute, +30). A window
-    rather than equality, because in a zone with a :15/:45 offset the local clock
-    never reads a multiple of 30 at a tick. Each instance's sent flag keeps a window
-    from sending twice. Catch-up (not exact): any time already passed today."""
+    exact (the per-minute tick): the tick that falls in [send_minute, +1). Each
+    instance's sent flag keeps a re-run of the same tick from sending twice. Catch-up (not exact): any time already passed today.
+    """
     if exact:
         return 0 <= local_minute - send_minute < _TICK_MINUTES
     return send_minute <= local_minute
 
 
 def _run_jobs(SessionLocal: sessionmaker, now_utc: datetime, *, exact: bool) -> int:
-    """Shared body of the 30-minute job and the startup catch-up, run per channel.
+    """Shared body of the per-minute job and the startup catch-up, run per channel.
     Everything about "when" is evaluated in each user's own time zone."""
     db: Session = SessionLocal()
     sent = 0
@@ -309,10 +308,10 @@ def _run_jobs(SessionLocal: sessionmaker, now_utc: datetime, *, exact: bool) -> 
                     sent += send_reminders_for_user(db, user, ch, now_utc=now_utc)
 
             # On a user's last day of the month (their calendar), send the summary
-            # regardless of send minute: a natural retry every 30 min until it
+            # regardless of send minute: a natural retry every minute until it
             # succeeds. Note: the query-then-flag pattern is not atomic; two
             # concurrent scheduler runs could both see last_sent unset and both
-            # send. Acceptable at household scale given the 30-min cadence.
+            # send. Acceptable at household scale given the per-minute cadence.
             last_sent_col = getattr(User, ch.summary_last_sent)
             summary_users = (
                 db.query(User)

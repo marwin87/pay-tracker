@@ -49,12 +49,9 @@ const CHANNEL_KEYS: Record<Channel, Keys> = {
   },
 };
 
-const SLOTS = Array.from({ length: 48 }, (_, i) => i * 30);
-function fmtSlot(minutes: number) {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
-}
+const pad = (n: number) => String(n).padStart(2, "0");
+const TIME_HOURS = Array.from({ length: 24 }, (_, i) => ({ value: String(i), label: pad(i) }));
+const TIME_MINUTES = Array.from({ length: 60 }, (_, i) => ({ value: String(i), label: pad(i) }));
 
 /**
  * The schedule controls shared by the Email and Telegram tiles: master toggle,
@@ -241,14 +238,25 @@ export function ChannelScheduleSection({
           <label className="text-sm font-medium text-slate-700 dark:text-slate-300 whitespace-nowrap">
             {tp("emailNotifications.sendTimeLabel", { zone: profile.timezone })}
           </label>
-          <Dropdown
-            variant="pill"
-            value={String(sendMinute)}
-            onChange={(v) => setSendMinute(Number(v))}
-            options={SLOTS.map((h) => ({ value: String(h), label: fmtSlot(h) }))}
-            ariaLabel={tp("emailNotifications.sendTimeLabel", { zone: profile.timezone })}
-            scrollable
-          />
+          <div className="flex items-center gap-1">
+            <Dropdown
+              variant="pill"
+              value={String(Math.floor(sendMinute / 60))}
+              onChange={(v) => setSendMinute(Number(v) * 60 + (sendMinute % 60))}
+              options={TIME_HOURS}
+              ariaLabel={tp("emailNotifications.sendTimeLabel", { zone: profile.timezone })}
+              scrollable
+            />
+            <span className="text-slate-500 dark:text-slate-400">:</span>
+            <Dropdown
+              variant="pill"
+              value={String(sendMinute % 60)}
+              onChange={(v) => setSendMinute(Math.floor(sendMinute / 60) * 60 + Number(v))}
+              options={TIME_MINUTES}
+              ariaLabel={tp("emailNotifications.sendTimeLabel", { zone: profile.timezone })}
+              scrollable
+            />
+          </div>
         </div>
 
         {isDirty && (

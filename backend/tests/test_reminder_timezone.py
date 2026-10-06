@@ -112,23 +112,23 @@ def test_a_reminder_is_not_sent_twice_for_the_same_window(
     for moment in (
         _utc(2026, 7, 15, 6, 0),
         _utc(2026, 7, 15, 6, 0),  # same tick re-run
-        _utc(2026, 7, 15, 6, 30),  # next tick: still inside no window, and flagged
+        _utc(2026, 7, 15, 6, 30),  # later tick: window passed, and flagged
     ):
         _tick(db_sessionmaker, moment)
     assert reminder.call_count == 1
 
 
-def test_half_hour_offset_zone_is_reached_by_the_window(
+def test_quarter_hour_offset_zone_is_reached_on_its_minute(
     db_session, db_sessionmaker, mail
 ):
     reminder, _ = mail
-    # Kathmandu is UTC+5:45: 08:00 local is 02:15 UTC, never on a :00/:30 tick
+    # Kathmandu is UTC+5:45: 08:00 local is 02:15 UTC, a :15 tick
     user = _user(db_session, "np@test.com", "Asia/Kathmandu", notify_on_day=True)
     _due(db_session, user, date(2026, 7, 15))
 
     _tick(db_sessionmaker, _utc(2026, 7, 15, 2, 0))  # 07:45 local
     assert reminder.call_count == 0
-    _tick(db_sessionmaker, _utc(2026, 7, 15, 2, 30))  # 08:15 local
+    _tick(db_sessionmaker, _utc(2026, 7, 15, 2, 15))  # 08:00 local
     assert reminder.call_count == 1
 
 

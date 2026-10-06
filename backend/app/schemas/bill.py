@@ -251,7 +251,7 @@ class BackupChannelSchedule(BaseModel):
     notify_1_day_before: bool
     notify_on_day: bool
     notify_1_day_after: bool
-    send_minute: int = Field(ge=0, le=1410)
+    send_minute: int = Field(ge=0, le=1439)
     monthly_summary_enabled: bool
 
 

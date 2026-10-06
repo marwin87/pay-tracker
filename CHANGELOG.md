@@ -38,6 +38,7 @@ Notable changes to Pay Tracker, release by release.
 - Restoring from a file that isn't a valid backup now shows an error instead of failing
 - Opening Payments in several tabs at once no longer fails with an error
 - Invalid values in profile settings now show an error instead of failing
+- Choose the exact minute reminders are sent, not just every 30 minutes
 - Excel export prints in landscape, fitted to page width, with a footer
 
 ## v1.2.0 — 30-09-2026

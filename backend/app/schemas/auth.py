@@ -199,7 +199,7 @@ class UserProfileUpdate(BaseModel):
     notify_1_day_before: bool | None = None
     notify_on_day: bool | None = None
     notify_1_day_after: bool | None = None
-    reminder_send_minute: Annotated[int, Field(ge=0, le=1410)] | None = None
+    reminder_send_minute: Annotated[int, Field(ge=0, le=1439)] | None = None
     monthly_summary_enabled: bool | None = None
     telegram_chat_id: str | None = None
     telegram_bot_token: str | None = None  # write-only; "" clears
@@ -208,7 +208,7 @@ class UserProfileUpdate(BaseModel):
     telegram_notify_1_day_before: bool | None = None
     telegram_notify_on_day: bool | None = None
     telegram_notify_1_day_after: bool | None = None
-    telegram_send_minute: Annotated[int, Field(ge=0, le=1410)] | None = None
+    telegram_send_minute: Annotated[int, Field(ge=0, le=1439)] | None = None
     telegram_monthly_summary_enabled: bool | None = None
     browser_notifications_enabled: bool | None = None
     export_enabled: bool | None = None
