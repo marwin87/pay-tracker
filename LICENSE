@@ -112,3 +112,11 @@ The copyright in the software remains with the copyright holder.
 
 Except for the rights expressly granted by this license, no rights are
 granted or transferred to any person.
+
+11. Third-Party Components
+
+This license does not apply to the fonts bundled in
+backend/app/assets/fonts/ (DejaVu Sans and Noto Sans SC). They remain
+under their own licenses (Bitstream Vera / Arev, and SIL Open Font
+License 1.1), reproduced in backend/app/assets/fonts/LICENSES.txt, which
+must be kept with any redistribution of those fonts.
