@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { usePopupPosition } from "@/components/ui/usePopupPosition";
 import { CalendarDays, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useLocale } from "next-intl";
 
@@ -19,7 +20,8 @@ export default function MonthYearPicker({ id, value, min, onChange }: Props) {
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
+
+  usePopupPosition({ open, triggerRef, popupRef: containerRef, onClose: () => setOpen(false) });
 
   useEffect(() => {
     if (!open) return;
@@ -54,15 +56,6 @@ export default function MonthYearPicker({ id, value, min, onChange }: Props) {
     : "---";
 
   function handleOpen() {
-    if (!triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    const popupHeight = 220;
-    const openUpward = window.innerHeight - rect.bottom < popupHeight + 8;
-    setPopupStyle(
-      openUpward
-        ? { position: "fixed", bottom: window.innerHeight - rect.top + 6, left: rect.left, width: 288, zIndex: 9999 }
-        : { position: "fixed", top: rect.bottom + 6, left: rect.left, width: 288, zIndex: 9999 },
-    );
     setViewYear(value ? selYear : new Date().getFullYear());
     setOpen((o) => !o);
   }
@@ -98,7 +91,7 @@ export default function MonthYearPicker({ id, value, min, onChange }: Props) {
       )}
 
       {open && createPortal(
-        <div ref={containerRef} style={popupStyle} className="rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-800">
+        <div ref={containerRef} className="fixed w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-800">
           <div className="mb-2 flex items-center justify-between">
             <button
               type="button"

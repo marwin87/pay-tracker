@@ -2,11 +2,13 @@
 
 import { ChevronDown, Clock } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { useTranslations } from "next-intl";
 import { updateMe, type UserProfile } from "@/lib/user-api";
 import { useLocale } from "@/context/locale-context";
 import { browserTimeZone, supportedTimeZones } from "@/lib/today";
 import { btnSaveClass as btnSave, btnCancelClass as btnCancel } from "@/components/ui/formButtonClasses";
+import { usePopupPosition } from "@/components/ui/usePopupPosition";
 import { Tile } from "./Tile";
 import { useToast } from "@/context/toast-context";
 
@@ -46,6 +48,8 @@ function TimeZonePicker({
   const [searching, setSearching] = useState(false);
   const [active, setActive] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
   const query = normalize(value.trim());
@@ -54,14 +58,18 @@ function TimeZonePicker({
     [zones, searching, query],
   );
 
+  function close() {
+    setOpen(false);
+    setSearching(false);
+  }
+  usePopupPosition({ open, triggerRef: inputRef, popupRef, onClose: close, width: "exact" });
+
   // Close on a click outside, like the shared Dropdown
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
-        setOpen(false);
-        setSearching(false);
-      }
+      const target = e.target as Node;
+      if (!containerRef.current?.contains(target) && !popupRef.current?.contains(target)) close();
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -104,6 +112,7 @@ function TimeZonePicker({
   return (
     <div ref={containerRef} className="relative">
       <input
+        ref={inputRef}
         role="combobox"
         aria-label={ariaLabel}
         aria-expanded={open}
@@ -133,8 +142,8 @@ function TimeZonePicker({
       {error && !open && (
         <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>
       )}
-      {open && (
-        <div className="absolute z-20 mt-1.5 w-full rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg dark:border-slate-600 dark:bg-slate-800">
+      {open && createPortal(
+        <div ref={popupRef} className="fixed rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg dark:border-slate-600 dark:bg-slate-800">
           {shown.length === 0 ? (
             <p className="px-3 py-2 text-sm text-slate-500 dark:text-slate-400">{noMatches}</p>
           ) : (
@@ -165,7 +174,8 @@ function TimeZonePicker({
               ))}
             </ul>
           )}
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

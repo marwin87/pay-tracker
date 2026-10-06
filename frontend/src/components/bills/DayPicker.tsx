@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { CalendarDays } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { usePopupPosition } from "@/components/ui/usePopupPosition";
 
 interface Props {
   value: string; // "" or "1"–"31"
@@ -14,12 +16,16 @@ const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 export default function DayPicker({ value, onChange }: Props) {
   const t = useTranslations("DayPicker");
   const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
+
+  usePopupPosition({ open, triggerRef, popupRef, onClose: () => setOpen(false) });
 
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (!triggerRef.current?.contains(target) && !popupRef.current?.contains(target)) {
         setOpen(false);
       }
     }
@@ -42,8 +48,9 @@ export default function DayPicker({ value, onChange }: Props) {
   }
 
   return (
-    <div ref={containerRef} className="relative">
+    <div className="relative">
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition-colors hover:border-green-500 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:hover:border-green-600 dark:focus:border-green-600 dark:focus:ring-green-900/40"
@@ -62,8 +69,8 @@ export default function DayPicker({ value, onChange }: Props) {
         </p>
       )}
 
-      {open && (
-        <div className="absolute z-20 mt-1.5 w-64 rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-800">
+      {open && createPortal(
+        <div ref={popupRef} className="fixed w-64 rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-800">
           <p className="mb-2 text-center text-xs font-medium text-slate-400 dark:text-slate-500">
             {t("heading")}
           </p>
@@ -83,7 +90,8 @@ export default function DayPicker({ value, onChange }: Props) {
               </button>
             ))}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { usePopupPosition } from "@/components/ui/usePopupPosition";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { CheckboxMark } from "@/components/ui/Checkbox";
@@ -25,7 +26,8 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const optionRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
+
+  usePopupPosition({ open, triggerRef, popupRef: containerRef, onClose: () => setOpen(false), width: "min" });
 
   useEffect(() => {
     if (!open) return;
@@ -68,7 +70,7 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
   // Move focus into the popup when it opens, like a single-select Dropdown does.
   useEffect(() => {
     if (!open) return;
-    optionRefs.current[0]?.focus();
+    optionRefs.current[0]?.focus({ preventScroll: true });
   }, [open]);
 
   function toggle(value: string) {
@@ -79,16 +81,6 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
   }
 
   function handleOpen() {
-    if (!triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    const popupHeight = 260;
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const openUpward = spaceBelow < popupHeight + 8;
-    setPopupStyle(
-      openUpward
-        ? { position: "fixed", bottom: window.innerHeight - rect.top + 6, left: rect.left, minWidth: rect.width, zIndex: 9999 }
-        : { position: "fixed", top: rect.bottom + 6, left: rect.left, minWidth: rect.width, zIndex: 9999 }
-    );
     setOpen((o) => !o);
   }
 
@@ -118,8 +110,7 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
       {open && createPortal(
         <div
           ref={containerRef}
-          style={popupStyle}
-          className="max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800"
+          className="fixed max-h-64 overflow-y-auto rounded-lg border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800"
         >
           {options.map((opt, i) => (
             <label

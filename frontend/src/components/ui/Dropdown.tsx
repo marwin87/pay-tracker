@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { ChevronDown } from "lucide-react";
+import { usePopupPosition } from "./usePopupPosition";
 
 export interface DropdownOption<T extends string> {
   value: T;
@@ -61,13 +63,17 @@ export default function Dropdown<T extends string>({
   align = "left",
 }: Props<T>) {
   const [open, setOpen] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const popupRef = useRef<HTMLDivElement>(null);
   const optionRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  usePopupPosition({ open, triggerRef, popupRef, onClose: () => setOpen(false), align, width: "min" });
 
   useEffect(() => {
     if (!open) return;
     function handleClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      const target = e.target as Node;
+      if (!triggerRef.current?.contains(target) && !popupRef.current?.contains(target)) {
         setOpen(false);
       }
     }
@@ -114,7 +120,7 @@ export default function Dropdown<T extends string>({
     const selectedIndex = latestOptions.current.findIndex(
       (o) => o.value === latestValue.current,
     );
-    optionRefs.current[selectedIndex < 0 ? 0 : selectedIndex]?.focus();
+    optionRefs.current[selectedIndex < 0 ? 0 : selectedIndex]?.focus({ preventScroll: true });
   }, [open]);
 
   const selected = options.find((o) => o.value === value);
@@ -125,9 +131,10 @@ export default function Dropdown<T extends string>({
   }
 
   return (
-    <div ref={containerRef} className="relative">
+    <div className="relative">
       <button
         id={id}
+        ref={triggerRef}
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="listbox"
@@ -143,10 +150,11 @@ export default function Dropdown<T extends string>({
         <ChevronDown size={14} className="shrink-0 text-slate-400 dark:text-slate-500" />
       </button>
 
-      {open && (
+      {open && createPortal(
         <div
+          ref={popupRef}
           role="listbox"
-          className={`absolute z-20 mt-1.5 ${align === "right" ? "right-0" : ""} min-w-full w-max max-w-xs rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg dark:border-slate-600 dark:bg-slate-800`}
+          className="fixed w-max max-w-xs rounded-xl border border-slate-200 bg-white p-1.5 shadow-lg dark:border-slate-600 dark:bg-slate-800"
         >
           <div className={scrollable ? "max-h-64 overflow-y-auto" : undefined}>
             {options.map((opt, i) => (
@@ -167,7 +175,8 @@ export default function Dropdown<T extends string>({
               </button>
             ))}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

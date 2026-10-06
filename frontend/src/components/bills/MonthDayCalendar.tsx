@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { usePopupPosition } from "@/components/ui/usePopupPosition";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { useLocale } from "next-intl";
 
@@ -30,7 +31,8 @@ export default function MonthDayCalendar({ month, day, onChange }: Props) {
   const [viewMonth, setViewMonth] = useState(month);
   const containerRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const [popupStyle, setPopupStyle] = useState<React.CSSProperties>({});
+
+  usePopupPosition({ open, triggerRef, popupRef: containerRef, onClose: () => setOpen(false) });
 
   useEffect(() => {
     if (!open) return;
@@ -85,16 +87,6 @@ export default function MonthDayCalendar({ month, day, onChange }: Props) {
   const offset = firstDayOffset(viewMonth);
 
   function handleOpen() {
-    if (!triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
-    const popupHeight = 320;
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const openUpward = spaceBelow < popupHeight + 8;
-    setPopupStyle(
-      openUpward
-        ? { position: "fixed", bottom: window.innerHeight - rect.top + 6, left: rect.left, width: 288, zIndex: 9999 }
-        : { position: "fixed", top: rect.bottom + 6, left: rect.left, width: 288, zIndex: 9999 }
-    );
     setViewMonth(month);
     setOpen((o) => !o);
   }
@@ -114,7 +106,7 @@ export default function MonthDayCalendar({ month, day, onChange }: Props) {
       </button>
 
       {open && createPortal(
-        <div ref={containerRef} style={popupStyle} className="rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-800">
+        <div ref={containerRef} className="fixed w-72 rounded-xl border border-slate-200 bg-white p-3 shadow-lg dark:border-slate-600 dark:bg-slate-800">
           {/* Month navigation */}
           <div className="mb-2 flex items-center justify-between">
             <button
