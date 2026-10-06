@@ -667,7 +667,7 @@ function PaymentsPageInner() {
                   <MultiSelectFilter
                     selected={statusFilter}
                     onChange={setStatusFilter}
-                    options={statusOptions}
+                    options={categoryOptions.length ? statusOptions : []}
                     ariaLabel={tFilters("allStatuses")}
                     allLabel={tFilters("allStatuses")}
                   />

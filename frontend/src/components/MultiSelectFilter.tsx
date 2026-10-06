@@ -108,7 +108,8 @@ export default function MultiSelectFilter({ options, selected, onChange, ariaLab
         aria-haspopup="true"
         aria-expanded={open}
         aria-label={ariaLabel}
-        className="flex items-center gap-1 rounded-lg border border-slate-200 bg-white pl-3 pr-2 py-1.5 text-xs font-medium text-slate-600 shadow-sm outline-none transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:focus:border-green-600 dark:focus:ring-green-900/40 cursor-pointer"
+        disabled={options.length === 0}
+        className="disabled:pointer-events-none disabled:opacity-50 flex items-center gap-1 rounded-lg border border-slate-200 bg-white pl-3 pr-2 py-1.5 text-xs font-medium text-slate-600 shadow-sm outline-none transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:focus:border-green-600 dark:focus:ring-green-900/40 cursor-pointer"
       >
         {label}
         <ChevronDown size={14} className="text-slate-400 dark:text-slate-500" />

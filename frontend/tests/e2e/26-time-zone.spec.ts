@@ -39,11 +39,12 @@ test('changing the time zone persists and relabels the send time', async ({ page
   // Step: pick another zone and save
   await zone.fill('Pacific/Auckland');
   await page.getByRole('button', { name: 'Save', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Save', exact: true })).not.toBeVisible();
 
-  // Assert: persisted server-side
-  const me = await (await page.request.get(`${API}/auth/me`)).json();
-  expect(me.timezone).toBe('Pacific/Auckland');
+  // Assert: persisted server-side (poll: while saving the button reads "Saving…", so
+  // "Save" is already not visible before the PATCH has finished)
+  await expect
+    .poll(async () => (await (await page.request.get(`${API}/auth/me`)).json()).timezone)
+    .toBe('Pacific/Auckland');
 
   // Assert: survives a reload
   await page.reload();
