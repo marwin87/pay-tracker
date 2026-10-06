@@ -134,7 +134,7 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
       <input
         ref={fileInputRef}
         type="file"
-        accept=".json"
+        accept=".bak,.json"
         className="hidden"
         onChange={handleFileChange}
       />

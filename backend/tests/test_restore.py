@@ -495,7 +495,7 @@ def test_legacy_restore_falls_back_to_other_for_unknown_category_slug(client):
 
 
 def test_restore_invalid_json_returns_422(client):
-    """Malformed JSON body → 422 with 'Invalid JSON' detail."""
+    """Malformed body → 422 with the generic invalid-file detail."""
     tok = register_and_login(client, "inv_json@test.com")
     r = client.post(
         "/export/restore",
@@ -503,7 +503,7 @@ def test_restore_invalid_json_returns_422(client):
         headers=auth(tok),
     )
     assert r.status_code == 422
-    assert "json" in r.json()["detail"].lower()
+    assert r.json()["detail"] == "Invalid backup file"
 
 
 def test_restore_unsupported_content_type_returns_415(client):

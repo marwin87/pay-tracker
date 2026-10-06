@@ -525,7 +525,7 @@
         },
         "backup": {
             "title": "Kopia zapasowa",
-            "description": "Pobierz pełną kopię wszystkich danych Pay Tracker jako plik JSON."
+            "description": "Pobierz pełną kopię wszystkich danych Pay Tracker jako plik kopii zapasowej."
         },
         "restore": {
             "title": "Przywracanie danych",

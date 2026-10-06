@@ -32,7 +32,7 @@ export async function downloadBackup(
   const a = document.createElement("a");
   a.href = url;
   const today = todayIn(browserTimeZone()); // the local date, not the UTC one
-  a.download = `pay-tracker-backup-${today}.json`;
+  a.download = `pay-tracker-backup-${today}.bak`;
   a.click();
   URL.revokeObjectURL(url);
   return {

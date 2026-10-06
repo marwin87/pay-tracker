@@ -159,8 +159,8 @@ def test_export_default_year_and_backup_name_follow_the_users_zone(client, pin):
 
     assert "2025.xlsx" in disposition(utc, "/export/xlsx")
     assert "2026.xlsx" in disposition(nz, "/export/xlsx")
-    assert "backup-2025-12-31.json" in disposition(utc, "/export/json")
-    assert "backup-2026-01-01.json" in disposition(nz, "/export/json")
+    assert "backup-2025-12-31.bak" in disposition(utc, "/export/json")
+    assert "backup-2026-01-01.bak" in disposition(nz, "/export/json")
 
 
 def test_unpay_status_uses_the_users_today(client, pin):
