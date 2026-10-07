@@ -5,6 +5,8 @@ import esMessages from "../../messages/es.json";
 import itMessages from "../../messages/it.json";
 import frMessages from "../../messages/fr.json";
 import zhMessages from "../../messages/zh.json";
+import nlMessages from "../../messages/nl.json";
+import ptMessages from "../../messages/pt.json";
 import localeList from "../../messages/locales.json";
 
 // Single source of truth for supported languages: messages/locales.json (also read by
@@ -18,6 +20,8 @@ export const messagesMap = {
   it: itMessages,
   fr: frMessages,
   zh: zhMessages,
+  nl: nlMessages,
+  pt: ptMessages,
 };
 
 export type Locale = keyof typeof messagesMap;

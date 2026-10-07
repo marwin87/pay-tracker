@@ -12,4 +12,6 @@ export const LOCALE_DEFAULT_CURRENCY: Record<string, string> = {
   de: "EUR",
   en: "USD",
   zh: "CNY",
+  nl: "EUR",
+  pt: "EUR",
 };

@@ -1,0 +1,693 @@
+{
+    "Auth": {
+        "loginSubtitle": "Inicie sessão para continuar a usar o PayTracker",
+        "welcomeHeading": "Bem-vindo de volta 👋",
+        "registerSubtitle": "Crie a sua conta",
+        "registerTagline": "Comece a acompanhar as suas faturas com o PayTracker",
+        "emailLabel": "E-mail",
+        "emailPlaceholder": "Introduza o seu e-mail",
+        "passwordLabel": "Palavra-passe",
+        "passwordPlaceholder": "Introduza a sua palavra-passe",
+        "passwordHint": "Mínimo de 8 caracteres",
+        "passwordTooShort": "A palavra-passe deve ter pelo menos 8 caracteres",
+        "passwordTooLong": "A palavra-passe deve ter no máximo 72 bytes (cerca de 72 caracteres)",
+        "requiredField": "Este campo é obrigatório.",
+        "invalidEmail": "Introduza um endereço de e-mail válido.",
+        "signIn": "Iniciar sessão",
+        "signingIn": "A iniciar sessão…",
+        "loginFailed": "Falha ao iniciar sessão",
+        "tooManyAttempts": "Demasiadas tentativas. Aguarde alguns minutos e tente novamente.",
+        "sessionExpired": "A sua sessão expirou. Inicie sessão novamente.",
+        "noAccount": "Ainda não tem conta?",
+        "register": "Criar conta",
+        "createAccount": "Criar conta",
+        "creatingAccount": "A criar conta…",
+        "registrationFailed": "Falha no registo",
+        "emailAlreadyRegistered": "Este e-mail já está registado.",
+        "alreadyHaveAccount": "Já tem conta?",
+        "forgotPassword": "Esqueceu-se da palavra-passe?",
+        "forgotPasswordTitle": "Repor a palavra-passe",
+        "forgotPasswordSubtitle": "Introduza o seu e-mail e enviaremos uma ligação para repor a palavra-passe.",
+        "sendResetLink": "Enviar ligação de reposição",
+        "sendingResetLink": "A enviar…",
+        "resetLinkSent": "Se esse e-mail estiver registado, receberá em breve uma ligação de reposição.",
+        "resetPasswordTitle": "Definir uma nova palavra-passe",
+        "resetPasswordSubtitle": "Introduza e confirme a sua nova palavra-passe.",
+        "newPasswordLabel": "Nova palavra-passe",
+        "confirmPasswordLabel": "Confirmar nova palavra-passe",
+        "passwordsDoNotMatch": "As palavras-passe não coincidem",
+        "setPassword": "Definir nova palavra-passe",
+        "settingPassword": "A atualizar…",
+        "invalidOrExpiredToken": "Esta ligação expirou ou é inválida.",
+        "requestNewLink": "Pedir uma nova ligação",
+        "forgotPasswordFailed": "Algo correu mal. Tente novamente."
+    },
+    "Common": {
+        "smtpNotConfigured": "O e-mail não está configurado. Verifique a configuração SMTP.",
+        "showPassword": "Mostrar palavra-passe",
+        "hidePassword": "Ocultar palavra-passe"
+    },
+    "DashboardLayout": {
+        "dashboard": "Painel",
+        "payments": "Pagamentos",
+        "bills": "Faturas",
+        "archived": "Arquivadas",
+        "settings": "Definições",
+        "logOut": "Terminar sessão",
+        "userMenu": "Menu do utilizador",
+        "signedInAs": "Sessão iniciada como"
+    },
+    "Dashboard": {
+        "title": "Bem-vindo ao Pay Tracker",
+        "subtitle": "Gira as faturas da sua casa num só lugar.",
+        "summary": {
+            "paid": "Pagas",
+            "overdue": "Em atraso",
+            "upcoming": "Por vencer",
+            "counts": "{paid} de {total} pagas",
+            "empty": "Sem pagamentos este mês nesta moeda.",
+            "of": "de {total}",
+            "paidLabel": "pago até agora",
+            "barLabel": "{percent}% pago",
+            "bills": "{count, plural, one {# fatura} other {# faturas}}",
+            "remaining": "Ainda por pagar",
+            "loadError": "Não foi possível carregar o resumo. Tente novamente.",
+            "loading": "A carregar o resumo",
+            "currency": "Mostrar resumo em:",
+            "emptyMonth": "Sem pagamentos este mês."
+        },
+        "nav": {
+            "prev": "Mês anterior",
+            "next": "Mês seguinte",
+            "today": "Hoje"
+        },
+        "categories": {
+            "title": "Por categoria",
+            "empty": "Sem pagamentos este mês nesta moeda.",
+            "chartLabel": "Despesas por categoria",
+            "paidOf": "pago {paid} de {total}"
+        },
+        "trend": {
+            "title": "Últimos 12 meses",
+            "empty": "Ainda sem histórico de pagamentos nesta moeda.",
+            "chartLabel": "Pagamentos mensais",
+            "paid": "Pago",
+            "unpaid": "Ainda por pagar",
+            "average": "média {amount}",
+            "detail": "pago {paid}, por pagar {unpaid}",
+            "above": "{amount} acima da média",
+            "below": "{amount} abaixo da média"
+        }
+    },
+    "BillsPage": {
+        "title": "As suas faturas",
+        "subtitle": "Gira as suas faturas recorrentes e pontuais. Cada fatura gera lembretes de pagamento automaticamente.",
+        "newBill": "Nova fatura",
+        "cancel": "Cancelar",
+        "billAdded": "Fatura “{name}” adicionada",
+        "billSaved": "Fatura “{name}” guardada",
+        "billArchived": "“{name}” arquivada",
+        "loadError": "Falha ao carregar as faturas.",
+        "noBillsYet": "Ainda sem faturas",
+        "addFirstBill": "Adicione a sua primeira fatura",
+        "viewArchive": "Faturas arquivadas",
+        "noFilterResults": "Nenhuma fatura corresponde ao filtro selecionado",
+        "collapseAll": "Recolher tudo",
+        "expandAll": "Expandir tudo"
+    },
+    "ArchivedBillsPage": {
+        "backToActive": "Faturas ativas",
+        "title": "Faturas arquivadas",
+        "subtitle": "O histórico de pagamentos de todas as faturas arquivadas é conservado.",
+        "billRestored": "“{name}” restaurada",
+        "loadError": "Falha ao carregar as faturas arquivadas.",
+        "noArchivedBills": "Sem faturas arquivadas",
+        "willAppearHere": "As faturas que arquivar aparecerão aqui",
+        "noFilterResults": "Nenhuma fatura arquivada corresponde ao filtro selecionado",
+        "archived": "Arquivada",
+        "collapseAll": "Recolher tudo",
+        "expandAll": "Expandir tudo",
+        "restore": "Restaurar",
+        "restoreError": "Falha ao restaurar a fatura."
+    },
+    "BillTemplateForm": {
+        "nameLabel": "Nome",
+        "namePlaceholder": "p. ex. Eletricidade",
+        "nameRequired": "O nome é obrigatório.",
+        "amountLabel": "Valor",
+        "amountInvalid": "Introduza um valor válido.",
+        "currencyAriaLabel": "Moeda",
+        "customOption": "Personalizada…",
+        "customCurrencyAriaLabel": "Código de moeda personalizado",
+        "customCurrencyPlaceholder": "p. ex. CHF",
+        "frequencyLabel": "Frequência",
+        "intervalLabel": "Repetir a cada",
+        "dueDateLabel": "Data de vencimento",
+        "startDateLabel": "Mês e dia de início",
+        "categoryLabel": "Categoria",
+        "categoryRequired": "A categoria é obrigatória.",
+        "notesLabel": "Notas",
+        "notesPlaceholder": "Notas opcionais",
+        "endPeriodLabel": "Mês do último pagamento (opcional)",
+        "endPeriodAdjusted": "O seu ciclo salta esse mês — o último pagamento será em {month}.",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "saving": "A guardar…",
+        "saveFailed": "Falha ao guardar."
+    },
+    "BillTemplateRow": {
+        "dueOn": "Vence em",
+        "lastPayment": "Último pagamento: {month}",
+        "close": "Fechar",
+        "edit": "Editar",
+        "archive": "Arquivar"
+    },
+    "RestoreDeletedDialog": {
+        "title": "Restaurar pagamentos eliminados?",
+        "description": "Alguns pagamentos futuros de “{name}” foram eliminados anteriormente. Restaurá-los com os valores atualizados do modelo?",
+        "restore": "Restaurar",
+        "skip": "Ignorar",
+        "restoring": "A restaurar…"
+    },
+    "ArchiveConfirmDialog": {
+        "title": "Arquivar “{billName}”?",
+        "description": "Esta fatura ficará oculta da lista de ativas. O histórico de pagamentos é conservado e pode ser consultado na vista de arquivadas.",
+        "cancel": "Cancelar",
+        "archive": "Arquivar",
+        "archiving": "A arquivar…"
+    },
+    "DeleteAccountDialog": {
+        "title": "Eliminar a sua conta?",
+        "description": "Isto elimina permanentemente a sua conta e tudo o que lhe está associado — faturas, categorias e histórico de pagamentos. Esta ação não pode ser anulada.",
+        "cancel": "Cancelar",
+        "confirm": "Eliminar conta",
+        "passwordLabel": "Confirme com a sua palavra-passe",
+        "passwordPlaceholder": "Introduza a sua palavra-passe",
+        "wrongPassword": "A palavra-passe atual está incorreta.",
+        "deleting": "A eliminar…"
+    },
+    "RestoreConfirmDialog": {
+        "title": "Restaurar “{billName}”?",
+        "description": "Esta fatura voltará a aparecer na lista de ativas e retomará a geração de pagamentos futuros.",
+        "cancel": "Cancelar",
+        "restore": "Restaurar",
+        "restoring": "A restaurar…"
+    },
+    "Frequencies": {
+        "monthly": "Mensal",
+        "annual": "Anual",
+        "one_off": "Pontual",
+        "every": "A cada {period}",
+        "months": "{count, plural, one {# mês} other {# meses}}",
+        "years": "{count, plural, one {# ano} other {# anos}}"
+    },
+    "DayPicker": {
+        "placeholder": "Selecionar dia",
+        "selectedDay": "Dia {day}",
+        "heading": "Dia do mês",
+        "shortMonthWarning": "Alguns meses têm menos dias — a fatura cairá no último dia disponível."
+    },
+    "CategoryCombobox": {
+        "placeholder": "p. ex. Serviços"
+    },
+    "PaymentsPage": {
+        "title": "Pagamentos",
+        "subtitle": "Acompanhe e marque as suas faturas mês a mês.",
+        "paymentEdited": "Pagamento “{name}” guardado",
+        "paymentPaid": "“{name}” marcado como pago",
+        "paymentDeleted": "Pagamento “{name}” eliminado",
+        "paymentReverted": "Pagamento “{name}” revertido",
+        "loadError": "Falha ao carregar os pagamentos.",
+        "noPayments": "Sem faturas para este mês",
+        "noFilterResults": "Nenhum pagamento corresponde aos filtros selecionados",
+        "addBills": "Adicionar faturas →",
+        "pastMonth": "Passado",
+        "exportXlsx": "Exportar para Excel",
+        "exportXlsxLoading": "A exportar…",
+        "exportXlsxError": "Falha na exportação. Tente novamente.",
+        "exportXlsxMonth": "Mês atual ({month})",
+        "exportXlsxYear": "Ano inteiro ({year})",
+        "exportPdf": "Exportar para PDF",
+        "exportPdfError": "Falha na exportação. Tente novamente.",
+        "collapseAll": "Recolher tudo",
+        "expandAll": "Expandir tudo",
+        "summaryUpcoming": "por vencer",
+        "summaryOverdueToday": "em atraso hoje",
+        "summaryOverdue": "em atraso",
+        "summaryPaid": "pagos",
+        "calendarTitle": "Calendário",
+        "clearDayFilter": "Limpar",
+        "shareMonth": "Partilhar por e-mail",
+        "shareSent": "Resumo do mês enviado",
+        "previousYear": "Ano anterior",
+        "previousMonth": "Mês anterior",
+        "nextMonth": "Mês seguinte",
+        "nextYear": "Ano seguinte"
+    },
+    "PaymentRow": {
+        "status": {
+            "upcoming": "Por vencer",
+            "overdue": "Em atraso",
+            "paid": "Pago"
+        },
+        "dueToday": "Hoje",
+        "lastPayment": "Último pagamento",
+        "markAsPaid": "Marcar como pago",
+        "revert": "Reverter pagamento",
+        "edit": "Editar pagamento",
+        "due": "Vence",
+        "paidOn": "Pago em",
+        "amountMismatch": "Esperado <expTag>{expected}</expTag>, pago <paidTag>{paid}</paidTag>",
+        "delete": "Eliminar pagamento",
+        "paymentNote": "Nota do pagamento",
+        "emailNotification": "Notificação por e-mail",
+        "emailNotSent": "Notificação por e-mail não enviada",
+        "emailSentOn": "E-mail enviado"
+    },
+    "DeletePaymentDialog": {
+        "title": "Eliminar este pagamento?",
+        "descriptionRecurring": "Este registo de pagamento será removido. A fatura recorrente continuará a gerar registos futuros.",
+        "descriptionOneOff": "Este registo de pagamento pontual será removido. Esta ação não pode ser anulada.",
+        "deleteFutureLabel": "Eliminar também todos os registos futuros por pagar desta fatura",
+        "cancel": "Cancelar",
+        "confirm": "Eliminar",
+        "deleting": "A eliminar…",
+        "deleteFailed": "Falha ao eliminar o pagamento."
+    },
+    "RevertPaymentDialog": {
+        "title": "Reverter este pagamento?",
+        "description": "Este pagamento voltará a ser marcado como não pago.",
+        "cancel": "Cancelar",
+        "confirm": "Reverter",
+        "reverting": "A reverter…",
+        "revertFailed": "Falha ao reverter o pagamento."
+    },
+    "MarkPaidDialog": {
+        "title": "Marcar como pago: {billName}",
+        "editTitle": "Editar pagamento: {billName}",
+        "amountInvalid": "Introduza um valor válido.",
+        "dueAmountLabel": "Valor a pagar",
+        "amountHint": "Aplica-se apenas a este pagamento. Deixe vazio para usar o valor da fatura.",
+        "dueDateLabel": "Data de vencimento",
+        "save": "Guardar",
+        "dateLabel": "Data de pagamento",
+        "amountLabel": "Valor pago",
+        "notesLabel": "Notas (opcional)",
+        "cancel": "Cancelar",
+        "confirm": "Marcar como pago",
+        "confirming": "A marcar…",
+        "saveFailed": "Falha ao registar o pagamento.",
+        "alreadyPaid": "Este pagamento já está marcado como pago. Recarregue a página para ver o estado mais recente.",
+        "paymentGone": "Este pagamento já não existe. Recarregue a página para ver o estado mais recente."
+    },
+    "RestoreButton": {
+        "ariaLabel": "Restaurar a partir de uma cópia de segurança",
+        "dialogTitle": "Restaurar a partir de uma cópia de segurança",
+        "dialogDescription": "Isto substituirá permanentemente os dados contidos em “{filename}” (as secções em falta no ficheiro não são alteradas). Esta ação não pode ser anulada.",
+        "cancel": "Cancelar",
+        "confirm": "Substituir os meus dados",
+        "restoring": "A restaurar…",
+        "error": "Falha ao restaurar. Verifique o ficheiro e tente novamente.",
+        "fileTooLarge": "Ficheiro demasiado grande. As cópias de segurança devem ter menos de 10 MB.",
+        "invalidFile": "Este ficheiro não parece ser uma cópia de segurança válida.",
+        "currentLabel": "Atual",
+        "backupLabel": "Cópia de segurança",
+        "countsSummary": "{bills} faturas, {payments} pagamentos",
+        "categoriesCount": "{categories} categorias",
+        "countsUnavailable": "indisponível",
+        "exportDateUnknown": "data de exportação desconhecida (formato de cópia mais antigo)",
+        "staleDataWarning": "Esta cópia de segurança tem menos faturas e pagamentos do que os seus dados atuais. Ao restaurar, a diferença será eliminada permanentemente.",
+        "noBillsInFile": "Sem faturas nem pagamentos neste ficheiro — as suas faturas atuais não serão alteradas."
+    },
+    "BackupButton": {
+        "ariaLabel": "Transferir cópia de segurança",
+        "dialogTitle": "Transferir cópia de segurança",
+        "dialogDescription": "Escolha o que incluir na cópia de segurança. Guarde o ficheiro em segurança.",
+        "cancel": "Cancelar",
+        "confirm": "Transferir",
+        "downloading": "A transferir…",
+        "error": "Falha na cópia de segurança. Tente novamente.",
+        "telegramWarning": "A sua cópia de segurança foi transferida, mas não contém o token do seu bot do Telegram: já não pode ser lido (o segredo do servidor mudou). Introduza novamente o token nas Definições e transfira uma nova cópia.",
+        "ok": "OK",
+        "selectAll": "Selecionar tudo",
+        "deselectAll": "Desmarcar tudo",
+        "sections": {
+            "bills": "Faturas e pagamentos",
+            "categories": "Categorias personalizadas",
+            "email": "Configuração das notificações por e-mail",
+            "telegram": "Telegram (token do bot e lembretes)",
+            "languages": "Definições de idioma",
+            "currency": "Moeda e formato numérico",
+            "export": "Definições de exportação para Excel",
+            "pdf": "Definições de exportação para PDF",
+            "share": "Definição de partilha por e-mail"
+        }
+    },
+    "SnapshotRecoverySection": {
+        "message": "Foi guardada uma cópia instantânea dos seus dados em {date}, mesmo antes da sua última restauração.",
+        "restoreButton": "Restaurar esta cópia instantânea",
+        "dialogTitle": "Restaurar esta cópia instantânea",
+        "dialogDescription": "Isto substituirá permanentemente os seus dados atuais pela cópia instantânea feita antes da sua última restauração. Esta ação não pode ser anulada.",
+        "cancel": "Cancelar",
+        "confirm": "Restaurar",
+        "restoring": "A restaurar…",
+        "error": "Falha ao restaurar. Tente novamente."
+    },
+    "ThemeToggle": {
+        "ariaLabel": "Alterar tema",
+        "label": "Tema",
+        "light": "Claro",
+        "dark": "Escuro",
+        "vesperfall": "Vesperfall"
+    },
+    "LanguageToggle": {
+        "ariaLabel": "Mudar de idioma",
+        "label": "Idioma:",
+        "name": "Português",
+        "title": "Idioma"
+    },
+    "NotificationToggle": {
+        "paymentIncoming": "Pagamento a vencer"
+    },
+    "EmailRemindersToggle": {
+        "enable": "Ativar lembretes por e-mail",
+        "disable": "Desativar lembretes por e-mail"
+    },
+    "SettingsPage": {
+        "pageTitle": "Definições",
+        "subtitle": "Torne o PayTracker verdadeiramente seu.",
+        "tabs": {
+            "account": "Conta",
+            "preferences": "Preferências",
+            "notifications": "Notificações",
+            "categories": "Categorias",
+            "reports": "Relatórios",
+            "data": "Cópia de segurança",
+            "about": "Sobre"
+        },
+        "unsavedTitle": "Alterações não guardadas",
+        "unsavedDescription": "Tem alterações não guardadas. Sair sem guardar?",
+        "unsavedLeave": "Sair",
+        "unsavedStay": "Ficar",
+        "save": "Guardar",
+        "saving": "A guardar…",
+        "cancel": "Cancelar",
+        "currencySaved": "Moeda predefinida guardada",
+        "timeZoneSaved": "Fuso horário guardado",
+        "emailChanged": "Endereço de e-mail alterado",
+        "passwordChanged": "Palavra-passe alterada",
+        "telegramSaved": "Definições do Telegram guardadas",
+        "categorySaved": "Categoria guardada",
+        "categoryArchived": "Categoria arquivada",
+        "categoryRestored": "Categoria restaurada",
+        "settingsSaved": "Definições guardadas",
+        "saveFailed": "Falha ao guardar. Tente novamente.",
+        "profile": {
+            "title": "Perfil do utilizador",
+            "description": "Altere o endereço de e-mail com que inicia sessão.",
+            "currentEmailLabel": "E-mail atual:",
+            "emailLabel": "Novo endereço de e-mail",
+            "emailHint": "Introduza um novo endereço e confirme com a sua palavra-passe atual.",
+            "emailPlaceholder": "novo@email.com",
+            "currentPasswordPlaceholder": "Introduza a palavra-passe atual",
+            "newPasswordLabel": "Alterar palavra-passe",
+            "passwordHint": "Introduza a sua palavra-passe atual e escolha uma nova.",
+            "newPasswordPlaceholder": "Nova palavra-passe (mín. 8 caracteres)",
+            "passwordTooShort": "A palavra-passe deve ter pelo menos 8 caracteres.",
+            "passwordTooLong": "A palavra-passe deve ter no máximo 72 bytes (cerca de 72 caracteres).",
+            "wrongPassword": "A palavra-passe atual está incorreta.",
+            "emailTaken": "Esse e-mail já está registado.",
+            "emailAndPasswordRequired": "Introduza um novo endereço de e-mail e a sua palavra-passe atual."
+        },
+        "password": {
+            "title": "Palavra-passe",
+            "description": "Escolha uma nova palavra-passe para iniciar sessão."
+        },
+        "currency": {
+            "title": "Moeda predefinida",
+            "description": "Usada para pré-selecionar a moeda quando cria uma nova fatura.",
+            "ariaLabel": "Moeda",
+            "customOption": "Personalizada…",
+            "customCurrencyAriaLabel": "Código de moeda personalizado",
+            "customCurrencyPlaceholder": "p. ex. CHF"
+        },
+        "timeZone": {
+            "title": "Fuso horário",
+            "description": "Define o que significa “hoje” para si e a hora a que os lembretes são enviados.",
+            "ariaLabel": "Fuso horário",
+            "placeholder": "p. ex. Europe/Lisbon",
+            "useBrowser": "Usar o fuso horário do meu navegador ({zone})",
+            "hint": "As horas de envio dos lembretes seguem este fuso horário, por isso alterá-lo muda o momento em que chegam.",
+            "unknown": "Escolha um fuso horário da lista.",
+            "noMatches": "Nenhum fuso horário correspondente"
+        },
+        "decimalSeparator": {
+            "title": "Separador decimal",
+            "description": "Escolha como os preços são apresentados.",
+            "period": "Ponto (.)",
+            "comma": "Vírgula (,)"
+        },
+        "languages": {
+            "title": "Idiomas",
+            "description": "Escolha os idiomas que aparecem no seletor de idioma.",
+            "activeSuffix": "(atual)"
+        },
+        "excelExport": {
+            "title": "Excel (XLSX)",
+            "description": "Controle se o botão de exportação para Excel está disponível e que colunas inclui.",
+            "toggleLabel": "Ativar exportação para Excel",
+            "fieldsHeading": "Colunas a incluir",
+            "requiredSuffix": "(obrigatória)",
+            "fields": {
+                "bill": "Fatura",
+                "category": "Categoria",
+                "period": "Período",
+                "due_date": "Data de vencimento",
+                "amount": "Valor",
+                "currency": "Moeda",
+                "status": "Estado",
+                "paid_amount": "Valor pago",
+                "paid_at": "Pago em",
+                "notes": "Notas"
+            }
+        },
+        "notificationsServerTimeHint": "As notificações são enviadas no seu fuso horário (<b>{zone}</b>). Agora são <b>{time}</b> aí.",
+        "emailNotifications": {
+            "title": "Notificações por e-mail",
+            "description": "Escolha quando receber lembretes por e-mail das faturas por vencer e em atraso.",
+            "twoDaysBefore": "2 dias antes do vencimento",
+            "oneDayBefore": "1 dia antes do vencimento",
+            "onDay": "No dia do pagamento",
+            "oneDayAfter": "1 dia depois do vencimento",
+            "noneWarning": "Selecione pelo menos uma opção para receber lembretes por e-mail.",
+            "sendTimeLabel": "Hora de envio ({zone})",
+            "masterToggle": "Ativar notificações por e-mail",
+            "sendNowButton": "Enviar lembretes agora",
+            "sendNowSending": "A enviar...",
+            "sendNowSent": "{count} lembrete(s) enviado(s)",
+            "sendNowNoReminders": "Sem lembretes para enviar (verifique os momentos selecionados)",
+            "monthlySummaryToggle": "Resumo mensal (último dia do mês)",
+            "sendMonthlySummaryButton": "Enviar resumo de {month}",
+            "sendMonthlySummarySending": "A enviar...",
+            "sendMonthlySummarySent": "Resumo de {month} enviado para {email}",
+            "sendMonthlySummarySentTelegram": "Resumo de {month} enviado para o Telegram",
+            "sendMonthlySummaryNoData": "Sem pagamentos em {month}, nada foi enviado"
+        },
+        "browserNotifications": {
+            "title": "Notificações do navegador",
+            "description": "Seja notificado quando uma fatura vence hoje.",
+            "enable": "Ativar notificações",
+            "toggle": "Ativar notificações do navegador",
+            "osHint": "Não vê notificações? Verifique as definições de notificações do sistema operativo (macOS: Definições do Sistema → Notificações).",
+            "blockedWarning": "As notificações do navegador estão bloqueadas. Ative-as nas definições do navegador ou do sistema operativo."
+        },
+        "telegramNotifications": {
+            "title": "Notificações do Telegram",
+            "description": "Receba lembretes no Telegram. Configurado separadamente do e-mail.",
+            "chatIdLabel": "ID do chat do Telegram",
+            "chatIdPlaceholder": "p. ex. 123456789",
+            "testButton": "Enviar mensagem de teste",
+            "testSending": "A enviar…",
+            "testSent": "Mensagem de teste enviada",
+            "invalidId": "O ID do chat deve ser um número (negativo para grupos).",
+            "testFailed": "O teste falhou. Verifique o ID do chat e se já enviou uma mensagem ao bot.",
+            "botTokenLabel": "Token do bot",
+            "botTokenPlaceholder": "Token do bot obtido com @BotFather",
+            "botTokenSaved": "Token guardado. Introduza um novo para o substituir.",
+            "invalidToken": "Formato do token do bot inválido.",
+            "remove": "Remover Telegram",
+            "helpTitle": "Como obtenho o token do bot e o ID do chat?",
+            "helpStep1": "No Telegram, abra @BotFather, envie /newbot e siga os passos. Copie o token que receber.",
+            "helpStep2": "Abra o seu novo bot e envie-lhe qualquer mensagem (p. ex. olá).",
+            "helpStep3": "Abra este endereço no navegador (substitua TOKEN pelo seu token):",
+            "helpStep4": "No resultado, procure \"chat\" e depois \"id\". Esse número é o seu ID do chat. Cole abaixo o token e o ID do chat.",
+            "masterToggle": "Ativar notificações do Telegram",
+            "noneWarning": "Selecione pelo menos uma opção para receber lembretes no Telegram.",
+            "needCredentials": "Guarde acima o token do bot e o ID do chat para ativar o envio.",
+            "tokenUnreadable": "O token do bot guardado já não pode ser lido (o segredo do servidor mudou). Introduza o token novamente e guarde."
+        },
+        "backup": {
+            "title": "Cópia de segurança dos dados",
+            "description": "Transfira uma cópia completa de todos os seus dados do Pay Tracker como ficheiro de cópia de segurança.",
+            "button": "Cópia de segurança"
+        },
+        "restore": {
+            "title": "Restaurar dados",
+            "description": "Substitua todos os dados atuais por um ficheiro de cópia de segurança transferido anteriormente.",
+            "button": "Restaurar"
+        },
+        "about": {
+            "title": "Informações da aplicação",
+            "description": "Versão e ligações úteis.",
+            "text": "O Pay Tracker é uma aplicação doméstica para acompanhar as suas faturas. Foi pensada para um orçamento familiar tranquilo, para que nenhuma fatura passe despercebida.",
+            "licensesTitle": "Licenças",
+            "licensesText": "Esta aplicação é construída com os componentes de código aberto e os tipos de letra abaixo. Cada um é utilizado ao abrigo da sua própria licença.",
+            "version": "Versão da aplicação"
+        },
+        "deleteAccount": {
+            "title": "Eliminar conta",
+            "description": "Elimine permanentemente a sua conta e tudo o que lhe está associado. Esta ação não pode ser anulada.",
+            "button": "Eliminar conta",
+            "error": "Falha ao eliminar a conta. Tente novamente."
+        },
+        "categories": {
+            "title": "Categorias",
+            "description": "Adicione as suas próprias categorias ou mude o nome e a cor das predefinidas.",
+            "loadError": "Não foi possível carregar as categorias. Tente novamente.",
+            "nameRequired": "O nome é obrigatório.",
+            "namePlaceholder": "p. ex. Passatempos",
+            "defaultBadge": "predefinida",
+            "archivedBadge": "arquivada",
+            "edit": "Editar",
+            "archive": "Arquivar",
+            "unarchive": "Desarquivar",
+            "addNew": "Adicionar categoria",
+            "newColorsLabel": "Novas cores",
+            "usedColorsLabel": "Cores em uso"
+        },
+        "pdfExport": {
+            "title": "Exportação para PDF",
+            "description": "Adiciona um botão de exportação para PDF na página Pagamentos (mês atual ou ano inteiro). Escolha as colunas a incluir.",
+            "toggleLabel": "Ativar exportação para PDF"
+        },
+        "shareByEmail": {
+            "title": "Partilhar o mês por e-mail",
+            "description": "Adiciona um botão de partilha na página Pagamentos que envia o resumo do mês para qualquer endereço. Requer que o e-mail esteja configurado.",
+            "toggleLabel": "Ativar partilha por e-mail",
+            "recipientsLabel": "Destinatários guardados",
+            "addPlaceholder": "nome@exemplo.pt",
+            "add": "Adicionar e-mail",
+            "remove": "Remover {email}"
+        }
+    },
+    "Categories": {
+        "housing": "Habitação",
+        "utilities": "Serviços",
+        "insurance": "Seguros",
+        "subscriptions": "Subscrições",
+        "entertainment": "Lazer",
+        "transport": "Transportes",
+        "healthcare": "Saúde",
+        "education": "Educação",
+        "other": "Outros",
+        "archivedSuffix": "(arquivada)"
+    },
+    "Filters": {
+        "allCategories": "Todas as categorias",
+        "allStatuses": "Todos os estados",
+        "selectedCount": "{count} selecionado(s)",
+        "filterBy": "Filtrar por",
+        "sortBy": "Ordenar por",
+        "sortCategoryAsc": "Categoria A-Z",
+        "sortCategoryDesc": "Categoria Z-A",
+        "sortPaidFirst": "Pagos primeiro",
+        "sortUnpaidFirst": "Não pagos primeiro",
+        "searchPlaceholder": "Pesquisar por nome…"
+    },
+    "ExcelExport": {
+        "monthShort": {
+            "1": "jan",
+            "2": "fev",
+            "3": "mar",
+            "4": "abr",
+            "5": "mai",
+            "6": "jun",
+            "7": "jul",
+            "8": "ago",
+            "9": "set",
+            "10": "out",
+            "11": "nov",
+            "12": "dez"
+        }
+    },
+    "Notifications": {
+        "reminder": {
+            "2_days_before": {
+                "subject": "Lembrete: {bill_name} vence em 2 dias ({amount} {currency})",
+                "body": "Este é um lembrete de que {bill_name} vence em 2 dias ({due_date}).\nValor: {amount} {currency}"
+            },
+            "upcoming": {
+                "subject": "Lembrete: {bill_name} vence amanhã ({amount} {currency})",
+                "body": "Este é um lembrete de que {bill_name} vence amanhã ({due_date}).\nValor: {amount} {currency}"
+            },
+            "on_day": {
+                "subject": "Vence hoje: {bill_name} ({amount} {currency})",
+                "body": "{bill_name} vence hoje ({due_date}).\nValor: {amount} {currency}"
+            },
+            "1_day_after": {
+                "subject": "Em atraso: {bill_name} venceu ontem ({amount} {currency})",
+                "body": "{bill_name} venceu ontem ({due_date}) e continua por pagar.\nValor: {amount} {currency}"
+            }
+        },
+        "dueDateLabel": "Data de vencimento",
+        "summary": {
+            "subject": "Resumo mensal de {month_label}",
+            "intro": "Aqui está o resumo dos seus pagamentos de {month_label}.",
+            "paid_header": "Pagas",
+            "unpaid_header": "Por pagar / Em atraso",
+            "bill": "Fatura",
+            "due_date": "Data de vencimento",
+            "expected": "Esperado",
+            "paid": "Pago",
+            "paid_on": "Pago em",
+            "amount": "Valor",
+            "nothing_paid": "Neste mês, nenhum pagamento foi marcado como pago.",
+            "nothing_unpaid": "Todas as faturas estão pagas — excelente trabalho!",
+            "total_paid": "Total pago",
+            "total_outstanding": "Total em dívida",
+            "footer": "Gira as suas faturas na aplicação Pay Tracker."
+        },
+        "reset": {
+            "subject": "Repor a sua palavra-passe do Pay Tracker",
+            "body": "Pediu a reposição da palavra-passe da sua conta Pay Tracker.\n\nClique na ligação abaixo para definir uma nova palavra-passe (válida durante {expires_label}):\n{reset_url}\n\nSe não fez este pedido, pode ignorar este e-mail — a sua palavra-passe não será alterada.",
+            "expires": "{minutes} minutos",
+            "noExpiry": "sem prazo de validade"
+        },
+        "monthLong": {
+            "1": "janeiro",
+            "2": "fevereiro",
+            "3": "março",
+            "4": "abril",
+            "5": "maio",
+            "6": "junho",
+            "7": "julho",
+            "8": "agosto",
+            "9": "setembro",
+            "10": "outubro",
+            "11": "novembro",
+            "12": "dezembro"
+        },
+        "monthYear": "{month} de {year}"
+    },
+    "ShareMonthDialog": {
+        "savedLabel": "Endereços guardados",
+        "title": "Partilhar por e-mail",
+        "description": "Envie o resumo de {month} para um endereço de e-mail.",
+        "emailLabel": "Endereço de e-mail",
+        "emailPlaceholder": "nome@exemplo.pt",
+        "cancel": "Cancelar",
+        "send": "Enviar",
+        "sending": "A enviar…",
+        "failed": "Não foi possível enviar o e-mail."
+    }
+}

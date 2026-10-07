@@ -33,7 +33,7 @@ class User(Base):
     enabled_languages: Mapped[list[str]] = mapped_column(
         ARRAY(String(5)),
         nullable=False,
-        server_default="{en,pl,de,es,it,fr,zh}",
+        server_default="{en,pl,de,es,it,fr,zh,nl,pt}",
     )
     # IANA zone name; "today", the month and the reminder send time follow it.
     timezone: Mapped[str] = mapped_column(

@@ -1,0 +1,693 @@
+{
+    "Auth": {
+        "loginSubtitle": "Log in om PayTracker te blijven gebruiken",
+        "welcomeHeading": "Welkom terug 👋",
+        "registerSubtitle": "Maak je account aan",
+        "registerTagline": "Begin met het bijhouden van je rekeningen met PayTracker",
+        "emailLabel": "E-mail",
+        "emailPlaceholder": "Vul je e-mailadres in",
+        "passwordLabel": "Wachtwoord",
+        "passwordPlaceholder": "Vul je wachtwoord in",
+        "passwordHint": "Minimaal 8 tekens",
+        "passwordTooShort": "Het wachtwoord moet minstens 8 tekens bevatten",
+        "passwordTooLong": "Het wachtwoord mag maximaal 72 bytes bevatten (ongeveer 72 tekens)",
+        "requiredField": "Dit veld is verplicht.",
+        "invalidEmail": "Vul een geldig e-mailadres in.",
+        "signIn": "Inloggen",
+        "signingIn": "Bezig met inloggen…",
+        "loginFailed": "Inloggen mislukt",
+        "tooManyAttempts": "Te veel pogingen. Wacht een paar minuten en probeer het opnieuw.",
+        "sessionExpired": "Je sessie is verlopen. Log opnieuw in.",
+        "noAccount": "Heb je nog geen account?",
+        "register": "Account aanmaken",
+        "createAccount": "Account aanmaken",
+        "creatingAccount": "Account wordt aangemaakt…",
+        "registrationFailed": "Registratie mislukt",
+        "emailAlreadyRegistered": "Dit e-mailadres is al geregistreerd.",
+        "alreadyHaveAccount": "Heb je al een account?",
+        "forgotPassword": "Wachtwoord vergeten?",
+        "forgotPasswordTitle": "Wachtwoord opnieuw instellen",
+        "forgotPasswordSubtitle": "Vul je e-mailadres in en we sturen je een link om je wachtwoord opnieuw in te stellen.",
+        "sendResetLink": "Resetlink versturen",
+        "sendingResetLink": "Bezig met versturen…",
+        "resetLinkSent": "Als dit e-mailadres is geregistreerd, ontvang je binnenkort een resetlink.",
+        "resetPasswordTitle": "Nieuw wachtwoord instellen",
+        "resetPasswordSubtitle": "Vul je nieuwe wachtwoord in en bevestig het.",
+        "newPasswordLabel": "Nieuw wachtwoord",
+        "confirmPasswordLabel": "Nieuw wachtwoord bevestigen",
+        "passwordsDoNotMatch": "De wachtwoorden komen niet overeen",
+        "setPassword": "Nieuw wachtwoord instellen",
+        "settingPassword": "Bezig met bijwerken…",
+        "invalidOrExpiredToken": "Deze link is verlopen of ongeldig.",
+        "requestNewLink": "Nieuwe link aanvragen",
+        "forgotPasswordFailed": "Er is iets misgegaan. Probeer het opnieuw."
+    },
+    "Common": {
+        "smtpNotConfigured": "E-mail is niet geconfigureerd. Controleer de SMTP-configuratie.",
+        "showPassword": "Wachtwoord tonen",
+        "hidePassword": "Wachtwoord verbergen"
+    },
+    "DashboardLayout": {
+        "dashboard": "Overzicht",
+        "payments": "Betalingen",
+        "bills": "Rekeningen",
+        "archived": "Gearchiveerd",
+        "settings": "Instellingen",
+        "logOut": "Uitloggen",
+        "userMenu": "Gebruikersmenu",
+        "signedInAs": "Ingelogd als"
+    },
+    "Dashboard": {
+        "title": "Welkom bij Pay Tracker",
+        "subtitle": "Beheer de rekeningen van je huishouden op één plek.",
+        "summary": {
+            "paid": "Betaald",
+            "overdue": "Te laat",
+            "upcoming": "Aankomend",
+            "counts": "{paid} van {total} betaald",
+            "empty": "Geen betalingen deze maand in deze valuta.",
+            "of": "van {total}",
+            "paidLabel": "tot nu toe betaald",
+            "barLabel": "{percent}% betaald",
+            "bills": "{count, plural, one {# rekening} other {# rekeningen}}",
+            "remaining": "Nog te betalen",
+            "loadError": "Het overzicht kon niet worden geladen. Probeer het opnieuw.",
+            "loading": "Overzicht laden",
+            "currency": "Overzicht tonen in:",
+            "emptyMonth": "Geen betalingen deze maand."
+        },
+        "nav": {
+            "prev": "Vorige maand",
+            "next": "Volgende maand",
+            "today": "Vandaag"
+        },
+        "categories": {
+            "title": "Per categorie",
+            "empty": "Geen betalingen deze maand in deze valuta.",
+            "chartLabel": "Uitgaven per categorie",
+            "paidOf": "{paid} van {total} betaald"
+        },
+        "trend": {
+            "title": "Afgelopen 12 maanden",
+            "empty": "Nog geen betalingsgeschiedenis in deze valuta.",
+            "chartLabel": "Maandelijkse betalingen",
+            "paid": "Betaald",
+            "unpaid": "Nog te betalen",
+            "average": "gemiddeld {amount}",
+            "detail": "betaald {paid}, te betalen {unpaid}",
+            "above": "{amount} boven het gemiddelde",
+            "below": "{amount} onder het gemiddelde"
+        }
+    },
+    "BillsPage": {
+        "title": "Je rekeningen",
+        "subtitle": "Beheer je terugkerende en eenmalige rekeningen. Voor elke rekening worden automatisch betalingsherinneringen aangemaakt.",
+        "newBill": "Nieuwe rekening",
+        "cancel": "Annuleren",
+        "billAdded": "Rekening “{name}” toegevoegd",
+        "billSaved": "Rekening “{name}” opgeslagen",
+        "billArchived": "“{name}” gearchiveerd",
+        "loadError": "Rekeningen laden mislukt.",
+        "noBillsYet": "Nog geen rekeningen",
+        "addFirstBill": "Voeg je eerste rekening toe",
+        "viewArchive": "Gearchiveerde rekeningen",
+        "noFilterResults": "Geen rekeningen komen overeen met het gekozen filter",
+        "collapseAll": "Alles inklappen",
+        "expandAll": "Alles uitklappen"
+    },
+    "ArchivedBillsPage": {
+        "backToActive": "Actieve rekeningen",
+        "title": "Gearchiveerde rekeningen",
+        "subtitle": "De betalingsgeschiedenis van alle gearchiveerde rekeningen blijft bewaard.",
+        "billRestored": "“{name}” hersteld",
+        "loadError": "Gearchiveerde rekeningen laden mislukt.",
+        "noArchivedBills": "Geen gearchiveerde rekeningen",
+        "willAppearHere": "Rekeningen die je archiveert verschijnen hier",
+        "noFilterResults": "Geen gearchiveerde rekeningen komen overeen met het gekozen filter",
+        "archived": "Gearchiveerd",
+        "collapseAll": "Alles inklappen",
+        "expandAll": "Alles uitklappen",
+        "restore": "Herstellen",
+        "restoreError": "Rekening herstellen mislukt."
+    },
+    "BillTemplateForm": {
+        "nameLabel": "Naam",
+        "namePlaceholder": "bijv. Elektriciteit",
+        "nameRequired": "Naam is verplicht.",
+        "amountLabel": "Bedrag",
+        "amountInvalid": "Vul een geldig bedrag in.",
+        "currencyAriaLabel": "Valuta",
+        "customOption": "Aangepast…",
+        "customCurrencyAriaLabel": "Aangepaste valutacode",
+        "customCurrencyPlaceholder": "bijv. CHF",
+        "frequencyLabel": "Frequentie",
+        "intervalLabel": "Herhaal elke",
+        "dueDateLabel": "Vervaldatum",
+        "startDateLabel": "Startmaand en -dag",
+        "categoryLabel": "Categorie",
+        "categoryRequired": "Categorie is verplicht.",
+        "notesLabel": "Notities",
+        "notesPlaceholder": "Optionele notities",
+        "endPeriodLabel": "Maand van de laatste betaling (optioneel)",
+        "endPeriodAdjusted": "Je cyclus slaat die maand over — de laatste betaling is in {month}.",
+        "cancel": "Annuleren",
+        "save": "Opslaan",
+        "saving": "Bezig met opslaan…",
+        "saveFailed": "Opslaan mislukt."
+    },
+    "BillTemplateRow": {
+        "dueOn": "Vervalt op",
+        "lastPayment": "Laatste betaling: {month}",
+        "close": "Sluiten",
+        "edit": "Bewerken",
+        "archive": "Archiveren"
+    },
+    "RestoreDeletedDialog": {
+        "title": "Verwijderde betalingen herstellen?",
+        "description": "Sommige toekomstige betalingen voor “{name}” zijn eerder verwijderd. Wil je ze herstellen met de bijgewerkte waarden van het sjabloon?",
+        "restore": "Herstellen",
+        "skip": "Overslaan",
+        "restoring": "Bezig met herstellen…"
+    },
+    "ArchiveConfirmDialog": {
+        "title": "“{billName}” archiveren?",
+        "description": "Deze rekening wordt verborgen in de actieve lijst. De betalingsgeschiedenis blijft bewaard en is beschikbaar in de weergave Gearchiveerd.",
+        "cancel": "Annuleren",
+        "archive": "Archiveren",
+        "archiving": "Bezig met archiveren…"
+    },
+    "DeleteAccountDialog": {
+        "title": "Je account verwijderen?",
+        "description": "Hiermee verwijder je je account en alles wat eraan gekoppeld is definitief — rekeningen, categorieën en betalingsgeschiedenis. Dit kan niet ongedaan worden gemaakt.",
+        "cancel": "Annuleren",
+        "confirm": "Account verwijderen",
+        "passwordLabel": "Bevestig met je wachtwoord",
+        "passwordPlaceholder": "Vul je wachtwoord in",
+        "wrongPassword": "Het huidige wachtwoord is onjuist.",
+        "deleting": "Bezig met verwijderen…"
+    },
+    "RestoreConfirmDialog": {
+        "title": "“{billName}” herstellen?",
+        "description": "Deze rekening verschijnt weer in de actieve lijst en maakt weer aankomende betalingen aan.",
+        "cancel": "Annuleren",
+        "restore": "Herstellen",
+        "restoring": "Bezig met herstellen…"
+    },
+    "Frequencies": {
+        "monthly": "Maandelijks",
+        "annual": "Jaarlijks",
+        "one_off": "Eenmalig",
+        "every": "Elke {period}",
+        "months": "{count, plural, one {# maand} other {# maanden}}",
+        "years": "{count, plural, one {# jaar} other {# jaar}}"
+    },
+    "DayPicker": {
+        "placeholder": "Kies een dag",
+        "selectedDay": "Dag {day}",
+        "heading": "Dag van de maand",
+        "shortMonthWarning": "Sommige maanden hebben minder dagen — de rekening valt dan op de laatste beschikbare dag."
+    },
+    "CategoryCombobox": {
+        "placeholder": "bijv. Nutsvoorzieningen"
+    },
+    "PaymentsPage": {
+        "title": "Betalingen",
+        "subtitle": "Volg en markeer je rekeningen maand voor maand.",
+        "paymentEdited": "Betaling “{name}” opgeslagen",
+        "paymentPaid": "“{name}” als betaald gemarkeerd",
+        "paymentDeleted": "Betaling “{name}” verwijderd",
+        "paymentReverted": "Betaling “{name}” teruggedraaid",
+        "loadError": "Betalingen laden mislukt.",
+        "noPayments": "Geen rekeningen voor deze maand",
+        "noFilterResults": "Geen betalingen komen overeen met de gekozen filters",
+        "addBills": "Rekeningen toevoegen →",
+        "pastMonth": "Verleden",
+        "exportXlsx": "Excel-export",
+        "exportXlsxLoading": "Bezig met exporteren…",
+        "exportXlsxError": "Exporteren mislukt. Probeer het opnieuw.",
+        "exportXlsxMonth": "Huidige maand ({month})",
+        "exportXlsxYear": "Heel jaar ({year})",
+        "exportPdf": "PDF-export",
+        "exportPdfError": "Exporteren mislukt. Probeer het opnieuw.",
+        "collapseAll": "Alles inklappen",
+        "expandAll": "Alles uitklappen",
+        "summaryUpcoming": "aankomend",
+        "summaryOverdueToday": "vandaag te laat",
+        "summaryOverdue": "te laat",
+        "summaryPaid": "betaald",
+        "calendarTitle": "Kalender",
+        "clearDayFilter": "Wissen",
+        "shareMonth": "Delen per e-mail",
+        "shareSent": "Maandoverzicht verzonden",
+        "previousYear": "Vorig jaar",
+        "previousMonth": "Vorige maand",
+        "nextMonth": "Volgende maand",
+        "nextYear": "Volgend jaar"
+    },
+    "PaymentRow": {
+        "status": {
+            "upcoming": "Aankomend",
+            "overdue": "Te laat",
+            "paid": "Betaald"
+        },
+        "dueToday": "Vandaag",
+        "lastPayment": "Laatste betaling",
+        "markAsPaid": "Markeer als betaald",
+        "revert": "Betaling terugdraaien",
+        "edit": "Betaling bewerken",
+        "due": "Vervalt",
+        "paidOn": "Betaald op",
+        "amountMismatch": "Verwacht <expTag>{expected}</expTag>, betaald <paidTag>{paid}</paidTag>",
+        "delete": "Betaling verwijderen",
+        "paymentNote": "Betalingsnotitie",
+        "emailNotification": "E-mailmelding",
+        "emailNotSent": "E-mailmelding niet verzonden",
+        "emailSentOn": "E-mail verzonden"
+    },
+    "DeletePaymentDialog": {
+        "title": "Deze betaling verwijderen?",
+        "descriptionRecurring": "Deze betaling wordt verwijderd. De terugkerende rekening blijft toekomstige betalingen aanmaken.",
+        "descriptionOneOff": "Deze eenmalige betaling wordt verwijderd. Dit kan niet ongedaan worden gemaakt.",
+        "deleteFutureLabel": "Verwijder ook alle toekomstige onbetaalde betalingen voor deze rekening",
+        "cancel": "Annuleren",
+        "confirm": "Verwijderen",
+        "deleting": "Bezig met verwijderen…",
+        "deleteFailed": "Betaling verwijderen mislukt."
+    },
+    "RevertPaymentDialog": {
+        "title": "Deze betaling terugdraaien?",
+        "description": "Deze betaling wordt weer als onbetaald gemarkeerd.",
+        "cancel": "Annuleren",
+        "confirm": "Terugdraaien",
+        "reverting": "Bezig met terugdraaien…",
+        "revertFailed": "Betaling terugdraaien mislukt."
+    },
+    "MarkPaidDialog": {
+        "title": "Markeer als betaald: {billName}",
+        "editTitle": "Betaling bewerken: {billName}",
+        "amountInvalid": "Vul een geldig bedrag in.",
+        "dueAmountLabel": "Te betalen bedrag",
+        "amountHint": "Geldt alleen voor deze betaling. Laat leeg om het bedrag van de rekening te gebruiken.",
+        "dueDateLabel": "Vervaldatum",
+        "save": "Opslaan",
+        "dateLabel": "Betaaldatum",
+        "amountLabel": "Betaald bedrag",
+        "notesLabel": "Notities (optioneel)",
+        "cancel": "Annuleren",
+        "confirm": "Markeer als betaald",
+        "confirming": "Bezig met markeren…",
+        "saveFailed": "Betaling vastleggen mislukt.",
+        "alreadyPaid": "Deze betaling is al als betaald gemarkeerd. Laad de pagina opnieuw om de actuele status te zien.",
+        "paymentGone": "Deze betaling bestaat niet meer. Laad de pagina opnieuw om de actuele status te zien."
+    },
+    "RestoreButton": {
+        "ariaLabel": "Herstellen vanuit back-up",
+        "dialogTitle": "Herstellen vanuit back-up",
+        "dialogDescription": "Hiermee worden de gegevens in “{filename}” definitief vervangen (onderdelen die niet in het bestand staan blijven ongewijzigd). Deze actie kan niet ongedaan worden gemaakt.",
+        "cancel": "Annuleren",
+        "confirm": "Mijn gegevens vervangen",
+        "restoring": "Bezig met herstellen…",
+        "error": "Herstellen mislukt. Controleer het bestand en probeer het opnieuw.",
+        "fileTooLarge": "Bestand te groot. Back-upbestanden mogen maximaal 10 MB zijn.",
+        "invalidFile": "Dit bestand lijkt geen geldige back-up te zijn.",
+        "currentLabel": "Huidig",
+        "backupLabel": "Back-up",
+        "countsSummary": "{bills} rekeningen, {payments} betalingen",
+        "categoriesCount": "{categories} categorieën",
+        "countsUnavailable": "niet beschikbaar",
+        "exportDateUnknown": "exportdatum onbekend (ouder back-upformaat)",
+        "staleDataWarning": "Deze back-up bevat minder rekeningen en betalingen dan je huidige gegevens. Bij herstellen wordt het verschil definitief verwijderd.",
+        "noBillsInFile": "Geen rekeningen of betalingen in dit bestand — je huidige rekeningen blijven ongewijzigd."
+    },
+    "BackupButton": {
+        "ariaLabel": "Back-up downloaden",
+        "dialogTitle": "Back-up downloaden",
+        "dialogDescription": "Kies wat je in de back-up wilt opnemen. Bewaar het bestand veilig.",
+        "cancel": "Annuleren",
+        "confirm": "Downloaden",
+        "downloading": "Bezig met downloaden…",
+        "error": "Back-up mislukt. Probeer het opnieuw.",
+        "telegramWarning": "Je back-up is gedownload, maar bevat je Telegram-bottoken niet: dat kan niet meer worden gelezen (het geheim van de server is gewijzigd). Vul het token opnieuw in bij Instellingen en download daarna een nieuwe back-up.",
+        "ok": "OK",
+        "selectAll": "Alles selecteren",
+        "deselectAll": "Alles deselecteren",
+        "sections": {
+            "bills": "Rekeningen en betalingen",
+            "categories": "Eigen categorieën",
+            "email": "Instellingen voor e-mailmeldingen",
+            "telegram": "Telegram (bottoken en herinneringen)",
+            "languages": "Taalinstellingen",
+            "currency": "Valuta en getalnotatie",
+            "export": "Instellingen voor Excel-export",
+            "pdf": "Instellingen voor PDF-export",
+            "share": "Instelling voor delen per e-mail"
+        }
+    },
+    "SnapshotRecoverySection": {
+        "message": "Op {date} is een momentopname van je gegevens opgeslagen, vlak voor je laatste herstelactie.",
+        "restoreButton": "Deze momentopname herstellen",
+        "dialogTitle": "Deze momentopname herstellen",
+        "dialogDescription": "Hiermee worden je huidige gegevens definitief vervangen door de momentopname van vóór je laatste herstelactie. Deze actie kan niet ongedaan worden gemaakt.",
+        "cancel": "Annuleren",
+        "confirm": "Herstellen",
+        "restoring": "Bezig met herstellen…",
+        "error": "Herstellen mislukt. Probeer het opnieuw."
+    },
+    "ThemeToggle": {
+        "ariaLabel": "Thema wijzigen",
+        "label": "Thema",
+        "light": "Licht",
+        "dark": "Donker",
+        "vesperfall": "Vesperfall"
+    },
+    "LanguageToggle": {
+        "ariaLabel": "Taal wijzigen",
+        "label": "Taal:",
+        "name": "Nederlands",
+        "title": "Taal"
+    },
+    "NotificationToggle": {
+        "paymentIncoming": "Betaling komt eraan"
+    },
+    "EmailRemindersToggle": {
+        "enable": "E-mailherinneringen inschakelen",
+        "disable": "E-mailherinneringen uitschakelen"
+    },
+    "SettingsPage": {
+        "pageTitle": "Instellingen",
+        "subtitle": "Maak PayTracker helemaal van jou.",
+        "tabs": {
+            "account": "Account",
+            "preferences": "Voorkeuren",
+            "notifications": "Meldingen",
+            "categories": "Categorieën",
+            "reports": "Rapporten",
+            "data": "Back-up",
+            "about": "Info"
+        },
+        "unsavedTitle": "Niet-opgeslagen wijzigingen",
+        "unsavedDescription": "Je hebt niet-opgeslagen wijzigingen. Verlaten zonder op te slaan?",
+        "unsavedLeave": "Verlaten",
+        "unsavedStay": "Blijven",
+        "save": "Opslaan",
+        "saving": "Bezig met opslaan…",
+        "cancel": "Annuleren",
+        "currencySaved": "Standaardvaluta opgeslagen",
+        "timeZoneSaved": "Tijdzone opgeslagen",
+        "emailChanged": "E-mailadres gewijzigd",
+        "passwordChanged": "Wachtwoord gewijzigd",
+        "telegramSaved": "Telegram-instellingen opgeslagen",
+        "categorySaved": "Categorie opgeslagen",
+        "categoryArchived": "Categorie gearchiveerd",
+        "categoryRestored": "Categorie hersteld",
+        "settingsSaved": "Instellingen opgeslagen",
+        "saveFailed": "Opslaan mislukt. Probeer het opnieuw.",
+        "profile": {
+            "title": "Gebruikersprofiel",
+            "description": "Wijzig het e-mailadres waarmee je inlogt.",
+            "currentEmailLabel": "Huidig e-mailadres:",
+            "emailLabel": "Nieuw e-mailadres",
+            "emailHint": "Vul een nieuw adres in en bevestig met je huidige wachtwoord.",
+            "emailPlaceholder": "nieuw@email.com",
+            "currentPasswordPlaceholder": "Vul je huidige wachtwoord in",
+            "newPasswordLabel": "Wachtwoord wijzigen",
+            "passwordHint": "Vul je huidige wachtwoord in en kies daarna een nieuw wachtwoord.",
+            "newPasswordPlaceholder": "Nieuw wachtwoord (min. 8 tekens)",
+            "passwordTooShort": "Het wachtwoord moet minstens 8 tekens bevatten.",
+            "passwordTooLong": "Het wachtwoord mag maximaal 72 bytes bevatten (ongeveer 72 tekens).",
+            "wrongPassword": "Het huidige wachtwoord is onjuist.",
+            "emailTaken": "Dit e-mailadres is al geregistreerd.",
+            "emailAndPasswordRequired": "Vul zowel een nieuw e-mailadres als je huidige wachtwoord in."
+        },
+        "password": {
+            "title": "Wachtwoord",
+            "description": "Kies een nieuw wachtwoord om mee in te loggen."
+        },
+        "currency": {
+            "title": "Standaardvaluta",
+            "description": "Wordt gebruikt om de valuta vooraf te selecteren wanneer je een nieuwe rekening aanmaakt.",
+            "ariaLabel": "Valuta",
+            "customOption": "Aangepast…",
+            "customCurrencyAriaLabel": "Aangepaste valutacode",
+            "customCurrencyPlaceholder": "bijv. CHF"
+        },
+        "timeZone": {
+            "title": "Tijdzone",
+            "description": "Bepaalt wat “vandaag” voor jou betekent en op welk tijdstip je herinneringen worden verzonden.",
+            "ariaLabel": "Tijdzone",
+            "placeholder": "bijv. Europe/Amsterdam",
+            "useBrowser": "Tijdzone van mijn browser gebruiken ({zone})",
+            "hint": "De verzendtijden van herinneringen volgen deze tijdzone, dus als je die wijzigt, verschuift ook het moment van ontvangst.",
+            "unknown": "Kies een tijdzone uit de lijst.",
+            "noMatches": "Geen overeenkomende tijdzone"
+        },
+        "decimalSeparator": {
+            "title": "Decimaalteken",
+            "description": "Kies hoe bedragen worden weergegeven.",
+            "period": "Punt (.)",
+            "comma": "Komma (,)"
+        },
+        "languages": {
+            "title": "Talen",
+            "description": "Kies welke talen in de taalkiezer verschijnen.",
+            "activeSuffix": "(huidig)"
+        },
+        "excelExport": {
+            "title": "Excel (XLSX)",
+            "description": "Bepaal of de Excel-exportknop beschikbaar is en welke kolommen erin zitten.",
+            "toggleLabel": "Excel-export inschakelen",
+            "fieldsHeading": "Op te nemen kolommen",
+            "requiredSuffix": "(verplicht)",
+            "fields": {
+                "bill": "Rekening",
+                "category": "Categorie",
+                "period": "Periode",
+                "due_date": "Vervaldatum",
+                "amount": "Bedrag",
+                "currency": "Valuta",
+                "status": "Status",
+                "paid_amount": "Betaald bedrag",
+                "paid_at": "Betaald op",
+                "notes": "Notities"
+            }
+        },
+        "notificationsServerTimeHint": "Meldingen worden verzonden in jouw tijdzone (<b>{zone}</b>). Daar is het nu <b>{time}</b>.",
+        "emailNotifications": {
+            "title": "E-mailmeldingen",
+            "description": "Kies wanneer je e-mailherinneringen wilt ontvangen voor aankomende en te late rekeningen.",
+            "twoDaysBefore": "2 dagen voor de vervaldatum",
+            "oneDayBefore": "1 dag voor de vervaldatum",
+            "onDay": "Op de betaaldatum",
+            "oneDayAfter": "1 dag na de vervaldatum",
+            "noneWarning": "Selecteer minstens één optie om e-mailherinneringen te ontvangen.",
+            "sendTimeLabel": "Verzendtijd ({zone})",
+            "masterToggle": "E-mailmeldingen inschakelen",
+            "sendNowButton": "Herinneringen nu versturen",
+            "sendNowSending": "Bezig met versturen...",
+            "sendNowSent": "{count} herinnering(en) verzonden",
+            "sendNowNoReminders": "Geen herinneringen om te versturen (controleer de gekozen tijdstippen)",
+            "monthlySummaryToggle": "Maandoverzicht (laatste dag van de maand)",
+            "sendMonthlySummaryButton": "Overzicht voor {month} versturen",
+            "sendMonthlySummarySending": "Bezig met versturen...",
+            "sendMonthlySummarySent": "Overzicht voor {month} verzonden naar {email}",
+            "sendMonthlySummarySentTelegram": "Overzicht voor {month} verzonden naar Telegram",
+            "sendMonthlySummaryNoData": "Geen betalingen voor {month}, niets verzonden"
+        },
+        "browserNotifications": {
+            "title": "Browsermeldingen",
+            "description": "Ontvang een melding wanneer een rekening vandaag vervalt.",
+            "enable": "Meldingen inschakelen",
+            "toggle": "Browsermeldingen inschakelen",
+            "osHint": "Zie je geen meldingen? Controleer de meldingsinstellingen van je besturingssysteem (macOS: Systeeminstellingen → Meldingen).",
+            "blockedWarning": "Browsermeldingen zijn geblokkeerd. Schakel ze in via de instellingen van je browser of besturingssysteem."
+        },
+        "telegramNotifications": {
+            "title": "Telegram-meldingen",
+            "description": "Ontvang herinneringen via Telegram. Wordt apart van e-mail ingesteld.",
+            "chatIdLabel": "Telegram-chat-ID",
+            "chatIdPlaceholder": "bijv. 123456789",
+            "testButton": "Testbericht versturen",
+            "testSending": "Bezig met versturen…",
+            "testSent": "Testbericht verzonden",
+            "invalidId": "De chat-ID moet een getal zijn (negatief voor groepen).",
+            "testFailed": "Test mislukt. Controleer de chat-ID en of je de bot al een bericht hebt gestuurd.",
+            "botTokenLabel": "Bottoken",
+            "botTokenPlaceholder": "Bottoken van @BotFather",
+            "botTokenSaved": "Token opgeslagen. Vul een nieuw token in om het te vervangen.",
+            "invalidToken": "Ongeldig formaat van het bottoken.",
+            "remove": "Telegram verwijderen",
+            "helpTitle": "Hoe kom ik aan het bottoken en de chat-ID?",
+            "helpStep1": "Open in Telegram @BotFather, stuur /newbot en volg de stappen. Kopieer het token dat je krijgt.",
+            "helpStep2": "Open je nieuwe bot en stuur hem een willekeurig bericht (bijv. hoi).",
+            "helpStep3": "Open dit adres in je browser (vervang TOKEN door je token):",
+            "helpStep4": "Zoek in het resultaat naar \"chat\" en daarna naar \"id\". Dat getal is je chat-ID. Plak hieronder het token en de chat-ID.",
+            "masterToggle": "Telegram-meldingen inschakelen",
+            "noneWarning": "Selecteer minstens één optie om Telegram-herinneringen te ontvangen.",
+            "needCredentials": "Sla hierboven het bottoken en de chat-ID op om verzenden in te schakelen.",
+            "tokenUnreadable": "Het opgeslagen bottoken kan niet meer worden gelezen (het geheim van de server is gewijzigd). Vul het token opnieuw in en sla op."
+        },
+        "backup": {
+            "title": "Gegevens back-uppen",
+            "description": "Download een volledige kopie van al je Pay Tracker-gegevens als back-upbestand.",
+            "button": "Back-up"
+        },
+        "restore": {
+            "title": "Gegevens herstellen",
+            "description": "Vervang alle huidige gegevens door een eerder gedownload back-upbestand.",
+            "button": "Herstellen"
+        },
+        "about": {
+            "title": "App-informatie",
+            "description": "Versie en handige links.",
+            "text": "Pay Tracker is een huishoudapp om je rekeningen bij te houden. Hij is gemaakt voor een rustig huishoudbudget, zodat er geen rekening tussendoor glipt.",
+            "licensesTitle": "Licenties",
+            "licensesText": "Deze app is gebouwd met de onderstaande open-sourcecomponenten en lettertypen. Elk daarvan wordt gebruikt onder zijn eigen licentie.",
+            "version": "App-versie"
+        },
+        "deleteAccount": {
+            "title": "Account verwijderen",
+            "description": "Verwijder je account en alles wat eraan gekoppeld is definitief. Dit kan niet ongedaan worden gemaakt.",
+            "button": "Account verwijderen",
+            "error": "Account verwijderen mislukt. Probeer het opnieuw."
+        },
+        "categories": {
+            "title": "Categorieën",
+            "description": "Voeg je eigen categorieën toe of hernoem en kleur de standaardcategorieën opnieuw.",
+            "loadError": "Categorieën konden niet worden geladen. Probeer het opnieuw.",
+            "nameRequired": "Naam is verplicht.",
+            "namePlaceholder": "bijv. Hobby's",
+            "defaultBadge": "standaard",
+            "archivedBadge": "gearchiveerd",
+            "edit": "Bewerken",
+            "archive": "Archiveren",
+            "unarchive": "Dearchiveren",
+            "addNew": "Categorie toevoegen",
+            "newColorsLabel": "Nieuwe kleuren",
+            "usedColorsLabel": "Gebruikte kleuren"
+        },
+        "pdfExport": {
+            "title": "PDF-export",
+            "description": "Voegt een PDF-exportknop toe op de pagina Betalingen (huidige maand of heel jaar). Kies welke kolommen je wilt opnemen.",
+            "toggleLabel": "PDF-export inschakelen"
+        },
+        "shareByEmail": {
+            "title": "Maand delen per e-mail",
+            "description": "Voegt een deelknop toe op de pagina Betalingen waarmee je het maandoverzicht naar elk e-mailadres kunt sturen. Hiervoor moet e-mail zijn geconfigureerd.",
+            "toggleLabel": "Delen per e-mail inschakelen",
+            "recipientsLabel": "Opgeslagen ontvangers",
+            "addPlaceholder": "naam@voorbeeld.nl",
+            "add": "E-mailadres toevoegen",
+            "remove": "{email} verwijderen"
+        }
+    },
+    "Categories": {
+        "housing": "Wonen",
+        "utilities": "Nutsvoorzieningen",
+        "insurance": "Verzekeringen",
+        "subscriptions": "Abonnementen",
+        "entertainment": "Vrije tijd",
+        "transport": "Vervoer",
+        "healthcare": "Gezondheidszorg",
+        "education": "Onderwijs",
+        "other": "Overig",
+        "archivedSuffix": "(gearchiveerd)"
+    },
+    "Filters": {
+        "allCategories": "Alle categorieën",
+        "allStatuses": "Alle statussen",
+        "selectedCount": "{count} geselecteerd",
+        "filterBy": "Filteren op",
+        "sortBy": "Sorteren op",
+        "sortCategoryAsc": "Categorie A-Z",
+        "sortCategoryDesc": "Categorie Z-A",
+        "sortPaidFirst": "Betaald eerst",
+        "sortUnpaidFirst": "Onbetaald eerst",
+        "searchPlaceholder": "Zoeken op naam…"
+    },
+    "ExcelExport": {
+        "monthShort": {
+            "1": "jan",
+            "2": "feb",
+            "3": "mrt",
+            "4": "apr",
+            "5": "mei",
+            "6": "jun",
+            "7": "jul",
+            "8": "aug",
+            "9": "sep",
+            "10": "okt",
+            "11": "nov",
+            "12": "dec"
+        }
+    },
+    "Notifications": {
+        "reminder": {
+            "2_days_before": {
+                "subject": "Herinnering: {bill_name} vervalt over 2 dagen ({amount} {currency})",
+                "body": "Dit is een herinnering dat {bill_name} over 2 dagen vervalt ({due_date}).\nBedrag: {amount} {currency}"
+            },
+            "upcoming": {
+                "subject": "Herinnering: {bill_name} vervalt morgen ({amount} {currency})",
+                "body": "Dit is een herinnering dat {bill_name} morgen vervalt ({due_date}).\nBedrag: {amount} {currency}"
+            },
+            "on_day": {
+                "subject": "Vervalt vandaag: {bill_name} ({amount} {currency})",
+                "body": "{bill_name} vervalt vandaag ({due_date}).\nBedrag: {amount} {currency}"
+            },
+            "1_day_after": {
+                "subject": "Te laat: {bill_name} verviel gisteren ({amount} {currency})",
+                "body": "{bill_name} verviel gisteren ({due_date}) en is nog niet betaald.\nBedrag: {amount} {currency}"
+            }
+        },
+        "dueDateLabel": "Vervaldatum",
+        "summary": {
+            "subject": "Maandoverzicht voor {month_label}",
+            "intro": "Hier is je betalingsoverzicht voor {month_label}.",
+            "paid_header": "Betaald",
+            "unpaid_header": "Onbetaald / Te laat",
+            "bill": "Rekening",
+            "due_date": "Vervaldatum",
+            "expected": "Verwacht",
+            "paid": "Betaald",
+            "paid_on": "Betaald op",
+            "amount": "Bedrag",
+            "nothing_paid": "Deze maand zijn geen betalingen als betaald gemarkeerd.",
+            "nothing_unpaid": "Alle rekeningen zijn betaald — goed gedaan!",
+            "total_paid": "Totaal betaald",
+            "total_outstanding": "Totaal openstaand",
+            "footer": "Beheer je rekeningen in de Pay Tracker-app."
+        },
+        "reset": {
+            "subject": "Stel je Pay Tracker-wachtwoord opnieuw in",
+            "body": "Je hebt een wachtwoordreset aangevraagd voor je Pay Tracker-account.\n\nKlik op de onderstaande link om een nieuw wachtwoord in te stellen (geldig gedurende {expires_label}):\n{reset_url}\n\nAls je dit niet hebt aangevraagd, kun je deze e-mail negeren — je wachtwoord verandert dan niet.",
+            "expires": "{minutes} minuten",
+            "noExpiry": "geen vervaltijd"
+        },
+        "monthLong": {
+            "1": "januari",
+            "2": "februari",
+            "3": "maart",
+            "4": "april",
+            "5": "mei",
+            "6": "juni",
+            "7": "juli",
+            "8": "augustus",
+            "9": "september",
+            "10": "oktober",
+            "11": "november",
+            "12": "december"
+        },
+        "monthYear": "{month} {year}"
+    },
+    "ShareMonthDialog": {
+        "savedLabel": "Opgeslagen adressen",
+        "title": "Delen per e-mail",
+        "description": "Stuur het overzicht van {month} naar een e-mailadres.",
+        "emailLabel": "E-mailadres",
+        "emailPlaceholder": "naam@voorbeeld.nl",
+        "cancel": "Annuleren",
+        "send": "Versturen",
+        "sending": "Bezig met versturen…",
+        "failed": "De e-mail kon niet worden verzonden."
+    }
+}

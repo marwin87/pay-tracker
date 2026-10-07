@@ -45,7 +45,7 @@ No third-party data sharing. No subscription. Runs locally with Docker Compose o
 - **Share by email** — optional. Email a month's summary to any address from the Payments page. Save your usual recipients in Settings → Reports and tick them in the share dialog instead of retyping, or add one by hand. Requires SMTP.
 - **Restore safety net** — before confirming a restore, see a comparison of your current data vs. the backup file (bill/payment counts, backup export date), with a warning if the backup would reduce your data. The server also auto-snapshots your current data immediately before any restore executes, so a mistaken restore can be undone from Settings — even if you proceeded past the warning or called the API directly.
 - **Password reset** — optional. When SMTP is configured, a "Forgot password?" link appears on the login page. Users receive a secure one-time reset link by email (expires after 60 minutes by default).
-- **Multilingual** — English, Polish, German, Spanish, Italian, French, Chinese. Language and the set of enabled languages are saved per account. The Excel export, emails and Telegram messages follow it.
+- **Multilingual** — English, Polish, German, Spanish, Italian, French, Chinese, Dutch, Portuguese. Language and the set of enabled languages are saved per account. The Excel export, emails and Telegram messages follow it.
 - **Themes** — light, dark and Vesperfall (a warm gold-and-leather dark theme). Switch from the sidebar (or the menu on mobile).
 - **Installable as PWA** — works offline-first on mobile and desktop.
 

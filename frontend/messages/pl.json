@@ -540,7 +540,7 @@
             "title": "Informacje o aplikacji",
             "description": "Wersja i przydatne linki.",
             "text": "Pay Tracker to domowa aplikacja do pilnowania rachunków. Powstała z myślą o spokojnym domowym budżecie, żeby żaden rachunek nie umknął.",
-            "licensesTitle": "Licencje open source",
+            "licensesTitle": "Licencje",
             "licensesText": "Aplikacja korzysta z poniższych komponentów open source i fontów. Każdy z nich jest używany na warunkach własnej licencji.",
             "version": "Wersja aplikacji"
         },

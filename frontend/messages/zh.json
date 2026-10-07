@@ -540,7 +540,7 @@
             "title": "应用信息",
             "description": "版本和相关链接。",
             "text": "Pay Tracker 是一款家庭账单管理应用。它为轻松的家庭预算而生，让每一笔账单都不被遗漏。",
-            "licensesTitle": "开源许可证",
+            "licensesTitle": "许可证",
             "licensesText": "本应用使用以下开源组件和字体，每项均遵循其各自的许可证。",
             "version": "应用版本"
         },

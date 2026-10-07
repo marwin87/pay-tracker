@@ -7,6 +7,7 @@ Notable changes to Pay Tracker, release by release.
 ### Features
 
 - About tab in Settings with the app version and open-source licenses
+- Dutch and Portuguese language support
 
 ## v1.3.0 — 07-10-2026
 

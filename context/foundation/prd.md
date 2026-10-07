@@ -201,7 +201,7 @@ household finance manager does not need to check the dashboard proactively.
 
 ### Localisation
 
-- FR-016: UI is available in English, Polish, German, Spanish, Italian, French and Chinese.
+- FR-016: UI is available in English, Polish, German, Spanish, Italian, French, Chinese, Dutch and Portuguese.
   The user can switch language via a toggle and choose which languages appear in it
   (per-user enabled languages). Priority: must-have
   > Started as EN/PL; extended after v1 (S-07 and later commits).
