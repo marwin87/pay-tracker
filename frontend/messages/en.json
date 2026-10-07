@@ -527,11 +527,13 @@
         },
         "backup": {
             "title": "Backup Data",
-            "description": "Download a complete copy of all your Pay Tracker data as a backup file."
+            "description": "Download a complete copy of all your Pay Tracker data as a backup file.",
+            "button": "Backup"
         },
         "restore": {
             "title": "Restore Data",
-            "description": "Replace all current data with a previously downloaded backup file."
+            "description": "Replace all current data with a previously downloaded backup file.",
+            "button": "Restore"
         },
         "deleteAccount": {
             "title": "Delete Account",

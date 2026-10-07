@@ -527,11 +527,13 @@
         },
         "backup": {
             "title": "Daten sichern",
-            "description": "Laden Sie eine vollständige Kopie aller Pay Tracker-Daten als Sicherungsdatei herunter."
+            "description": "Laden Sie eine vollständige Kopie aller Pay Tracker-Daten als Sicherungsdatei herunter.",
+            "button": "Sichern"
         },
         "restore": {
             "title": "Daten wiederherstellen",
-            "description": "Ersetzen Sie alle aktuellen Daten durch eine zuvor heruntergeladene Sicherungsdatei."
+            "description": "Ersetzen Sie alle aktuellen Daten durch eine zuvor heruntergeladene Sicherungsdatei.",
+            "button": "Wiederherstellen"
         },
         "deleteAccount": {
             "title": "Konto löschen",

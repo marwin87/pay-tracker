@@ -514,7 +514,7 @@ export default function SettingsPage() {
           description={t("backup.description")}
           t={t}
         >
-          <BackupButton label="Backup" />
+          <BackupButton label={t("backup.button")} />
         </Tile>
 
         <Tile
@@ -524,7 +524,7 @@ export default function SettingsPage() {
           description={t("restore.description")}
           t={t}
         >
-          <RestoreButton label="Restore" />
+          <RestoreButton label={t("restore.button")} />
           <SnapshotRecoverySection />
         </Tile>
       </div>

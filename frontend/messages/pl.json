@@ -527,11 +527,13 @@
         },
         "backup": {
             "title": "Kopia zapasowa",
-            "description": "Pobierz pełną kopię wszystkich danych Pay Tracker jako plik kopii zapasowej."
+            "description": "Pobierz pełną kopię wszystkich danych Pay Tracker jako plik kopii zapasowej.",
+            "button": "Kopia zapasowa"
         },
         "restore": {
             "title": "Przywracanie danych",
-            "description": "Zastąp wszystkie bieżące dane wcześniej pobraną kopią zapasową."
+            "description": "Zastąp wszystkie bieżące dane wcześniej pobraną kopią zapasową.",
+            "button": "Przywróć"
         },
         "deleteAccount": {
             "title": "Usuń konto",

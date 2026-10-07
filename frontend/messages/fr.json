@@ -527,11 +527,13 @@
         },
         "backup": {
             "title": "Sauvegarde des données",
-            "description": "Téléchargez une copie complète de toutes vos données Pay Tracker sous forme de fichier de sauvegarde."
+            "description": "Téléchargez une copie complète de toutes vos données Pay Tracker sous forme de fichier de sauvegarde.",
+            "button": "Sauvegarder"
         },
         "restore": {
             "title": "Restaurer les données",
-            "description": "Remplacez toutes les données actuelles par un fichier de sauvegarde téléchargé précédemment."
+            "description": "Remplacez toutes les données actuelles par un fichier de sauvegarde téléchargé précédemment.",
+            "button": "Restaurer"
         },
         "deleteAccount": {
             "title": "Supprimer le compte",

@@ -527,11 +527,13 @@
         },
         "backup": {
             "title": "数据备份",
-            "description": "将您所有的 Pay Tracker 数据下载为一个完整的备份文件。"
+            "description": "将您所有的 Pay Tracker 数据下载为一个完整的备份文件。",
+            "button": "备份"
         },
         "restore": {
             "title": "恢复数据",
-            "description": "用之前下载的备份文件替换所有当前数据。"
+            "description": "用之前下载的备份文件替换所有当前数据。",
+            "button": "恢复"
         },
         "deleteAccount": {
             "title": "删除账户",
