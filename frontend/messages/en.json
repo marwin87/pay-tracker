@@ -540,6 +540,8 @@
             "title": "App information",
             "description": "Version and useful links.",
             "text": "Pay Tracker is a household app for keeping track of your bills. It was made with a calm household budget in mind, so that no bill slips through.",
+            "licensesTitle": "Open-source licenses",
+            "licensesText": "This app is built with the open-source components and fonts below. Each one is used under its own license.",
             "version": "App version"
         },
         "deleteAccount": {

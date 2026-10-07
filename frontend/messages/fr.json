@@ -540,6 +540,8 @@
             "title": "Informations sur l'application",
             "description": "Version et liens utiles.",
             "text": "Pay Tracker est une application domestique pour suivre vos factures. Elle a été pensée pour un budget du foyer serein, afin qu'aucune facture ne passe à la trappe.",
+            "licensesTitle": "Licences open source",
+            "licensesText": "Cette application utilise les composants open source et les polices ci-dessous. Chacun est utilisé selon sa propre licence.",
             "version": "Version de l'application"
         },
         "deleteAccount": {
