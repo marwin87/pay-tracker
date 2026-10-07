@@ -31,9 +31,9 @@ test('restore from backup preserves bill count', async ({ page }) => {
   const tmpFile = path.join(os.tmpdir(), `pay-tracker-backup-${Date.now()}.json`);
   fs.writeFileSync(tmpFile, JSON.stringify(backup));
 
-  // Step: navigate to settings where RestoreButton lives, under the Backup & Restore tab
+  // Step: navigate to settings where RestoreButton lives, under the Backup tab
   await page.goto('/dashboard/settings');
-  await page.getByRole('tab', { name: 'Backup & Restore', exact: true }).click();
+  await page.getByRole('tab', { name: 'Backup', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Restore from backup' })).toBeVisible();
 
   // Step: click restore button — triggers hidden file input
@@ -96,7 +96,7 @@ test('restoring a backup with fewer bills/payments than current shows the stale-
   await syncPaymentsViaApi(page);
 
   await page.goto('/dashboard/settings');
-  await page.getByRole('tab', { name: 'Backup & Restore', exact: true }).click();
+  await page.getByRole('tab', { name: 'Backup', exact: true }).click();
   const [fileChooser] = await Promise.all([
     page.waitForEvent('filechooser'),
     page.getByRole('button', { name: 'Restore from backup' }).click(),
@@ -127,7 +127,7 @@ test('picking a malformed backup file shows an inline error, not the comparison/
   fs.writeFileSync(tmpFile, 'this is not valid JSON {{{');
 
   await page.goto('/dashboard/settings');
-  await page.getByRole('tab', { name: 'Backup & Restore', exact: true }).click();
+  await page.getByRole('tab', { name: 'Backup', exact: true }).click();
   const [fileChooser] = await Promise.all([
     page.waitForEvent('filechooser'),
     page.getByRole('button', { name: 'Restore from backup' }).click(),
@@ -150,7 +150,7 @@ test('picking a malformed backup file shows an inline error, not the comparison/
 test('backup dialog: select/deselect all drives a partial export', async ({ page }) => {
   await loginNewUser(page);
   await page.goto('/dashboard/settings');
-  await page.getByRole('tab', { name: 'Backup & Restore', exact: true }).click();
+  await page.getByRole('tab', { name: 'Backup', exact: true }).click();
   await page.getByRole('button', { name: 'Download backup' }).click();
 
   const dialog = page.getByRole('dialog');

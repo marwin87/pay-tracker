@@ -382,7 +382,7 @@
             "notifications": "Notifications",
             "categories": "Categories",
             "reports": "Reports",
-            "data": "Backup & Restore",
+            "data": "Backup",
             "about": "About"
         },
         "unsavedTitle": "Unsaved changes",

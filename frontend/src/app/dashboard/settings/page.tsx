@@ -235,7 +235,7 @@ export default function SettingsPage() {
 
       <div
         role="tablist"
-        className="hidden gap-1 border-b border-slate-200 dark:border-slate-700 sm:flex sm:flex-wrap"
+        className="hidden shadow-[inset_0_-1px_0_0_var(--color-slate-200)] dark:shadow-[inset_0_-1px_0_0_var(--color-slate-700)] sm:flex sm:flex-nowrap sm:overflow-x-auto sm:overflow-y-hidden"
       >
         {TABS.map((tab) => (
           <button
@@ -245,7 +245,7 @@ export default function SettingsPage() {
             aria-selected={activeTab === tab}
             aria-controls={`settings-panel-${tab}`}
             onClick={() => selectTab(tab)}
-            className={`flex items-center gap-2 whitespace-nowrap px-3 py-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+            className={`flex flex-none items-center gap-2 whitespace-nowrap px-2.5 py-2 text-sm font-medium border-b-2 transition-colors ${
               activeTab === tab
                 ? TILE_STYLES[TAB_COLOR[tab]].tab
                 : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200"

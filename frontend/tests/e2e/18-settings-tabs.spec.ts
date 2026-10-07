@@ -13,7 +13,7 @@ test('settings has six tabs; Currency and Languages live under Preferences, not 
   await loginNewUser(page);
   await page.goto('/dashboard/settings');
 
-  // Assert: six tabs exposed with the tab role
+  // Assert: seven tabs exposed with the tab role
   await expect(page.getByRole('tablist')).toBeVisible();
   await expect(page.getByRole('tab')).toHaveText([
     'Account',
@@ -21,7 +21,8 @@ test('settings has six tabs; Currency and Languages live under Preferences, not 
     'Notifications',
     'Categories',
     'Reports',
-    'Backup & Restore',
+    'Backup',
+    'About',
   ]);
   await expect(page.getByRole('tab', { name: 'Account', exact: true })).toHaveAttribute('aria-selected', 'true');
 
@@ -56,7 +57,7 @@ test('active settings tab is kept in the URL: refresh and deep-link land on it',
 
   // Assert: a deep-link opens the requested tab; an unknown value falls back to Account
   await page.goto('/dashboard/settings?tab=data');
-  await expect(page.getByRole('tab', { name: 'Backup & Restore', exact: true })).toHaveAttribute('aria-selected', 'true');
+  await expect(page.getByRole('tab', { name: 'Backup', exact: true })).toHaveAttribute('aria-selected', 'true');
   await expect(page.getByRole('heading', { name: 'Backup Data' })).toBeVisible();
 
   await page.goto('/dashboard/settings?tab=bogus');

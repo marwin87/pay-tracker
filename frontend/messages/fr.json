@@ -382,7 +382,7 @@
             "notifications": "Notifications",
             "categories": "Catégories",
             "reports": "Rapports",
-            "data": "Sauvegarde et restauration",
+            "data": "Sauvegarde",
             "about": "À propos"
         },
         "unsavedTitle": "Modifications non enregistrées",

@@ -225,7 +225,8 @@ def configure_profile(session: requests.Session, token: str) -> None:
             "telegram_reminders_enabled": False,
             "telegram_monthly_summary_enabled": False,
             "browser_notifications_enabled": False,
-            "enabled_languages": ["en", "pl", "es"],
+            # enabled_languages left out: new accounts get every app language by default.
+            "language_preference": "en",
             "default_currency": "EUR",
             "timezone": DEMO_TIMEZONE,
         },
@@ -233,7 +234,7 @@ def configure_profile(session: requests.Session, token: str) -> None:
     if r.status_code != 200:
         print(f"  Profile configuration failed ({r.status_code}): {r.text}")
         sys.exit(1)
-    print(f"  All notifications (email, Telegram, browser) disabled, languages set to en/pl/es, default currency EUR, time zone {DEMO_TIMEZONE}")
+    print(f"  All notifications (email, Telegram, browser) disabled, language English (all languages enabled), default currency EUR, time zone {DEMO_TIMEZONE}")
 
 
 def restore(session: requests.Session, token: str) -> None:
