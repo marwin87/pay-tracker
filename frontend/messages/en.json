@@ -382,7 +382,8 @@
             "notifications": "Notifications",
             "categories": "Categories",
             "reports": "Reports",
-            "data": "Backup & Restore"
+            "data": "Backup & Restore",
+            "about": "About"
         },
         "unsavedTitle": "Unsaved changes",
         "unsavedDescription": "You have unsaved changes. Leave without saving?",
@@ -534,6 +535,12 @@
             "title": "Restore Data",
             "description": "Replace all current data with a previously downloaded backup file.",
             "button": "Restore"
+        },
+        "about": {
+            "title": "App information",
+            "description": "Version and useful links.",
+            "text": "Pay Tracker is a household app for keeping track of your bills. It was made with a calm household budget in mind, so that no bill slips through.",
+            "version": "App version"
         },
         "deleteAccount": {
             "title": "Delete Account",

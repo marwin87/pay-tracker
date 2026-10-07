@@ -382,7 +382,8 @@
             "notifications": "Notifiche",
             "categories": "Categorie",
             "reports": "Report",
-            "data": "Backup e ripristino"
+            "data": "Backup e ripristino",
+            "about": "Informazioni"
         },
         "unsavedTitle": "Modifiche non salvate",
         "unsavedDescription": "Hai modifiche non salvate. Uscire senza salvare?",
@@ -534,6 +535,12 @@
             "title": "Ripristina dati",
             "description": "Sostituisci tutti i dati attuali con un file di backup scaricato in precedenza.",
             "button": "Ripristina"
+        },
+        "about": {
+            "title": "Informazioni sull'app",
+            "description": "Versione e link utili.",
+            "text": "Pay Tracker è un'app domestica per tenere sotto controllo le bollette. Nasce per un budget familiare sereno, perché nessuna bolletta venga dimenticata.",
+            "version": "Versione dell'app"
         },
         "deleteAccount": {
             "title": "Elimina account",

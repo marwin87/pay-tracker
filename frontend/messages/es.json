@@ -382,7 +382,8 @@
             "notifications": "Notificaciones",
             "categories": "Categorías",
             "reports": "Informes",
-            "data": "Copia de seguridad y restauración"
+            "data": "Copia de seguridad y restauración",
+            "about": "Acerca de"
         },
         "unsavedTitle": "Cambios sin guardar",
         "unsavedDescription": "Tienes cambios sin guardar. ¿Salir sin guardar?",
@@ -534,6 +535,12 @@
             "title": "Restaurar datos",
             "description": "Reemplaza todos los datos actuales con un archivo de copia de seguridad descargado previamente.",
             "button": "Restaurar"
+        },
+        "about": {
+            "title": "Información de la aplicación",
+            "description": "Versión y enlaces útiles.",
+            "text": "Pay Tracker es una aplicación doméstica para controlar tus facturas. Nació pensando en un presupuesto familiar tranquilo, para que ninguna factura se te pase.",
+            "version": "Versión de la aplicación"
         },
         "deleteAccount": {
             "title": "Eliminar cuenta",

@@ -382,7 +382,8 @@
             "notifications": "Notifications",
             "categories": "Catégories",
             "reports": "Rapports",
-            "data": "Sauvegarde et restauration"
+            "data": "Sauvegarde et restauration",
+            "about": "À propos"
         },
         "unsavedTitle": "Modifications non enregistrées",
         "unsavedDescription": "Vous avez des modifications non enregistrées. Quitter sans enregistrer ?",
@@ -534,6 +535,12 @@
             "title": "Restaurer les données",
             "description": "Remplacez toutes les données actuelles par un fichier de sauvegarde téléchargé précédemment.",
             "button": "Restaurer"
+        },
+        "about": {
+            "title": "Informations sur l'application",
+            "description": "Version et liens utiles.",
+            "text": "Pay Tracker est une application domestique pour suivre vos factures. Elle a été pensée pour un budget du foyer serein, afin qu'aucune facture ne passe à la trappe.",
+            "version": "Version de l'application"
         },
         "deleteAccount": {
             "title": "Supprimer le compte",

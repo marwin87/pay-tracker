@@ -382,7 +382,8 @@
             "notifications": "通知",
             "categories": "类别",
             "reports": "报表",
-            "data": "备份与恢复"
+            "data": "备份与恢复",
+            "about": "关于"
         },
         "unsavedTitle": "有未保存的更改",
         "unsavedDescription": "您有未保存的更改。是否在不保存的情况下离开？",
@@ -534,6 +535,12 @@
             "title": "恢复数据",
             "description": "用之前下载的备份文件替换所有当前数据。",
             "button": "恢复"
+        },
+        "about": {
+            "title": "应用信息",
+            "description": "版本和相关链接。",
+            "text": "Pay Tracker 是一款家庭账单管理应用。它为轻松的家庭预算而生，让每一笔账单都不被遗漏。",
+            "version": "应用版本"
         },
         "deleteAccount": {
             "title": "删除账户",

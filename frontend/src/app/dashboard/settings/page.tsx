@@ -7,6 +7,7 @@ import {
   ChevronRight,
   DatabaseBackup,
   FileText,
+  Info,
   HardDriveDownload,
   HardDriveUpload,
   SlidersHorizontal,
@@ -36,6 +37,7 @@ import { EmailNotificationsTile } from "@/components/settings/EmailNotifications
 import { TelegramNotificationsTile } from "@/components/settings/TelegramNotificationsTile";
 import { BrowserNotificationsTile } from "@/components/settings/BrowserNotificationsTile";
 import { ServerTimeNote } from "@/components/settings/ServerTimeNote";
+import { AboutTile } from "@/components/settings/AboutTile";
 import { CategoriesTile } from "@/components/settings/CategoriesTile";
 import { UnsavedChangesDialog } from "@/components/settings/UnsavedChangesDialog";
 import DeleteAccountDialog from "@/components/settings/DeleteAccountDialog";
@@ -47,6 +49,7 @@ const TABS = [
   "categories",
   "reports",
   "data",
+  "about",
 ] as const;
 type TabKey = (typeof TABS)[number];
 
@@ -57,6 +60,7 @@ const TAB_ICON: Record<TabKey, LucideIcon> = {
   categories: Tags,
   reports: FileText,
   data: DatabaseBackup,
+  about: Info,
 };
 
 // Grey while inactive; when active/expanded it inherits the tab's text color (currentColor).
@@ -71,6 +75,7 @@ const TAB_COLOR: Record<TabKey, TileColor> = {
   categories: "green",
   reports: "teal",
   data: "orange",
+  about: "slate",
 };
 
 function tabFromUrl(): TabKey {
@@ -527,6 +532,40 @@ export default function SettingsPage() {
           <RestoreButton label={t("restore.button")} />
           <SnapshotRecoverySection />
         </Tile>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => toggleMobileSection("about")}
+        aria-expanded={expandedMobile.has("about")}
+        aria-controls="settings-panel-about"
+        id="settings-tab-about-mobile"
+        className={`flex w-full items-center justify-between border-b border-slate-200 py-3 text-left text-sm font-semibold dark:border-slate-700 sm:hidden ${
+          expandedMobile.has("about")
+            ? TILE_STYLES[TAB_COLOR.about].icon
+            : "text-slate-600 dark:text-slate-300"
+        }`}
+      >
+        <span className="flex items-center gap-2">
+        <TAB_ICON.about size={16} className={tabIconClass(expandedMobile.has("about"))} />
+        {t("tabs.about")}
+        </span>
+        <ChevronRight
+          size={16}
+          className={`shrink-0 text-slate-400 transition-transform duration-150 dark:text-slate-500 ${
+            expandedMobile.has("about") ? "rotate-90" : ""
+          }`}
+        />
+      </button>
+      <div
+        role="tabpanel"
+        id="settings-panel-about"
+        aria-labelledby="settings-tab-about settings-tab-about-mobile"
+        className={`space-y-4 ${expandedMobile.has("about") ? "block" : "hidden"} ${
+          activeTab === "about" ? "sm:block" : "sm:hidden"
+        }`}
+      >
+        <AboutTile color={TAB_COLOR.about} t={t} />
       </div>
 
       {(pendingHref || pendingLogout) && (

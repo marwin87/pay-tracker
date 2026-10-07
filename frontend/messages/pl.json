@@ -382,7 +382,8 @@
             "notifications": "Powiadomienia",
             "categories": "Kategorie",
             "reports": "Raporty",
-            "data": "Kopia zapasowa i przywracanie"
+            "data": "Kopia zapasowa i przywracanie",
+            "about": "Informacje"
         },
         "unsavedTitle": "Niezapisane zmiany",
         "unsavedDescription": "Masz niezapisane zmiany. Wyjść bez zapisywania?",
@@ -534,6 +535,12 @@
             "title": "Przywracanie danych",
             "description": "Zastąp wszystkie bieżące dane wcześniej pobraną kopią zapasową.",
             "button": "Przywróć"
+        },
+        "about": {
+            "title": "Informacje o aplikacji",
+            "description": "Wersja i przydatne linki.",
+            "text": "Pay Tracker to domowa aplikacja do pilnowania rachunków. Powstała z myślą o spokojnym domowym budżecie, żeby żaden rachunek nie umknął.",
+            "version": "Wersja aplikacji"
         },
         "deleteAccount": {
             "title": "Usuń konto",

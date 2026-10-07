@@ -382,7 +382,8 @@
             "notifications": "Benachrichtigungen",
             "categories": "Kategorien",
             "reports": "Berichte",
-            "data": "Sicherung & Wiederherstellung"
+            "data": "Sicherung & Wiederherstellung",
+            "about": "Info"
         },
         "unsavedTitle": "Nicht gespeicherte Änderungen",
         "unsavedDescription": "Sie haben nicht gespeicherte Änderungen. Ohne Speichern verlassen?",
@@ -534,6 +535,12 @@
             "title": "Daten wiederherstellen",
             "description": "Ersetzen Sie alle aktuellen Daten durch eine zuvor heruntergeladene Sicherungsdatei.",
             "button": "Wiederherstellen"
+        },
+        "about": {
+            "title": "App-Informationen",
+            "description": "Version und nützliche Links.",
+            "text": "Pay Tracker ist eine Haushalts-App, mit der du den Überblick über deine Rechnungen behältst. Sie entstand für ein entspanntes Haushaltsbudget, damit keine Rechnung untergeht.",
+            "version": "App-Version"
         },
         "deleteAccount": {
             "title": "Konto löschen",

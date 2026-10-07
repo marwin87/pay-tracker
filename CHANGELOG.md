@@ -2,6 +2,12 @@
 
 Notable changes to Pay Tracker, release by release.
 
+## v1.4.0 (Not released yet)
+
+### Features
+
+- About tab in Settings with the app version
+
 ## v1.3.0 — 07-10-2026
 
 ### Features
