@@ -49,6 +49,7 @@
     },
     "DashboardLayout": {
         "dashboard": "Dashboard",
+        "more": "Altro",
         "payments": "Pagamenti",
         "bills": "Bollette",
         "archived": "Archiviate",

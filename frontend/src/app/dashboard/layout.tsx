@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Archive, CalendarCheck, ClipboardPen, LayoutGrid, LogOut, Menu, X, Settings } from "lucide-react";
+import { Archive, CalendarCheck, ClipboardPen, Ellipsis, LayoutGrid, LogOut, Settings, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import { getAuthToken } from "@/lib/auth";
@@ -15,6 +15,7 @@ import { monthIn } from "@/lib/today";
 import { useLocale } from "@/context/locale-context";
 import ThemeToggle from "@/components/ThemeToggle";
 import LanguageToggle from "@/components/LanguageToggle";
+import { MENU_ROW_CLASS } from "@/components/menuRow";
 import { ToastProvider } from "@/context/toast-context";
 
 // Full class strings so Tailwind can see them; picked per user by hashing the email.
@@ -42,11 +43,32 @@ const NAV_ITEMS = [
 
 // Settings lives in the avatar menu on desktop and in the hamburger menu on mobile.
 const SETTINGS_ITEM = { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings, exact: false };
-const MOBILE_NAV_ITEMS = [...NAV_ITEMS, SETTINGS_ITEM];
-
-// Desktop sidebar only: the icon squeezes while its row is pressed.
+// The icon squeezes while its row (sidebar link or bottom-bar tab) is pressed.
 const SIDEBAR_ICON_CLASS =
   "transition-transform duration-150 ease-out group-active:scale-80 motion-reduce:transition-none motion-reduce:group-active:scale-100";
+
+const bottomTabClass = (active: boolean) =>
+  `group flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-1.5 text-[11px] font-medium transition-colors ${
+    active ? "text-green-700 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"
+  }`;
+
+function BottomTabBody({ active, Icon, label }: { active: boolean; Icon: LucideIcon; label: string }) {
+  return (
+    <>
+      <span
+        className={`flex h-7 w-14 items-center justify-center rounded-full transition-colors ${
+          active ? "bg-green-100 dark:bg-emerald-900/30" : ""
+        }`}
+      >
+        <Icon
+          size={20}
+          className={`${SIDEBAR_ICON_CLASS} ${active ? "animate-[icon-pop_260ms_ease-out] motion-reduce:animate-none" : ""}`}
+        />
+      </span>
+      <span className="max-w-full truncate">{label}</span>
+    </>
+  );
+}
 
 const sidebarLinkClass = (active: boolean) =>
   `group flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
@@ -105,13 +127,22 @@ export default function DashboardLayout({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
+  // The account panel also closes on Escape (and when a link in the bar or panel is tapped).
+  useEffect(() => {
+    function onKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setMenuOpen(false);
+    }
+    if (menuOpen) document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
   if (!isAuthenticated) return null;
 
   const initials = userEmail ? userEmail[0].toUpperCase() : "?";
   const palette = avatarPalette(userEmail);
 
   return (
-    <div className="flex min-h-dvh flex-col md:-mb-9">
+    <div className="flex min-h-dvh flex-col -mb-9">
       {/* Desktop sidebar */}
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-60 flex-col overflow-y-auto border-r border-slate-200 dark:border-slate-700 md:flex">
         <Link
@@ -186,7 +217,7 @@ export default function DashboardLayout({
       </aside>
 
       {/* Mobile top bar */}
-      <header ref={menuRef} className="relative sticky top-0 z-10 md:hidden border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
+      <header className="relative sticky top-0 z-10 md:hidden border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
         <div className="mx-auto flex max-w-4xl items-center gap-4 px-4 py-3">
           {/* Brand */}
           <Link
@@ -200,72 +231,81 @@ export default function DashboardLayout({
             </span>
           </Link>
 
-          {/* Mobile: utility icons + hamburger */}
-          <div className="flex md:hidden items-center gap-1 ml-auto">
-            <button
-              onClick={() => setMenuOpen((o) => !o)}
-              aria-label="Toggle menu"
-              aria-expanded={menuOpen}
-              className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-700 transition-colors"
-            >
-              {menuOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
-
-            {/* Mobile dropdown */}
-            {menuOpen && (
-              <div className="absolute top-full inset-x-0 border-b border-slate-200 bg-white shadow-md dark:border-slate-700 dark:bg-slate-800">
-                <div className="mx-auto max-w-4xl px-4 py-3 flex flex-col gap-1">
-                  {/* Signed-in email header */}
-                  {userEmail && (
-                    <div className="mb-2 flex items-center gap-2.5 rounded-lg bg-slate-50 px-3 py-2 dark:bg-slate-700/50">
-                      <div className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${palette.grad} text-xs font-bold text-white shadow-sm`}>
-                        {initials}
-                      </div>
-                      <span className="truncate text-sm text-slate-600 dark:text-slate-300">{userEmail}</span>
-                    </div>
-                  )}
-
-                  {MOBILE_NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
-                    const active = pathname === href || (!exact && pathname.startsWith(href + "/"));
-                    return (
-                      <Link
-                        key={href}
-                        href={href}
-                        onClick={() => setMenuOpen(false)}
-                        className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-medium transition-all ${
-                          active
-                            ? "border border-green-200 bg-green-50 text-green-800 dark:border-green-800 dark:bg-green-900/30 dark:text-green-300"
-                            : "border border-transparent text-slate-600 hover:border-green-200 hover:bg-green-50 hover:text-green-700 dark:text-slate-400 dark:hover:border-green-800 dark:hover:bg-green-900/20 dark:hover:text-green-300"
-                        }`}
-                      >
-                        <Icon size={16} />
-                        {t(labelKey)}
-                      </Link>
-                    );
-                  })}
-
-                  <div className="mt-1 flex flex-col gap-0.5 border-t border-slate-100 pt-1 dark:border-slate-700">
-                    <ThemeToggle />
-                    <LanguageToggle />
-                    <button
-                      data-logout-trigger
-                      onClick={() => { setMenuOpen(false); logout(); }}
-                      className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
-                    >
-                      <LogOut size={15} />
-                      {t("logOut")}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       </header>
 
+      {/* Mobile bottom tab bar; the last tab ("More") opens a panel (email, Settings, theme, language, log out). */}
+      <nav
+        ref={menuRef}
+        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-slate-200 bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden dark:border-slate-700 dark:bg-slate-800/90"
+      >
+        {menuOpen && (
+          <div className="absolute inset-x-0 bottom-full max-h-[70dvh] overflow-y-auto border-t border-slate-200 bg-white px-4 py-3 shadow-md dark:border-slate-700 dark:bg-slate-800">
+            <div className="mx-auto flex max-w-4xl flex-col gap-1">
+              {userEmail && (
+                <>
+                  <div className="flex items-center gap-2.5 px-3 py-2">
+                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${palette.grad} text-sm font-bold text-white shadow-md ${palette.shadow}`}>
+                      {initials}
+                    </div>
+                    <span className="truncate text-xs text-slate-500 dark:text-slate-400">{userEmail}</span>
+                  </div>
+                  <div className="mx-3 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+                </>
+              )}
+              <div className="flex flex-col gap-0.5">
+                <Link href={SETTINGS_ITEM.href} onClick={() => setMenuOpen(false)} className={MENU_ROW_CLASS}>
+                  <Settings size={15} />
+                  {t(SETTINGS_ITEM.labelKey)}
+                </Link>
+                <ThemeToggle />
+                <LanguageToggle />
+                <button
+                  data-logout-trigger
+                  onClick={() => { setMenuOpen(false); logout(); }}
+                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+                >
+                  <LogOut size={15} />
+                  {t("logOut")}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
+          const active = pathname === href || (!exact && pathname.startsWith(href + "/"));
+          return (
+            <Link
+              key={href}
+              href={href}
+              onClick={() => setMenuOpen(false)}
+              aria-current={active ? "page" : undefined}
+              className={bottomTabClass(active)}
+            >
+              <BottomTabBody active={active} Icon={Icon} label={t(labelKey)} />
+            </Link>
+          );
+        })}
+        {(() => {
+          const active = menuOpen || pathname.startsWith(SETTINGS_ITEM.href);
+          return (
+            <button
+              type="button"
+              onClick={() => setMenuOpen((o) => !o)}
+              aria-expanded={menuOpen}
+              aria-haspopup="true"
+              aria-current={!menuOpen && active ? "page" : undefined}
+              className={bottomTabClass(active)}
+            >
+              <BottomTabBody active={active} Icon={Ellipsis} label={t("more")} />
+            </button>
+          );
+        })()}
+      </nav>
+
       {/* Page content */}
       <ToastProvider>
-        <main key={pathname} className="page-in flex-1 md:ml-60">{children}</main>
+        <main key={pathname} className="page-in flex-1 pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:ml-60 md:pb-0">{children}</main>
       </ToastProvider>
     </div>
   );

@@ -49,6 +49,7 @@
     },
     "DashboardLayout": {
         "dashboard": "Pulpit",
+        "more": "Więcej",
         "payments": "Płatności",
         "bills": "Rachunki",
         "archived": "Archiwum",

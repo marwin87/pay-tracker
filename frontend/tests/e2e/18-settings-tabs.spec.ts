@@ -9,7 +9,7 @@
 import { test, expect } from '@playwright/test';
 import { loginNewUser } from './helpers';
 
-test('settings has six tabs; Currency and Languages live under Preferences, not Account', async ({ page }) => {
+test('settings has seven tabs; Currency and Languages live under Preferences, not Account', async ({ page }) => {
   await loginNewUser(page);
   await page.goto('/dashboard/settings');
 

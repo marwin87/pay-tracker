@@ -49,6 +49,7 @@
     },
     "DashboardLayout": {
         "dashboard": "仪表盘",
+        "more": "更多",
         "payments": "付款",
         "bills": "账单",
         "archived": "已归档",

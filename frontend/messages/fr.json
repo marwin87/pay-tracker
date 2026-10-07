@@ -49,6 +49,7 @@
     },
     "DashboardLayout": {
         "dashboard": "Tableau de bord",
+        "more": "Plus",
         "payments": "Paiements",
         "bills": "Factures",
         "archived": "Archivées",

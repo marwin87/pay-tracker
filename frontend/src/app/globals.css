@@ -293,6 +293,9 @@ html.dark:not(.theme-vesperfall) body {
   border-top-color: #c29a3f;
 }
 
+/* Bottom tab bar: the newly active tab icon pops once. */
+@keyframes icon-pop { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
 /* Soft fade when switching dashboard pages (keyed by pathname on <main>). */
 @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
 .page-in { animation: page-in 150ms ease-out; }

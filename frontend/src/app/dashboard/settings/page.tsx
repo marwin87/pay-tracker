@@ -107,7 +107,10 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<TabKey>(tabFromUrl);
   // Mobile accordion: which sections are expanded, independent of activeTab — each one
   // opens/closes on its own instead of exactly one always being open.
-  const [expandedMobile, setExpandedMobile] = useState<Set<TabKey>>(() => new Set([tabFromUrl()]));
+  // Starts fully collapsed unless a ?tab= deep link names a section to open.
+  const [expandedMobile, setExpandedMobile] = useState<Set<TabKey>>(
+    () => new Set(typeof window !== "undefined" && window.location.search.includes("tab=") ? [tabFromUrl()] : []),
+  );
 
   const isDirtyAny =
     profileDirty ||

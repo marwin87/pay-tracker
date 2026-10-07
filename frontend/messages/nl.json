@@ -49,6 +49,7 @@
     },
     "DashboardLayout": {
         "dashboard": "Overzicht",
+        "more": "Meer",
         "payments": "Betalingen",
         "bills": "Rekeningen",
         "archived": "Gearchiveerd",

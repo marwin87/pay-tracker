@@ -49,6 +49,7 @@
     },
     "DashboardLayout": {
         "dashboard": "Painel",
+        "more": "Mais",
         "payments": "Pagamentos",
         "bills": "Faturas",
         "archived": "Arquivadas",
