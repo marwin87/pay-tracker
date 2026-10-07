@@ -44,8 +44,12 @@ const NAV_ITEMS = [
 const SETTINGS_ITEM = { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings, exact: false };
 const MOBILE_NAV_ITEMS = [...NAV_ITEMS, SETTINGS_ITEM];
 
+// Desktop sidebar only: the icon squeezes while its row is pressed.
+const SIDEBAR_ICON_CLASS =
+  "transition-transform duration-150 ease-out group-active:scale-80 motion-reduce:transition-none motion-reduce:group-active:scale-100";
+
 const sidebarLinkClass = (active: boolean) =>
-  `flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
+  `group flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
     active
       ? "border border-green-200 bg-green-50 text-green-800 shadow-sm dark:border-green-800 dark:bg-green-900/30 dark:text-green-300"
       : "border border-transparent text-slate-600 hover:border-green-200 hover:bg-green-50 hover:text-green-700 dark:text-slate-400 dark:hover:border-green-800 dark:hover:bg-green-900/20 dark:hover:text-green-300"
@@ -141,7 +145,7 @@ export default function DashboardLayout({
                 href={href}
                 className={sidebarLinkClass(active)}
               >
-                <Icon size={16} />
+                <Icon size={16} className={SIDEBAR_ICON_CLASS} />
                 {t(labelKey)}
               </Link>
             );
@@ -152,7 +156,7 @@ export default function DashboardLayout({
 
         <div className="flex flex-col gap-0.5 p-3">
           <Link href={SETTINGS_ITEM.href} className={sidebarLinkClass(pathname.startsWith(SETTINGS_ITEM.href))}>
-            <Settings size={15} />
+            <Settings size={15} className={SIDEBAR_ICON_CLASS} />
             {t(SETTINGS_ITEM.labelKey)}
           </Link>
           <ThemeToggle />
@@ -167,9 +171,9 @@ export default function DashboardLayout({
           <button
             data-logout-trigger
             onClick={logout}
-            className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+            className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
           >
-            <LogOut size={14} />
+            <LogOut size={14} className={SIDEBAR_ICON_CLASS} />
             {t("logOut")}
           </button>
         </div>
