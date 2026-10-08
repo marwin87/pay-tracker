@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Tag, Pencil, Plus, Archive as ArchiveIcon, ArchiveRestore } from "lucide-react";
+import { Tag, Pencil, Plus, FolderArchive, FolderOpen } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   fetchCategories,
@@ -158,7 +158,7 @@ export function CategoriesTile({
 
   function startEdit(cat: Category) {
     setEditingId(cat.id);
-    setEditName(cat.name);
+    setEditName(categoryLabel(cat, tCategories));
     setEditColor(cat.color);
     setRowError(null);
   }
@@ -305,7 +305,7 @@ export function CategoriesTile({
                     }
                     className="shrink-0 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
                   >
-                    {cat.is_archived ? <ArchiveRestore size={14} /> : <ArchiveIcon size={14} />}
+                    {cat.is_archived ? <FolderOpen size={14} /> : <FolderArchive size={14} />}
                   </button>
                 </div>
               ),

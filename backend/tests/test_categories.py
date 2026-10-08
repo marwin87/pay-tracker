@@ -176,3 +176,23 @@ def test_category_name_length_is_validated(client):
         "/categories", json={"name": "x" * 50, "color": "blue"}, headers=auth(tok)
     )
     assert r.status_code == 201
+
+
+def test_rename_default_category_keeps_slug(client):
+    # The frontend shows the translated label only while name == slug, so a
+    # rename must change name but leave slug (used by backup restore) intact.
+    tok = register_and_login(client, "rename-default@test.com")
+    housing = next(
+        c
+        for c in client.get("/categories", headers=auth(tok)).json()
+        if c["slug"] == "housing"
+    )
+    r = client.patch(
+        f"/categories/{housing['id']}", json={"name": "Dom"}, headers=auth(tok)
+    )
+    assert r.status_code == 200
+    assert (r.json()["name"], r.json()["slug"], r.json()["is_default"]) == (
+        "Dom",
+        "housing",
+        True,
+    )

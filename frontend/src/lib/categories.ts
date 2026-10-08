@@ -94,12 +94,15 @@ export function categoryBorderClass(color: string): string {
 
 // Seeded default categories keep their translated label (looked up by slug,
 // e.g. "housing" -> Categories.housing); user-created ones have no slug and
-// just show their free-text name.
+// just show their free-text name. A renamed default (name no longer equals its
+// seeded slug) shows the user's name instead of the translation.
 export function categoryLabel(
   category: Pick<Category, "slug" | "name">,
   t: (key: string) => string,
 ): string {
-  return category.slug ? t(category.slug) : category.name;
+  return category.slug && category.name.toLowerCase() === category.slug
+    ? t(category.slug)
+    : category.name;
 }
 
 // Filter dropdown label — flags archived categories so users aren't

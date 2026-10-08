@@ -10,6 +10,10 @@ Notable changes to Pay Tracker, release by release.
 - Dutch and Portuguese language support
 - Bottom tab bar on mobile, with a More tab for Settings, theme, language and log out
 
+### Fixes
+
+- Default categories can now be renamed in Settings
+
 ## v1.3.0 — 07-10-2026
 
 ### Features
