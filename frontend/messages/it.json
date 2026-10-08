@@ -227,6 +227,7 @@
         "previousYear": "Anno precedente",
         "previousMonth": "Mese precedente",
         "nextMonth": "Mese successivo",
+        "pickMonth": "Scegli un mese",
         "nextYear": "Anno successivo",
         "emptyHelp": "I pagamenti compaiono qui da soli appena aggiungi una bolletta in «Bollette»."
     },

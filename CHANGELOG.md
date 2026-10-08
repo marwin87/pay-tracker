@@ -10,6 +10,7 @@ Notable changes to Pay Tracker, release by release.
 - Dutch and Portuguese language support
 - Bottom tab bar on mobile, with a More tab for Settings, theme, language and log out
 - Add a new category right from the bill form
+- Cleaner month picker on Payments: one title, and a bottom sheet for months on mobile
 - Animated menu on mobile and desktop, with the overdue count on Payments
 - Clearer tab names and helpful hints on empty screens
 - Pause and resume bills right from the bills list, no separate archive page

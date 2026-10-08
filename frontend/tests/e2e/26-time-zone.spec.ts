@@ -97,7 +97,8 @@ test('the zone list opens on click even with a zone filled in, narrows as you ty
 
   // Assert: the choice saves
   await page.getByRole('button', { name: 'Save', exact: true }).click();
-  await expect(page.getByRole('button', { name: 'Save', exact: true })).not.toBeVisible();
-  const me = await (await page.request.get(`${API}/auth/me`)).json();
-  expect(me.timezone).toBe('Asia/Tokyo');
+  // poll: "Save" is already not visible while the button reads "Saving…"
+  await expect
+    .poll(async () => (await (await page.request.get(`${API}/auth/me`)).json()).timezone)
+    .toBe('Asia/Tokyo');
 });

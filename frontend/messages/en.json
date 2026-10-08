@@ -227,6 +227,7 @@
         "previousYear": "Previous year",
         "previousMonth": "Previous month",
         "nextMonth": "Next month",
+        "pickMonth": "Pick a month",
         "nextYear": "Next year",
         "emptyHelp": "Payments show up here by themselves once you add a bill in “My bills”."
     },

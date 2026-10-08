@@ -227,6 +227,7 @@
         "previousYear": "Année précédente",
         "previousMonth": "Mois précédent",
         "nextMonth": "Mois suivant",
+        "pickMonth": "Choisir un mois",
         "nextYear": "Année suivante",
         "emptyHelp": "Les paiements apparaissent ici d’eux-mêmes dès que vous ajoutez une facture dans « Factures »."
     },

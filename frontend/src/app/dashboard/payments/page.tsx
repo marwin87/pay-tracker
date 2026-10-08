@@ -28,6 +28,7 @@ import { SessionExpiredError, apiFetch } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
 import PaymentsCalendar from "@/components/payments/PaymentsCalendar";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
+import MonthSheet from "@/components/payments/MonthSheet";
 import ShareMonthDialog from "@/components/payments/ShareMonthDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
 import RevertPaymentDialog from "@/components/payments/RevertPaymentDialog";
@@ -125,6 +126,7 @@ export default function PaymentsPage() {
 function PaymentsPageInner() {
   const t = useTranslations("PaymentsPage");
   const tRow = useTranslations("PaymentRow");
+  const tNav = useTranslations("Dashboard.nav");
   const tCategories = useTranslations("Categories");
   const tFilters = useTranslations("Filters");
   const showToast = useToast();
@@ -278,25 +280,19 @@ function PaymentsPageInner() {
     showToast(t("paymentReverted", { name: toastName(updated.bill_name) }));
   }
 
-  const [selectedYear, setSelectedYear] = useState(currentYear);
-
-  // Moving the year keeps the same month, so the list, export and share follow the header.
-  function changeYear(delta: number) {
-    const year = selectedYear + delta;
-    setSelectedYear(year);
-    setSelectedMonth(monthKey(year, Number(selectedMonth.slice(5, 7)) - 1));
-  }
-
-  // Mobile month picker: arrows step ±1 month (crossing years), the label opens a 4×3 grid.
-  const [monthGridOpen, setMonthGridOpen] = useState(false);
+  // The year follows the selected month; arrows step ±1 month (crossing years).
+  const [monthSheetOpen, setMonthSheetOpen] = useState(false);
   const selYear = Number(selectedMonth.slice(0, 4));
   const selMonthIdx = Number(selectedMonth.slice(5, 7)) - 1;
+  const selectedYear = selYear;
   function stepMonth(delta: number) {
     const d = new Date(selYear, selMonthIdx + delta);
     if (d.getFullYear() < currentYear - 2 || d.getFullYear() > currentYear + 1) return;
-    setSelectedYear(d.getFullYear());
     setSelectedMonth(monthKey(d.getFullYear(), d.getMonth()));
   }
+  const atMinMonth = selYear <= currentYear - 2 && selMonthIdx === 0;
+  const atMaxMonth = selYear >= currentYear + 1 && selMonthIdx === 11;
+  const monthTitle = `${monthName(selYear, selMonthIdx, locale)} ${selYear}`;
 
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
@@ -396,6 +392,76 @@ function PaymentsPageInner() {
     { value: "year" as const, label: t("exportXlsxYear", { year: selectedYear }) },
   ];
 
+  const exportControls =
+    exportEnabled || pdfEnabled || shareAvailable ? (
+      <>
+      {shareSent && (
+        <p role="status" className="text-sm text-green-600 dark:text-emerald-400">
+          {t("shareSent")}
+        </p>
+      )}
+      {shareAvailable && (
+        <button
+          type="button"
+          onClick={() => {
+            setShareSent(false);
+            setShareOpen(true);
+          }}
+          aria-label={t("shareMonth")}
+          title={t("shareMonth")}
+          className="flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-400"
+        >
+          <Share2 size={16} />
+        </button>
+      )}
+      {exportEnabled && (
+      <Dropdown<ExportScope | "">
+        variant="icon-sm"
+        align="right"
+        value=""
+        onChange={(scope) => scope && handleExportXlsx(scope)}
+        disabled={xlsxLoading}
+        ariaLabel={t("exportXlsx")}
+        placeholder={
+          <span className="flex items-center gap-1.5">
+            {xlsxLoading ? (
+              <Loader2 size={14} className="animate-spin text-green-600 dark:text-emerald-400" />
+            ) : (
+              <FileSpreadsheet size={14} />
+            )}
+            XLSX
+          </span>
+        }
+        options={exportScopeOptions}
+      />
+      )}
+      {pdfEnabled && (
+      <Dropdown<ExportScope | "">
+        variant="icon-sm"
+        align="right"
+        value=""
+        onChange={(scope) => scope && handleExportPdf(scope)}
+        disabled={pdfLoading}
+        ariaLabel={t("exportPdf")}
+        placeholder={
+          <span className="flex items-center gap-1.5">
+            {pdfLoading ? (
+              <Loader2 size={14} className="animate-spin text-green-600 dark:text-emerald-400" />
+            ) : (
+              <FileText size={14} />
+            )}
+            PDF
+          </span>
+        }
+        options={exportScopeOptions}
+      />
+      )}
+      {(xlsxError || pdfError) && (
+        <p className="text-sm text-red-600 dark:text-red-400">{xlsxError ?? pdfError}</p>
+      )}
+      </>
+    ) : null;
+
   return (
     <div className="mx-auto max-w-6xl px-4 md:px-8 py-8">
       {dialogTarget && (
@@ -442,194 +508,111 @@ function PaymentsPageInner() {
         </p>
       </div>
 
-      {/* Month selector */}
+      {/* Month selector: one card, the title is the only place the month is named */}
       <div className="mb-6">
-        {/* Mobile: ‹ Month Year ▾ › + 4×3 grid */}
-        <div className="sm:hidden">
-          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-1 dark:border-slate-700 dark:bg-slate-800">
-            <button
-              onClick={() => stepMonth(-1)}
-              aria-label={t("previousMonth")}
-              disabled={selYear <= currentYear - 2 && selMonthIdx === 0}
-              className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 disabled:opacity-30 dark:text-slate-400"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              onClick={() => setMonthGridOpen((o) => !o)}
-              aria-expanded={monthGridOpen}
-              className="flex h-12 flex-1 items-center justify-center gap-1.5 text-base font-semibold text-slate-700 dark:text-slate-200"
-            >
-              {monthName(selYear, selMonthIdx, locale)} {selYear}
-              <ChevronDown size={16} className={`transition-transform ${monthGridOpen ? "rotate-180" : ""}`} />
-            </button>
-            <button
-              onClick={() => stepMonth(1)}
-              aria-label={t("nextMonth")}
-              disabled={selYear >= currentYear + 1 && selMonthIdx === 11}
-              className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 disabled:opacity-30 dark:text-slate-400"
-            >
-              <ChevronRight size={20} />
-            </button>
+        <div className="sm:rounded-xl sm:border sm:border-slate-200 sm:bg-white sm:px-4 sm:pt-3 sm:shadow-sm dark:sm:border-slate-700 dark:sm:bg-slate-800">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            <div className="flex w-full items-center justify-between rounded-2xl border border-slate-200 bg-white p-1 sm:w-auto sm:justify-start sm:gap-1 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0 dark:border-slate-700 dark:bg-slate-800 dark:sm:bg-transparent">
+              <button
+                onClick={() => stepMonth(-1)}
+                aria-label={t("previousMonth")}
+                disabled={atMinMonth}
+                className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-50 disabled:opacity-30 sm:h-9 sm:w-9 dark:text-slate-400 dark:hover:bg-slate-700/50"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <h2 className="flex-1 text-center text-base font-semibold text-slate-800 sm:min-w-[11rem] sm:flex-none sm:text-xl dark:text-slate-100">
+                <button
+                  onClick={() => setMonthSheetOpen(true)}
+                  aria-haspopup="dialog"
+                  className="flex h-12 w-full items-center justify-center gap-1.5 sm:hidden"
+                >
+                  {monthTitle}
+                  <ChevronDown size={16} className="text-slate-400 dark:text-slate-500" />
+                </button>
+                <span className="hidden sm:inline">{monthTitle}</span>
+              </h2>
+              <button
+                onClick={() => stepMonth(1)}
+                aria-label={t("nextMonth")}
+                disabled={atMaxMonth}
+                className="flex h-12 w-12 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-50 disabled:opacity-30 sm:h-9 sm:w-9 dark:text-slate-400 dark:hover:bg-slate-700/50"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+            <div className="flex min-w-0 flex-1 items-center gap-3">
+              {selectedMonth !== currentMonth && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedMonth(currentMonth)}
+                  className="text-xs font-medium text-green-700 hover:underline dark:text-emerald-400"
+                >
+                  {tNav("today")}
+                </button>
+              )}
+              {isReadOnly && (
+                <span className="rounded-md px-1.5 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+                  {t("pastMonth")}
+                </span>
+              )}
+              <div className="ml-auto flex items-center gap-3">
+                {exportControls}
+              </div>
+            </div>
           </div>
-          {monthGridOpen && (
-            <div className="mt-2 grid grid-cols-4 gap-1.5 rounded-2xl border border-slate-200 bg-white p-2.5 dark:border-slate-700 dark:bg-slate-800">
+
+          {/* Desktop shortcut strip; the year comes from the title */}
+          <div className="relative mt-1 hidden sm:block">
+            <div className="flex">
               {Array.from({ length: 12 }, (_, i) => {
-                const key = monthKey(selYear, i);
+                const key = monthKey(selectedYear, i);
+                const isSelected = key === selectedMonth;
+                const isCurrent = key === currentMonth;
+                const isPast = key < currentMonth;
                 return (
                   <button
                     key={key}
-                    onClick={() => {
-                      setSelectedMonth(key);
-                      setMonthGridOpen(false);
-                    }}
-                    className={`rounded-xl py-3.5 text-sm font-medium ${
-                      key === selectedMonth
-                        ? "bg-green-100 text-green-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                        : key === currentMonth
+                    onClick={() => setSelectedMonth(key)}
+                    aria-current={isSelected ? "date" : undefined}
+                    className={`relative flex flex-1 flex-col items-center gap-1 pb-3 pt-2.5 text-sm font-medium transition-colors focus:outline-none ${
+                      isSelected
                         ? "text-green-700 dark:text-emerald-400"
-                        : "text-slate-500 dark:text-slate-400"
+                        : isPast
+                        ? "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                     }`}
                   >
-                    {getMonthLabel(selYear, i, locale)}
+                    {isCurrent && (
+                      <span className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-green-500 dark:bg-emerald-400" />
+                    )}
+                    {getMonthLabel(selectedYear, i, locale)}
+                    <span
+                      className={`absolute bottom-0 left-1 right-1 h-0.5 rounded-full transition-all ${
+                        isSelected ? "bg-green-600 dark:bg-emerald-500" : "bg-transparent"
+                      }`}
+                    />
                   </button>
                 );
               })}
             </div>
-          )}
-        </div>
-
-        <div className="hidden sm:block">
-        {/* Year navigation */}
-        <div className="flex items-center gap-1 mb-3">
-          <button
-            onClick={() => changeYear(-1)}
-            aria-label={t("previousYear")}
-            disabled={selectedYear <= currentYear - 2}
-            className="rounded p-1 text-slate-400 hover:text-slate-600 disabled:opacity-30 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
-          >
-            <ChevronLeft size={18} />
-          </button>
-          <span className="text-lg font-semibold text-slate-700 dark:text-slate-200 w-14 text-center tabular-nums">
-            {selectedYear}
-          </span>
-          <button
-            onClick={() => changeYear(1)}
-            aria-label={t("nextYear")}
-            disabled={selectedYear >= currentYear + 1}
-            className="rounded p-1 text-slate-400 hover:text-slate-600 disabled:opacity-30 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
-          >
-            <ChevronRight size={18} />
-          </button>
-        </div>
-
-        {/* Timeline strip */}
-        <div className="relative">
-          {/* Track */}
-          <div className="absolute bottom-0 left-0 right-0 h-px bg-slate-200 dark:bg-slate-700" />
-          <div className="flex">
-            {Array.from({ length: 12 }, (_, i) => {
-              const key = monthKey(selectedYear, i);
-              const isSelected = key === selectedMonth;
-              const isCurrent = key === currentMonth;
-              const isPast = key < currentMonth;
-              return (
-                <button
-                  key={key}
-                  onClick={() => setSelectedMonth(key)}
-                  className={`relative flex flex-1 flex-col items-center gap-1 pb-2.5 pt-2 text-sm font-medium transition-colors focus:outline-none ${
-                    isSelected
-                      ? "text-green-700 dark:text-emerald-400"
-                      : isPast
-                      ? "text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                  }`}
-                >
-                  {isCurrent && (
-                    <span className="absolute top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-green-500 dark:bg-emerald-400" />
-                  )}
-                  {getMonthLabel(selectedYear, i, locale)}
-                  <span
-                    className={`absolute bottom-0 left-1 right-1 h-0.5 rounded-full transition-all ${
-                      isSelected ? "bg-green-600 dark:bg-emerald-500" : "bg-transparent"
-                    }`}
-                  />
-                </button>
-              );
-            })}
           </div>
         </div>
 
-        </div>
-
-        {/* Export */}
-        {(exportEnabled || pdfEnabled || shareAvailable) && (
-          <div className="mt-4 flex items-center justify-end gap-3">
-            {shareSent && (
-              <p role="status" className="text-sm text-green-600 dark:text-emerald-400">
-                {t("shareSent")}
-              </p>
-            )}
-            {shareAvailable && (
-              <button
-                type="button"
-                onClick={() => {
-                  setShareSent(false);
-                  setShareOpen(true);
-                }}
-                aria-label={t("shareMonth")}
-                title={t("shareMonth")}
-                className="flex items-center rounded-xl border border-slate-200 bg-white p-2.5 text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-400"
-              >
-                <Share2 size={18} />
-              </button>
-            )}
-            {exportEnabled && (
-            <Dropdown<ExportScope | "">
-              variant="icon"
-              align="right"
-              value=""
-              onChange={(scope) => scope && handleExportXlsx(scope)}
-              disabled={xlsxLoading}
-              ariaLabel={t("exportXlsx")}
-              placeholder={
-                <span className="flex items-center gap-1.5">
-                  {xlsxLoading ? (
-                    <Loader2 size={16} className="animate-spin text-green-600 dark:text-emerald-400" />
-                  ) : (
-                    <FileSpreadsheet size={16} />
-                  )}
-                  XLSX
-                </span>
-              }
-              options={exportScopeOptions}
-            />
-            )}
-            {pdfEnabled && (
-            <Dropdown<ExportScope | "">
-              variant="icon"
-              align="right"
-              value=""
-              onChange={(scope) => scope && handleExportPdf(scope)}
-              disabled={pdfLoading}
-              ariaLabel={t("exportPdf")}
-              placeholder={
-                <span className="flex items-center gap-1.5">
-                  {pdfLoading ? (
-                    <Loader2 size={16} className="animate-spin text-green-600 dark:text-emerald-400" />
-                  ) : (
-                    <FileText size={16} />
-                  )}
-                  PDF
-                </span>
-              }
-              options={exportScopeOptions}
-            />
-            )}
-            {(xlsxError || pdfError) && (
-              <p className="text-sm text-red-600 dark:text-red-400">{xlsxError ?? pdfError}</p>
-            )}
-          </div>
+        {monthSheetOpen && (
+          <MonthSheet
+            year={selYear}
+            selectedMonth={selectedMonth}
+            currentMonth={currentMonth}
+            minYear={currentYear - 2}
+            maxYear={currentYear + 1}
+            locale={locale}
+            onPick={(key) => {
+              setSelectedMonth(key);
+              setMonthSheetOpen(false);
+            }}
+            onClose={() => setMonthSheetOpen(false)}
+          />
         )}
 
         {shareOpen && (
@@ -647,75 +630,9 @@ function PaymentsPageInner() {
           />
         )}
 
-        {/* Calendar view */}
-        <div className="mt-4">
-          <button
-            type="button"
-            onClick={toggleCalendarOpen}
-            aria-expanded={calendarOpen}
-            className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
-          >
-            <ChevronRight
-              size={12}
-              className={`transition-transform duration-150 ${calendarOpen ? "rotate-90" : ""}`}
-            />
-            {t("calendarTitle")}
-          </button>
-          {calendarOpen && (
-            <div className="mt-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-800">
-              <PaymentsCalendar
-                year={parseInt(selectedMonth.split("-")[0], 10)}
-                month={parseInt(selectedMonth.split("-")[1], 10)}
-                instances={statusCategoryFiltered}
-                todayStr={todayStr}
-                selectedDay={dayFilter}
-                onSelectDay={(d) => setSelectedDay((prev) => (prev === d ? null : d))}
-              />
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Selected month header */}
-      <div className="mb-4 pb-2">
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
-              {(() => {
-                const label = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
-                  new Date(
-                    parseInt(selectedMonth.split("-")[0]),
-                    parseInt(selectedMonth.split("-")[1]) - 1,
-                  ),
-                );
-                return label.charAt(0).toUpperCase() + label.slice(1);
-              })()}
-            </h2>
-            {isReadOnly && (
-              <span className="rounded-md px-1.5 py-0.5 text-xs font-medium bg-slate-100 text-slate-500 dark:bg-slate-700 dark:text-slate-400">
-                {t("pastMonth")}
-              </span>
-            )}
-          </div>
-        </div>
+        {/* Search, filter & sort */}
         {!loading && !loadError && (
-          <div className="mt-0.5 flex flex-col gap-3">
-            {filteredInstances.length === 0 ? (
-              <p className="text-sm text-slate-500 dark:text-slate-400">
-                {instances.length === 0 ? t("noPayments") : t("noFilterResults")}
-              </p>
-            ) : (
-              <CategorySummary
-                group={filteredInstances}
-                todayStr={todayStr}
-                labels={{
-                  upcoming: t("summaryUpcoming"),
-                  overdueToday: t("summaryOverdueToday"),
-                  overdue: t("summaryOverdue"),
-                  paid: t("summaryPaid"),
-                }}
-              />
-            )}
+          <div className="mt-4 flex flex-col gap-3">
             <FiltersHeader
               activeCount={(searchQuery ? 1 : 0) + (statusFilter.size > 0 ? 1 : 0) + (categoryFilter.size > 0 ? 1 : 0) + (dayFilter ? 1 : 0)}
               onReset={() => { setSearchQuery(""); setStatusFilter(new Set()); setCategoryFilter(new Set()); setSelectedDay(null); }}
@@ -760,16 +677,65 @@ function PaymentsPageInner() {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col gap-3">
-              <div className="border-t border-slate-200 dark:border-slate-700 sm:h-px sm:w-1/2 sm:self-end sm:border-t-0 sm:bg-gradient-to-r sm:from-transparent sm:to-slate-300 dark:sm:to-slate-600" />
+          </div>
+        )}
+
+        {/* Calendar view */}
+        <div className="mt-4">
+          <button
+            type="button"
+            onClick={toggleCalendarOpen}
+            aria-expanded={calendarOpen}
+            className="flex items-center gap-2.5 text-xs font-bold uppercase tracking-widest text-slate-400 hover:text-slate-600 dark:text-slate-500 dark:hover:text-slate-300 transition-colors"
+          >
+            <ChevronRight
+              size={12}
+              className={`transition-transform duration-150 ${calendarOpen ? "rotate-90" : ""}`}
+            />
+            {t("calendarTitle")}
+          </button>
+          {calendarOpen && (
+            <div className="mt-3 rounded-xl border border-slate-200 bg-white p-3 shadow-sm dark:border-slate-700 dark:bg-slate-800">
+              <PaymentsCalendar
+                year={parseInt(selectedMonth.split("-")[0], 10)}
+                month={parseInt(selectedMonth.split("-")[1], 10)}
+                instances={statusCategoryFiltered}
+                todayStr={todayStr}
+                selectedDay={dayFilter}
+                onSelectDay={(d) => setSelectedDay((prev) => (prev === d ? null : d))}
+              />
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Selected month header */}
+      <div className="mb-4 pb-2">
+        {!loading && !loadError && (
+          <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+            {filteredInstances.length === 0 ? (
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                {instances.length === 0 ? t("noPayments") : t("noFilterResults")}
+              </p>
+            ) : (
+              <CategorySummary
+                group={filteredInstances}
+                todayStr={todayStr}
+                labels={{
+                  upcoming: t("summaryUpcoming"),
+                  overdueToday: t("summaryOverdueToday"),
+                  overdue: t("summaryOverdue"),
+                  paid: t("summaryPaid"),
+                }}
+              />
+            )}
               <button
                 onClick={allCollapsed ? expandAll : collapseAll}
-                className="flex shrink-0 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200 w-full justify-center sm:w-auto sm:self-end"
+                className="flex shrink-0 items-center gap-1.5 ml-auto rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
               >
                 <ChevronsUpDown size={16} />
                 {allCollapsed ? t("expandAll") : t("collapseAll")}
               </button>
-            </div>
           </div>
         )}
       </div>

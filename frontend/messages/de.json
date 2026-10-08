@@ -227,6 +227,7 @@
         "previousYear": "Vorheriges Jahr",
         "previousMonth": "Vorheriger Monat",
         "nextMonth": "Nächster Monat",
+        "pickMonth": "Monat wählen",
         "nextYear": "Nächstes Jahr",
         "emptyHelp": "Zahlungen erscheinen hier von selbst, sobald Sie unter „Rechnungen“ eine Rechnung hinzufügen."
     },

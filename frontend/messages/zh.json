@@ -227,6 +227,7 @@
         "previousYear": "上一年",
         "previousMonth": "上个月",
         "nextMonth": "下个月",
+        "pickMonth": "选择月份",
         "nextYear": "下一年",
         "emptyHelp": "在“账单”中添加账单后，付款会自动出现在这里。"
     },

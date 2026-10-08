@@ -22,8 +22,12 @@ const PILL_SM_TRIGGER_CLASS = PILL_TRIGGER_CLASS.replace("py-1.5", "py-2.5").rep
 const ICON_TRIGGER_CLASS =
   "flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm font-semibold text-slate-600 shadow-sm outline-none transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 focus:border-green-500 focus:ring-2 focus:ring-green-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-400 dark:focus:border-green-600 dark:focus:ring-green-900/40 aria-expanded:border-green-300 aria-expanded:bg-green-50 aria-expanded:text-green-700 dark:aria-expanded:border-green-700 dark:aria-expanded:bg-green-900/20 dark:aria-expanded:text-green-400 cursor-pointer";
 
+// Compact (h-9) icon trigger for toolbars next to 36px nav buttons.
+const ICON_SM_TRIGGER_CLASS = ICON_TRIGGER_CLASS.replace("px-3 py-2.5 text-sm", "h-9 px-2.5 text-xs");
+
 const TRIGGER_VARIANTS = {
   icon: ICON_TRIGGER_CLASS,
+  "icon-sm": ICON_SM_TRIGGER_CLASS,
   field: FIELD_TRIGGER_CLASS,
   pill: PILL_TRIGGER_CLASS,
   "pill-sm": PILL_SM_TRIGGER_CLASS,
@@ -34,6 +38,7 @@ const OPTION_TEXT_SIZE: Record<keyof typeof TRIGGER_VARIANTS, string> = {
   pill: "text-sm",
   "pill-sm": "text-sm",
   icon: "text-sm",
+  "icon-sm": "text-sm",
 };
 
 interface Props<T extends string> {
@@ -140,7 +145,7 @@ export default function Dropdown<T extends string>({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={ariaLabel}
-        title={variant === "icon" ? ariaLabel : undefined}
+        title={variant === "icon" || variant === "icon-sm" ? ariaLabel : undefined}
         disabled={disabled}
         className={`${TRIGGER_VARIANTS[variant]} disabled:cursor-not-allowed disabled:opacity-50`}
       >

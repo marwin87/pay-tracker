@@ -51,7 +51,7 @@ test('Share > hidden when SMTP is not configured', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Share by email' })).toHaveCount(0);
 });
 
-test('Share > follows the year arrows: same month, new year', async ({ page }) => {
+test('Share > follows the month arrows across a year: same month, new year', async ({ page }) => {
   await page.route('**/auth/smtp-status', (r) => r.fulfill({ json: { configured: true } }));
   let posted: { month: string } | null = null;
   await page.route('**/auth/share-month', async (r) => {
@@ -66,8 +66,8 @@ test('Share > follows the year arrows: same month, new year', async ({ page }) =
   const now = new Date();
   const lastYear = now.getFullYear() - 1;
   const month = String(now.getMonth() + 1).padStart(2, '0');
-  await page.getByRole('button', { name: 'Previous year' }).click();
-  await expect(page.getByText(String(lastYear), { exact: true })).toBeVisible();
+  for (let i = 0; i < 12; i++) await page.getByRole('button', { name: 'Previous month' }).click();
+  await expect(page.getByRole('heading', { level: 2 })).toContainText(String(lastYear));
 
   await page.getByRole('button', { name: 'Share by email' }).click();
   const dialog = page.getByRole('dialog');

@@ -8,7 +8,7 @@ export default function FiltersHeader({ activeCount, onReset }: { activeCount: n
   const t = useTranslations("Filters");
   return (
     <div className="-mb-1 flex min-h-6 flex-wrap items-center justify-between gap-x-3 gap-y-1">
-      <p className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">{t("toolbarTitle")}</p>
+      <p className="text-xs font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">{t("toolbarTitle")}</p>
       {activeCount > 0 && (
         <button
           type="button"
