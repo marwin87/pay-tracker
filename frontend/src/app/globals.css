@@ -293,6 +293,11 @@ html.dark:not(.theme-vesperfall) :is(body, .nav-fade) {
   border-top-color: #c29a3f;
 }
 
+/* Accent of the bottom tab bar's active tab: follows the theme (green / emerald / Vesperfall gold). */
+:root { --nav-accent: var(--color-green-700); }
+html.dark { --nav-accent: var(--color-emerald-400); }
+html.theme-vesperfall { --nav-accent: var(--color-green-300); }
+
 /* Bottom tab bar indicator: left/right edges move at different speeds, so it stretches toward the new tab. */
 .tab-ind { transition: left 300ms cubic-bezier(.3,.8,.3,1), right 300ms cubic-bezier(.3,.8,.3,1); }
 .tab-ind[data-dir="R"] { transition: left 420ms cubic-bezier(.3,.8,.3,1) 60ms, right 260ms cubic-bezier(.3,.8,.3,1); }

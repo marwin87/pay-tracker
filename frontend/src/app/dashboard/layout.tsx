@@ -49,7 +49,7 @@ const SIDEBAR_ICON_CLASS =
 
 const bottomTabClass = (active: boolean) =>
   `group relative z-10 flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-1.5 text-[11px] font-medium transition-colors ${
-    active ? "text-green-700 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"
+    active ? "text-[color:var(--nav-accent)]" : "text-slate-500 dark:text-slate-400"
   }`;
 
 function BottomTabBody({ active, Icon, label, badge = 0 }: { active: boolean; Icon: LucideIcon; label: string; badge?: number }) {
@@ -304,13 +304,13 @@ export default function DashboardLayout({
             <span
               aria-hidden
               data-dir={tabDir}
-              className="tab-ind pointer-events-none absolute top-0 h-[62px] bg-[radial-gradient(ellipse_70%_100%_at_50%_0,color-mix(in_srgb,var(--color-green-600)_28%,transparent),color-mix(in_srgb,var(--color-green-600)_10%,transparent)_55%,transparent_80%)] [mask-image:linear-gradient(#000,transparent)] dark:bg-[radial-gradient(ellipse_70%_100%_at_50%_0,color-mix(in_srgb,var(--color-emerald-400)_26%,transparent),color-mix(in_srgb,var(--color-emerald-400)_9%,transparent)_55%,transparent_80%)]"
+              className="tab-ind pointer-events-none absolute top-0 h-[62px] bg-[radial-gradient(ellipse_70%_100%_at_50%_0,color-mix(in_srgb,var(--nav-accent)_28%,transparent),color-mix(in_srgb,var(--nav-accent)_10%,transparent)_55%,transparent_80%)] [mask-image:linear-gradient(#000,transparent)]"
               style={{ left: `${tabIdx * 20}%`, right: `${100 - (tabIdx + 1) * 20}%` }}
             />
             <span
               aria-hidden
               data-dir={tabDir}
-              className="tab-ind pointer-events-none absolute -top-px z-20 h-[3px] rounded-b-md bg-gradient-to-r from-transparent via-green-600 to-transparent dark:via-emerald-400"
+              className="tab-ind pointer-events-none absolute -top-px z-20 h-[3px] rounded-b-md bg-gradient-to-r from-transparent via-[var(--nav-accent)] to-transparent"
               style={{ left: `${tabIdx * 20 + 2}%`, right: `${100 - (tabIdx + 1) * 20 + 2}%` }}
             />
           </>
