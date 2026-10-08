@@ -2,10 +2,10 @@
 
 import { ChevronRight, Info } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { copyright } from "@/lib/copyright";
 import { Tile, type TileColor } from "@/components/settings/Tile";
 
 const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "dev";
-const AUTHOR = "Mariusz Winiarz";
 const REPO_URL = "https://github.com/marwin87/pay-tracker";
 const LINK_CLASS = "font-medium text-green-700 underline-offset-2 hover:underline dark:text-emerald-400";
 
@@ -91,7 +91,7 @@ export function AboutTile({
         </div>
       </details>
       <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-        © 2026 {AUTHOR}. {t("about.copyright")}
+        {copyright()}. {t("about.copyright")}
       </p>
     </Tile>
   );

@@ -697,5 +697,146 @@
         "cancel": "Annuleren",
         "resume": "Hervatten",
         "resuming": "Bezig met hervatten…"
+    },
+    "Help": {
+        "button": "Help",
+        "title": "Hoe werkt het?",
+        "intro": "Korte antwoorden op de meest gestelde vragen.",
+        "close": "Sluiten",
+        "restart": "Startstappen opnieuw tonen",
+        "bills": "Rekeningen",
+        "payments": "Betalingen",
+        "settings": "Instellingen en gegevens",
+        "checklist": {
+            "title": "Begin in 3 stappen",
+            "progress": "{done} van {total} klaar",
+            "hide": "Verbergen",
+            "billT": "Voeg je eerste rekening toe",
+            "billD": "Voeg elke rekening maar één keer toe, zoals huur of stroom. De betaling wordt elke maand automatisch aangemaakt.",
+            "billCta": "Rekening toevoegen",
+            "paidT": "Markeer een betaling als betaald",
+            "paidD": "Als je een rekening betaalt, tik je ernaast op <b>{markPaid}</b>.",
+            "remT": "Zet herinneringen aan",
+            "remD": "Je krijgt een bericht vóór de vervaldatum en betaalt nooit te laat.",
+            "remCta": "Instellen"
+        },
+        "items": {
+            "addBill": {
+                "q": "Hoe voeg ik een rekening toe?",
+                "s1": "Open <b>{bills}</b> en tik op <b>{newBill}</b>.",
+                "s2": "Typ een naam, kies een categorie en vul het bedrag in.",
+                "s3": "Kies de vervaldag en hoe vaak hij terugkomt (elke maand, elk jaar of eenmalig). Sla het daarna op."
+            },
+            "repeat": {
+                "q": "Mijn rekening is niet maandelijks. Wat nu?",
+                "s1": "Kies bij het toevoegen of wijzigen hoe vaak de rekening terugkomt: om de paar maanden, elk jaar of maar één keer.",
+                "s2": "Je kunt ook een eindmaand instellen. Dan stopt een rekening die eindigt, zoals een lening, vanzelf."
+            },
+            "editBill": {
+                "q": "Hoe wijzig ik een rekening (naam, bedrag, dag)?",
+                "s1": "Open <b>{bills}</b> en tik naast de rekening op <b>{edit}</b>.",
+                "s2": "Wijzig wat nodig is en sla op."
+            },
+            "pause": {
+                "q": "Hoe pauzeer ik een rekening?",
+                "s1": "Open <b>{bills}</b>.",
+                "s2": "Tik naast de rekening op <b>{pause}</b> en bevestig.",
+                "s3": "Er komen geen nieuwe betalingen of herinneringen. Wat je al betaald hebt, blijft in je geschiedenis."
+            },
+            "resume": {
+                "q": "Hoe haal ik een gepauzeerde rekening terug?",
+                "s1": "Open <b>{bills}</b> en tik op <b>{showPaused}</b>.",
+                "s2": "Tik naast de rekening op <b>{resume}</b>. Nieuwe betalingen starten weer."
+            },
+            "seePayments": {
+                "q": "Waar zie ik wat ik moet betalen?",
+                "s1": "Open <b>{payments}</b>. Je ziet de rekeningen van één maand, gegroepeerd per categorie.",
+                "s2": "Met de pijlen naast de maandnaam ga je naar een andere maand. Tik op een telefoon op de maandnaam om er een te kiezen.",
+                "s3": "Tik op <b>{today}</b> om terug te gaan naar deze maand."
+            },
+            "filters": {
+                "q": "Hoe vind ik één betaling?",
+                "s1": "Boven de lijst zie je <b>{search}</b>. Typ een naam om te zoeken.",
+                "s2": "Met de filters toon je alleen onbetaalde rekeningen of één categorie, en kies je de volgorde.",
+                "s3": "Open <b>{calendar}</b> en tik op een dag om alleen de betalingen van die dag te zien."
+            },
+            "markPaid": {
+                "q": "Hoe markeer ik een rekening als betaald?",
+                "s1": "Open <b>{payments}</b>.",
+                "s2": "Tik naast de rekening op <b>{markPaid}</b>.",
+                "s3": "Heb je een ander bedrag of op een andere dag betaald? Pas het aan en bevestig."
+            },
+            "editPayment": {
+                "q": "Ik heb een ander bedrag betaald. Kan ik dat aanpassen?",
+                "s1": "Open <b>{payments}</b> en tik naast de rekening op <b>{editPayment}</b> (het potlood).",
+                "s2": "Wijzig het bedrag, de datum of de notitie en sla op. Het werkt ook bij betaalde rekeningen."
+            },
+            "revert": {
+                "q": "Ik heb per ongeluk een rekening als betaald gemarkeerd",
+                "s1": "Open <b>{payments}</b> en zoek de rekening.",
+                "s2": "Tik op <b>{revert}</b>. De rekening staat weer als onbetaald."
+            },
+            "deletePayment": {
+                "q": "Hoe verwijder ik één betaling?",
+                "s1": "Tik ernaast op <b>{deletePayment}</b> en bevestig.",
+                "s2": "De volgende betalingen van deze rekening blijven. Wil je een rekening helemaal stoppen, pauzeer hem dan."
+            },
+            "export": {
+                "q": "Hoe download ik mijn betalingen (Excel of PDF)?",
+                "s1": "Open <b>{payments}</b> en kies de maand.",
+                "s2": "Tik naast de maandnaam op <b>XLSX</b> of <b>PDF</b>.",
+                "s3": "Kies deze maand of het hele jaar. Het bestand wordt op je apparaat gedownload.",
+                "s4": "Zie je de knoppen niet? Zet ze aan bij <b>{settings}</b> → <b>{tabReports}</b>."
+            },
+            "share": {
+                "q": "Hoe stuur ik een maand per e-mail naar iemand?",
+                "s1": "Zet bij <b>{settings}</b> → <b>{tabReports}</b> delen aan. Je kunt adressen opslaan die je vaak gebruikt.",
+                "s2": "Open daarna <b>{payments}</b> en tik naast de maandnaam op de deelknop (<b>{share}</b>).",
+                "s3": "Kies een adres en verstuur."
+            },
+            "reminders": {
+                "q": "Hoe krijg ik herinneringen?",
+                "s1": "Open <b>{settings}</b> → <b>{tabNotifications}</b>.",
+                "s2": "Zet herinneringen per e-mail, browser of Telegram aan en kies wanneer je ze wilt.",
+                "s3": "E-mail en Telegram hebben eerst een korte instelling nodig. De pagina vertelt wat je moet invullen."
+            },
+            "backup": {
+                "q": "Hoe maak ik een back-up?",
+                "s1": "Open <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Tik op <b>{backup}</b>, kies wat erin moet en download het bestand.",
+                "s3": "Bewaar het bestand op een veilige plek."
+            },
+            "restore": {
+                "q": "Hoe haal ik mijn gegevens terug uit een back-up?",
+                "s1": "Open <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Tik op <b>{restore}</b> en kies je back-upbestand.",
+                "s3": "Bekijk de vergelijking en bevestig. Let op: dit vervangt je huidige gegevens.",
+                "s4": "Bedenk je je? Direct na het herstellen kun je op dezelfde pagina de gegevens van daarvoor terughalen."
+            },
+            "categories": {
+                "q": "Hoe voeg ik categorieën toe of wijzig ik ze?",
+                "s1": "Open <b>{settings}</b> → <b>{tabCategories}</b>.",
+                "s2": "Voeg je eigen toe of wijzig naam en kleur van de bestaande.",
+                "s3": "Een categorie die je niet nodig hebt kan weg. Gebruikt een rekening hem nog, dan wordt hij alleen verborgen."
+            },
+            "language": {
+                "q": "Hoe wijzig ik de taal, valuta of tijdzone?",
+                "s1": "Open <b>{settings}</b> → <b>{tabPreferences}</b>.",
+                "s2": "Daar stel je de standaardvaluta, het getalformaat, de tijdzone en de keuzetalen in. De taal wissel je ook in het menu."
+            },
+            "account": {
+                "q": "Hoe wijzig ik mijn e-mail of wachtwoord?",
+                "s1": "Open <b>{settings}</b> → <b>{tabAccount}</b>.",
+                "s2": "Wijzig daar je e-mail of wachtwoord. Wachtwoord vergeten? Gebruik de link op de inlogpagina.",
+                "s3": "Je kunt daar ook je account verwijderen. Dat kan niet ongedaan worden gemaakt."
+            },
+            "install": {
+                "q": "Hoe zet ik de app op mijn telefoon?",
+                "s1": "Open de app in de browser van je telefoon.",
+                "s2": "Kies in het browsermenu “Toevoegen aan beginscherm” (iPhone: Deel → “Zet op beginscherm”)."
+            }
+        },
+        "searchPlaceholder": "Zoeken in help…",
+        "noResults": "Niets gevonden. Probeer andere woorden."
     }
 }

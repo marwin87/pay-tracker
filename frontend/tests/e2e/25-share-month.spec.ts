@@ -67,7 +67,7 @@ test('Share > follows the month arrows across a year: same month, new year', asy
   const lastYear = now.getFullYear() - 1;
   const month = String(now.getMonth() + 1).padStart(2, '0');
   for (let i = 0; i < 12; i++) await page.getByRole('button', { name: 'Previous month' }).click();
-  await expect(page.getByRole('heading', { level: 2 })).toContainText(String(lastYear));
+  await expect(page.getByRole('heading', { level: 2, name: new RegExp(String(lastYear)) })).toBeVisible();
 
   await page.getByRole('button', { name: 'Share by email' }).click();
   const dialog = page.getByRole('dialog');

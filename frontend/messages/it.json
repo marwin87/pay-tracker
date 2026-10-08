@@ -697,5 +697,146 @@
         "cancel": "Annulla",
         "resume": "Riprendi",
         "resuming": "Ripresa…"
+    },
+    "Help": {
+        "button": "Aiuto",
+        "title": "Come funziona?",
+        "intro": "Risposte brevi alle domande più comuni.",
+        "close": "Chiudi",
+        "restart": "Mostra di nuovo i passi iniziali",
+        "bills": "Bollette",
+        "payments": "Pagamenti",
+        "settings": "Impostazioni e dati",
+        "checklist": {
+            "title": "Inizia in 3 passi",
+            "progress": "{done} di {total} fatti",
+            "hide": "Nascondi",
+            "billT": "Aggiungi la tua prima bolletta",
+            "billD": "Aggiungi ogni bolletta una sola volta, ad esempio l’affitto o la luce. Il pagamento di ogni mese viene creato automaticamente.",
+            "billCta": "Aggiungi bolletta",
+            "paidT": "Segna un pagamento come pagato",
+            "paidD": "Quando paghi una bolletta, premi <b>{markPaid}</b> accanto.",
+            "remT": "Attiva i promemoria",
+            "remD": "Ricevi un messaggio prima della scadenza e non paghi mai in ritardo.",
+            "remCta": "Imposta"
+        },
+        "items": {
+            "addBill": {
+                "q": "Come aggiungo una bolletta?",
+                "s1": "Apri <b>{bills}</b> e premi <b>{newBill}</b>.",
+                "s2": "Scrivi un nome, scegli una categoria e inserisci l’importo.",
+                "s3": "Scegli il giorno di scadenza e ogni quanto si ripete (ogni mese, ogni anno o una volta sola). Poi salva."
+            },
+            "repeat": {
+                "q": "La mia bolletta non è mensile. Che faccio?",
+                "s1": "Quando aggiungi o modifichi una bolletta, scegli ogni quanto si ripete: ogni pochi mesi, ogni anno o una volta sola.",
+                "s2": "Puoi anche impostare un mese finale. Così una bolletta che finisce, come un prestito, si ferma da sola."
+            },
+            "editBill": {
+                "q": "Come cambio una bolletta (nome, importo, giorno)?",
+                "s1": "Apri <b>{bills}</b> e premi <b>{edit}</b> accanto alla bolletta.",
+                "s2": "Cambia ciò che serve e salva."
+            },
+            "pause": {
+                "q": "Come metto in pausa una bolletta?",
+                "s1": "Apri <b>{bills}</b>.",
+                "s2": "Premi <b>{pause}</b> accanto alla bolletta e conferma.",
+                "s3": "Non arriveranno nuovi pagamenti né promemoria. Ciò che hai già pagato resta nella cronologia."
+            },
+            "resume": {
+                "q": "Come riattivo una bolletta in pausa?",
+                "s1": "Apri <b>{bills}</b> e premi <b>{showPaused}</b>.",
+                "s2": "Premi <b>{resume}</b> accanto alla bolletta. I nuovi pagamenti ricominciano."
+            },
+            "seePayments": {
+                "q": "Dove vedo cosa devo pagare?",
+                "s1": "Apri <b>{payments}</b>. Vedi le bollette di un mese, raggruppate per categoria.",
+                "s2": "Con le frecce accanto al nome del mese cambi mese. Sul telefono tocca il nome del mese per sceglierne uno.",
+                "s3": "Premi <b>{today}</b> per tornare a questo mese."
+            },
+            "filters": {
+                "q": "Come trovo un pagamento?",
+                "s1": "Sopra l’elenco vedi <b>{search}</b>. Scrivi un nome per cercare.",
+                "s2": "Con i filtri mostri solo le non pagate o una categoria, e scegli l’ordine dell’elenco.",
+                "s3": "Apri <b>{calendar}</b> e tocca un giorno per vedere solo i pagamenti di quel giorno."
+            },
+            "markPaid": {
+                "q": "Come segno una bolletta come pagata?",
+                "s1": "Apri <b>{payments}</b>.",
+                "s2": "Premi <b>{markPaid}</b> accanto alla bolletta.",
+                "s3": "Se hai pagato un altro importo o un altro giorno, cambialo e conferma."
+            },
+            "editPayment": {
+                "q": "Ho pagato un importo diverso. Posso cambiarlo?",
+                "s1": "Apri <b>{payments}</b> e premi <b>{editPayment}</b> (la matita) accanto alla bolletta.",
+                "s2": "Cambia importo, data o nota e salva. Funziona anche per le bollette pagate."
+            },
+            "revert": {
+                "q": "Ho segnato una bolletta come pagata per sbaglio",
+                "s1": "Apri <b>{payments}</b> e trova la bolletta.",
+                "s2": "Premi <b>{revert}</b>. La bolletta torna da pagare."
+            },
+            "deletePayment": {
+                "q": "Come tolgo un singolo pagamento?",
+                "s1": "Premi <b>{deletePayment}</b> accanto e conferma.",
+                "s2": "I pagamenti successivi di quella bolletta restano. Per fermare del tutto una bolletta, mettila in pausa."
+            },
+            "export": {
+                "q": "Come scarico i miei pagamenti (Excel o PDF)?",
+                "s1": "Apri <b>{payments}</b> e scegli il mese.",
+                "s2": "Accanto al nome del mese premi <b>XLSX</b> o <b>PDF</b>.",
+                "s3": "Scegli questo mese o tutto l’anno. Il file si scarica sul tuo dispositivo.",
+                "s4": "Non vedi i pulsanti? Attivali in <b>{settings}</b> → <b>{tabReports}</b>."
+            },
+            "share": {
+                "q": "Come invio un mese a qualcuno per e-mail?",
+                "s1": "In <b>{settings}</b> → <b>{tabReports}</b> attiva la condivisione. Puoi salvare gli indirizzi che usi spesso.",
+                "s2": "Poi apri <b>{payments}</b> e premi il pulsante di condivisione (<b>{share}</b>) accanto al nome del mese.",
+                "s3": "Scegli un indirizzo e invia."
+            },
+            "reminders": {
+                "q": "Come ricevo i promemoria?",
+                "s1": "Apri <b>{settings}</b> → <b>{tabNotifications}</b>.",
+                "s2": "Attiva i promemoria via e-mail, browser o Telegram e scegli quando riceverli.",
+                "s3": "E-mail e Telegram richiedono una breve configurazione. La pagina ti dice cosa compilare."
+            },
+            "backup": {
+                "q": "Come faccio un backup?",
+                "s1": "Apri <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Premi <b>{backup}</b>, scegli cosa includere e scarica il file.",
+                "s3": "Conserva il file in un posto sicuro."
+            },
+            "restore": {
+                "q": "Come recupero i miei dati da un backup?",
+                "s1": "Apri <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Premi <b>{restore}</b> e scegli il file di backup.",
+                "s3": "Guarda il confronto e conferma. Attenzione: questo sostituisce i dati attuali.",
+                "s4": "Hai cambiato idea? Subito dopo il ripristino puoi riavere i dati di prima nella stessa pagina."
+            },
+            "categories": {
+                "q": "Come aggiungo o cambio le categorie?",
+                "s1": "Apri <b>{settings}</b> → <b>{tabCategories}</b>.",
+                "s2": "Aggiungi le tue o cambia nome e colore di quelle esistenti.",
+                "s3": "Una categoria che non serve si può eliminare. Se una bolletta la usa ancora, viene solo nascosta."
+            },
+            "language": {
+                "q": "Come cambio lingua, valuta o fuso orario?",
+                "s1": "Apri <b>{settings}</b> → <b>{tabPreferences}</b>.",
+                "s2": "Lì imposti valuta predefinita, formato dei numeri, fuso orario e lingue disponibili. La lingua si cambia anche dal menu."
+            },
+            "account": {
+                "q": "Come cambio e-mail o password?",
+                "s1": "Apri <b>{settings}</b> → <b>{tabAccount}</b>.",
+                "s2": "Cambia lì e-mail o password. Password dimenticata? Usa il link nella pagina di accesso.",
+                "s3": "Lì puoi anche eliminare l’account. Non si può annullare."
+            },
+            "install": {
+                "q": "Come metto l’app sul telefono?",
+                "s1": "Apri l’app nel browser del telefono.",
+                "s2": "Nel menu del browser scegli “Aggiungi a schermata Home” (iPhone: Condividi → “Aggiungi alla schermata Home”)."
+            }
+        },
+        "searchPlaceholder": "Cerca nell’aiuto…",
+        "noResults": "Nessun risultato. Prova con altre parole."
     }
 }

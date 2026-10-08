@@ -697,5 +697,146 @@
         "cancel": "Cancel",
         "resume": "Resume",
         "resuming": "Resuming…"
+    },
+    "Help": {
+        "button": "Help",
+        "title": "How does it work?",
+        "intro": "Short answers to the most common questions.",
+        "close": "Close",
+        "restart": "Show the start steps again",
+        "bills": "Bills",
+        "payments": "Payments",
+        "settings": "Settings and data",
+        "checklist": {
+            "title": "Get started in 3 steps",
+            "progress": "{done} of {total} done",
+            "hide": "Hide",
+            "billT": "Add your first bill",
+            "billD": "Add each bill once, like rent or electricity. Its payment is created automatically every month.",
+            "billCta": "Add bill",
+            "paidT": "Mark a payment as paid",
+            "paidD": "When you pay a bill, press <b>{markPaid}</b> next to it.",
+            "remT": "Turn on reminders",
+            "remD": "Get a message before a bill is due, so you never pay late.",
+            "remCta": "Set up"
+        },
+        "items": {
+            "addBill": {
+                "q": "How do I add a bill?",
+                "s1": "Open <b>{bills}</b> and press <b>{newBill}</b>.",
+                "s2": "Type a name, pick a category and write the amount.",
+                "s3": "Choose the day it is due and how often it comes back (every month, every year or just once). Then save it."
+            },
+            "repeat": {
+                "q": "My bill is not monthly. What now?",
+                "s1": "When you add or edit a bill, choose how often it comes back: every few months, every year or only once.",
+                "s2": "You can also set an end month. Then a bill that ends, like a loan, stops by itself."
+            },
+            "editBill": {
+                "q": "How do I change a bill (name, amount, day)?",
+                "s1": "Open <b>{bills}</b> and press <b>{edit}</b> next to the bill.",
+                "s2": "Change what you need and save."
+            },
+            "pause": {
+                "q": "How do I pause a bill?",
+                "s1": "Open <b>{bills}</b>.",
+                "s2": "Press <b>{pause}</b> next to the bill and confirm.",
+                "s3": "No new payments or reminders will come. What you already paid stays in your history."
+            },
+            "resume": {
+                "q": "How do I bring back a paused bill?",
+                "s1": "Open <b>{bills}</b> and press <b>{showPaused}</b>.",
+                "s2": "Press <b>{resume}</b> next to the bill. New payments start again."
+            },
+            "seePayments": {
+                "q": "Where do I see what I have to pay?",
+                "s1": "Open <b>{payments}</b>. You see the bills of one month, grouped by category.",
+                "s2": "Use the arrows next to the month name to go to another month. On a phone, tap the month name to pick one.",
+                "s3": "Press <b>{today}</b> to come back to this month."
+            },
+            "filters": {
+                "q": "How do I find one payment?",
+                "s1": "Above the list you see <b>{search}</b>. Type a name to search.",
+                "s2": "Use the filters to show only unpaid bills or one category, and choose how the list is sorted.",
+                "s3": "Open <b>{calendar}</b> and tap a day to see only the payments of that day."
+            },
+            "markPaid": {
+                "q": "How do I mark a bill as paid?",
+                "s1": "Open <b>{payments}</b>.",
+                "s2": "Press <b>{markPaid}</b> next to the bill.",
+                "s3": "If you paid another amount or on another day, change it, then confirm."
+            },
+            "editPayment": {
+                "q": "I paid a different amount. Can I change it?",
+                "s1": "Open <b>{payments}</b> and press <b>{editPayment}</b> (the pencil) next to the bill.",
+                "s2": "Change the amount, the date or the note, then save. It works for paid bills too."
+            },
+            "revert": {
+                "q": "I marked a bill as paid by mistake",
+                "s1": "Open <b>{payments}</b> and find the bill.",
+                "s2": "Press <b>{revert}</b>. The bill goes back to unpaid."
+            },
+            "deletePayment": {
+                "q": "How do I remove one payment?",
+                "s1": "Press <b>{deletePayment}</b> next to it and confirm.",
+                "s2": "The next payments of this bill stay. To stop a bill completely, pause it."
+            },
+            "export": {
+                "q": "How do I download my payments (Excel or PDF)?",
+                "s1": "Open <b>{payments}</b> and choose the month.",
+                "s2": "Next to the month name press <b>XLSX</b> or <b>PDF</b>.",
+                "s3": "Pick this month or the whole year. The file downloads to your device.",
+                "s4": "Do not see the buttons? Turn them on in <b>{settings}</b> → <b>{tabReports}</b>."
+            },
+            "share": {
+                "q": "How do I send a month to someone by email?",
+                "s1": "In <b>{settings}</b> → <b>{tabReports}</b> turn on sharing. You can save the addresses you use often.",
+                "s2": "Then open <b>{payments}</b> and press the share button (<b>{share}</b>) next to the month name.",
+                "s3": "Pick an address and send."
+            },
+            "reminders": {
+                "q": "How do I get reminders?",
+                "s1": "Open <b>{settings}</b> → <b>{tabNotifications}</b>.",
+                "s2": "Turn on email, browser or Telegram reminders and choose when you want them.",
+                "s3": "Email and Telegram need a short setup first. The page tells you what to fill in."
+            },
+            "backup": {
+                "q": "How do I make a backup?",
+                "s1": "Open <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Press <b>{backup}</b>, choose what to include and download the file.",
+                "s3": "Keep the file in a safe place."
+            },
+            "restore": {
+                "q": "How do I bring my data back from a backup?",
+                "s1": "Open <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Press <b>{restore}</b> and choose your backup file.",
+                "s3": "Check the comparison and confirm. Careful: this replaces your current data.",
+                "s4": "Changed your mind? Right after a restore you can bring back the data you had before, on the same page."
+            },
+            "categories": {
+                "q": "How do I add or change categories?",
+                "s1": "Open <b>{settings}</b> → <b>{tabCategories}</b>.",
+                "s2": "Add your own, or rename and recolor the ones you have.",
+                "s3": "A category you do not need can be removed. If a bill still uses it, it is only hidden."
+            },
+            "language": {
+                "q": "How do I change the language, currency or time zone?",
+                "s1": "Open <b>{settings}</b> → <b>{tabPreferences}</b>.",
+                "s2": "There you set the default currency, the number format, the time zone and the languages you can pick. You can also switch the language in the menu."
+            },
+            "account": {
+                "q": "How do I change my email or password?",
+                "s1": "Open <b>{settings}</b> → <b>{tabAccount}</b>.",
+                "s2": "Change your email or password there. Forgot your password? Use the link on the sign-in page.",
+                "s3": "You can also delete your account there. This cannot be undone."
+            },
+            "install": {
+                "q": "How do I put the app on my phone?",
+                "s1": "Open the app in your phone’s browser.",
+                "s2": "In the browser menu choose “Add to Home screen” (on iPhone: Share → “Add to Home Screen”)."
+            }
+        },
+        "searchPlaceholder": "Search help…",
+        "noResults": "Nothing found. Try other words."
     }
 }

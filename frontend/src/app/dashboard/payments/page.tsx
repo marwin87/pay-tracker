@@ -28,6 +28,8 @@ import { SessionExpiredError, apiFetch } from "@/lib/api";
 import PaymentRow from "@/components/payments/PaymentRow";
 import PaymentsCalendar from "@/components/payments/PaymentsCalendar";
 import MarkPaidDialog from "@/components/payments/MarkPaidDialog";
+import PageHeader from "@/components/PageHeader";
+import OnboardingChecklist from "@/components/help/OnboardingChecklist";
 import MonthSheet from "@/components/payments/MonthSheet";
 import ShareMonthDialog from "@/components/payments/ShareMonthDialog";
 import DeletePaymentDialog from "@/components/payments/DeletePaymentDialog";
@@ -499,14 +501,9 @@ function PaymentsPageInner() {
       )}
 
       {/* Page header */}
-      <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
-          {t("title")}
-        </h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          {t("subtitle")}
-        </p>
-      </div>
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
+
+      <OnboardingChecklist currentMonth={currentMonth} />
 
       {/* Month selector: one card, the title is the only place the month is named */}
       <div className="mb-6">

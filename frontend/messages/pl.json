@@ -697,5 +697,146 @@
         "cancel": "Anuluj",
         "resume": "Wznów",
         "resuming": "Wznawianie…"
+    },
+    "Help": {
+        "button": "Pomoc",
+        "title": "Jak to działa?",
+        "intro": "Krótkie odpowiedzi na najczęstsze pytania.",
+        "close": "Zamknij",
+        "restart": "Pokaż kroki startowe ponownie",
+        "bills": "Rachunki",
+        "payments": "Płatności",
+        "settings": "Ustawienia i dane",
+        "checklist": {
+            "title": "Zacznij w 3 krokach",
+            "progress": "Zrobione: {done} z {total}",
+            "hide": "Ukryj",
+            "billT": "Dodaj pierwszy rachunek",
+            "billD": "Dodaj każdy rachunek tylko raz, np. czynsz albo prąd. Płatność co miesiąc zostanie utworzona automatycznie.",
+            "billCta": "Dodaj rachunek",
+            "paidT": "Oznacz płatność jako opłaconą",
+            "paidD": "Po zapłaceniu rachunku nacisnąć <b>{markPaid}</b> obok niego.",
+            "remT": "Włącz przypomnienia",
+            "remD": "Wiadomość przyjdzie przed terminem, więc płatność nie umknie.",
+            "remCta": "Ustaw"
+        },
+        "items": {
+            "addBill": {
+                "q": "Jak dodać rachunek?",
+                "s1": "Wejdź w <b>{bills}</b> i naciśnij <b>{newBill}</b>.",
+                "s2": "Wpisz nazwę, wybierz kategorię i wpisz kwotę.",
+                "s3": "Wybierz dzień płatności i jak często wraca (co miesiąc, co rok albo jednorazowo). Potem zapisz."
+            },
+            "repeat": {
+                "q": "Rachunek nie powtarza się co miesiąc. Co robić?",
+                "s1": "Przy dodawaniu lub zmianie rachunku wybierz, jak często wraca: co kilka miesięcy, co rok albo tylko raz.",
+                "s2": "Można też ustawić miesiąc końcowy. Wtedy rachunek, który się kończy, np. rata, sam przestanie się pojawiać."
+            },
+            "editBill": {
+                "q": "Jak zmienić rachunek (nazwę, kwotę, dzień)?",
+                "s1": "Wejdź w <b>{bills}</b> i naciśnij <b>{edit}</b> przy rachunku.",
+                "s2": "Zmień, co trzeba, i zapisz."
+            },
+            "pause": {
+                "q": "Jak wstrzymać rachunek?",
+                "s1": "Wejdź w <b>{bills}</b>.",
+                "s2": "Naciśnij <b>{pause}</b> przy rachunku i potwierdź.",
+                "s3": "Nie pojawią się nowe płatności ani przypomnienia. To, co już zapłacone, zostaje w historii."
+            },
+            "resume": {
+                "q": "Jak przywrócić wstrzymany rachunek?",
+                "s1": "Wejdź w <b>{bills}</b> i naciśnij <b>{showPaused}</b>.",
+                "s2": "Naciśnij <b>{resume}</b> przy rachunku. Nowe płatności znów będą się pojawiać."
+            },
+            "seePayments": {
+                "q": "Gdzie zobaczę, co mam zapłacić?",
+                "s1": "Wejdź w <b>{payments}</b>. Widać tam rachunki z jednego miesiąca, pogrupowane według kategorii.",
+                "s2": "Strzałki przy nazwie miesiąca przełączają miesiąc. Na telefonie dotknięcie nazwy miesiąca otwiera jego wybór.",
+                "s3": "Naciśnij <b>{today}</b>, żeby wrócić do tego miesiąca."
+            },
+            "filters": {
+                "q": "Jak znaleźć jedną płatność?",
+                "s1": "Nad listą jest <b>{search}</b>. Wpisz nazwę, żeby wyszukać.",
+                "s2": "Filtry pokazują tylko nieopłacone albo jedną kategorię, a sortowanie ustawia kolejność listy.",
+                "s3": "Otwórz <b>{calendar}</b> i dotknij dnia, żeby zobaczyć tylko płatności z tego dnia."
+            },
+            "markPaid": {
+                "q": "Jak oznaczyć rachunek jako opłacony?",
+                "s1": "Wejdź w <b>{payments}</b>.",
+                "s2": "Naciśnij <b>{markPaid}</b> przy rachunku.",
+                "s3": "Jeśli zapłacono inną kwotę albo innego dnia, zmień to i potwierdź."
+            },
+            "editPayment": {
+                "q": "Zapłacono inną kwotę. Czy można to zmienić?",
+                "s1": "Wejdź w <b>{payments}</b> i naciśnij <b>{editPayment}</b> (ołówek) przy rachunku.",
+                "s2": "Zmień kwotę, datę albo notatkę i zapisz. Działa też przy opłaconych rachunkach."
+            },
+            "revert": {
+                "q": "Rachunek został oznaczony jako opłacony przez pomyłkę",
+                "s1": "Wejdź w <b>{payments}</b> i znajdź rachunek.",
+                "s2": "Naciśnij <b>{revert}</b>. Rachunek wróci do nieopłaconych."
+            },
+            "deletePayment": {
+                "q": "Jak usunąć jedną płatność?",
+                "s1": "Naciśnij <b>{deletePayment}</b> przy niej i potwierdź.",
+                "s2": "Kolejne płatności tego rachunku zostają. Żeby całkiem zatrzymać rachunek, wstrzymaj go."
+            },
+            "export": {
+                "q": "Jak pobrać płatności (Excel lub PDF)?",
+                "s1": "Wejdź w <b>{payments}</b> i wybierz miesiąc.",
+                "s2": "Przy nazwie miesiąca naciśnij <b>XLSX</b> albo <b>PDF</b>.",
+                "s3": "Do wyboru jest ten miesiąc albo cały rok. Plik pobiera się na urządzenie.",
+                "s4": "Brak przycisków? Włącza się je w <b>{settings}</b> → <b>{tabReports}</b>."
+            },
+            "share": {
+                "q": "Jak wysłać komuś miesiąc e-mailem?",
+                "s1": "W <b>{settings}</b> → <b>{tabReports}</b> włącz udostępnianie. Często używane adresy można zapisać.",
+                "s2": "Potem wejdź w <b>{payments}</b> i naciśnij przycisk udostępniania (<b>{share}</b>) przy nazwie miesiąca.",
+                "s3": "Wybierz adres i wyślij."
+            },
+            "reminders": {
+                "q": "Jak włączyć przypomnienia?",
+                "s1": "Wejdź w <b>{settings}</b> → <b>{tabNotifications}</b>.",
+                "s2": "Włącz przypomnienia e-mail, w przeglądarce albo na Telegramie i wybierz, kiedy mają przychodzić.",
+                "s3": "E-mail i Telegram wymagają krótkiej konfiguracji. Strona podpowie, co uzupełnić."
+            },
+            "backup": {
+                "q": "Jak zrobić kopię zapasową?",
+                "s1": "Wejdź w <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Naciśnij <b>{backup}</b>, wybierz, co dołączyć, i pobierz plik.",
+                "s3": "Trzymaj plik w bezpiecznym miejscu."
+            },
+            "restore": {
+                "q": "Jak przywrócić dane z kopii zapasowej?",
+                "s1": "Wejdź w <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Naciśnij <b>{restore}</b> i wybierz plik kopii.",
+                "s3": "Sprawdź porównanie i potwierdź. Uwaga: to zastępuje obecne dane.",
+                "s4": "Zmiana decyzji? Zaraz po przywróceniu na tej samej stronie można odzyskać dane sprzed zmiany."
+            },
+            "categories": {
+                "q": "Jak dodać lub zmienić kategorie?",
+                "s1": "Wejdź w <b>{settings}</b> → <b>{tabCategories}</b>.",
+                "s2": "Dodaj własne albo zmień nazwę i kolor istniejących.",
+                "s3": "Niepotrzebną kategorię można usunąć. Jeśli używa jej jakiś rachunek, zostanie tylko ukryta."
+            },
+            "language": {
+                "q": "Jak zmienić język, walutę lub strefę czasową?",
+                "s1": "Wejdź w <b>{settings}</b> → <b>{tabPreferences}</b>.",
+                "s2": "Ustawia się tam domyślną walutę, format liczb, strefę czasową i języki do wyboru. Język zmienia się też w menu."
+            },
+            "account": {
+                "q": "Jak zmienić e-mail lub hasło?",
+                "s1": "Wejdź w <b>{settings}</b> → <b>{tabAccount}</b>.",
+                "s2": "Zmień tam e-mail albo hasło. Nie pamiętasz hasła? Użyj linku na stronie logowania.",
+                "s3": "Tam też można usunąć konto. Tego nie da się cofnąć."
+            },
+            "install": {
+                "q": "Jak dodać aplikację na telefon?",
+                "s1": "Otwórz aplikację w przeglądarce telefonu.",
+                "s2": "W menu przeglądarki wybierz „Dodaj do ekranu głównego” (na iPhonie: Udostępnij → „Do ekranu początkowego”)."
+            }
+        },
+        "searchPlaceholder": "Szukaj w pomocy…",
+        "noResults": "Nic nie znaleziono. Warto spróbować innych słów."
     }
 }

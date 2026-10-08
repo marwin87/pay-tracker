@@ -313,12 +313,6 @@ export default function DashboardLayout({
               {t("logOut")}
             </button>
           </div>
-
-          <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
-
-          <div className="app-footer flex h-9 items-center justify-center text-xs text-slate-400 dark:text-slate-500">
-            © {new Date().getFullYear()} Pay Tracker · {process.env.NEXT_PUBLIC_APP_VERSION ?? "dev"}
-          </div>
         </div>
       </aside>
 

@@ -697,5 +697,146 @@
         "cancel": "Cancelar",
         "resume": "Retomar",
         "resuming": "A retomar…"
+    },
+    "Help": {
+        "button": "Ajuda",
+        "title": "Como funciona?",
+        "intro": "Respostas curtas às perguntas mais comuns.",
+        "close": "Fechar",
+        "restart": "Mostrar os passos iniciais outra vez",
+        "bills": "Faturas",
+        "payments": "Pagamentos",
+        "settings": "Definições e dados",
+        "checklist": {
+            "title": "Comece em 3 passos",
+            "progress": "{done} de {total} feitos",
+            "hide": "Ocultar",
+            "billT": "Adicione a sua primeira fatura",
+            "billD": "Adicione cada fatura só uma vez, por exemplo a renda ou a luz. O pagamento de cada mês é criado automaticamente.",
+            "billCta": "Adicionar fatura",
+            "paidT": "Marque um pagamento como pago",
+            "paidD": "Quando pagar uma fatura, toque em <b>{markPaid}</b> ao lado dela.",
+            "remT": "Ative os lembretes",
+            "remD": "Recebe uma mensagem antes do vencimento e nunca paga atrasado.",
+            "remCta": "Configurar"
+        },
+        "items": {
+            "addBill": {
+                "q": "Como adiciono uma fatura?",
+                "s1": "Abra <b>{bills}</b> e toque em <b>{newBill}</b>.",
+                "s2": "Escreva um nome, escolha uma categoria e escreva o valor.",
+                "s3": "Escolha o dia de vencimento e de quanto em quanto tempo se repete (todos os meses, todos os anos ou só uma vez). Depois guarde."
+            },
+            "repeat": {
+                "q": "A minha fatura não é mensal. E agora?",
+                "s1": "Ao adicionar ou editar uma fatura, escolha de quanto em quanto tempo se repete: a cada alguns meses, todos os anos ou só uma vez.",
+                "s2": "Também pode definir um mês final. Assim uma fatura que acaba, como um empréstimo, para sozinha."
+            },
+            "editBill": {
+                "q": "Como altero uma fatura (nome, valor, dia)?",
+                "s1": "Abra <b>{bills}</b> e toque em <b>{edit}</b> ao lado da fatura.",
+                "s2": "Altere o que precisar e guarde."
+            },
+            "pause": {
+                "q": "Como pauso uma fatura?",
+                "s1": "Abra <b>{bills}</b>.",
+                "s2": "Toque em <b>{pause}</b> ao lado da fatura e confirme.",
+                "s3": "Não chegam novos pagamentos nem lembretes. O que já pagou fica no histórico."
+            },
+            "resume": {
+                "q": "Como retomo uma fatura em pausa?",
+                "s1": "Abra <b>{bills}</b> e toque em <b>{showPaused}</b>.",
+                "s2": "Toque em <b>{resume}</b> ao lado da fatura. Os novos pagamentos voltam a começar."
+            },
+            "seePayments": {
+                "q": "Onde vejo o que tenho de pagar?",
+                "s1": "Abra <b>{payments}</b>. Vê as faturas de um mês, agrupadas por categoria.",
+                "s2": "Com as setas ao lado do nome do mês muda de mês. No telemóvel, toque no nome do mês para escolher um.",
+                "s3": "Toque em <b>{today}</b> para voltar a este mês."
+            },
+            "filters": {
+                "q": "Como encontro um pagamento?",
+                "s1": "Por cima da lista vê <b>{search}</b>. Escreva um nome para procurar.",
+                "s2": "Com os filtros mostra só as não pagas ou uma categoria, e escolhe a ordem da lista.",
+                "s3": "Abra <b>{calendar}</b> e toque num dia para ver só os pagamentos desse dia."
+            },
+            "markPaid": {
+                "q": "Como marco uma fatura como paga?",
+                "s1": "Abra <b>{payments}</b>.",
+                "s2": "Toque em <b>{markPaid}</b> ao lado da fatura.",
+                "s3": "Se pagou outro valor ou noutro dia, altere e confirme."
+            },
+            "editPayment": {
+                "q": "Paguei um valor diferente. Posso alterar?",
+                "s1": "Abra <b>{payments}</b> e toque em <b>{editPayment}</b> (o lápis) ao lado da fatura.",
+                "s2": "Altere o valor, a data ou a nota e guarde. Funciona também em faturas pagas."
+            },
+            "revert": {
+                "q": "Marquei uma fatura como paga por engano",
+                "s1": "Abra <b>{payments}</b> e encontre a fatura.",
+                "s2": "Toque em <b>{revert}</b>. A fatura volta a não paga."
+            },
+            "deletePayment": {
+                "q": "Como retiro um só pagamento?",
+                "s1": "Toque em <b>{deletePayment}</b> ao lado dele e confirme.",
+                "s2": "Os pagamentos seguintes dessa fatura ficam. Para parar uma fatura por completo, ponha-a em pausa."
+            },
+            "export": {
+                "q": "Como descarrego os meus pagamentos (Excel ou PDF)?",
+                "s1": "Abra <b>{payments}</b> e escolha o mês.",
+                "s2": "Ao lado do nome do mês toque em <b>XLSX</b> ou <b>PDF</b>.",
+                "s3": "Escolha este mês ou o ano todo. O ficheiro é descarregado para o seu dispositivo.",
+                "s4": "Não vê os botões? Ative-os em <b>{settings}</b> → <b>{tabReports}</b>."
+            },
+            "share": {
+                "q": "Como envio um mês por e-mail a alguém?",
+                "s1": "Em <b>{settings}</b> → <b>{tabReports}</b> ative a partilha. Pode guardar os endereços que usa muitas vezes.",
+                "s2": "Depois abra <b>{payments}</b> e toque no botão de partilha (<b>{share}</b>) ao lado do nome do mês.",
+                "s3": "Escolha um endereço e envie."
+            },
+            "reminders": {
+                "q": "Como recebo lembretes?",
+                "s1": "Abra <b>{settings}</b> → <b>{tabNotifications}</b>.",
+                "s2": "Ative lembretes por e-mail, navegador ou Telegram e escolha quando os quer.",
+                "s3": "O e-mail e o Telegram precisam primeiro de uma configuração curta. A página diz o que preencher."
+            },
+            "backup": {
+                "q": "Como faço uma cópia de segurança?",
+                "s1": "Abra <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Toque em <b>{backup}</b>, escolha o que incluir e descarregue o ficheiro.",
+                "s3": "Guarde o ficheiro num sítio seguro."
+            },
+            "restore": {
+                "q": "Como recupero os meus dados de uma cópia?",
+                "s1": "Abra <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Toque em <b>{restore}</b> e escolha o ficheiro da cópia.",
+                "s3": "Veja a comparação e confirme. Atenção: isto substitui os dados atuais.",
+                "s4": "Mudou de ideias? Logo após restaurar, pode recuperar os dados de antes na mesma página."
+            },
+            "categories": {
+                "q": "Como adiciono ou altero categorias?",
+                "s1": "Abra <b>{settings}</b> → <b>{tabCategories}</b>.",
+                "s2": "Adicione as suas ou mude o nome e a cor das que tem.",
+                "s3": "Uma categoria de que não precisa pode ser removida. Se uma fatura ainda a usa, fica só oculta."
+            },
+            "language": {
+                "q": "Como mudo o idioma, a moeda ou o fuso horário?",
+                "s1": "Abra <b>{settings}</b> → <b>{tabPreferences}</b>.",
+                "s2": "Aí define a moeda padrão, o formato dos números, o fuso horário e os idiomas disponíveis. O idioma também se muda no menu."
+            },
+            "account": {
+                "q": "Como mudo o meu e-mail ou palavra-passe?",
+                "s1": "Abra <b>{settings}</b> → <b>{tabAccount}</b>.",
+                "s2": "Mude aí o e-mail ou a palavra-passe. Esqueceu a palavra-passe? Use a ligação na página de entrada.",
+                "s3": "Também pode apagar a conta aí. Não dá para desfazer."
+            },
+            "install": {
+                "q": "Como ponho a app no telemóvel?",
+                "s1": "Abra a app no navegador do telemóvel.",
+                "s2": "No menu do navegador escolha “Adicionar ao ecrã principal” (iPhone: Partilhar → “Adicionar ao ecrã principal”)."
+            }
+        },
+        "searchPlaceholder": "Pesquisar na ajuda…",
+        "noResults": "Nada encontrado. Tente outras palavras."
     }
 }

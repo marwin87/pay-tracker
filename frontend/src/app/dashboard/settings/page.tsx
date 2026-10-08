@@ -40,6 +40,7 @@ import { ServerTimeNote } from "@/components/settings/ServerTimeNote";
 import { AboutTile } from "@/components/settings/AboutTile";
 import { CategoriesTile } from "@/components/settings/CategoriesTile";
 import { UnsavedChangesDialog } from "@/components/settings/UnsavedChangesDialog";
+import PageHeader from "@/components/PageHeader";
 import DeleteAccountDialog from "@/components/settings/DeleteAccountDialog";
 
 const TABS = [
@@ -227,14 +228,7 @@ export default function SettingsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 md:px-8 py-8 space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
-          {t("pageTitle")}
-        </h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          {t("subtitle")}
-        </p>
-      </div>
+      <PageHeader title={t("pageTitle")} subtitle={t("subtitle")} />
 
       <div
         role="tablist"

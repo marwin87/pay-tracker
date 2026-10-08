@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import PageHeader from "@/components/PageHeader";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
 import { monthIn } from "@/lib/today";
@@ -75,13 +76,8 @@ export default function DashboardPage() {
   const monthLabel = new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(new Date(yy, mm - 1));
 
   return (
-    <div className="mx-auto max-w-6xl px-4 md:px-8 py-10">
-      <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
-        {t("title")}
-      </h1>
-      <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 mb-8">
-        {t("subtitle")}
-      </p>
+    <div className="mx-auto max-w-6xl px-4 md:px-8 py-8">
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
 
       {error && (
         <p className="mb-6 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600 dark:bg-red-900/20 dark:text-red-400">

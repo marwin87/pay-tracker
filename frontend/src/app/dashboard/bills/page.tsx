@@ -1,5 +1,6 @@
 "use client";
 
+import PageHeader from "@/components/PageHeader";
 import { btnPrimaryClass } from "@/components/ui/formButtonClasses";
 import { useEffect, useState } from "react";
 import { ChevronRight, ChevronsUpDown, CirclePause, Plus } from "lucide-react";
@@ -262,14 +263,9 @@ export default function BillsPage() {
       )}
 
       {/* Page header */}
+      <PageHeader title={t("title")} subtitle={t("subtitle")} />
       <div className="mb-6">
-        <h1 className="text-2xl font-semibold text-slate-800 dark:text-slate-100">
-          {t("title")}
-        </h1>
-        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-          {t("subtitle")}
-        </p>
-        <div className="mt-3 flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between gap-2">
             <button
               onClick={() => toggleExpand("new")}

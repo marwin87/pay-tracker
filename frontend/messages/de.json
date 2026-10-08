@@ -697,5 +697,146 @@
         "cancel": "Abbrechen",
         "resume": "Fortsetzen",
         "resuming": "Setze fort…"
+    },
+    "Help": {
+        "button": "Hilfe",
+        "title": "So funktioniert es",
+        "intro": "Kurze Antworten auf die häufigsten Fragen.",
+        "close": "Schließen",
+        "restart": "Startschritte erneut anzeigen",
+        "bills": "Rechnungen",
+        "payments": "Zahlungen",
+        "settings": "Einstellungen und Daten",
+        "checklist": {
+            "title": "In 3 Schritten loslegen",
+            "progress": "{done} von {total} erledigt",
+            "hide": "Ausblenden",
+            "billT": "Erste Rechnung hinzufügen",
+            "billD": "Jede Rechnung nur einmal hinzufügen, z. B. Miete oder Strom. Die Zahlung wird jeden Monat automatisch angelegt.",
+            "billCta": "Rechnung hinzufügen",
+            "paidT": "Eine Zahlung als bezahlt markieren",
+            "paidD": "Wenn du eine Rechnung bezahlt hast, tippe daneben auf <b>{markPaid}</b>.",
+            "remT": "Erinnerungen einschalten",
+            "remD": "Du bekommst eine Nachricht vor der Fälligkeit und zahlst nie zu spät.",
+            "remCta": "Einrichten"
+        },
+        "items": {
+            "addBill": {
+                "q": "Wie füge ich eine Rechnung hinzu?",
+                "s1": "Öffne <b>{bills}</b> und tippe auf <b>{newBill}</b>.",
+                "s2": "Gib einen Namen ein, wähle eine Kategorie und schreibe den Betrag.",
+                "s3": "Wähle den Fälligkeitstag und wie oft sie wiederkommt (jeden Monat, jedes Jahr oder einmalig). Dann speichern."
+            },
+            "repeat": {
+                "q": "Meine Rechnung kommt nicht monatlich. Was tun?",
+                "s1": "Wähle beim Hinzufügen oder Ändern, wie oft sie wiederkommt: alle paar Monate, jedes Jahr oder nur einmal.",
+                "s2": "Du kannst auch einen Endmonat setzen. Dann hört eine endende Rechnung, z. B. ein Kredit, von selbst auf."
+            },
+            "editBill": {
+                "q": "Wie ändere ich eine Rechnung (Name, Betrag, Tag)?",
+                "s1": "Öffne <b>{bills}</b> und tippe neben der Rechnung auf <b>{edit}</b>.",
+                "s2": "Ändere, was du brauchst, und speichere."
+            },
+            "pause": {
+                "q": "Wie pausiere ich eine Rechnung?",
+                "s1": "Öffne <b>{bills}</b>.",
+                "s2": "Tippe neben der Rechnung auf <b>{pause}</b> und bestätige.",
+                "s3": "Es kommen keine neuen Zahlungen oder Erinnerungen mehr. Was du schon bezahlt hast, bleibt im Verlauf."
+            },
+            "resume": {
+                "q": "Wie hole ich eine pausierte Rechnung zurück?",
+                "s1": "Öffne <b>{bills}</b> und tippe auf <b>{showPaused}</b>.",
+                "s2": "Tippe neben der Rechnung auf <b>{resume}</b>. Neue Zahlungen starten wieder."
+            },
+            "seePayments": {
+                "q": "Wo sehe ich, was ich zahlen muss?",
+                "s1": "Öffne <b>{payments}</b>. Du siehst die Rechnungen eines Monats, nach Kategorie gruppiert.",
+                "s2": "Mit den Pfeilen neben dem Monatsnamen wechselst du den Monat. Am Handy tippst du auf den Monatsnamen, um einen zu wählen.",
+                "s3": "Tippe auf <b>{today}</b>, um zu diesem Monat zurückzukehren."
+            },
+            "filters": {
+                "q": "Wie finde ich eine einzelne Zahlung?",
+                "s1": "Über der Liste siehst du <b>{search}</b>. Tippe einen Namen ein, um zu suchen.",
+                "s2": "Mit den Filtern zeigst du nur unbezahlte Rechnungen oder eine Kategorie und bestimmst die Reihenfolge.",
+                "s3": "Öffne <b>{calendar}</b> und tippe auf einen Tag, um nur die Zahlungen dieses Tages zu sehen."
+            },
+            "markPaid": {
+                "q": "Wie markiere ich eine Rechnung als bezahlt?",
+                "s1": "Öffne <b>{payments}</b>.",
+                "s2": "Tippe neben der Rechnung auf <b>{markPaid}</b>.",
+                "s3": "Wenn du einen anderen Betrag oder an einem anderen Tag gezahlt hast, ändere es und bestätige."
+            },
+            "editPayment": {
+                "q": "Ich habe einen anderen Betrag gezahlt. Kann ich das ändern?",
+                "s1": "Öffne <b>{payments}</b> und tippe neben der Rechnung auf <b>{editPayment}</b> (der Stift).",
+                "s2": "Ändere Betrag, Datum oder Notiz und speichere. Das geht auch bei bezahlten Rechnungen."
+            },
+            "revert": {
+                "q": "Ich habe eine Rechnung versehentlich als bezahlt markiert",
+                "s1": "Öffne <b>{payments}</b> und suche die Rechnung.",
+                "s2": "Tippe auf <b>{revert}</b>. Die Rechnung ist wieder unbezahlt."
+            },
+            "deletePayment": {
+                "q": "Wie entferne ich eine einzelne Zahlung?",
+                "s1": "Tippe daneben auf <b>{deletePayment}</b> und bestätige.",
+                "s2": "Die nächsten Zahlungen dieser Rechnung bleiben. Um eine Rechnung ganz zu stoppen, pausiere sie."
+            },
+            "export": {
+                "q": "Wie lade ich meine Zahlungen herunter (Excel oder PDF)?",
+                "s1": "Öffne <b>{payments}</b> und wähle den Monat.",
+                "s2": "Tippe neben dem Monatsnamen auf <b>XLSX</b> oder <b>PDF</b>.",
+                "s3": "Wähle diesen Monat oder das ganze Jahr. Die Datei wird auf dein Gerät geladen.",
+                "s4": "Siehst du die Knöpfe nicht? Schalte sie unter <b>{settings}</b> → <b>{tabReports}</b> ein."
+            },
+            "share": {
+                "q": "Wie schicke ich jemandem einen Monat per E-Mail?",
+                "s1": "Schalte unter <b>{settings}</b> → <b>{tabReports}</b> das Teilen ein. Du kannst oft genutzte Adressen speichern.",
+                "s2": "Öffne dann <b>{payments}</b> und tippe neben dem Monatsnamen auf den Teilen-Knopf (<b>{share}</b>).",
+                "s3": "Wähle eine Adresse und sende."
+            },
+            "reminders": {
+                "q": "Wie bekomme ich Erinnerungen?",
+                "s1": "Öffne <b>{settings}</b> → <b>{tabNotifications}</b>.",
+                "s2": "Schalte Erinnerungen per E-Mail, Browser oder Telegram ein und wähle, wann sie kommen sollen.",
+                "s3": "E-Mail und Telegram brauchen zuerst eine kurze Einrichtung. Die Seite sagt dir, was auszufüllen ist."
+            },
+            "backup": {
+                "q": "Wie mache ich eine Sicherung?",
+                "s1": "Öffne <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Tippe auf <b>{backup}</b>, wähle, was dabei sein soll, und lade die Datei herunter.",
+                "s3": "Bewahre die Datei sicher auf."
+            },
+            "restore": {
+                "q": "Wie hole ich meine Daten aus einer Sicherung zurück?",
+                "s1": "Öffne <b>{settings}</b> → <b>{tabBackup}</b>.",
+                "s2": "Tippe auf <b>{restore}</b> und wähle deine Sicherungsdatei.",
+                "s3": "Prüfe den Vergleich und bestätige. Achtung: Das ersetzt deine aktuellen Daten.",
+                "s4": "Anders überlegt? Direkt nach dem Wiederherstellen kannst du auf derselben Seite die vorherigen Daten zurückholen."
+            },
+            "categories": {
+                "q": "Wie füge ich Kategorien hinzu oder ändere sie?",
+                "s1": "Öffne <b>{settings}</b> → <b>{tabCategories}</b>.",
+                "s2": "Füge eigene hinzu oder ändere Name und Farbe der vorhandenen.",
+                "s3": "Eine nicht mehr nötige Kategorie kann entfernt werden. Wird sie noch von einer Rechnung genutzt, wird sie nur ausgeblendet."
+            },
+            "language": {
+                "q": "Wie ändere ich Sprache, Währung oder Zeitzone?",
+                "s1": "Öffne <b>{settings}</b> → <b>{tabPreferences}</b>.",
+                "s2": "Dort stellst du Standardwährung, Zahlenformat, Zeitzone und wählbare Sprachen ein. Die Sprache kannst du auch im Menü wechseln."
+            },
+            "account": {
+                "q": "Wie ändere ich E-Mail oder Passwort?",
+                "s1": "Öffne <b>{settings}</b> → <b>{tabAccount}</b>.",
+                "s2": "Ändere dort E-Mail oder Passwort. Passwort vergessen? Nutze den Link auf der Anmeldeseite.",
+                "s3": "Dort kannst du auch dein Konto löschen. Das lässt sich nicht rückgängig machen."
+            },
+            "install": {
+                "q": "Wie lege ich die App auf mein Handy?",
+                "s1": "Öffne die App im Browser deines Handys.",
+                "s2": "Wähle im Browsermenü „Zum Startbildschirm hinzufügen“ (iPhone: Teilen → „Zum Home-Bildschirm“)."
+            }
+        },
+        "searchPlaceholder": "In der Hilfe suchen …",
+        "noResults": "Nichts gefunden. Versuche andere Wörter."
     }
 }
