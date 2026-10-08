@@ -5,6 +5,7 @@ import { Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { fetchCategories, createCategory, type Category } from "@/lib/categories-api";
 import { CATEGORY_COLORS, categoryLabel } from "@/lib/categories";
+import { useToast } from "@/context/toast-context";
 import Dropdown from "@/components/ui/Dropdown";
 import { ColorPicker } from "@/components/ui/CategoryColorPicker";
 import { btnSaveClass, btnCancelClass } from "@/components/ui/formButtonClasses";
@@ -21,6 +22,7 @@ const inputClass =
 export default function CategoryCombobox({ id, value, onChange }: Props) {
   const t = useTranslations("Categories");
   const ts = useTranslations("SettingsPage");
+  const showToast = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
@@ -77,6 +79,7 @@ export default function CategoryCombobox({ id, value, onChange }: Props) {
       setCategories((prev) => [...prev, cat]);
       onChange(cat.id);
       setCreating(false);
+      showToast(ts("categorySaved"));
     } catch (err) {
       setError(err instanceof Error ? err.message : ts("saveFailed"));
     } finally {

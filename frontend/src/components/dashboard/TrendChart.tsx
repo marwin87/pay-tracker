@@ -77,7 +77,8 @@ export default function TrendChart({ points, currency, month }: Props) {
             {bars.map((b, i) => {
               const bw = step * 0.62;
               const x = LEFT + i * step + (step - bw) / 2;
-              const isLast = i === bars.length - 1;
+              const isSel = i === (active ?? bars.length - 1);
+              const dim = isSel ? 1 : 0.45;
               return (
                 <g
                   key={b.period}
@@ -89,17 +90,18 @@ export default function TrendChart({ points, currency, month }: Props) {
                   onFocus={() => setActive(i)}
                   onClick={() => setActive(i)}
                 >
-                  <rect x={LEFT + i * step} y={TOP} width={step} height={BASE - TOP + 24} fill="transparent" strokeWidth={2} className="stroke-transparent" />
+                  <rect x={LEFT + i * step} y={TOP} width={step} height={BASE - TOP + 24} rx={6} strokeWidth={2}
+                    className={`stroke-transparent ${isSel ? "fill-slate-100 dark:fill-slate-700/60" : "fill-transparent"}`} />
                   {b.paid > 0 && (
                     <rect x={x} y={y(b.paid)} width={bw} height={BASE - y(b.paid)} rx={2}
-                      className="fill-emerald-500 dark:fill-emerald-600" opacity={isLast || active === i ? 1 : 0.75} />
+                      className="fill-emerald-500 dark:fill-emerald-600" opacity={dim} />
                   )}
                   {b.unpaid > 0 && (
                     <rect x={x} y={y(b.total)} width={bw} height={y(b.paid) - y(b.total)} rx={2}
-                      className="fill-blue-400 dark:fill-blue-500" />
+                      className="fill-blue-400 dark:fill-blue-500" opacity={dim} />
                   )}
                   <text x={x + bw / 2} y={BASE + 22} textAnchor="middle"
-                    className={`text-[20px] sm:text-[11px] ${isLast ? "fill-slate-800 font-semibold dark:fill-slate-100" : "fill-slate-400 dark:fill-slate-500"}`}>
+                    className={`text-[20px] sm:text-[11px] ${isSel ? "fill-slate-800 font-bold dark:fill-slate-100" : "fill-slate-400 dark:fill-slate-500"}`}>
                     {monthName(b.period, "short")}
                   </text>
                 </g>

@@ -7,6 +7,11 @@ const ToastContext = createContext<(message: string) => void>(() => {});
 
 const FLASH_KEY = "flash_toast";
 
+/** Shorten a user-entered name so it fits in a toast. */
+export function toastName(name: string, max = 30): string {
+  return name.length > max ? `${name.slice(0, max - 1).trimEnd()}…` : name;
+}
+
 /** Queue a toast for after a full page reload (e.g. after restoring a backup). */
 export function flashToastAfterReload(message: string): void {
   try {

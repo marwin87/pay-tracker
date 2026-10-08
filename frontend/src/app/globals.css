@@ -303,10 +303,8 @@ html.theme-vesperfall { --nav-accent: var(--color-green-300); }
 .tab-ind[data-dir="R"] { transition: left 420ms cubic-bezier(.3,.8,.3,1) 60ms, right 260ms cubic-bezier(.3,.8,.3,1); }
 .tab-ind[data-dir="L"] { transition: left 260ms cubic-bezier(.3,.8,.3,1), right 420ms cubic-bezier(.3,.8,.3,1) 60ms; }
 @media (prefers-reduced-motion: reduce) { .tab-ind { transition: none !important; } }
-/* Same stretch, vertical: desktop sidebar indicator. data-dir R = moving down. */
-.side-ind { transition: top 300ms cubic-bezier(.3,.8,.3,1), bottom 300ms cubic-bezier(.3,.8,.3,1); }
-.side-ind[data-dir="R"] { transition: top 420ms cubic-bezier(.3,.8,.3,1) 60ms, bottom 260ms cubic-bezier(.3,.8,.3,1); }
-.side-ind[data-dir="L"] { transition: top 260ms cubic-bezier(.3,.8,.3,1), bottom 420ms cubic-bezier(.3,.8,.3,1) 60ms; }
+/* Desktop sidebar indicator: a plain slide (GPU transform), no stretch. */
+.side-ind { transition: transform 260ms cubic-bezier(.2,.8,.2,1); }
 @media (prefers-reduced-motion: reduce) { .side-ind { transition: none !important; } }
 
 /* Crossfade when switching dashboard pages (see <ViewTransition name="page"> in the dashboard layout). */

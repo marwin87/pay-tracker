@@ -24,7 +24,7 @@ import { formatDueLabel, formatLastPaymentLabel } from "@/components/bills/BillT
 import RestoreConfirmDialog from "@/components/bills/RestoreConfirmDialog";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
-import { useToast } from "@/context/toast-context";
+import { toastName, useToast } from "@/context/toast-context";
 
 const CATEGORY_SORT_OPTIONS: CategorySortOrder[] = ["az", "za"];
 
@@ -101,7 +101,7 @@ export default function ArchivedBillsPage() {
     setRestoring(true);
     try {
       await unarchiveBill(restoreTarget.id);
-      showToast(t("billRestored", { name: restoreTarget.name }));
+      showToast(t("billRestored", { name: toastName(restoreTarget.name) }));
       setTemplates((prev) => prev.filter((tmpl) => tmpl.id !== restoreTarget.id));
       setRestoreTarget(null);
     } catch (err: unknown) {

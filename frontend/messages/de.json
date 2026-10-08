@@ -243,6 +243,8 @@
         "summaryPaid": "bezahlt",
         "calendarTitle": "Kalender",
         "clearDayFilter": "Zurücksetzen",
+        "dayFilterTitle": "Zahlungen vom {date}",
+        "dayFilterCount": "{count} von {total} in diesem Monat",
         "shareMonth": "Per E-Mail teilen",
         "shareSent": "Monatsübersicht gesendet",
         "previousYear": "Vorheriges Jahr",

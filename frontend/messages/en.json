@@ -243,6 +243,8 @@
         "summaryPaid": "paid",
         "calendarTitle": "Calendar",
         "clearDayFilter": "Clear",
+        "dayFilterTitle": "Payments for {date}",
+        "dayFilterCount": "{count} of {total} this month",
         "shareMonth": "Share by email",
         "shareSent": "Month summary sent",
         "previousYear": "Previous year",

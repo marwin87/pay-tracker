@@ -30,7 +30,7 @@ import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
-import { useToast } from "@/context/toast-context";
+import { toastName, useToast } from "@/context/toast-context";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
 
@@ -137,14 +137,14 @@ export default function BillsPage() {
   async function handleCreate(data: BillTemplateCreate) {
     const bill = await createBill(data);
     setExpandedId(null);
-    reveal(bill, t("billAdded", { name: bill.name }));
+    reveal(bill, t("billAdded", { name: toastName(bill.name) }));
     setRefreshKey((k) => k + 1);
   }
 
   async function doUpdate(id: number, data: BillTemplateUpdate) {
     const bill = await updateBill(id, data);
     setExpandedId(null);
-    reveal(bill, t("billSaved", { name: bill.name }));
+    reveal(bill, t("billSaved", { name: toastName(bill.name) }));
     setRefreshKey((k) => k + 1);
     setDeletedFutureMap((m) => { const copy = { ...m }; delete copy[id]; return copy; });
   }
@@ -185,7 +185,7 @@ export default function BillsPage() {
     setArchiving(true);
     try {
       await archiveBill(archiveTarget.id);
-      showToast(t("billArchived", { name: archiveTarget.name }));
+      showToast(t("billArchived", { name: toastName(archiveTarget.name) }));
       setArchiveTarget(null);
       setRefreshKey((k) => k + 1);
     } finally {

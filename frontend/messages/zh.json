@@ -243,6 +243,8 @@
         "summaryPaid": "已付款",
         "calendarTitle": "日历",
         "clearDayFilter": "清除",
+        "dayFilterTitle": "{date}的付款",
+        "dayFilterCount": "本月共 {total} 笔中的 {count} 笔",
         "shareMonth": "通过邮件分享",
         "shareSent": "月度汇总已发送",
         "previousYear": "上一年",

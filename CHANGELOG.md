@@ -12,6 +12,9 @@ Notable changes to Pay Tracker, release by release.
 - Add a new category right from the bill form
 - Animated menu on mobile and desktop, with the overdue count on Payments
 - Clearer tab names and helpful hints on empty screens
+- Archived bills show due date, last payment and notes
+- Payments shows which day you are filtering by, pinned at the top while you scroll
+- The selected month in the dashboard 12-month chart stands out more
 
 ### Fixes
 
@@ -19,6 +22,7 @@ Notable changes to Pay Tracker, release by release.
 - A payment moved to a future due date is no longer shown as overdue
 - Edit and archive buttons on bills are always visible
 - Switching tabs no longer flashes: pages crossfade and show the last data instantly
+- Long bill names are shortened in confirmation messages so they fit
 
 ## v1.3.0 — 07-10-2026
 

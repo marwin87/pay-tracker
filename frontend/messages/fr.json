@@ -243,6 +243,8 @@
         "summaryPaid": "payées",
         "calendarTitle": "Calendrier",
         "clearDayFilter": "Effacer",
+        "dayFilterTitle": "Paiements du {date}",
+        "dayFilterCount": "{count} sur {total} ce mois-ci",
         "shareMonth": "Partager par e-mail",
         "shareSent": "Résumé du mois envoyé",
         "previousYear": "Année précédente",

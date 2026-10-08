@@ -196,7 +196,7 @@ export default function DashboardLayout({
   // Desktop sidebar indicator: measured position of the active row, relative to the sidebar content.
   const sideRef = useRef<HTMLDivElement>(null);
   const sideItems = useRef<(HTMLElement | null)[]>([]);
-  const [sideInd, setSideInd] = useState<{ top: number; bottom: number } | null>(null);
+  const [sideInd, setSideInd] = useState<{ top: number; height: number } | null>(null);
   useLayoutEffect(() => {
     const box = sideRef.current;
     if (!box) return;
@@ -205,7 +205,7 @@ export default function DashboardLayout({
       if (!box || !el) return setSideInd(null);
       const b = box.getBoundingClientRect();
       const r = el.getBoundingClientRect();
-      setSideInd({ top: r.top - b.top, bottom: b.bottom - r.bottom });
+      setSideInd({ top: r.top - b.top, height: r.height });
     }
     measure();
     // Rows shift without resizing the box (e.g. when the email block loads in), so re-measure on those too.
@@ -230,15 +230,13 @@ export default function DashboardLayout({
             <>
               <span
                 aria-hidden
-                data-dir={tabDir}
-                className="side-ind pointer-events-none absolute inset-x-0 z-0 bg-[linear-gradient(90deg,color-mix(in_srgb,var(--nav-accent)_18%,transparent),color-mix(in_srgb,var(--nav-accent)_5%,transparent)_60%,transparent)]"
-                style={{ top: sideInd.top, bottom: sideInd.bottom }}
+                className="side-ind pointer-events-none absolute inset-x-0 top-0 z-0 bg-[linear-gradient(90deg,color-mix(in_srgb,var(--nav-accent)_18%,transparent),color-mix(in_srgb,var(--nav-accent)_5%,transparent)_60%,transparent)]"
+                style={{ height: sideInd.height, transform: `translateY(${sideInd.top}px)` }}
               />
               <span
                 aria-hidden
-                data-dir={tabDir}
-                className="side-ind pointer-events-none absolute left-0 z-20 w-1 rounded-r-full bg-[var(--nav-accent)]"
-                style={{ top: sideInd.top + 6, bottom: sideInd.bottom + 6 }}
+                className="side-ind pointer-events-none absolute left-0 top-0 z-20 w-1 rounded-r-full bg-[var(--nav-accent)]"
+                style={{ height: sideInd.height - 12, transform: `translateY(${sideInd.top + 6}px)` }}
               />
             </>
           )}
@@ -390,7 +388,7 @@ export default function DashboardLayout({
             <span
               aria-hidden
               data-dir={tabDir}
-              className="tab-ind pointer-events-none absolute top-0 h-[62px] bg-[radial-gradient(ellipse_70%_100%_at_50%_0,color-mix(in_srgb,var(--nav-accent)_28%,transparent),color-mix(in_srgb,var(--nav-accent)_10%,transparent)_55%,transparent_80%)] [mask-image:linear-gradient(#000,transparent)]"
+              className="tab-ind pointer-events-none absolute top-0 h-[62px] bg-[radial-gradient(ellipse_70%_100%_at_50%_0,color-mix(in_srgb,var(--nav-accent)_28%,transparent),color-mix(in_srgb,var(--nav-accent)_10%,transparent)_55%,transparent_80%)] [mask-composite:intersect] [mask-image:linear-gradient(#000,transparent),linear-gradient(90deg,transparent,#000_25%,#000_75%,transparent)]"
               style={{ left: `${tabIdx * 20}%`, right: `${100 - (tabIdx + 1) * 20}%` }}
             />
             <span

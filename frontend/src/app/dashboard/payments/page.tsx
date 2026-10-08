@@ -4,7 +4,7 @@ import { btnPrimaryClass } from "@/components/ui/formButtonClasses";
 import { getCached, setCached } from "@/lib/page-cache";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, FileSpreadsheet, FileText, Loader2, Share2 } from "lucide-react";
+import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, FileSpreadsheet, FileText, Loader2, Share2, X } from "lucide-react";
 import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
@@ -36,7 +36,7 @@ import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
-import { useToast } from "@/context/toast-context";
+import { toastName, useToast } from "@/context/toast-context";
 
 type PaymentSortOption = "category-az" | "category-za" | "paid-first" | "unpaid-first";
 const PAYMENT_SORT_OPTIONS: PaymentSortOption[] = [
@@ -251,7 +251,7 @@ function PaymentsPageInner() {
       prev.map((inst) => (inst.id === updated.id ? updated : inst)),
     );
     setDialogTarget(null);
-    showToast(t("paymentPaid", { name: updated.bill_name }));
+    showToast(t("paymentPaid", { name: toastName(updated.bill_name) }));
   }
 
   function handleInstanceEdited(updated: PaymentInstanceOut) {
@@ -259,14 +259,14 @@ function PaymentsPageInner() {
       prev.map((inst) => (inst.id === updated.id ? updated : inst)),
     );
     setEditTarget(null);
-    showToast(t("paymentEdited", { name: updated.bill_name }));
+    showToast(t("paymentEdited", { name: toastName(updated.bill_name) }));
   }
 
   function handleInstanceDeleted(id: number) {
     const name = instances.find((inst) => inst.id === id)?.bill_name ?? "";
     setInstances((prev) => prev.filter((inst) => inst.id !== id));
     setDeleteTarget(null);
-    showToast(t("paymentDeleted", { name }));
+    showToast(t("paymentDeleted", { name: toastName(name) }));
   }
 
   function handleInstanceReverted(updated: PaymentInstanceOut) {
@@ -274,7 +274,7 @@ function PaymentsPageInner() {
       prev.map((inst) => (inst.id === updated.id ? updated : inst)),
     );
     setRevertTarget(null);
-    showToast(t("paymentReverted", { name: updated.bill_name }));
+    showToast(t("paymentReverted", { name: toastName(updated.bill_name) }));
   }
 
   const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -670,21 +670,6 @@ function PaymentsPageInner() {
                 selectedDay={dayFilter}
                 onSelectDay={(d) => setSelectedDay((prev) => (prev === d ? null : d))}
               />
-              {dayFilter && (
-                <div className="mt-2 flex items-center gap-2 text-xs">
-                  <span className="text-slate-500 dark:text-slate-400">
-                    {new Intl.DateTimeFormat(locale, { day: "numeric", month: "long" }).format(
-                      new Date(dayFilter + "T00:00:00"),
-                    )}
-                  </span>
-                  <button
-                    onClick={() => setSelectedDay(null)}
-                    className="text-green-700 hover:underline dark:text-emerald-400"
-                  >
-                    {t("clearDayFilter")}
-                  </button>
-                </div>
-              )}
             </div>
           )}
         </div>
@@ -784,6 +769,32 @@ function PaymentsPageInner() {
           </div>
         )}
       </div>
+
+      {/* Day filter banner: sticky so it stays visible once the calendar has scrolled away */}
+      {dayFilter && !loading && !loadError && (
+        <div className="sticky top-[57px] z-[5] mb-4 flex items-center gap-2 rounded-xl border border-slate-300 bg-slate-100 px-3 py-2 text-slate-700 shadow-sm md:top-0 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200">
+          <CalendarDays size={20} className="shrink-0" />
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold">
+              {t("dayFilterTitle", {
+                date: new Intl.DateTimeFormat(locale, { day: "numeric", month: "long" }).format(
+                  new Date(dayFilter + "T00:00:00"),
+                ),
+              })}
+            </p>
+            <p className="text-xs opacity-75">
+              {t("dayFilterCount", { count: filteredInstances.length, total: instances.length })}
+            </p>
+          </div>
+          <button
+            onClick={() => setSelectedDay(null)}
+            className="flex shrink-0 items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 dark:border-slate-500 dark:bg-slate-800 dark:text-slate-200"
+          >
+            <X size={12} />
+            {t("clearDayFilter")}
+          </button>
+        </div>
+      )}
 
       {/* Error banner */}
       {loadError && (

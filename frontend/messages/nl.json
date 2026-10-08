@@ -243,6 +243,8 @@
         "summaryPaid": "betaald",
         "calendarTitle": "Kalender",
         "clearDayFilter": "Wissen",
+        "dayFilterTitle": "Betalingen van {date}",
+        "dayFilterCount": "{count} van {total} deze maand",
         "shareMonth": "Delen per e-mail",
         "shareSent": "Maandoverzicht verzonden",
         "previousYear": "Vorig jaar",
