@@ -25,7 +25,7 @@ test('setup help is collapsed by default and explains the getUpdates method', as
   await expect(url).toBeHidden();
 
   // Step: expand
-  await page.getByText('How do I get the bot token and chat ID?').click();
+  await page.getByText('Where do the bot token and chat ID come from?').click();
   await expect(url).toBeVisible();
   await expect(page.getByText('@BotFather', { exact: false })).toBeVisible();
 });

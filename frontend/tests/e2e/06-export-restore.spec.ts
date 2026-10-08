@@ -107,7 +107,7 @@ test('restoring a backup with fewer bills/payments than current shows the stale-
   await expect(dialog).toBeVisible();
   await expect(
     dialog.getByText(
-      'This backup has fewer bills and payments than your current data. Restoring will permanently delete the difference.'
+      'This backup has fewer bills and payments than the current data. Restoring will permanently delete the difference.'
     )
   ).toBeVisible();
 

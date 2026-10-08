@@ -35,13 +35,13 @@ test('deleting the account cascades owned data and frees the email for re-regist
   await expect(confirm).toBeDisabled();
 
   // Wrong password: rejected, the dialog stays open and the user stays logged in
-  await dialog.getByPlaceholder('Enter your password').fill('not-my-password'); // pragma: allowlist secret
+  await dialog.getByPlaceholder('Enter password').fill('not-my-password'); // pragma: allowlist secret
   await confirm.click();
   await expect(dialog.getByText('Current password is incorrect.')).toBeVisible();
   await expect(page).toHaveURL(/\/dashboard\/settings/);
 
   // Correct password deletes the account
-  await dialog.getByPlaceholder('Enter your password').fill(password);
+  await dialog.getByPlaceholder('Enter password').fill(password);
   await confirm.click();
 
   // Assert: redirected to /login (cookies cleared server-side, client re-synced)

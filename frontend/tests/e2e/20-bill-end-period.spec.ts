@@ -85,7 +85,7 @@ test('every-3-months bill warns when the end month is off its schedule', async (
   await page.getByRole('button', { name: nextShort, exact: true }).click();
 
   // The last payment falls back to the start month, and the user is told right away
-  await expect(page.getByText(/Your cycle skips that month/)).toBeVisible();
+  await expect(page.getByText(/The cycle skips that month/)).toBeVisible();
 });
 
 test('a bill with an end month shows its last payment month on the Bills tile', async ({ page }) => {

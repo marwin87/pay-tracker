@@ -53,7 +53,7 @@ test('changing the time zone persists and relabels the send time', async ({ page
   // Assert: the Notifications tab states the send time and server note in that zone
   await page.getByRole('tab', { name: 'Notifications', exact: true }).click();
   await expect(page.getByText('Send time (Pacific/Auckland)').first()).toBeVisible();
-  await expect(page.getByText('Notifications are sent in your time zone')).toContainText(
+  await expect(page.getByText('Notifications are sent in the selected time zone')).toContainText(
     'Pacific/Auckland',
   );
 });
