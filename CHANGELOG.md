@@ -16,6 +16,7 @@ Notable changes to Pay Tracker, release by release.
 
 - Default categories can now be renamed in Settings
 - Edit and archive buttons on bills are always visible
+- Switching tabs no longer flashes: pages crossfade and show the last data instantly
 
 ## v1.3.0 — 07-10-2026
 

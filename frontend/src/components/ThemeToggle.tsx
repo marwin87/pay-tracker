@@ -37,10 +37,10 @@ export default function ThemeToggle() {
         <span>{t("label")}</span>
         <span
           suppressHydrationWarning
-          className="ml-auto flex items-center gap-1 text-xs font-normal text-slate-400 dark:text-slate-500"
+          className="ml-auto flex items-center gap-1 text-[13px] md:text-xs font-normal text-slate-400 dark:text-slate-500"
         >
           {t(theme)}
-          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+          <ChevronDown className={`h-4 w-4 md:h-3.5 md:w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
         </span>
       </button>
 

@@ -7,6 +7,8 @@ import { useLocale } from "@/context/locale-context";
 import { useFrequencyLabel } from "@/lib/frequency";
 import { formatAmount } from "@/lib/summary";
 import { fetchBills, unarchiveBill, type BillTemplateOut } from "@/lib/bills-api";
+import { getCached, setCached } from "@/lib/page-cache";
+
 import {
   categoryFilterLabel,
   categoryLabel,
@@ -32,8 +34,8 @@ export default function ArchivedBillsPage() {
   const tFilters = useTranslations("Filters");
   const showToast = useToast();
   const { decimalSeparator } = useLocale();
-  const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [templates, setTemplates] = useState<BillTemplateOut[]>(() => getCached<BillTemplateOut[]>("bills-archived") ?? []);
+  const [loading, setLoading] = useState(() => getCached("bills-archived") === undefined);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [categoryFilter, setCategoryFilter] = useState<Set<string>>(new Set());
   const [searchQuery, setSearchQuery] = useState("");
@@ -73,7 +75,9 @@ export default function ArchivedBillsPage() {
     fetchBills(true)
       .then((data) => {
         if (!cancelled) {
-          setTemplates(data.filter((t) => t.is_archived));
+          const archived = data.filter((t) => t.is_archived);
+          setCached("bills-archived", archived);
+          setTemplates(archived);
           setLoading(false);
         }
       })

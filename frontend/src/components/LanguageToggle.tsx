@@ -27,9 +27,9 @@ export default function LanguageToggle() {
       >
         <Languages className="h-[18px] w-[18px] md:h-[15px] md:w-[15px]" />
         <span>{t("title")}</span>
-        <span className="ml-auto flex items-center gap-1 text-xs font-normal text-slate-400 dark:text-slate-500">
+        <span className="ml-auto flex items-center gap-1 text-[13px] md:text-xs font-normal text-slate-400 dark:text-slate-500">
           {current?.flag} {current?.name}
-          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+          <ChevronDown className={`h-4 w-4 md:h-3.5 md:w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
         </span>
       </button>
 

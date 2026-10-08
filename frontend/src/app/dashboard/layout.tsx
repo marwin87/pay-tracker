@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, ViewTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -63,7 +63,7 @@ function BottomTabBody({ active, Icon, label, badge = 0 }: { active: boolean; Ic
           }`}
         />
         {badge > 0 && (
-          <span className="absolute -right-2.5 -top-0.5 grid h-[17px] min-w-[17px] place-items-center rounded-full border-2 border-white bg-red-500 px-1 text-[10px] font-bold leading-none text-white dark:border-slate-800">
+          <span className="absolute -right-3.5 -top-1 grid h-5 min-w-5 place-items-center rounded-full border-2 border-white bg-red-600 px-1 text-xs font-extrabold leading-none tabular-nums text-white shadow-sm dark:border-slate-800">
             {badge}
           </span>
         )}
@@ -164,7 +164,7 @@ export default function DashboardLayout({
   return (
     <div className="flex min-h-dvh flex-col -mb-9">
       {/* Desktop sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-50 hidden w-60 flex-col overflow-y-auto border-r border-slate-200 dark:border-slate-700 md:flex">
+      <aside className="[view-transition-name:app-sidebar] fixed inset-y-0 left-0 z-50 hidden w-60 flex-col overflow-y-auto border-r border-slate-200 dark:border-slate-700 md:flex">
         <Link
           href="/dashboard"
           className="flex items-center gap-2 px-4 py-4 transition-opacity hover:opacity-80"
@@ -237,7 +237,7 @@ export default function DashboardLayout({
       </aside>
 
       {/* Mobile top bar */}
-      <header className="relative sticky top-0 z-10 md:hidden border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
+      <header className="[view-transition-name:app-header] relative sticky top-0 z-10 md:hidden border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-700 dark:bg-slate-800/80">
         <div className="mx-auto flex max-w-4xl items-center gap-4 px-4 py-3">
           {/* Brand */}
           <Link
@@ -257,8 +257,15 @@ export default function DashboardLayout({
       {/* Mobile bottom tab bar; the last tab ("More") opens a panel (email, Settings, theme, language, log out). */}
       <nav
         ref={menuRef}
-        className="fixed inset-x-0 bottom-0 z-40 flex border-t border-slate-200 bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden dark:border-slate-700 dark:bg-slate-800/90"
+        className="[view-transition-name:bottom-nav] fixed inset-x-0 bottom-0 z-40 flex border-t border-slate-200 bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden dark:border-slate-700 dark:bg-slate-800/90"
       >
+        {/* Page background (same fixed layers as <body>) faded in over the content, so it sinks under the bar. */}
+        {!menuOpen && (
+          <div
+            aria-hidden
+            className="nav-fade pointer-events-none absolute inset-x-0 bottom-full h-10 bg-[#F6FAF8] [mask-image:linear-gradient(to_top,#000_0%,rgba(0,0,0,.85)_35%,transparent)] dark:bg-slate-900"
+          />
+        )}
         {menuOpen && (
           <div className="absolute inset-x-0 bottom-full max-h-[70dvh] overflow-y-auto border-t border-slate-200 bg-white px-4 py-3 shadow-md dark:border-slate-700 dark:bg-slate-800">
             <div className="mx-auto flex max-w-4xl flex-col gap-1">
@@ -346,7 +353,12 @@ export default function DashboardLayout({
 
       {/* Page content */}
       <ToastProvider>
-        <main key={pathname} className="page-in flex-1 pb-[calc(4.5rem+env(safe-area-inset-bottom))] md:ml-60 md:pb-0">{children}</main>
+        <main className="flex-1 pb-[calc(6.5rem+env(safe-area-inset-bottom))] md:ml-60 md:pb-0">
+          {/* Keyed by route: a tab switch crossfades old page into new instead of blinking. */}
+          <ViewTransition key={pathname} name="page" enter="auto" exit="auto" default="none">
+            {children}
+          </ViewTransition>
+        </main>
       </ToastProvider>
     </div>
   );

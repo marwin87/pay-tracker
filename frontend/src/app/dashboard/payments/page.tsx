@@ -1,5 +1,6 @@
 "use client";
 
+import { getCached, setCached } from "@/lib/page-cache";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, FileSpreadsheet, FileText, Loader2, Share2 } from "lucide-react";
@@ -143,8 +144,12 @@ function PaymentsPageInner() {
     setRevertTarget,
   } = usePaymentActions();
   const [editTarget, setEditTarget] = useState<PaymentInstanceOut | null>(null);
-  const [instances, setInstances] = useState<PaymentInstanceOut[]>([]);
-  const [loadedMonth, setLoadedMonth] = useState<string | null>(null);
+  const [instances, setInstances] = useState<PaymentInstanceOut[]>(
+    () => getCached<PaymentInstanceOut[]>(`payments:${currentMonth}`) ?? [],
+  );
+  const [loadedMonth, setLoadedMonth] = useState<string | null>(() =>
+    getCached(`payments:${currentMonth}`) === undefined ? null : currentMonth,
+  );
   const [loadError, setLoadError] = useState<string | null>(null);
   const [xlsxLoading, setXlsxLoading] = useState(false);
   const [xlsxError, setXlsxError] = useState<string | null>(null);
@@ -186,6 +191,11 @@ function PaymentsPageInner() {
 
   const isReadOnly = selectedMonth < currentMonth;
 
+  // Keep the cache in step with local edits so a return visit never shows stale rows.
+  useEffect(() => {
+    if (!loading) setCached(`payments:${selectedMonth}`, instances);
+  }, [instances, loading, selectedMonth]);
+
   useEffect(() => {
     let cancelled = false;
     const isCurrentOrFuture = selectedMonth >= currentMonth;
@@ -194,6 +204,7 @@ function PaymentsPageInner() {
       .then((data) => {
         if (!cancelled) {
           setInstances(data);
+          setCached(`payments:${selectedMonth}`, data);
           setLoadError(null);
           setLoadedMonth(selectedMonth);
         }

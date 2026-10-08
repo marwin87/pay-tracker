@@ -14,6 +14,7 @@ import {
   type BillTemplateUpdate,
 } from "@/lib/bills-api";
 import { SessionExpiredError } from "@/lib/api";
+import { getCached, setCached } from "@/lib/page-cache";
 import { fetchMe } from "@/lib/user-api";
 import {
   categoryFilterLabel,
@@ -38,8 +39,8 @@ export default function BillsPage() {
   const t = useTranslations("BillsPage");
   const tCategories = useTranslations("Categories");
   const tFilters = useTranslations("Filters");
-  const [templates, setTemplates] = useState<BillTemplateOut[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [templates, setTemplates] = useState<BillTemplateOut[]>(() => getCached<BillTemplateOut[]>("bills") ?? []);
+  const [loading, setLoading] = useState(() => getCached("bills") === undefined);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [expandedId, setExpandedId] = useState<number | "new" | null>(null);
@@ -102,6 +103,7 @@ export default function BillsPage() {
     let cancelled = false;
     fetchBills()
       .then((data) => {
+        setCached("bills", data);
         if (!cancelled) {
           setTemplates(data);
           setLoadError(null);

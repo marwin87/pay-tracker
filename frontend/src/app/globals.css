@@ -152,7 +152,7 @@ button:not(:disabled) {
 }
 
 /* Dark leather with a torch-lit vignette and a faint grain. */
-.theme-vesperfall body {
+.theme-vesperfall :is(body, .nav-fade) {
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .8 0 0 0 0 .65 0 0 0 0 .4 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
     radial-gradient(ellipse at top, #58472f 0%, transparent 65%),
@@ -268,7 +268,7 @@ button:not(:disabled) {
 }
 
 /* Light & dark: same grain + vignette idea as Vesperfall, in the app's own colors. */
-html:not(.dark) body {
+html:not(.dark) :is(body, .nav-fade) {
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .3 0 0 0 0 .25 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
     radial-gradient(ellipse at top, #e0f2e9 0%, transparent 65%),
@@ -276,7 +276,7 @@ html:not(.dark) body {
   background-attachment: fixed;
 }
 
-html.dark:not(.theme-vesperfall) body {
+html.dark:not(.theme-vesperfall) :is(body, .nav-fade) {
   background-image:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .7 0 0 0 0 .85 0 0 0 0 .8 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
     radial-gradient(ellipse at top, #12332b 0%, transparent 65%),
@@ -299,10 +299,19 @@ html.dark:not(.theme-vesperfall) body {
 .tab-ind[data-dir="L"] { transition: left 260ms cubic-bezier(.3,.8,.3,1), right 420ms cubic-bezier(.3,.8,.3,1) 60ms; }
 @media (prefers-reduced-motion: reduce) { .tab-ind { transition: none !important; } }
 
-/* Soft fade when switching dashboard pages (keyed by pathname on <main>). */
-@keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
-.page-in { animation: page-in 150ms ease-out; }
-@media (prefers-reduced-motion: reduce) { .page-in { animation: none; } }
+/* Crossfade when switching dashboard pages (see <ViewTransition name="page"> in the dashboard layout). */
+::view-transition { pointer-events: none; }
+::view-transition-group(page) { animation-duration: 200ms; }
+/* Fixed chrome gets its own layer so the page snapshot can never paint over it, and shows live (no crossfade of the tab indicator). */
+::view-transition-group(app-sidebar), ::view-transition-group(app-header), ::view-transition-group(bottom-nav) { animation: none; z-index: 10; }
+::view-transition-old(app-sidebar), ::view-transition-old(app-header), ::view-transition-old(bottom-nav) { display: none; }
+::view-transition-new(app-sidebar), ::view-transition-new(app-header), ::view-transition-new(bottom-nav) { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
 
 /* Browser autofill/autocomplete paints inputs light; keep them dark in Vesperfall.
    The long background transition (rather than an inset box-shadow) leaves the focus ring intact. */

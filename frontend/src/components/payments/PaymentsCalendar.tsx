@@ -81,7 +81,7 @@ export default function PaymentsCalendar({
         {weekdayHeaders.map((wd, i) => (
           <div
             key={i}
-            className="flex h-5 items-center justify-center text-[11px] font-medium text-slate-400 dark:text-slate-500 capitalize"
+            className="flex h-5 items-center justify-center text-xs font-medium text-slate-400 dark:text-slate-500 capitalize"
           >
             {wd}
           </div>

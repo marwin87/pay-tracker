@@ -13,6 +13,7 @@ import {
   type TrendPoint,
 } from "@/lib/payments-api";
 import { fetchMe } from "@/lib/user-api";
+import { getCached, setCached } from "@/lib/page-cache";
 import { currenciesByVolume, pickCurrency, summarize } from "@/lib/summary";
 import MonthSummaryCard, { CARD_CLASS } from "@/components/dashboard/MonthSummaryCard";
 import CategoryDonut from "@/components/dashboard/CategoryDonut";
@@ -32,7 +33,7 @@ export default function DashboardPage() {
     instances: PaymentInstanceOut[];
     trend: TrendPoint[];
     defaultCurrency: string | null;
-  } | null>(null);
+  } | null>(() => getCached(`dashboard:${currentMonth}`) ?? null);
   const [error, setError] = useState<string | null>(null);
   const [selectedCurrency, setSelectedCurrency] = useState<string | null>(null);
 
@@ -49,7 +50,10 @@ export default function DashboardPage() {
         ]),
       )
       .then(([instances, trend, defaultCurrency]) => {
-        if (!cancelled) setData({ month, instances, trend, defaultCurrency });
+        if (cancelled) return;
+        const next = { month, instances, trend, defaultCurrency };
+        setCached(`dashboard:${month}`, next);
+        setData(next);
       })
       .catch((err: unknown) => {
         if (err instanceof SessionExpiredError || cancelled) return;
