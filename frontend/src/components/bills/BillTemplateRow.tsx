@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from "react";
 import {
   Pencil,
   Archive as ArchiveIcon,
   ChevronUp,
   NotebookPen,
-  MoreHorizontal,
 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
@@ -63,7 +61,6 @@ export default function BillTemplateRow({
   const frequencyLabel = useFrequencyLabel();
   const locale = useLocale();
   const { decimalSeparator } = useAppLocale();
-  const [actionsOpen, setActionsOpen] = useState(false);
 
   const dueLabel = formatDueLabel(template, locale);
 
@@ -127,21 +124,7 @@ export default function BillTemplateRow({
 
         {/* Actions */}
         <div className="flex items-center gap-1 shrink-0">
-          {/* Mobile: ⋯ toggle */}
-          <button
-            onClick={() => setActionsOpen((o) => !o)}
-            aria-label="More actions"
-            className="sm:hidden rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300"
-          >
-            <MoreHorizontal size={16} />
-          </button>
-
-          {/* Edit + Archive: hidden on mobile unless actionsOpen; hover-reveal on sm+ */}
-          <div
-            className={`items-center gap-1 ${
-              actionsOpen ? "flex" : "hidden"
-            } sm:flex sm:[@media(hover:hover)]:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100 sm:transition-opacity sm:duration-150`}
-          >
+          <div className="flex items-center gap-1">
             <button
               onClick={onEditToggle}
               aria-label={isExpanded ? t("close") : t("edit")}

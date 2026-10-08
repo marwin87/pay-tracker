@@ -273,7 +273,9 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
       {/* Row 4: Category + Notes */}
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="bill-category" className={labelClass}>{t("categoryLabel")}</label>
+          <label htmlFor="bill-category" className={labelClass}>
+            {t("categoryLabel")} <span className="text-red-400">*</span>
+          </label>
           <CategoryCombobox
             id="bill-category"
             value={categoryId}
