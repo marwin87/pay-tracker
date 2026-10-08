@@ -211,7 +211,7 @@ _RESET_BASE = dict(
 @pytest.mark.parametrize(
     "language,expected_subject",
     [
-        ("en", "Reset your Pay Tracker password"),
+        ("en", "Reset Pay Tracker password"),
         ("pl", "Zresetuj hasło Pay Tracker"),
         ("de", "Pay Tracker Passwort zurücksetzen"),
     ],
@@ -233,4 +233,4 @@ def test_reset_email_body_contains_reset_url(sent):
 def test_reset_email_unknown_language_falls_back_to_english(sent):
     send_password_reset_email(**{**_RESET_BASE, "language": "xx"})
 
-    assert _subject(sent) == "Reset your Pay Tracker password"
+    assert _subject(sent) == "Reset Pay Tracker password"

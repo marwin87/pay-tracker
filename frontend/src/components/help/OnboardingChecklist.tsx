@@ -11,21 +11,22 @@ import { fetchMe } from "@/lib/user-api";
 const HIDDEN_KEY = "onboarding-hidden";
 const RESET_EVENT = "onboarding-reset";
 
-/** Brings the start steps back (from the help sheet). */
+/** Brings the start steps back (from the help sheet), even when every step is already done. */
 export function resetOnboarding() {
   try {
-    localStorage.removeItem(HIDDEN_KEY);
+    localStorage.setItem(HIDDEN_KEY, "0");
   } catch {
     // storage blocked: the card simply stays as it is
   }
   window.dispatchEvent(new Event(RESET_EVENT));
 }
 
-function isHidden(): boolean {
+// "1" = hidden, "0" = shown on request (even if complete), unset = automatic
+function stored(): string | null {
   try {
-    return localStorage.getItem(HIDDEN_KEY) === "1";
+    return localStorage.getItem(HIDDEN_KEY);
   } catch {
-    return false;
+    return null;
   }
 }
 
@@ -40,7 +41,7 @@ export default function OnboardingChecklist({ currentMonth }: { currentMonth: st
   const t = useTranslations("Help.checklist");
   const tRow = useTranslations("PaymentRow");
   const [done, setDone] = useState<[boolean, boolean, boolean] | null>(null);
-  const [hidden, setHidden] = useState(true);
+  const [pref, setPref] = useState<string | null>("1");
 
   useEffect(() => {
     let cancelled = false;
@@ -60,13 +61,13 @@ export default function OnboardingChecklist({ currentMonth }: { currentMonth: st
   }, [currentMonth]);
 
   useEffect(() => {
-    const sync = () => setHidden(isHidden());
+    const sync = () => setPref(stored());
     sync();
     window.addEventListener(RESET_EVENT, sync);
     return () => window.removeEventListener(RESET_EVENT, sync);
   }, []);
 
-  if (!done || hidden || done.every(Boolean)) return null;
+  if (!done || pref === "1" || (pref !== "0" && done.every(Boolean))) return null;
 
   const count = done.filter(Boolean).length;
   const current = done.indexOf(false);
@@ -112,7 +113,7 @@ export default function OnboardingChecklist({ currentMonth }: { currentMonth: st
             } catch {
               // storage blocked: hide for this visit only
             }
-            setHidden(true);
+            setPref("1");
           }}
           className="text-xs font-medium text-slate-500 hover:text-slate-700 hover:underline dark:text-slate-400 dark:hover:text-slate-200"
         >

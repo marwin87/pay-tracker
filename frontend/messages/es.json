@@ -2,12 +2,12 @@
     "Auth": {
         "loginSubtitle": "Inicia sesión para seguir usando PayTracker",
         "welcomeHeading": "Bienvenido de nuevo 👋",
-        "registerSubtitle": "Crea tu cuenta",
-        "registerTagline": "Empieza a controlar tus facturas con PayTracker",
+        "registerSubtitle": "Crear una cuenta",
+        "registerTagline": "Empezar a controlar las facturas con PayTracker",
         "emailLabel": "Correo electrónico",
-        "emailPlaceholder": "Introduce tu correo electrónico",
+        "emailPlaceholder": "Introducir el correo electrónico",
         "passwordLabel": "Contraseña",
-        "passwordPlaceholder": "Introduce tu contraseña",
+        "passwordPlaceholder": "Introducir la contraseña",
         "passwordHint": "Mínimo 8 caracteres",
         "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
         "passwordTooLong": "La contraseña puede tener como máximo 72 bytes (unos 72 caracteres)",
@@ -17,22 +17,22 @@
         "signingIn": "Iniciando sesión…",
         "loginFailed": "Error al iniciar sesión",
         "tooManyAttempts": "Demasiados intentos. Espera unos minutos e inténtalo de nuevo.",
-        "sessionExpired": "Tu sesión ha caducado. Vuelve a iniciar sesión.",
-        "noAccount": "¿Aún no tienes cuenta?",
+        "sessionExpired": "La sesión ha caducado. Volver a iniciar sesión.",
+        "noAccount": "¿Aún sin cuenta?",
         "register": "Crear cuenta",
         "createAccount": "Crear cuenta",
         "creatingAccount": "Creando cuenta…",
         "registrationFailed": "Error en el registro",
         "emailAlreadyRegistered": "Este correo electrónico ya está registrado.",
-        "alreadyHaveAccount": "¿Ya tienes una cuenta?",
-        "forgotPassword": "¿Olvidaste tu contraseña?",
-        "forgotPasswordTitle": "Restablece tu contraseña",
-        "forgotPasswordSubtitle": "Introduce tu correo electrónico y te enviaremos un enlace de restablecimiento.",
+        "alreadyHaveAccount": "¿Cuenta ya creada?",
+        "forgotPassword": "¿Contraseña olvidada?",
+        "forgotPasswordTitle": "Restablecer la contraseña",
+        "forgotPasswordSubtitle": "Al introducir el correo electrónico se envía un enlace de restablecimiento.",
         "sendResetLink": "Enviar enlace de restablecimiento",
         "sendingResetLink": "Enviando…",
-        "resetLinkSent": "Si ese correo está registrado, recibirás un enlace de restablecimiento en breve.",
+        "resetLinkSent": "Si ese correo está registrado, se enviará en breve un enlace de restablecimiento.",
         "resetPasswordTitle": "Establece una nueva contraseña",
-        "resetPasswordSubtitle": "Introduce y confirma tu nueva contraseña.",
+        "resetPasswordSubtitle": "Introducir y confirmar la nueva contraseña.",
         "newPasswordLabel": "Nueva contraseña",
         "confirmPasswordLabel": "Confirmar nueva contraseña",
         "passwordsDoNotMatch": "Las contraseñas no coinciden",
@@ -61,7 +61,7 @@
     },
     "Dashboard": {
         "title": "Bienvenido a Pay Tracker",
-        "subtitle": "Tu mes de un vistazo: qué está pagado, qué vence y qué está atrasado.",
+        "subtitle": "El mes de un vistazo: qué está pagado, qué vence y qué está atrasado.",
         "summary": {
             "paid": "Pagado",
             "overdue": "Vencido",
@@ -104,15 +104,15 @@
         }
     },
     "BillsPage": {
-        "title": "Mis facturas",
-        "subtitle": "Añade cada factura una sola vez, por ejemplo el alquiler o la luz. Nosotros creamos su pago cada mes.",
+        "title": "Facturas",
+        "subtitle": "Cada factura solo debe añadirse una vez, por ejemplo el alquiler o la luz. Su pago se crea automáticamente cada mes.",
         "newBill": "Nueva factura",
         "cancel": "Cancelar",
         "billAdded": "Factura «{name}» añadida",
         "billSaved": "Factura «{name}» guardada",
         "loadError": "No se pudieron cargar las facturas.",
         "noBillsYet": "Aún no hay facturas",
-        "addFirstBill": "Añade tu primera factura",
+        "addFirstBill": "Añadir la primera factura",
         "noFilterResults": "Ninguna factura coincide con el filtro seleccionado",
         "collapseAll": "Contraer todo",
         "expandAll": "Expandir todo",
@@ -123,7 +123,7 @@
         "paused": "En pausa",
         "resumeError": "No se pudo reanudar la factura.",
         "hidePaused": "Ocultar en pausa",
-        "allPaused": "Todas tus facturas están en pausa",
+        "allPaused": "Todas las facturas están en pausa",
         "allPausedHelp": "Las facturas en pausa no generan pagos ni recordatorios. Muéstralas para reanudar una o añade una factura nueva."
     },
     "BillTemplateForm": {
@@ -167,12 +167,12 @@
         "restoring": "Restaurando…"
     },
     "DeleteAccountDialog": {
-        "title": "¿Eliminar tu cuenta?",
-        "description": "Esto elimina permanentemente tu cuenta y todo lo vinculado a ella: facturas, categorías e historial de pagos. Esta acción no se puede deshacer.",
+        "title": "¿Eliminar la cuenta?",
+        "description": "Esto elimina permanentemente la cuenta y todo lo vinculado a ella: facturas, categorías e historial de pagos. Esta acción no se puede deshacer.",
         "cancel": "Cancelar",
         "confirm": "Eliminar cuenta",
-        "passwordLabel": "Confirma con tu contraseña",
-        "passwordPlaceholder": "Introduce tu contraseña",
+        "passwordLabel": "Confirmar con la contraseña",
+        "passwordPlaceholder": "Introducir la contraseña",
         "wrongPassword": "La contraseña actual es incorrecta.",
         "deleting": "Eliminando…"
     },
@@ -195,7 +195,7 @@
     },
     "PaymentsPage": {
         "title": "Por pagar",
-        "subtitle": "Tus facturas mes a mes. Toca «Marcar como pagado» cuando pagues una.",
+        "subtitle": "Las facturas mes a mes. Tocar «Marcar como pagado» al pagar una.",
         "paymentEdited": "Pago «{name}» guardado",
         "paymentPaid": "«{name}» marcada como pagada",
         "paymentDeleted": "Pago «{name}» eliminado",
@@ -292,7 +292,7 @@
         "dialogTitle": "Restaurar desde copia de seguridad",
         "dialogDescription": "Esto reemplazará permanentemente los datos contenidos en “{filename}” (las secciones ausentes del archivo no se modifican). Esta acción no se puede deshacer.",
         "cancel": "Cancelar",
-        "confirm": "Reemplazar mis datos",
+        "confirm": "Reemplazar los datos",
         "restoring": "Restaurando…",
         "error": "Error al restaurar. Comprueba el archivo e inténtalo de nuevo.",
         "fileTooLarge": "Archivo demasiado grande. Los archivos de copia de seguridad deben ser menores de 10 MB.",
@@ -303,8 +303,8 @@
         "categoriesCount": "{categories} categorías",
         "countsUnavailable": "no disponible",
         "exportDateUnknown": "fecha de exportación desconocida (formato de copia de seguridad antiguo)",
-        "staleDataWarning": "Esta copia de seguridad tiene menos facturas y pagos que tus datos actuales. Restaurarla eliminará permanentemente la diferencia.",
-        "noBillsInFile": "No hay facturas ni pagos en este archivo: tus facturas actuales no se modifican.",
+        "staleDataWarning": "Esta copia de seguridad tiene menos facturas y pagos que los datos actuales. Restaurarla eliminará permanentemente la diferencia.",
+        "noBillsInFile": "No hay facturas ni pagos en este archivo: las facturas actuales no se modifican.",
         "done": "Datos restaurados desde la copia de seguridad"
     },
     "BackupButton": {
@@ -315,7 +315,7 @@
         "confirm": "Descargar",
         "downloading": "Descargando…",
         "error": "Error al crear la copia de seguridad. Inténtalo de nuevo.",
-        "telegramWarning": "Tu copia de seguridad se descargó, pero no incluye el token del bot de Telegram: ya no se puede leer (cambió el secreto del servidor). Vuelve a introducir el token en Ajustes y descarga una copia nueva.",
+        "telegramWarning": "La copia de seguridad se descargó, pero no incluye el token del bot de Telegram: ya no se puede leer (cambió el secreto del servidor). Volver a introducir el token en Ajustes y descargar una copia nueva.",
         "ok": "OK",
         "selectAll": "Seleccionar todo",
         "deselectAll": "Deseleccionar todo",
@@ -332,10 +332,10 @@
         }
     },
     "SnapshotRecoverySection": {
-        "message": "Se guardó una instantánea de tus datos el {date}, justo antes de tu última restauración.",
+        "message": "Se guardó una instantánea de los datos el {date}, justo antes de la última restauración.",
         "restoreButton": "Restaurar esta instantánea",
         "dialogTitle": "Restaurar esta instantánea",
-        "dialogDescription": "Esto reemplazará permanentemente tus datos actuales con la instantánea tomada antes de tu última restauración. Esta acción no se puede deshacer.",
+        "dialogDescription": "Esto reemplazará permanentemente los datos actuales con la instantánea tomada antes de la última restauración. Esta acción no se puede deshacer.",
         "cancel": "Cancelar",
         "confirm": "Restaurar",
         "restoring": "Restaurando…",
@@ -374,7 +374,7 @@
             "about": "Acerca de"
         },
         "unsavedTitle": "Cambios sin guardar",
-        "unsavedDescription": "Tienes cambios sin guardar. ¿Salir sin guardar?",
+        "unsavedDescription": "Hay cambios sin guardar. ¿Salir sin guardar?",
         "unsavedLeave": "Salir",
         "unsavedStay": "Quedarse",
         "save": "Guardar",
@@ -394,17 +394,17 @@
             "description": "Cambia el correo electrónico con el que inicias sesión.",
             "currentEmailLabel": "Correo electrónico actual:",
             "emailLabel": "Nueva dirección de correo electrónico",
-            "emailHint": "Introduce una nueva dirección y confirma con tu contraseña actual.",
+            "emailHint": "Introducir una nueva dirección y confirmar con la contraseña actual.",
             "emailPlaceholder": "nuevo@correo.com",
             "currentPasswordPlaceholder": "Introduce la contraseña actual",
             "newPasswordLabel": "Cambiar contraseña",
-            "passwordHint": "Introduce tu contraseña actual y elige una nueva.",
+            "passwordHint": "Introducir la contraseña actual y elegir una nueva.",
             "newPasswordPlaceholder": "Nueva contraseña (mín. 8 caracteres)",
             "passwordTooShort": "La contraseña debe tener al menos 8 caracteres.",
             "passwordTooLong": "La contraseña puede tener como máximo 72 bytes (unos 72 caracteres).",
             "wrongPassword": "La contraseña actual es incorrecta.",
             "emailTaken": "Ese correo electrónico ya está registrado.",
-            "emailAndPasswordRequired": "Introduce tanto la nueva dirección de correo como tu contraseña actual."
+            "emailAndPasswordRequired": "Introducir tanto la nueva dirección de correo como la contraseña actual."
         },
         "password": {
             "title": "Contraseña",
@@ -420,10 +420,10 @@
         },
         "timeZone": {
             "title": "Zona horaria",
-            "description": "Define qué significa «hoy» para ti y a qué hora se envían tus recordatorios.",
+            "description": "Define qué significa «hoy» y a qué hora se envían los recordatorios.",
             "ariaLabel": "Zona horaria",
             "placeholder": "p. ej. Europe/Madrid",
-            "useBrowser": "Usar la zona horaria de mi navegador ({zone})",
+            "useBrowser": "Usar la zona horaria del navegador ({zone})",
             "hint": "Las horas de envío de los recordatorios están en esta zona horaria, así que cambiarla mueve el momento en que llegan.",
             "unknown": "Elige una zona horaria de la lista.",
             "noMatches": "No hay ninguna zona horaria que coincida"
@@ -458,7 +458,7 @@
                 "notes": "Notas"
             }
         },
-        "notificationsServerTimeHint": "Las notificaciones se envían en tu zona horaria (<b>{zone}</b>). Allí son ahora las <b>{time}</b>.",
+        "notificationsServerTimeHint": "Las notificaciones se envían en la zona horaria elegida (<b>{zone}</b>). Allí son ahora las <b>{time}</b>.",
         "emailNotifications": {
             "title": "Notificaciones por correo",
             "description": "Elige cuándo recibir recordatorios por correo de facturas próximas y vencidas.",
@@ -485,8 +485,8 @@
             "description": "Recibe una notificación cuando una factura vence hoy.",
             "enable": "Activar notificaciones",
             "toggle": "Activar notificaciones del navegador",
-            "osHint": "¿No ves las notificaciones? Comprueba la configuración de notificaciones del sistema (macOS: Ajustes del sistema → Notificaciones).",
-            "blockedWarning": "Las notificaciones del navegador están bloqueadas. Actívalas en la configuración de tu navegador o sistema operativo."
+            "osHint": "¿No aparecen las notificaciones? Comprobar la configuración de notificaciones del sistema (macOS: Ajustes del sistema → Notificaciones).",
+            "blockedWarning": "Las notificaciones del navegador están bloqueadas. Activarlas en la configuración del navegador o del sistema operativo."
         },
         "telegramNotifications": {
             "title": "Notificaciones de Telegram",
@@ -505,9 +505,9 @@
             "remove": "Quitar Telegram",
             "helpTitle": "¿Cómo obtengo el token del bot y el ID del chat?",
             "helpStep1": "En Telegram abre @BotFather, envía /newbot y sigue los pasos. Copia el token que recibas.",
-            "helpStep2": "Abre tu nuevo bot y envíale cualquier mensaje (p. ej. hola).",
-            "helpStep3": "Abre esta dirección en el navegador (sustituye TOKEN por tu token):",
-            "helpStep4": "En el resultado busca \"chat\" y luego \"id\". Ese número es tu ID de chat. Pega el token y el ID de chat abajo.",
+            "helpStep2": "Abrir el nuevo bot y enviarle cualquier mensaje (p. ej. hola).",
+            "helpStep3": "Abrir esta dirección en el navegador (sustituir TOKEN por el token del bot):",
+            "helpStep4": "En el resultado buscar \"chat\" y luego \"id\". Ese número es el ID de chat. Pegar el token y el ID de chat abajo.",
             "masterToggle": "Activar notificaciones de Telegram",
             "noneWarning": "Selecciona al menos una opción para recibir recordatorios por Telegram.",
             "needCredentials": "Guarda arriba el token del bot y el ID del chat para activar el envío.",
@@ -515,7 +515,7 @@
         },
         "backup": {
             "title": "Copia de seguridad de datos",
-            "description": "Descarga una copia completa de todos tus datos de Pay Tracker en un archivo de copia de seguridad.",
+            "description": "Descargar una copia completa de todos los datos de Pay Tracker en un archivo de copia de seguridad.",
             "button": "Copia de seguridad"
         },
         "restore": {
@@ -526,23 +526,23 @@
         "about": {
             "title": "Información de la aplicación",
             "description": "Versión y enlaces útiles.",
-            "text": "Pay Tracker es una aplicación doméstica para controlar tus facturas. Nació pensando en un presupuesto familiar tranquilo, para que ninguna factura se te pase.",
+            "text": "Pay Tracker es una aplicación doméstica para controlar las facturas. Nació pensando en un presupuesto familiar tranquilo, para que ninguna factura se pase.",
             "licensesTitle": "Licencias",
             "licensesText": "Esta aplicación usa los componentes de código abierto y las fuentes siguientes. Cada uno se utiliza bajo su propia licencia.",
             "version": "Versión de la aplicación",
             "license": "Licencia",
             "licenseValue": "Gratis para uso no comercial, con atribución",
-            "copyright": "Puedes usar, modificar y compartir Pay Tracker para fines personales y otros fines no comerciales. Mantén el crédito al proyecto original. El uso comercial requiere permiso escrito del autor."
+            "copyright": "Pay Tracker puede usarse, modificarse y compartirse para fines personales y otros fines no comerciales. Mantener el crédito al proyecto original. El uso comercial requiere permiso escrito del autor."
         },
         "deleteAccount": {
             "title": "Eliminar cuenta",
-            "description": "Elimina permanentemente tu cuenta y todo lo vinculado a ella. Esta acción no se puede deshacer.",
+            "description": "Eliminar permanentemente la cuenta y todo lo vinculado a ella. Esta acción no se puede deshacer.",
             "button": "Eliminar cuenta",
             "error": "No se pudo eliminar la cuenta. Inténtalo de nuevo."
         },
         "categories": {
             "title": "Categorías",
-            "description": "Añade tus propias categorías o renombra y recolorea las predeterminadas.",
+            "description": "Añadir categorías propias o renombrar y recolorear las predeterminadas.",
             "loadError": "No se pudieron cargar las categorías. Inténtalo de nuevo.",
             "nameRequired": "El nombre es obligatorio.",
             "namePlaceholder": "p. ej. Aficiones",
@@ -618,11 +618,11 @@
         "reminder": {
             "2_days_before": {
                 "subject": "Recordatorio: {bill_name} vence en 2 días ({amount} {currency})",
-                "body": "Te recordamos que {bill_name} vence en 2 días ({due_date}).\nImporte: {amount} {currency}"
+                "body": "Recordatorio: {bill_name} vence en 2 días ({due_date}).\nImporte: {amount} {currency}"
             },
             "upcoming": {
                 "subject": "Recordatorio: {bill_name} vence mañana ({amount} {currency})",
-                "body": "Te recordamos que {bill_name} vence mañana ({due_date}).\nImporte: {amount} {currency}"
+                "body": "Recordatorio: {bill_name} vence mañana ({due_date}).\nImporte: {amount} {currency}"
             },
             "on_day": {
                 "subject": "Vence hoy: {bill_name} ({amount} {currency})",
@@ -636,7 +636,7 @@
         "dueDateLabel": "Vencimiento",
         "summary": {
             "subject": "Resumen mensual de {month_label}",
-            "intro": "Este es tu resumen de pagos de {month_label}.",
+            "intro": "Este es el resumen de pagos de {month_label}.",
             "paid_header": "Pagado",
             "unpaid_header": "Sin pagar / Vencido",
             "bill": "Factura",
@@ -649,11 +649,11 @@
             "nothing_unpaid": "Todas las facturas están pagadas. ¡Buen trabajo!",
             "total_paid": "Total pagado",
             "total_outstanding": "Total pendiente",
-            "footer": "Gestiona tus facturas en la aplicación Pay Tracker."
+            "footer": "Las facturas se gestionan en la aplicación Pay Tracker."
         },
         "reset": {
-            "subject": "Restablece tu contraseña de Pay Tracker",
-            "body": "Has solicitado restablecer la contraseña de tu cuenta de Pay Tracker.\n\nHaz clic en el siguiente enlace para establecer una nueva contraseña (válido durante {expires_label}):\n{reset_url}\n\nSi no lo solicitaste, puedes ignorar este correo: tu contraseña no cambiará.",
+            "subject": "Restablecer la contraseña de Pay Tracker",
+            "body": "Se ha solicitado restablecer la contraseña de esta cuenta de Pay Tracker.\n\nEl siguiente enlace permite establecer una nueva contraseña (válido durante {expires_label}):\n{reset_url}\n\nSi no se solicitó, este correo puede ignorarse: la contraseña no cambiará.",
             "expires": "{minutes} minutos",
             "noExpiry": "sin caducidad"
         },
@@ -686,7 +686,7 @@
     },
     "PauseConfirmDialog": {
         "title": "¿Pausar “{billName}”?",
-        "description": "Esta factura dejará de generar nuevos pagos y recordatorios, y sus próximos pagos sin pagar desaparecerán de Pagos. El historial pagado se conserva. Puedes reanudarla en cualquier momento.",
+        "description": "Esta factura dejará de generar nuevos pagos y recordatorios, y sus próximos pagos sin pagar desaparecerán de Pagos. El historial pagado se conserva. Se puede reanudar en cualquier momento.",
         "cancel": "Cancelar",
         "pause": "Pausar",
         "pausing": "Pausando…"
@@ -711,127 +711,127 @@
             "title": "Empieza en 3 pasos",
             "progress": "{done} de {total} hechos",
             "hide": "Ocultar",
-            "billT": "Añade tu primera factura",
+            "billT": "Añadir la primera factura",
             "billD": "Añade cada factura una sola vez, por ejemplo el alquiler o la luz. Su pago se crea automáticamente cada mes.",
             "billCta": "Añadir factura",
             "paidT": "Marca un pago como pagado",
-            "paidD": "Cuando pagues una factura, pulsa <b>{markPaid}</b> a su lado.",
+            "paidD": "Al pagar una factura, pulsar <b>{markPaid}</b> a su lado.",
             "remT": "Activa los recordatorios",
-            "remD": "Recibirás un aviso antes del vencimiento y nunca pagarás tarde.",
+            "remD": "Llega un aviso antes del vencimiento, así que nada se paga tarde.",
             "remCta": "Configurar"
         },
         "items": {
             "addBill": {
-                "q": "¿Cómo añado una factura?",
+                "q": "¿Cómo se añade una factura?",
                 "s1": "Abre <b>{bills}</b> y pulsa <b>{newBill}</b>.",
-                "s2": "Escribe un nombre, elige una categoría y escribe el importe.",
+                "s2": "Escribir un nombre, elegir una categoría y escribir el importe.",
                 "s3": "Elige el día de vencimiento y cada cuánto se repite (cada mes, cada año o una sola vez). Luego guarda."
             },
             "repeat": {
-                "q": "Mi factura no es mensual. ¿Qué hago?",
+                "q": "La factura no es mensual. ¿Qué hacer?",
                 "s1": "Al añadir o editar una factura, elige cada cuánto se repite: cada pocos meses, cada año o solo una vez.",
-                "s2": "También puedes poner un mes final. Así una factura que termina, como un préstamo, se detiene sola."
+                "s2": "También se puede poner un mes final. Así una factura que termina, como un préstamo, se detiene sola."
             },
             "editBill": {
-                "q": "¿Cómo cambio una factura (nombre, importe, día)?",
+                "q": "¿Cómo se cambia una factura (nombre, importe, día)?",
                 "s1": "Abre <b>{bills}</b> y pulsa <b>{edit}</b> junto a la factura.",
-                "s2": "Cambia lo que necesites y guarda."
+                "s2": "Cambiar lo necesario y guardar."
             },
             "pause": {
-                "q": "¿Cómo pauso una factura?",
+                "q": "¿Cómo se pausa una factura?",
                 "s1": "Abre <b>{bills}</b>.",
                 "s2": "Pulsa <b>{pause}</b> junto a la factura y confirma.",
-                "s3": "No llegarán nuevos pagos ni recordatorios. Lo que ya pagaste sigue en tu historial."
+                "s3": "No llegarán nuevos pagos ni recordatorios. Lo que ya se pagó sigue en el historial."
             },
             "resume": {
-                "q": "¿Cómo recupero una factura pausada?",
+                "q": "¿Cómo se recupera una factura pausada?",
                 "s1": "Abre <b>{bills}</b> y pulsa <b>{showPaused}</b>.",
                 "s2": "Pulsa <b>{resume}</b> junto a la factura. Los pagos nuevos vuelven a empezar."
             },
             "seePayments": {
-                "q": "¿Dónde veo lo que tengo que pagar?",
-                "s1": "Abre <b>{payments}</b>. Verás las facturas de un mes, agrupadas por categoría.",
-                "s2": "Con las flechas junto al nombre del mes cambias de mes. En el móvil, toca el nombre del mes para elegir uno.",
+                "q": "¿Dónde se ve lo que hay que pagar?",
+                "s1": "Abrir <b>{payments}</b>. Allí aparecen las facturas de un mes, agrupadas por categoría.",
+                "s2": "Con las flechas junto al nombre del mes se cambia de mes. En el móvil, tocar el nombre del mes abre la selección.",
                 "s3": "Pulsa <b>{today}</b> para volver a este mes."
             },
             "filters": {
-                "q": "¿Cómo encuentro un pago?",
-                "s1": "Sobre la lista verás <b>{search}</b>. Escribe un nombre para buscar.",
-                "s2": "Con los filtros ves solo lo no pagado o una categoría, y eliges el orden de la lista.",
+                "q": "¿Cómo se encuentra un pago?",
+                "s1": "Sobre la lista está <b>{search}</b>. Escribir un nombre para buscar.",
+                "s2": "Los filtros muestran solo lo no pagado o una categoría, y el orden de la lista se puede elegir.",
                 "s3": "Abre <b>{calendar}</b> y toca un día para ver solo los pagos de ese día."
             },
             "markPaid": {
-                "q": "¿Cómo marco una factura como pagada?",
+                "q": "¿Cómo se marca una factura como pagada?",
                 "s1": "Abre <b>{payments}</b>.",
                 "s2": "Pulsa <b>{markPaid}</b> junto a la factura.",
-                "s3": "Si pagaste otro importe u otro día, cámbialo y confirma."
+                "s3": "Si se pagó otro importe u otro día, cambiarlo y confirmar."
             },
             "editPayment": {
-                "q": "Pagué otro importe. ¿Puedo cambiarlo?",
+                "q": "Se pagó otro importe. ¿Se puede cambiar?",
                 "s1": "Abre <b>{payments}</b> y pulsa <b>{editPayment}</b> (el lápiz) junto a la factura.",
                 "s2": "Cambia el importe, la fecha o la nota y guarda. También funciona con facturas pagadas."
             },
             "revert": {
-                "q": "Marqué una factura como pagada por error",
+                "q": "Una factura se marcó como pagada por error",
                 "s1": "Abre <b>{payments}</b> y busca la factura.",
                 "s2": "Pulsa <b>{revert}</b>. La factura vuelve a estar sin pagar."
             },
             "deletePayment": {
-                "q": "¿Cómo quito un solo pago?",
+                "q": "¿Cómo se quita un solo pago?",
                 "s1": "Pulsa <b>{deletePayment}</b> junto a él y confirma.",
                 "s2": "Los siguientes pagos de esa factura se mantienen. Para detener una factura del todo, páusala."
             },
             "export": {
-                "q": "¿Cómo descargo mis pagos (Excel o PDF)?",
+                "q": "¿Cómo se descargan los pagos (Excel o PDF)?",
                 "s1": "Abre <b>{payments}</b> y elige el mes.",
                 "s2": "Junto al nombre del mes pulsa <b>XLSX</b> o <b>PDF</b>.",
-                "s3": "Elige este mes o todo el año. El archivo se descarga en tu dispositivo.",
-                "s4": "¿No ves los botones? Actívalos en <b>{settings}</b> → <b>{tabReports}</b>."
+                "s3": "Elegir este mes o todo el año. El archivo se descarga en el dispositivo.",
+                "s4": "¿No aparecen los botones? Se activan en <b>{settings}</b> → <b>{tabReports}</b>."
             },
             "share": {
-                "q": "¿Cómo envío un mes por correo a alguien?",
-                "s1": "En <b>{settings}</b> → <b>{tabReports}</b> activa compartir. Puedes guardar las direcciones que usas a menudo.",
+                "q": "¿Cómo se envía un mes por correo a alguien?",
+                "s1": "En <b>{settings}</b> → <b>{tabReports}</b> activar compartir. Las direcciones de uso frecuente se pueden guardar.",
                 "s2": "Luego abre <b>{payments}</b> y pulsa el botón de compartir (<b>{share}</b>) junto al nombre del mes.",
                 "s3": "Elige una dirección y envía."
             },
             "reminders": {
-                "q": "¿Cómo recibo recordatorios?",
+                "q": "¿Cómo se reciben recordatorios?",
                 "s1": "Abre <b>{settings}</b> → <b>{tabNotifications}</b>.",
-                "s2": "Activa los recordatorios por correo, navegador o Telegram y elige cuándo quieres recibirlos.",
-                "s3": "El correo y Telegram necesitan una configuración corta. La página te dice qué rellenar."
+                "s2": "Activar los recordatorios por correo, navegador o Telegram y elegir cuándo deben llegar.",
+                "s3": "El correo y Telegram necesitan una configuración corta. La página indica qué rellenar."
             },
             "backup": {
-                "q": "¿Cómo hago una copia de seguridad?",
+                "q": "¿Cómo se hace una copia de seguridad?",
                 "s1": "Abre <b>{settings}</b> → <b>{tabBackup}</b>.",
                 "s2": "Pulsa <b>{backup}</b>, elige qué incluir y descarga el archivo.",
                 "s3": "Guarda el archivo en un lugar seguro."
             },
             "restore": {
-                "q": "¿Cómo recupero mis datos desde una copia?",
+                "q": "¿Cómo se recuperan los datos desde una copia?",
                 "s1": "Abre <b>{settings}</b> → <b>{tabBackup}</b>.",
-                "s2": "Pulsa <b>{restore}</b> y elige tu archivo de copia.",
-                "s3": "Mira la comparación y confirma. Ojo: esto reemplaza tus datos actuales.",
-                "s4": "¿Te arrepientes? Justo después de restaurar puedes recuperar los datos anteriores en la misma página."
+                "s2": "Pulsar <b>{restore}</b> y elegir el archivo de copia.",
+                "s3": "Mirar la comparación y confirmar. Ojo: esto reemplaza los datos actuales.",
+                "s4": "¿Arrepentimiento? Justo después de restaurar se pueden recuperar los datos anteriores en la misma página."
             },
             "categories": {
-                "q": "¿Cómo añado o cambio categorías?",
+                "q": "¿Cómo se añaden o cambian categorías?",
                 "s1": "Abre <b>{settings}</b> → <b>{tabCategories}</b>.",
-                "s2": "Añade las tuyas o cambia el nombre y el color de las que ya tienes.",
-                "s3": "Una categoría que no necesitas se puede quitar. Si una factura aún la usa, solo se oculta."
+                "s2": "Añadir categorías propias o cambiar el nombre y el color de las existentes.",
+                "s3": "Una categoría innecesaria se puede quitar. Si una factura aún la usa, solo se oculta."
             },
             "language": {
-                "q": "¿Cómo cambio el idioma, la moneda o la zona horaria?",
+                "q": "¿Cómo se cambia el idioma, la moneda o la zona horaria?",
                 "s1": "Abre <b>{settings}</b> → <b>{tabPreferences}</b>.",
-                "s2": "Allí eliges la moneda por defecto, el formato de números, la zona horaria y los idiomas disponibles. El idioma también se cambia en el menú."
+                "s2": "Allí se eligen la moneda por defecto, el formato de números, la zona horaria y los idiomas disponibles. El idioma también se cambia en el menú."
             },
             "account": {
-                "q": "¿Cómo cambio mi correo o contraseña?",
+                "q": "¿Cómo se cambia el correo o la contraseña?",
                 "s1": "Abre <b>{settings}</b> → <b>{tabAccount}</b>.",
-                "s2": "Cambia allí tu correo o contraseña. ¿Olvidaste la contraseña? Usa el enlace de la página de acceso.",
-                "s3": "También puedes borrar tu cuenta allí. No se puede deshacer."
+                "s2": "Cambiar allí el correo o la contraseña. ¿Contraseña olvidada? Usar el enlace de la página de acceso.",
+                "s3": "La cuenta también se puede borrar allí. No se puede deshacer."
             },
             "install": {
-                "q": "¿Cómo pongo la app en mi móvil?",
+                "q": "¿Cómo se pone la app en el móvil?",
                 "s1": "Abre la app en el navegador del móvil.",
                 "s2": "En el menú del navegador elige “Añadir a pantalla de inicio” (en iPhone: Compartir → “Añadir a pantalla de inicio”)."
             }

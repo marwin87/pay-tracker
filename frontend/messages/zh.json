@@ -2,8 +2,8 @@
     "Auth": {
         "loginSubtitle": "登录以继续使用 PayTracker",
         "welcomeHeading": "欢迎回来 👋",
-        "registerSubtitle": "创建您的账户",
-        "registerTagline": "开始用 PayTracker 追踪您的账单",
+        "registerSubtitle": "创建账户",
+        "registerTagline": "开始用 PayTracker 追踪账单",
         "emailLabel": "邮箱",
         "emailPlaceholder": "请输入邮箱",
         "passwordLabel": "密码",
@@ -17,7 +17,7 @@
         "signingIn": "正在登录…",
         "loginFailed": "登录失败",
         "tooManyAttempts": "尝试次数过多，请等待几分钟后重试。",
-        "sessionExpired": "您的会话已过期，请重新登录。",
+        "sessionExpired": "会话已过期，请重新登录。",
         "noAccount": "还没有账户？",
         "register": "创建账户",
         "createAccount": "创建账户",
@@ -26,13 +26,13 @@
         "emailAlreadyRegistered": "该邮箱已被注册。",
         "alreadyHaveAccount": "已有账户？",
         "forgotPassword": "忘记密码？",
-        "forgotPasswordTitle": "重置您的密码",
-        "forgotPasswordSubtitle": "输入您的邮箱，我们将发送重置链接给您。",
+        "forgotPasswordTitle": "重置密码",
+        "forgotPasswordSubtitle": "输入邮箱后，将发送重置链接。",
         "sendResetLink": "发送重置链接",
         "sendingResetLink": "正在发送…",
-        "resetLinkSent": "如果该邮箱已注册，您将很快收到重置链接。",
+        "resetLinkSent": "如果该邮箱已注册，很快会发送重置链接。",
         "resetPasswordTitle": "设置新密码",
-        "resetPasswordSubtitle": "输入并确认您的新密码。",
+        "resetPasswordSubtitle": "输入并确认新密码。",
         "newPasswordLabel": "新密码",
         "confirmPasswordLabel": "确认新密码",
         "passwordsDoNotMatch": "两次输入的密码不一致",
@@ -104,19 +104,19 @@
         }
     },
     "BillsPage": {
-        "title": "我的账单",
-        "subtitle": "每个账单只需添加一次，例如房租或电费。我们会每月为您生成付款。",
+        "title": "账单",
+        "subtitle": "每个账单只需添加一次，例如房租或电费。付款将每月自动生成。",
         "newBill": "新建账单",
         "cancel": "取消",
         "billAdded": "已添加账单“{name}”",
         "billSaved": "已保存账单“{name}”",
         "loadError": "账单加载失败。",
         "noBillsYet": "暂无账单",
-        "addFirstBill": "添加您的第一个账单",
+        "addFirstBill": "添加第一个账单",
         "noFilterResults": "没有符合所选筛选条件的账单",
         "collapseAll": "全部折叠",
         "expandAll": "全部展开",
-        "emptyHelp": "账单就是您要支付的一切：每月、每年或仅一次。添加一次，它就会出现在“待付款”中。",
+        "emptyHelp": "账单就是需要支付的一切：每月、每年或仅一次。添加一次，它就会出现在“待付款”中。",
         "billPaused": "已暂停“{name}”",
         "billResumed": "已恢复“{name}”",
         "showPaused": "显示已暂停",
@@ -167,8 +167,8 @@
         "restoring": "正在恢复…"
     },
     "DeleteAccountDialog": {
-        "title": "删除您的账户？",
-        "description": "此操作将永久删除您的账户及与之关联的所有内容——账单、类别和付款记录。此操作无法撤销。",
+        "title": "删除账户？",
+        "description": "此操作将永久删除账户及与之关联的所有内容——账单、类别和付款记录。此操作无法撤销。",
         "cancel": "取消",
         "confirm": "删除账户",
         "passwordLabel": "请输入密码确认",
@@ -195,7 +195,7 @@
     },
     "PaymentsPage": {
         "title": "待付款",
-        "subtitle": "按月查看您的账单。付款后点击“标记为已付款”。",
+        "subtitle": "按月查看账单。付款后点击“标记为已付款”。",
         "paymentEdited": "已保存付款“{name}”",
         "paymentPaid": "已标记“{name}”为已付款",
         "paymentDeleted": "已删除付款“{name}”",
@@ -292,7 +292,7 @@
         "dialogTitle": "从备份恢复",
         "dialogDescription": "此操作将永久替换“{filename}”中包含的数据（文件中缺少的部分保持不变）。此操作无法撤销。",
         "cancel": "取消",
-        "confirm": "替换我的数据",
+        "confirm": "替换数据",
         "restoring": "正在恢复…",
         "error": "恢复失败，请检查文件后重试。",
         "fileTooLarge": "文件过大。备份文件必须小于 10 MB。",
@@ -303,8 +303,8 @@
         "categoriesCount": "{categories} 个类别",
         "countsUnavailable": "不可用",
         "exportDateUnknown": "导出日期未知（旧版备份格式）",
-        "staleDataWarning": "此备份的账单和付款记录数量少于您当前的数据。恢复将永久删除差异部分。",
-        "noBillsInFile": "此文件不含账单或付款——您当前的账单保持不变。",
+        "staleDataWarning": "此备份的账单和付款记录数量少于当前的数据。恢复将永久删除差异部分。",
+        "noBillsInFile": "此文件不含账单或付款——当前的账单保持不变。",
         "done": "已从备份恢复数据"
     },
     "BackupButton": {
@@ -315,7 +315,7 @@
         "confirm": "下载",
         "downloading": "正在下载…",
         "error": "备份失败，请重试。",
-        "telegramWarning": "备份已下载，但不包含你的 Telegram 机器人令牌：它已无法读取（服务器密钥已更改）。请在设置中重新输入令牌，然后重新下载备份。",
+        "telegramWarning": "备份已下载，但不包含 Telegram 机器人令牌：它已无法读取（服务器密钥已更改）。请在设置中重新输入令牌，然后重新下载备份。",
         "ok": "确定",
         "selectAll": "全选",
         "deselectAll": "取消全选",
@@ -335,7 +335,7 @@
         "message": "系统已于 {date}（上次恢复操作前）保存了一份数据快照。",
         "restoreButton": "恢复此快照",
         "dialogTitle": "恢复此快照",
-        "dialogDescription": "此操作将用上次恢复操作前的快照永久替换您当前的数据。此操作无法撤销。",
+        "dialogDescription": "此操作将用上次恢复操作前的快照永久替换当前的数据。此操作无法撤销。",
         "cancel": "取消",
         "confirm": "恢复",
         "restoring": "正在恢复…",
@@ -363,7 +363,7 @@
     },
     "SettingsPage": {
         "pageTitle": "设置",
-        "subtitle": "把 PayTracker 打造成专属于你的样子。",
+        "subtitle": "把 PayTracker 调整成合适的样子。",
         "tabs": {
             "account": "账户",
             "preferences": "偏好设置",
@@ -374,7 +374,7 @@
             "about": "关于"
         },
         "unsavedTitle": "有未保存的更改",
-        "unsavedDescription": "您有未保存的更改。是否在不保存的情况下离开？",
+        "unsavedDescription": "有未保存的更改。是否在不保存的情况下离开？",
         "unsavedLeave": "离开",
         "unsavedStay": "留在此页",
         "save": "保存",
@@ -391,7 +391,7 @@
         "saveFailed": "保存失败，请重试。",
         "profile": {
             "title": "用户资料",
-            "description": "更改您的登录邮箱。",
+            "description": "更改登录邮箱。",
             "currentEmailLabel": "当前邮箱：",
             "emailLabel": "新邮箱地址",
             "emailHint": "输入新地址，然后使用当前密码确认。",
@@ -420,7 +420,7 @@
         },
         "timeZone": {
             "title": "时区",
-            "description": "决定对你而言“今天”是哪一天，以及提醒在一天中的几点发送。",
+            "description": "决定“今天”是哪一天，以及提醒在一天中的几点发送。",
             "ariaLabel": "时区",
             "placeholder": "例如 Asia/Shanghai",
             "useBrowser": "使用浏览器的时区（{zone}）",
@@ -458,7 +458,7 @@
                 "notes": "备注"
             }
         },
-        "notificationsServerTimeHint": "通知按你的时区（<b>{zone}</b>）发送。当地现在是 <b>{time}</b>。",
+        "notificationsServerTimeHint": "通知按所选时区（<b>{zone}</b>）发送。当地现在是 <b>{time}</b>。",
         "emailNotifications": {
             "title": "邮件通知",
             "description": "选择何时接收即将到期和已逾期账单的邮件提醒。",
@@ -485,7 +485,7 @@
             "description": "当账单今日到期时收到提醒。",
             "enable": "开启通知",
             "toggle": "开启浏览器通知",
-            "osHint": "没有看到通知？请检查您的操作系统通知设置（macOS：系统设置 → 通知）。",
+            "osHint": "没有看到通知？请检查操作系统的通知设置（macOS：系统设置 → 通知）。",
             "blockedWarning": "浏览器通知已被阻止。请在浏览器或操作系统设置中启用。"
         },
         "telegramNotifications": {
@@ -505,9 +505,9 @@
             "remove": "移除 Telegram",
             "helpTitle": "如何获取机器人令牌和聊天 ID？",
             "helpStep1": "在 Telegram 中打开 @BotFather，发送 /newbot 并按提示操作，复制得到的令牌。",
-            "helpStep2": "打开你的新机器人，给它发送任意消息（例如 hi）。",
-            "helpStep3": "在浏览器中打开下面的地址（把 TOKEN 替换为你的令牌）：",
-            "helpStep4": "在结果中找到 \"chat\"，再找到 \"id\"，这个数字就是你的聊天 ID。把令牌和聊天 ID 粘贴到下方。",
+            "helpStep2": "打开新的机器人，给它发送任意消息（例如 hi）。",
+            "helpStep3": "在浏览器中打开下面的地址（把 TOKEN 替换为机器人令牌）：",
+            "helpStep4": "在结果中找到 \"chat\"，再找到 \"id\"，这个数字就是聊天 ID。把令牌和聊天 ID 粘贴到下方。",
             "masterToggle": "启用 Telegram 通知",
             "noneWarning": "请至少选择一个选项以接收 Telegram 提醒。",
             "needCredentials": "请先在上方保存机器人令牌和聊天 ID，才能启用发送。",
@@ -515,7 +515,7 @@
         },
         "backup": {
             "title": "数据备份",
-            "description": "将您所有的 Pay Tracker 数据下载为一个完整的备份文件。",
+            "description": "将所有 Pay Tracker 数据下载为一个完整的备份文件。",
             "button": "备份"
         },
         "restore": {
@@ -532,17 +532,17 @@
             "version": "应用版本",
             "license": "许可证",
             "licenseValue": "非商业用途免费，需注明出处",
-            "copyright": "您可以将 Pay Tracker 用于个人及其他非商业用途，包括修改和分享。请保留对原项目的署名。商业用途需获得作者的书面许可。"
+            "copyright": "Pay Tracker 可用于个人及其他非商业用途，包括修改和分享。请保留对原项目的署名。商业用途需获得作者的书面许可。"
         },
         "deleteAccount": {
             "title": "删除账户",
-            "description": "永久删除您的账户及与之关联的所有内容。此操作无法撤销。",
+            "description": "永久删除账户及与之关联的所有内容。此操作无法撤销。",
             "button": "删除账户",
             "error": "删除账户失败，请重试。"
         },
         "categories": {
             "title": "类别",
-            "description": "添加您自己的类别，或重命名和重新着色默认类别。",
+            "description": "添加自定义类别，或重命名和重新着色默认类别。",
             "loadError": "类别加载失败，请重试。",
             "nameRequired": "名称为必填项。",
             "namePlaceholder": "例如：爱好",
@@ -618,11 +618,11 @@
         "reminder": {
             "2_days_before": {
                 "subject": "提醒：{bill_name} 将在 2 天后到期 ({amount} {currency})",
-                "body": "提醒您，{bill_name} 将在 2 天后到期（{due_date}）。\n金额：{amount} {currency}"
+                "body": "提醒：{bill_name} 将在 2 天后到期（{due_date}）。\n金额：{amount} {currency}"
             },
             "upcoming": {
                 "subject": "提醒：{bill_name} 明天到期 ({amount} {currency})",
-                "body": "提醒您，{bill_name} 明天到期（{due_date}）。\n金额：{amount} {currency}"
+                "body": "提醒：{bill_name} 明天到期（{due_date}）。\n金额：{amount} {currency}"
             },
             "on_day": {
                 "subject": "今天到期：{bill_name} ({amount} {currency})",
@@ -636,7 +636,7 @@
         "dueDateLabel": "到期日",
         "summary": {
             "subject": "{month_label} 月度汇总",
-            "intro": "这是您 {month_label} 的付款汇总。",
+            "intro": "这是 {month_label} 的付款汇总。",
             "paid_header": "已支付",
             "unpaid_header": "未支付 / 已逾期",
             "bill": "账单",
@@ -649,11 +649,11 @@
             "nothing_unpaid": "所有账单均已支付——干得好！",
             "total_paid": "已付总额",
             "total_outstanding": "未付总额",
-            "footer": "请在 Pay Tracker 应用中管理您的账单。"
+            "footer": "请在 Pay Tracker 应用中管理账单。"
         },
         "reset": {
-            "subject": "重置您的 Pay Tracker 密码",
-            "body": "您请求重置 Pay Tracker 账户的密码。\n\n请点击下方链接设置新密码（{expires_label}内有效）：\n{reset_url}\n\n如果这不是您本人的操作，请忽略此邮件——您的密码不会改变。",
+            "subject": "重置 Pay Tracker 密码",
+            "body": "收到了重置此 Pay Tracker 账户密码的请求。\n\n点击下方链接可设置新密码（{expires_label}内有效）：\n{reset_url}\n\n如果这不是本人的操作，请忽略此邮件——密码不会改变。",
             "expires": "{minutes} 分钟",
             "noExpiry": "无期限"
         },
@@ -686,7 +686,7 @@
     },
     "PauseConfirmDialog": {
         "title": "暂停“{billName}”？",
-        "description": "此账单将不再生成新的付款和提醒，其未付的即将到期付款会从“付款”中消失。已付历史会保留。你可以随时恢复。",
+        "description": "此账单将不再生成新的付款和提醒，其未付的即将到期付款会从“付款”中消失。已付历史会保留。可以随时恢复。",
         "cancel": "取消",
         "pause": "暂停",
         "pausing": "正在暂停…"
@@ -728,7 +728,7 @@
                 "s3": "选择到期日，以及多久重复一次（每月、每年或只一次），然后保存。"
             },
             "repeat": {
-                "q": "我的账单不是每月的，怎么办？",
+                "q": "账单不是每月的，怎么办？",
                 "s1": "添加或修改账单时，选择重复的频率：每隔几个月、每年或只一次。",
                 "s2": "还可以设置结束月份。这样像贷款这样会结束的账单，会自动停止。"
             },
@@ -750,7 +750,7 @@
             },
             "seePayments": {
                 "q": "在哪里看要付什么？",
-                "s1": "打开<b>{payments}</b>。你会看到某个月的账单，按分类分组。",
+                "s1": "打开<b>{payments}</b>。会显示某个月的账单，按分类分组。",
                 "s2": "点月份名称旁边的箭头切换月份。手机上点月份名称来选择。",
                 "s3": "点<b>{today}</b>回到本月。"
             },
@@ -767,12 +767,12 @@
                 "s3": "如果付的金额或日期不同，改一下再确认。"
             },
             "editPayment": {
-                "q": "我付的金额不一样，可以改吗？",
+                "q": "付的金额不一样，可以改吗？",
                 "s1": "打开<b>{payments}</b>，点账单旁边的<b>{editPayment}</b>（铅笔图标）。",
                 "s2": "修改金额、日期或备注后保存。已付款的账单也可以改。"
             },
             "revert": {
-                "q": "我不小心把账单标成了已付款",
+                "q": "不小心把账单标成了已付款",
                 "s1": "打开<b>{payments}</b>，找到这笔账单。",
                 "s2": "点<b>{revert}</b>，账单会变回未付款。"
             },
@@ -782,10 +782,10 @@
                 "s2": "这个账单之后的付款会保留。想彻底停止这个账单，请先暂停它。"
             },
             "export": {
-                "q": "怎么下载我的付款记录（Excel 或 PDF）？",
+                "q": "怎么下载付款记录（Excel 或 PDF）？",
                 "s1": "打开<b>{payments}</b>，选择月份。",
                 "s2": "点月份名称旁边的<b>XLSX</b>或<b>PDF</b>。",
-                "s3": "选择本月或整年。文件会下载到你的设备。",
+                "s3": "选择本月或整年。文件会下载到设备上。",
                 "s4": "看不到按钮？到<b>{settings}</b> → <b>{tabReports}</b>里打开。"
             },
             "share": {
@@ -798,7 +798,7 @@
                 "q": "怎么收到提醒？",
                 "s1": "打开<b>{settings}</b> → <b>{tabNotifications}</b>。",
                 "s2": "开启邮件、浏览器或 Telegram 提醒，并选择提醒时间。",
-                "s3": "邮件和 Telegram 需要先做简单设置，页面会告诉你要填什么。"
+                "s3": "邮件和 Telegram 需要先做简单设置，页面会提示要填什么。"
             },
             "backup": {
                 "q": "怎么做备份？",
@@ -809,9 +809,9 @@
             "restore": {
                 "q": "怎么从备份恢复数据？",
                 "s1": "打开<b>{settings}</b> → <b>{tabBackup}</b>。",
-                "s2": "点<b>{restore}</b>，选择你的备份文件。",
-                "s3": "查看对比后确认。注意：这会替换你当前的数据。",
-                "s4": "改主意了？恢复之后，你可以在同一页面找回恢复前的数据。"
+                "s2": "点<b>{restore}</b>，选择备份文件。",
+                "s3": "查看对比后确认。注意：这会替换当前的数据。",
+                "s4": "改主意了？恢复之后，可以在同一页面找回恢复前的数据。"
             },
             "categories": {
                 "q": "怎么添加或修改分类？",
@@ -828,7 +828,7 @@
                 "q": "怎么修改邮箱或密码？",
                 "s1": "打开<b>{settings}</b> → <b>{tabAccount}</b>。",
                 "s2": "在那里修改邮箱或密码。忘记密码？用登录页上的链接。",
-                "s3": "也可以在那里删除账号。删除后无法恢复。"
+                "s3": "也可以在那里删除账户。删除后无法恢复。"
             },
             "install": {
                 "q": "怎么把应用放到手机上？",

@@ -2,12 +2,12 @@
     "Auth": {
         "loginSubtitle": "Log in om PayTracker te blijven gebruiken",
         "welcomeHeading": "Welkom terug 👋",
-        "registerSubtitle": "Maak je account aan",
-        "registerTagline": "Begin met het bijhouden van je rekeningen met PayTracker",
+        "registerSubtitle": "Een account aanmaken",
+        "registerTagline": "Begin met het bijhouden van rekeningen met PayTracker",
         "emailLabel": "E-mail",
-        "emailPlaceholder": "Vul je e-mailadres in",
+        "emailPlaceholder": "E-mailadres invullen",
         "passwordLabel": "Wachtwoord",
-        "passwordPlaceholder": "Vul je wachtwoord in",
+        "passwordPlaceholder": "Wachtwoord invullen",
         "passwordHint": "Minimaal 8 tekens",
         "passwordTooShort": "Het wachtwoord moet minstens 8 tekens bevatten",
         "passwordTooLong": "Het wachtwoord mag maximaal 72 bytes bevatten (ongeveer 72 tekens)",
@@ -17,22 +17,22 @@
         "signingIn": "Bezig met inloggen…",
         "loginFailed": "Inloggen mislukt",
         "tooManyAttempts": "Te veel pogingen. Wacht een paar minuten en probeer het opnieuw.",
-        "sessionExpired": "Je sessie is verlopen. Log opnieuw in.",
-        "noAccount": "Heb je nog geen account?",
+        "sessionExpired": "De sessie is verlopen. Log opnieuw in.",
+        "noAccount": "Nog geen account?",
         "register": "Account aanmaken",
         "createAccount": "Account aanmaken",
         "creatingAccount": "Account wordt aangemaakt…",
         "registrationFailed": "Registratie mislukt",
         "emailAlreadyRegistered": "Dit e-mailadres is al geregistreerd.",
-        "alreadyHaveAccount": "Heb je al een account?",
+        "alreadyHaveAccount": "Al een account?",
         "forgotPassword": "Wachtwoord vergeten?",
         "forgotPasswordTitle": "Wachtwoord opnieuw instellen",
-        "forgotPasswordSubtitle": "Vul je e-mailadres in en we sturen je een link om je wachtwoord opnieuw in te stellen.",
+        "forgotPasswordSubtitle": "Na het invullen van het e-mailadres wordt een link verstuurd om het wachtwoord opnieuw in te stellen.",
         "sendResetLink": "Resetlink versturen",
         "sendingResetLink": "Bezig met versturen…",
-        "resetLinkSent": "Als dit e-mailadres is geregistreerd, ontvang je binnenkort een resetlink.",
+        "resetLinkSent": "Als dit e-mailadres is geregistreerd, wordt binnenkort een resetlink verstuurd.",
         "resetPasswordTitle": "Nieuw wachtwoord instellen",
-        "resetPasswordSubtitle": "Vul je nieuwe wachtwoord in en bevestig het.",
+        "resetPasswordSubtitle": "Het nieuwe wachtwoord invullen en bevestigen.",
         "newPasswordLabel": "Nieuw wachtwoord",
         "confirmPasswordLabel": "Nieuw wachtwoord bevestigen",
         "passwordsDoNotMatch": "De wachtwoorden komen niet overeen",
@@ -61,7 +61,7 @@
     },
     "Dashboard": {
         "title": "Welkom bij Pay Tracker",
-        "subtitle": "Je maand in één oogopslag: wat is betaald, wat moet nog en wat is te laat.",
+        "subtitle": "De maand in één oogopslag: wat is betaald, wat moet nog en wat is te laat.",
         "summary": {
             "paid": "Betaald",
             "overdue": "Te laat",
@@ -77,7 +77,7 @@
             "loading": "Overzicht laden",
             "currency": "Overzicht tonen in:",
             "emptyMonth": "Geen betalingen deze maand.",
-            "emptyHelp": "Betalingen verschijnen hier vanzelf zodra je een rekening toevoegt.",
+            "emptyHelp": "Betalingen verschijnen hier vanzelf zodra een rekening is toegevoegd.",
             "addBill": "Rekening toevoegen"
         },
         "nav": {
@@ -104,26 +104,26 @@
         }
     },
     "BillsPage": {
-        "title": "Mijn rekeningen",
-        "subtitle": "Voeg elke rekening één keer toe, bijvoorbeeld huur of stroom. De betaling maken wij elke maand voor je aan.",
+        "title": "Rekeningen",
+        "subtitle": "Elke rekening hoeft maar één keer te worden toegevoegd, bijvoorbeeld huur of stroom. De betaling wordt elke maand automatisch aangemaakt.",
         "newBill": "Nieuwe rekening",
         "cancel": "Annuleren",
         "billAdded": "Rekening “{name}” toegevoegd",
         "billSaved": "Rekening “{name}” opgeslagen",
         "loadError": "Rekeningen laden mislukt.",
         "noBillsYet": "Nog geen rekeningen",
-        "addFirstBill": "Voeg je eerste rekening toe",
+        "addFirstBill": "De eerste rekening toevoegen",
         "noFilterResults": "Geen rekeningen komen overeen met het gekozen filter",
         "collapseAll": "Alles inklappen",
         "expandAll": "Alles uitklappen",
-        "emptyHelp": "Een rekening is alles wat je betaalt: elke maand, elk jaar of eenmalig. Voeg hem één keer toe en hij verschijnt bij “Te betalen”.",
+        "emptyHelp": "Een rekening is elke betaling: elke maand, elk jaar of eenmalig. Eén keer toevoegen en hij verschijnt bij “Te betalen”.",
         "billPaused": "“{name}” gepauzeerd",
         "billResumed": "“{name}” hervat",
         "showPaused": "Toon gepauzeerd",
         "paused": "Gepauzeerd",
         "resumeError": "Rekening hervatten mislukt.",
         "hidePaused": "Verberg gepauzeerd",
-        "allPaused": "Al je rekeningen zijn gepauzeerd",
+        "allPaused": "Alle rekeningen zijn gepauzeerd",
         "allPausedHelp": "Gepauzeerde rekeningen maken geen betalingen of herinneringen aan. Toon ze om er een te hervatten, of voeg een nieuwe rekening toe."
     },
     "BillTemplateForm": {
@@ -145,7 +145,7 @@
         "notesLabel": "Notities",
         "notesPlaceholder": "Optionele notities",
         "endPeriodLabel": "Maand van de laatste betaling (optioneel)",
-        "endPeriodAdjusted": "Je cyclus slaat die maand over — de laatste betaling is in {month}.",
+        "endPeriodAdjusted": "De cyclus slaat die maand over — de laatste betaling is in {month}.",
         "cancel": "Annuleren",
         "save": "Opslaan",
         "saving": "Bezig met opslaan…",
@@ -161,18 +161,18 @@
     },
     "RestoreDeletedDialog": {
         "title": "Verwijderde betalingen herstellen?",
-        "description": "Sommige toekomstige betalingen voor “{name}” zijn eerder verwijderd. Wil je ze herstellen met de bijgewerkte waarden van het sjabloon?",
+        "description": "Sommige toekomstige betalingen voor “{name}” zijn eerder verwijderd. Herstellen met de bijgewerkte waarden van het sjabloon?",
         "restore": "Herstellen",
         "skip": "Overslaan",
         "restoring": "Bezig met herstellen…"
     },
     "DeleteAccountDialog": {
-        "title": "Je account verwijderen?",
-        "description": "Hiermee verwijder je je account en alles wat eraan gekoppeld is definitief — rekeningen, categorieën en betalingsgeschiedenis. Dit kan niet ongedaan worden gemaakt.",
+        "title": "Het account verwijderen?",
+        "description": "Hiermee worden het account en alles wat eraan gekoppeld is definitief verwijderd — rekeningen, categorieën en betalingsgeschiedenis. Dit kan niet ongedaan worden gemaakt.",
         "cancel": "Annuleren",
         "confirm": "Account verwijderen",
-        "passwordLabel": "Bevestig met je wachtwoord",
-        "passwordPlaceholder": "Vul je wachtwoord in",
+        "passwordLabel": "Bevestigen met het wachtwoord",
+        "passwordPlaceholder": "Wachtwoord invullen",
         "wrongPassword": "Het huidige wachtwoord is onjuist.",
         "deleting": "Bezig met verwijderen…"
     },
@@ -195,7 +195,7 @@
     },
     "PaymentsPage": {
         "title": "Te betalen",
-        "subtitle": "Je rekeningen per maand. Tik op “Markeer als betaald” als je er een betaalt.",
+        "subtitle": "De rekeningen per maand. Tik op “Markeer als betaald” zodra een rekening is betaald.",
         "paymentEdited": "Betaling “{name}” opgeslagen",
         "paymentPaid": "“{name}” als betaald gemarkeerd",
         "paymentDeleted": "Betaling “{name}” verwijderd",
@@ -229,7 +229,7 @@
         "nextMonth": "Volgende maand",
         "pickMonth": "Kies een maand",
         "nextYear": "Volgend jaar",
-        "emptyHelp": "Betalingen verschijnen hier vanzelf zodra je een rekening toevoegt bij “Rekeningen”."
+        "emptyHelp": "Betalingen verschijnen hier vanzelf zodra een rekening is toegevoegd bij “Rekeningen”."
     },
     "PaymentRow": {
         "status": {
@@ -292,7 +292,7 @@
         "dialogTitle": "Herstellen vanuit back-up",
         "dialogDescription": "Hiermee worden de gegevens in “{filename}” definitief vervangen (onderdelen die niet in het bestand staan blijven ongewijzigd). Deze actie kan niet ongedaan worden gemaakt.",
         "cancel": "Annuleren",
-        "confirm": "Mijn gegevens vervangen",
+        "confirm": "Gegevens vervangen",
         "restoring": "Bezig met herstellen…",
         "error": "Herstellen mislukt. Controleer het bestand en probeer het opnieuw.",
         "fileTooLarge": "Bestand te groot. Back-upbestanden mogen maximaal 10 MB zijn.",
@@ -303,19 +303,19 @@
         "categoriesCount": "{categories} categorieën",
         "countsUnavailable": "niet beschikbaar",
         "exportDateUnknown": "exportdatum onbekend (ouder back-upformaat)",
-        "staleDataWarning": "Deze back-up bevat minder rekeningen en betalingen dan je huidige gegevens. Bij herstellen wordt het verschil definitief verwijderd.",
-        "noBillsInFile": "Geen rekeningen of betalingen in dit bestand — je huidige rekeningen blijven ongewijzigd.",
+        "staleDataWarning": "Deze back-up bevat minder rekeningen en betalingen dan de huidige gegevens. Bij herstellen wordt het verschil definitief verwijderd.",
+        "noBillsInFile": "Geen rekeningen of betalingen in dit bestand — de huidige rekeningen blijven ongewijzigd.",
         "done": "Gegevens hersteld uit back-up"
     },
     "BackupButton": {
         "ariaLabel": "Back-up downloaden",
         "dialogTitle": "Back-up downloaden",
-        "dialogDescription": "Kies wat je in de back-up wilt opnemen. Bewaar het bestand veilig.",
+        "dialogDescription": "Kiezen wat in de back-up moet worden opgenomen. Het bestand veilig bewaren.",
         "cancel": "Annuleren",
         "confirm": "Downloaden",
         "downloading": "Bezig met downloaden…",
         "error": "Back-up mislukt. Probeer het opnieuw.",
-        "telegramWarning": "Je back-up is gedownload, maar bevat je Telegram-bottoken niet: dat kan niet meer worden gelezen (het geheim van de server is gewijzigd). Vul het token opnieuw in bij Instellingen en download daarna een nieuwe back-up.",
+        "telegramWarning": "De back-up is gedownload, maar bevat het Telegram-bottoken niet: dat kan niet meer worden gelezen (het geheim van de server is gewijzigd). Het token opnieuw invullen bij Instellingen en daarna een nieuwe back-up downloaden.",
         "ok": "OK",
         "selectAll": "Alles selecteren",
         "deselectAll": "Alles deselecteren",
@@ -332,10 +332,10 @@
         }
     },
     "SnapshotRecoverySection": {
-        "message": "Op {date} is een momentopname van je gegevens opgeslagen, vlak voor je laatste herstelactie.",
+        "message": "Op {date} is een momentopname van de gegevens opgeslagen, vlak voor de laatste herstelactie.",
         "restoreButton": "Deze momentopname herstellen",
         "dialogTitle": "Deze momentopname herstellen",
-        "dialogDescription": "Hiermee worden je huidige gegevens definitief vervangen door de momentopname van vóór je laatste herstelactie. Deze actie kan niet ongedaan worden gemaakt.",
+        "dialogDescription": "Hiermee worden de huidige gegevens definitief vervangen door de momentopname van vóór de laatste herstelactie. Deze actie kan niet ongedaan worden gemaakt.",
         "cancel": "Annuleren",
         "confirm": "Herstellen",
         "restoring": "Bezig met herstellen…",
@@ -363,7 +363,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Instellingen",
-        "subtitle": "Maak PayTracker helemaal van jou.",
+        "subtitle": "PayTracker naar wens instellen.",
         "tabs": {
             "account": "Account",
             "preferences": "Voorkeuren",
@@ -374,7 +374,7 @@
             "about": "Info"
         },
         "unsavedTitle": "Niet-opgeslagen wijzigingen",
-        "unsavedDescription": "Je hebt niet-opgeslagen wijzigingen. Verlaten zonder op te slaan?",
+        "unsavedDescription": "Er zijn niet-opgeslagen wijzigingen. Verlaten zonder op te slaan?",
         "unsavedLeave": "Verlaten",
         "unsavedStay": "Blijven",
         "save": "Opslaan",
@@ -391,20 +391,20 @@
         "saveFailed": "Opslaan mislukt. Probeer het opnieuw.",
         "profile": {
             "title": "Gebruikersprofiel",
-            "description": "Wijzig het e-mailadres waarmee je inlogt.",
+            "description": "Het e-mailadres wijzigen waarmee wordt ingelogd.",
             "currentEmailLabel": "Huidig e-mailadres:",
             "emailLabel": "Nieuw e-mailadres",
-            "emailHint": "Vul een nieuw adres in en bevestig met je huidige wachtwoord.",
+            "emailHint": "Een nieuw adres invullen en bevestigen met het huidige wachtwoord.",
             "emailPlaceholder": "nieuw@email.com",
-            "currentPasswordPlaceholder": "Vul je huidige wachtwoord in",
+            "currentPasswordPlaceholder": "Huidig wachtwoord invullen",
             "newPasswordLabel": "Wachtwoord wijzigen",
-            "passwordHint": "Vul je huidige wachtwoord in en kies daarna een nieuw wachtwoord.",
+            "passwordHint": "Het huidige wachtwoord invullen en daarna een nieuw wachtwoord kiezen.",
             "newPasswordPlaceholder": "Nieuw wachtwoord (min. 8 tekens)",
             "passwordTooShort": "Het wachtwoord moet minstens 8 tekens bevatten.",
             "passwordTooLong": "Het wachtwoord mag maximaal 72 bytes bevatten (ongeveer 72 tekens).",
             "wrongPassword": "Het huidige wachtwoord is onjuist.",
             "emailTaken": "Dit e-mailadres is al geregistreerd.",
-            "emailAndPasswordRequired": "Vul zowel een nieuw e-mailadres als je huidige wachtwoord in."
+            "emailAndPasswordRequired": "Zowel een nieuw e-mailadres als het huidige wachtwoord invullen."
         },
         "password": {
             "title": "Wachtwoord",
@@ -412,7 +412,7 @@
         },
         "currency": {
             "title": "Standaardvaluta",
-            "description": "Wordt gebruikt om de valuta vooraf te selecteren wanneer je een nieuwe rekening aanmaakt.",
+            "description": "Wordt gebruikt om de valuta vooraf te selecteren bij het aanmaken van een nieuwe rekening.",
             "ariaLabel": "Valuta",
             "customOption": "Aangepast…",
             "customCurrencyAriaLabel": "Aangepaste valutacode",
@@ -420,11 +420,11 @@
         },
         "timeZone": {
             "title": "Tijdzone",
-            "description": "Bepaalt wat “vandaag” voor jou betekent en op welk tijdstip je herinneringen worden verzonden.",
+            "description": "Bepaalt wat “vandaag” betekent en op welk tijdstip herinneringen worden verzonden.",
             "ariaLabel": "Tijdzone",
             "placeholder": "bijv. Europe/Amsterdam",
-            "useBrowser": "Tijdzone van mijn browser gebruiken ({zone})",
-            "hint": "De verzendtijden van herinneringen volgen deze tijdzone, dus als je die wijzigt, verschuift ook het moment van ontvangst.",
+            "useBrowser": "Tijdzone van de browser gebruiken ({zone})",
+            "hint": "De verzendtijden van herinneringen volgen deze tijdzone, dus bij een wijziging verschuift ook het moment van ontvangst.",
             "unknown": "Kies een tijdzone uit de lijst.",
             "noMatches": "Geen overeenkomende tijdzone"
         },
@@ -458,10 +458,10 @@
                 "notes": "Notities"
             }
         },
-        "notificationsServerTimeHint": "Meldingen worden verzonden in jouw tijdzone (<b>{zone}</b>). Daar is het nu <b>{time}</b>.",
+        "notificationsServerTimeHint": "Meldingen worden verzonden in de gekozen tijdzone (<b>{zone}</b>). Daar is het nu <b>{time}</b>.",
         "emailNotifications": {
             "title": "E-mailmeldingen",
-            "description": "Kies wanneer je e-mailherinneringen wilt ontvangen voor aankomende en te late rekeningen.",
+            "description": "Kiezen wanneer e-mailherinneringen binnenkomen voor aankomende en te late rekeningen.",
             "twoDaysBefore": "2 dagen voor de vervaldatum",
             "oneDayBefore": "1 dag voor de vervaldatum",
             "onDay": "Op de betaaldatum",
@@ -485,8 +485,8 @@
             "description": "Ontvang een melding wanneer een rekening vandaag vervalt.",
             "enable": "Meldingen inschakelen",
             "toggle": "Browsermeldingen inschakelen",
-            "osHint": "Zie je geen meldingen? Controleer de meldingsinstellingen van je besturingssysteem (macOS: Systeeminstellingen → Meldingen).",
-            "blockedWarning": "Browsermeldingen zijn geblokkeerd. Schakel ze in via de instellingen van je browser of besturingssysteem."
+            "osHint": "Geen meldingen zichtbaar? De meldingsinstellingen van het besturingssysteem controleren (macOS: Systeeminstellingen → Meldingen).",
+            "blockedWarning": "Browsermeldingen zijn geblokkeerd. Inschakelen via de instellingen van de browser of het besturingssysteem."
         },
         "telegramNotifications": {
             "title": "Telegram-meldingen",
@@ -497,17 +497,17 @@
             "testSending": "Bezig met versturen…",
             "testSent": "Testbericht verzonden",
             "invalidId": "De chat-ID moet een getal zijn (negatief voor groepen).",
-            "testFailed": "Test mislukt. Controleer de chat-ID en of je de bot al een bericht hebt gestuurd.",
+            "testFailed": "Test mislukt. De chat-ID controleren en nagaan of de bot al een bericht heeft gekregen.",
             "botTokenLabel": "Bottoken",
             "botTokenPlaceholder": "Bottoken van @BotFather",
             "botTokenSaved": "Token opgeslagen. Vul een nieuw token in om het te vervangen.",
             "invalidToken": "Ongeldig formaat van het bottoken.",
             "remove": "Telegram verwijderen",
-            "helpTitle": "Hoe kom ik aan het bottoken en de chat-ID?",
-            "helpStep1": "Open in Telegram @BotFather, stuur /newbot en volg de stappen. Kopieer het token dat je krijgt.",
-            "helpStep2": "Open je nieuwe bot en stuur hem een willekeurig bericht (bijv. hoi).",
-            "helpStep3": "Open dit adres in je browser (vervang TOKEN door je token):",
-            "helpStep4": "Zoek in het resultaat naar \"chat\" en daarna naar \"id\". Dat getal is je chat-ID. Plak hieronder het token en de chat-ID.",
+            "helpTitle": "Waar komen het bottoken en de chat-ID vandaan?",
+            "helpStep1": "Open in Telegram @BotFather, stuur /newbot en volg de stappen. Kopieer het token dat terugkomt.",
+            "helpStep2": "Open de nieuwe bot en stuur hem een willekeurig bericht (bijv. hoi).",
+            "helpStep3": "Open dit adres in de browser (vervang TOKEN door het token van de bot):",
+            "helpStep4": "Zoek in het resultaat naar \"chat\" en daarna naar \"id\". Dat getal is de chat-ID. Plak hieronder het token en de chat-ID.",
             "masterToggle": "Telegram-meldingen inschakelen",
             "noneWarning": "Selecteer minstens één optie om Telegram-herinneringen te ontvangen.",
             "needCredentials": "Sla hierboven het bottoken en de chat-ID op om verzenden in te schakelen.",
@@ -515,7 +515,7 @@
         },
         "backup": {
             "title": "Gegevens back-uppen",
-            "description": "Download een volledige kopie van al je Pay Tracker-gegevens als back-upbestand.",
+            "description": "Een volledige kopie van alle Pay Tracker-gegevens downloaden als back-upbestand.",
             "button": "Back-up"
         },
         "restore": {
@@ -526,23 +526,23 @@
         "about": {
             "title": "App-informatie",
             "description": "Versie en handige links.",
-            "text": "Pay Tracker is een huishoudapp om je rekeningen bij te houden. Hij is gemaakt voor een rustig huishoudbudget, zodat er geen rekening tussendoor glipt.",
+            "text": "Pay Tracker is een huishoudapp om rekeningen bij te houden. Hij is gemaakt voor een rustig huishoudbudget, zodat er geen rekening tussendoor glipt.",
             "licensesTitle": "Licenties",
             "licensesText": "Deze app is gebouwd met de onderstaande open-sourcecomponenten en lettertypen. Elk daarvan wordt gebruikt onder zijn eigen licentie.",
             "version": "App-versie",
             "license": "Licentie",
             "licenseValue": "Gratis voor niet-commercieel gebruik, met naamsvermelding",
-            "copyright": "Je mag Pay Tracker gebruiken, aanpassen en delen voor persoonlijke en andere niet-commerciële doeleinden. Behoud de vermelding van het oorspronkelijke project. Commercieel gebruik vereist schriftelijke toestemming van de auteur."
+            "copyright": "Pay Tracker mag worden gebruikt, aangepast en gedeeld voor persoonlijke en andere niet-commerciële doeleinden. De vermelding van het oorspronkelijke project behouden. Commercieel gebruik vereist schriftelijke toestemming van de auteur."
         },
         "deleteAccount": {
             "title": "Account verwijderen",
-            "description": "Verwijder je account en alles wat eraan gekoppeld is definitief. Dit kan niet ongedaan worden gemaakt.",
+            "description": "Het account en alles wat eraan gekoppeld is definitief verwijderen. Dit kan niet ongedaan worden gemaakt.",
             "button": "Account verwijderen",
             "error": "Account verwijderen mislukt. Probeer het opnieuw."
         },
         "categories": {
             "title": "Categorieën",
-            "description": "Voeg je eigen categorieën toe of hernoem en kleur de standaardcategorieën opnieuw.",
+            "description": "Eigen categorieën toevoegen of de standaardcategorieën hernoemen en opnieuw kleuren.",
             "loadError": "Categorieën konden niet worden geladen. Probeer het opnieuw.",
             "nameRequired": "Naam is verplicht.",
             "namePlaceholder": "bijv. Hobby's",
@@ -557,12 +557,12 @@
         },
         "pdfExport": {
             "title": "PDF-export",
-            "description": "Voegt een PDF-exportknop toe op de pagina Betalingen (huidige maand of heel jaar). Kies welke kolommen je wilt opnemen.",
+            "description": "Voegt een PDF-exportknop toe op de pagina Betalingen (huidige maand of heel jaar). Kiezen welke kolommen worden opgenomen.",
             "toggleLabel": "PDF-export inschakelen"
         },
         "shareByEmail": {
             "title": "Maand delen per e-mail",
-            "description": "Voegt een deelknop toe op de pagina Betalingen waarmee je het maandoverzicht naar elk e-mailadres kunt sturen. Hiervoor moet e-mail zijn geconfigureerd.",
+            "description": "Voegt een deelknop toe op de pagina Betalingen waarmee het maandoverzicht naar elk e-mailadres kan worden gestuurd. Hiervoor moet e-mail zijn geconfigureerd.",
             "toggleLabel": "Delen per e-mail inschakelen",
             "recipientsLabel": "Opgeslagen ontvangers",
             "addPlaceholder": "naam@voorbeeld.nl",
@@ -636,7 +636,7 @@
         "dueDateLabel": "Vervaldatum",
         "summary": {
             "subject": "Maandoverzicht voor {month_label}",
-            "intro": "Hier is je betalingsoverzicht voor {month_label}.",
+            "intro": "Hier is het betalingsoverzicht voor {month_label}.",
             "paid_header": "Betaald",
             "unpaid_header": "Onbetaald / Te laat",
             "bill": "Rekening",
@@ -649,11 +649,11 @@
             "nothing_unpaid": "Alle rekeningen zijn betaald — goed gedaan!",
             "total_paid": "Totaal betaald",
             "total_outstanding": "Totaal openstaand",
-            "footer": "Beheer je rekeningen in de Pay Tracker-app."
+            "footer": "Rekeningen worden beheerd in de Pay Tracker-app."
         },
         "reset": {
-            "subject": "Stel je Pay Tracker-wachtwoord opnieuw in",
-            "body": "Je hebt een wachtwoordreset aangevraagd voor je Pay Tracker-account.\n\nKlik op de onderstaande link om een nieuw wachtwoord in te stellen (geldig gedurende {expires_label}):\n{reset_url}\n\nAls je dit niet hebt aangevraagd, kun je deze e-mail negeren — je wachtwoord verandert dan niet.",
+            "subject": "Pay Tracker-wachtwoord opnieuw instellen",
+            "body": "Voor dit Pay Tracker-account is een wachtwoordreset aangevraagd.\n\nVia de onderstaande link kan een nieuw wachtwoord worden ingesteld (geldig gedurende {expires_label}):\n{reset_url}\n\nAls dit niet is aangevraagd, kan deze e-mail worden genegeerd — het wachtwoord verandert dan niet.",
             "expires": "{minutes} minuten",
             "noExpiry": "geen vervaltijd"
         },
@@ -686,7 +686,7 @@
     },
     "PauseConfirmDialog": {
         "title": "“{billName}” pauzeren?",
-        "description": "Voor deze rekening komen er geen nieuwe betalingen en herinneringen meer en de openstaande komende betalingen verdwijnen uit Betalingen. Betaalde geschiedenis blijft behouden. Je kunt hem op elk moment hervatten.",
+        "description": "Voor deze rekening komen er geen nieuwe betalingen en herinneringen meer en de openstaande komende betalingen verdwijnen uit Betalingen. Betaalde geschiedenis blijft behouden. Hervatten kan op elk moment.",
         "cancel": "Annuleren",
         "pause": "Pauzeren",
         "pausing": "Bezig met pauzeren…"
@@ -711,128 +711,128 @@
             "title": "Begin in 3 stappen",
             "progress": "{done} van {total} klaar",
             "hide": "Verbergen",
-            "billT": "Voeg je eerste rekening toe",
+            "billT": "De eerste rekening toevoegen",
             "billD": "Voeg elke rekening maar één keer toe, zoals huur of stroom. De betaling wordt elke maand automatisch aangemaakt.",
             "billCta": "Rekening toevoegen",
             "paidT": "Markeer een betaling als betaald",
-            "paidD": "Als je een rekening betaalt, tik je ernaast op <b>{markPaid}</b>.",
+            "paidD": "Na het betalen van een rekening ernaast op <b>{markPaid}</b> tikken.",
             "remT": "Zet herinneringen aan",
-            "remD": "Je krijgt een bericht vóór de vervaldatum en betaalt nooit te laat.",
+            "remD": "Er komt een bericht vóór de vervaldatum, zodat nooit te laat wordt betaald.",
             "remCta": "Instellen"
         },
         "items": {
             "addBill": {
-                "q": "Hoe voeg ik een rekening toe?",
+                "q": "Hoe wordt een rekening toegevoegd?",
                 "s1": "Open <b>{bills}</b> en tik op <b>{newBill}</b>.",
                 "s2": "Typ een naam, kies een categorie en vul het bedrag in.",
                 "s3": "Kies de vervaldag en hoe vaak hij terugkomt (elke maand, elk jaar of eenmalig). Sla het daarna op."
             },
             "repeat": {
-                "q": "Mijn rekening is niet maandelijks. Wat nu?",
+                "q": "De rekening is niet maandelijks. Wat nu?",
                 "s1": "Kies bij het toevoegen of wijzigen hoe vaak de rekening terugkomt: om de paar maanden, elk jaar of maar één keer.",
-                "s2": "Je kunt ook een eindmaand instellen. Dan stopt een rekening die eindigt, zoals een lening, vanzelf."
+                "s2": "Er kan ook een eindmaand worden ingesteld. Dan stopt een rekening die eindigt, zoals een lening, vanzelf."
             },
             "editBill": {
-                "q": "Hoe wijzig ik een rekening (naam, bedrag, dag)?",
+                "q": "Hoe wordt een rekening gewijzigd (naam, bedrag, dag)?",
                 "s1": "Open <b>{bills}</b> en tik naast de rekening op <b>{edit}</b>.",
                 "s2": "Wijzig wat nodig is en sla op."
             },
             "pause": {
-                "q": "Hoe pauzeer ik een rekening?",
+                "q": "Hoe wordt een rekening gepauzeerd?",
                 "s1": "Open <b>{bills}</b>.",
                 "s2": "Tik naast de rekening op <b>{pause}</b> en bevestig.",
-                "s3": "Er komen geen nieuwe betalingen of herinneringen. Wat je al betaald hebt, blijft in je geschiedenis."
+                "s3": "Er komen geen nieuwe betalingen of herinneringen. Wat al betaald is, blijft in de geschiedenis."
             },
             "resume": {
-                "q": "Hoe haal ik een gepauzeerde rekening terug?",
+                "q": "Hoe wordt een gepauzeerde rekening teruggehaald?",
                 "s1": "Open <b>{bills}</b> en tik op <b>{showPaused}</b>.",
                 "s2": "Tik naast de rekening op <b>{resume}</b>. Nieuwe betalingen starten weer."
             },
             "seePayments": {
-                "q": "Waar zie ik wat ik moet betalen?",
-                "s1": "Open <b>{payments}</b>. Je ziet de rekeningen van één maand, gegroepeerd per categorie.",
-                "s2": "Met de pijlen naast de maandnaam ga je naar een andere maand. Tik op een telefoon op de maandnaam om er een te kiezen.",
+                "q": "Waar is te zien wat betaald moet worden?",
+                "s1": "Open <b>{payments}</b>. Daar staan de rekeningen van één maand, gegroepeerd per categorie.",
+                "s2": "Met de pijlen naast de maandnaam gaat men naar een andere maand. Tik op een telefoon op de maandnaam om er een te kiezen.",
                 "s3": "Tik op <b>{today}</b> om terug te gaan naar deze maand."
             },
             "filters": {
-                "q": "Hoe vind ik één betaling?",
-                "s1": "Boven de lijst zie je <b>{search}</b>. Typ een naam om te zoeken.",
-                "s2": "Met de filters toon je alleen onbetaalde rekeningen of één categorie, en kies je de volgorde.",
+                "q": "Hoe wordt één betaling gevonden?",
+                "s1": "Boven de lijst staat <b>{search}</b>. Typ een naam om te zoeken.",
+                "s2": "Met de filters worden alleen onbetaalde rekeningen of één categorie getoond, en de volgorde is te kiezen.",
                 "s3": "Open <b>{calendar}</b> en tik op een dag om alleen de betalingen van die dag te zien."
             },
             "markPaid": {
-                "q": "Hoe markeer ik een rekening als betaald?",
+                "q": "Hoe wordt een rekening als betaald gemarkeerd?",
                 "s1": "Open <b>{payments}</b>.",
                 "s2": "Tik naast de rekening op <b>{markPaid}</b>.",
-                "s3": "Heb je een ander bedrag of op een andere dag betaald? Pas het aan en bevestig."
+                "s3": "Is een ander bedrag of op een andere dag betaald? Pas het aan en bevestig."
             },
             "editPayment": {
-                "q": "Ik heb een ander bedrag betaald. Kan ik dat aanpassen?",
+                "q": "Er is een ander bedrag betaald. Kan dat worden aangepast?",
                 "s1": "Open <b>{payments}</b> en tik naast de rekening op <b>{editPayment}</b> (het potlood).",
                 "s2": "Wijzig het bedrag, de datum of de notitie en sla op. Het werkt ook bij betaalde rekeningen."
             },
             "revert": {
-                "q": "Ik heb per ongeluk een rekening als betaald gemarkeerd",
+                "q": "Een rekening is per ongeluk als betaald gemarkeerd",
                 "s1": "Open <b>{payments}</b> en zoek de rekening.",
                 "s2": "Tik op <b>{revert}</b>. De rekening staat weer als onbetaald."
             },
             "deletePayment": {
-                "q": "Hoe verwijder ik één betaling?",
+                "q": "Hoe wordt één betaling verwijderd?",
                 "s1": "Tik ernaast op <b>{deletePayment}</b> en bevestig.",
-                "s2": "De volgende betalingen van deze rekening blijven. Wil je een rekening helemaal stoppen, pauzeer hem dan."
+                "s2": "De volgende betalingen van deze rekening blijven. Een rekening helemaal stoppen? Pauzeer hem dan."
             },
             "export": {
-                "q": "Hoe download ik mijn betalingen (Excel of PDF)?",
+                "q": "Hoe worden betalingen gedownload (Excel of PDF)?",
                 "s1": "Open <b>{payments}</b> en kies de maand.",
                 "s2": "Tik naast de maandnaam op <b>XLSX</b> of <b>PDF</b>.",
-                "s3": "Kies deze maand of het hele jaar. Het bestand wordt op je apparaat gedownload.",
-                "s4": "Zie je de knoppen niet? Zet ze aan bij <b>{settings}</b> → <b>{tabReports}</b>."
+                "s3": "Kies deze maand of het hele jaar. Het bestand wordt op het apparaat gedownload.",
+                "s4": "Zijn de knoppen niet zichtbaar? Ze gaan aan bij <b>{settings}</b> → <b>{tabReports}</b>."
             },
             "share": {
-                "q": "Hoe stuur ik een maand per e-mail naar iemand?",
-                "s1": "Zet bij <b>{settings}</b> → <b>{tabReports}</b> delen aan. Je kunt adressen opslaan die je vaak gebruikt.",
+                "q": "Hoe wordt een maand per e-mail naar iemand gestuurd?",
+                "s1": "Zet bij <b>{settings}</b> → <b>{tabReports}</b> delen aan. Vaak gebruikte adressen kunnen worden opgeslagen.",
                 "s2": "Open daarna <b>{payments}</b> en tik naast de maandnaam op de deelknop (<b>{share}</b>).",
                 "s3": "Kies een adres en verstuur."
             },
             "reminders": {
-                "q": "Hoe krijg ik herinneringen?",
+                "q": "Hoe worden herinneringen ingeschakeld?",
                 "s1": "Open <b>{settings}</b> → <b>{tabNotifications}</b>.",
-                "s2": "Zet herinneringen per e-mail, browser of Telegram aan en kies wanneer je ze wilt.",
-                "s3": "E-mail en Telegram hebben eerst een korte instelling nodig. De pagina vertelt wat je moet invullen."
+                "s2": "Zet herinneringen per e-mail, browser of Telegram aan en kies wanneer ze moeten komen.",
+                "s3": "E-mail en Telegram hebben eerst een korte instelling nodig. De pagina laat zien wat in te vullen is."
             },
             "backup": {
-                "q": "Hoe maak ik een back-up?",
+                "q": "Hoe wordt een back-up gemaakt?",
                 "s1": "Open <b>{settings}</b> → <b>{tabBackup}</b>.",
                 "s2": "Tik op <b>{backup}</b>, kies wat erin moet en download het bestand.",
                 "s3": "Bewaar het bestand op een veilige plek."
             },
             "restore": {
-                "q": "Hoe haal ik mijn gegevens terug uit een back-up?",
+                "q": "Hoe worden gegevens uit een back-up teruggehaald?",
                 "s1": "Open <b>{settings}</b> → <b>{tabBackup}</b>.",
-                "s2": "Tik op <b>{restore}</b> en kies je back-upbestand.",
-                "s3": "Bekijk de vergelijking en bevestig. Let op: dit vervangt je huidige gegevens.",
-                "s4": "Bedenk je je? Direct na het herstellen kun je op dezelfde pagina de gegevens van daarvoor terughalen."
+                "s2": "Tik op <b>{restore}</b> en kies het back-upbestand.",
+                "s3": "Bekijk de vergelijking en bevestig. Let op: dit vervangt de huidige gegevens.",
+                "s4": "Bedenkt men zich? Direct na het herstellen zijn de gegevens van daarvoor op dezelfde pagina terug te halen."
             },
             "categories": {
-                "q": "Hoe voeg ik categorieën toe of wijzig ik ze?",
+                "q": "Hoe worden categorieën toegevoegd of gewijzigd?",
                 "s1": "Open <b>{settings}</b> → <b>{tabCategories}</b>.",
-                "s2": "Voeg je eigen toe of wijzig naam en kleur van de bestaande.",
-                "s3": "Een categorie die je niet nodig hebt kan weg. Gebruikt een rekening hem nog, dan wordt hij alleen verborgen."
+                "s2": "Voeg eigen categorieën toe of wijzig naam en kleur van de bestaande.",
+                "s3": "Een categorie die niet nodig is, kan weg. Gebruikt een rekening hem nog, dan wordt hij alleen verborgen."
             },
             "language": {
-                "q": "Hoe wijzig ik de taal, valuta of tijdzone?",
+                "q": "Hoe worden de taal, valuta of tijdzone gewijzigd?",
                 "s1": "Open <b>{settings}</b> → <b>{tabPreferences}</b>.",
-                "s2": "Daar stel je de standaardvaluta, het getalformaat, de tijdzone en de keuzetalen in. De taal wissel je ook in het menu."
+                "s2": "Daar worden de standaardvaluta, het getalformaat, de tijdzone en de keuzetalen ingesteld. De taal is ook in het menu te wisselen."
             },
             "account": {
-                "q": "Hoe wijzig ik mijn e-mail of wachtwoord?",
+                "q": "Hoe worden e-mail of wachtwoord gewijzigd?",
                 "s1": "Open <b>{settings}</b> → <b>{tabAccount}</b>.",
-                "s2": "Wijzig daar je e-mail of wachtwoord. Wachtwoord vergeten? Gebruik de link op de inlogpagina.",
-                "s3": "Je kunt daar ook je account verwijderen. Dat kan niet ongedaan worden gemaakt."
+                "s2": "Wijzig daar het e-mailadres of wachtwoord. Wachtwoord vergeten? Gebruik de link op de inlogpagina.",
+                "s3": "Daar kan ook het account worden verwijderd. Dat kan niet ongedaan worden gemaakt."
             },
             "install": {
-                "q": "Hoe zet ik de app op mijn telefoon?",
-                "s1": "Open de app in de browser van je telefoon.",
+                "q": "Hoe komt de app op een telefoon?",
+                "s1": "Open de app in de browser van de telefoon.",
                 "s2": "Kies in het browsermenu “Toevoegen aan beginscherm” (iPhone: Deel → “Zet op beginscherm”)."
             }
         },

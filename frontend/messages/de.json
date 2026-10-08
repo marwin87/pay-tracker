@@ -1,9 +1,9 @@
 {
     "Auth": {
-        "loginSubtitle": "Melden Sie sich an, um PayTracker weiter zu nutzen",
+        "loginSubtitle": "Anmelden, um PayTracker weiter zu nutzen",
         "welcomeHeading": "Willkommen zurück 👋",
         "registerSubtitle": "Konto erstellen",
-        "registerTagline": "Behalten Sie Ihre Rechnungen mit PayTracker im Blick",
+        "registerTagline": "Rechnungen mit PayTracker im Blick behalten",
         "emailLabel": "E-Mail",
         "emailPlaceholder": "E-Mail eingeben",
         "passwordLabel": "Passwort",
@@ -12,12 +12,12 @@
         "passwordTooShort": "Das Passwort muss mindestens 8 Zeichen lang sein",
         "passwordTooLong": "Das Passwort darf höchstens 72 Bytes lang sein (etwa 72 Zeichen)",
         "requiredField": "Dieses Feld ist erforderlich.",
-        "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "invalidEmail": "Bitte eine gültige E-Mail-Adresse eingeben.",
         "signIn": "Anmelden",
         "signingIn": "Anmeldung…",
         "loginFailed": "Anmeldung fehlgeschlagen",
-        "tooManyAttempts": "Zu viele Versuche. Bitte warte einige Minuten und versuche es erneut.",
-        "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+        "tooManyAttempts": "Zu viele Versuche. Bitte einige Minuten warten und es erneut versuchen.",
+        "sessionExpired": "Die Sitzung ist abgelaufen. Bitte erneut anmelden.",
         "noAccount": "Noch kein Konto?",
         "register": "Konto erstellen",
         "createAccount": "Konto erstellen",
@@ -27,12 +27,12 @@
         "alreadyHaveAccount": "Bereits ein Konto?",
         "forgotPassword": "Passwort vergessen?",
         "forgotPasswordTitle": "Passwort zurücksetzen",
-        "forgotPasswordSubtitle": "Geben Sie Ihre E-Mail-Adresse ein und wir senden Ihnen einen Reset-Link.",
+        "forgotPasswordSubtitle": "Nach Eingabe der E-Mail-Adresse wird ein Reset-Link gesendet.",
         "sendResetLink": "Reset-Link senden",
         "sendingResetLink": "Senden…",
-        "resetLinkSent": "Falls diese E-Mail-Adresse registriert ist, erhalten Sie in Kürze einen Reset-Link.",
+        "resetLinkSent": "Falls diese E-Mail-Adresse registriert ist, wird in Kürze ein Reset-Link gesendet.",
         "resetPasswordTitle": "Neues Passwort festlegen",
-        "resetPasswordSubtitle": "Geben Sie Ihr neues Passwort ein und bestätigen Sie es.",
+        "resetPasswordSubtitle": "Das neue Passwort eingeben und bestätigen.",
         "newPasswordLabel": "Neues Passwort",
         "confirmPasswordLabel": "Neues Passwort bestätigen",
         "passwordsDoNotMatch": "Passwörter stimmen nicht überein",
@@ -40,10 +40,10 @@
         "settingPassword": "Aktualisieren…",
         "invalidOrExpiredToken": "Dieser Link ist abgelaufen oder ungültig.",
         "requestNewLink": "Neuen Link anfordern",
-        "forgotPasswordFailed": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+        "forgotPasswordFailed": "Etwas ist schiefgelaufen. Bitte erneut versuchen."
     },
     "Common": {
-        "smtpNotConfigured": "E-Mail ist nicht konfiguriert. Überprüfen Sie die SMTP-Konfiguration.",
+        "smtpNotConfigured": "E-Mail ist nicht konfiguriert. Die SMTP-Konfiguration muss geprüft werden.",
         "showPassword": "Passwort anzeigen",
         "hidePassword": "Passwort verbergen"
     },
@@ -61,7 +61,7 @@
     },
     "Dashboard": {
         "title": "Willkommen bei Pay Tracker",
-        "subtitle": "Ihr Monat auf einen Blick: was bezahlt ist, was fällig ist und was überfällig ist.",
+        "subtitle": "Der Monat auf einen Blick: was bezahlt ist, was fällig ist und was überfällig ist.",
         "summary": {
             "paid": "Bezahlt",
             "overdue": "Überfällig",
@@ -77,7 +77,7 @@
             "loading": "Übersicht wird geladen",
             "currency": "Zusammenfassung anzeigen in:",
             "emptyMonth": "Keine Zahlungen in diesem Monat.",
-            "emptyHelp": "Zahlungen erscheinen hier von selbst, sobald Sie eine Rechnung hinzufügen.",
+            "emptyHelp": "Zahlungen erscheinen hier von selbst, sobald eine Rechnung hinzugefügt wird.",
             "addBill": "Rechnung hinzufügen"
         },
         "nav": {
@@ -104,8 +104,8 @@
         }
     },
     "BillsPage": {
-        "title": "Meine Rechnungen",
-        "subtitle": "Fügen Sie jede Rechnung nur einmal hinzu, z. B. Miete oder Strom. Die Zahlung legen wir jeden Monat für Sie an.",
+        "title": "Rechnungen",
+        "subtitle": "Jede Rechnung muss nur einmal hinzugefügt werden, z. B. Miete oder Strom. Die Zahlung wird jeden Monat automatisch angelegt.",
         "newBill": "Neue Rechnung",
         "cancel": "Abbrechen",
         "billAdded": "Rechnung „{name}“ hinzugefügt",
@@ -116,7 +116,7 @@
         "noFilterResults": "Keine Rechnungen entsprechen dem ausgewählten Filter",
         "collapseAll": "Alle einklappen",
         "expandAll": "Alle ausklappen",
-        "emptyHelp": "Eine Rechnung ist alles, was Sie zahlen: monatlich, jährlich oder einmalig. Einmal hinzufügen, und sie erscheint unter „Zu zahlen“.",
+        "emptyHelp": "Eine Rechnung ist jede Zahlung: monatlich, jährlich oder einmalig. Einmal hinzufügen, und sie erscheint unter „Zu zahlen“.",
         "billPaused": "„{name}“ pausiert",
         "billResumed": "„{name}“ fortgesetzt",
         "showPaused": "Pausierte zeigen",
@@ -168,10 +168,10 @@
     },
     "DeleteAccountDialog": {
         "title": "Konto löschen?",
-        "description": "Dadurch werden Ihr Konto und alles damit Verknüpfte dauerhaft gelöscht — Rechnungen, Kategorien und Zahlungshistorie. Dies kann nicht rückgängig gemacht werden.",
+        "description": "Dadurch werden das Konto und alles damit Verknüpfte dauerhaft gelöscht — Rechnungen, Kategorien und Zahlungshistorie. Dies kann nicht rückgängig gemacht werden.",
         "cancel": "Abbrechen",
         "confirm": "Konto löschen",
-        "passwordLabel": "Mit deinem Passwort bestätigen",
+        "passwordLabel": "Mit dem Passwort bestätigen",
         "passwordPlaceholder": "Passwort eingeben",
         "wrongPassword": "Das aktuelle Passwort ist falsch.",
         "deleting": "Wird gelöscht…"
@@ -195,7 +195,7 @@
     },
     "PaymentsPage": {
         "title": "Zu zahlen",
-        "subtitle": "Ihre Rechnungen Monat für Monat. Tippen Sie auf „Als bezahlt markieren“, wenn Sie eine bezahlt haben.",
+        "subtitle": "Die Rechnungen Monat für Monat. Nach dem Bezahlen auf „Als bezahlt markieren“ tippen.",
         "paymentEdited": "Zahlung „{name}“ gespeichert",
         "paymentPaid": "„{name}“ als bezahlt markiert",
         "paymentDeleted": "Zahlung „{name}“ gelöscht",
@@ -229,7 +229,7 @@
         "nextMonth": "Nächster Monat",
         "pickMonth": "Monat wählen",
         "nextYear": "Nächstes Jahr",
-        "emptyHelp": "Zahlungen erscheinen hier von selbst, sobald Sie unter „Rechnungen“ eine Rechnung hinzufügen."
+        "emptyHelp": "Zahlungen erscheinen hier von selbst, sobald unter „Rechnungen“ eine Rechnung hinzugefügt wird."
     },
     "PaymentRow": {
         "status": {
@@ -292,7 +292,7 @@
         "dialogTitle": "Aus Backup wiederherstellen",
         "dialogDescription": "Dadurch werden die in „{filename}“ enthaltenen Daten dauerhaft ersetzt (Bereiche, die in der Datei fehlen, bleiben unverändert). Diese Aktion kann nicht rückgängig gemacht werden.",
         "cancel": "Abbrechen",
-        "confirm": "Meine Daten ersetzen",
+        "confirm": "Daten ersetzen",
         "restoring": "Wird wiederhergestellt…",
         "error": "Wiederherstellung fehlgeschlagen. Bitte Datei prüfen und erneut versuchen.",
         "fileTooLarge": "Datei zu groß. Backup-Dateien müssen kleiner als 10 MB sein.",
@@ -303,19 +303,19 @@
         "categoriesCount": "{categories} Kategorien",
         "countsUnavailable": "nicht verfügbar",
         "exportDateUnknown": "Exportdatum unbekannt (älteres Backup-Format)",
-        "staleDataWarning": "Dieses Backup enthält weniger Rechnungen und Zahlungen als Ihre aktuellen Daten. Die Wiederherstellung löscht die Differenz dauerhaft.",
-        "noBillsInFile": "Keine Rechnungen oder Zahlungen in dieser Datei – Ihre aktuellen Rechnungen bleiben unverändert.",
+        "staleDataWarning": "Dieses Backup enthält weniger Rechnungen und Zahlungen als die aktuellen Daten. Die Wiederherstellung löscht die Differenz dauerhaft.",
+        "noBillsInFile": "Keine Rechnungen oder Zahlungen in dieser Datei – die aktuellen Rechnungen bleiben unverändert.",
         "done": "Daten aus der Sicherung wiederhergestellt"
     },
     "BackupButton": {
         "ariaLabel": "Backup herunterladen",
         "dialogTitle": "Backup herunterladen",
-        "dialogDescription": "Wählen Sie aus, was gesichert werden soll. Bewahren Sie die Datei sicher auf.",
+        "dialogDescription": "Auswählen, was gesichert werden soll. Die Datei sicher aufbewahren.",
         "cancel": "Abbrechen",
         "confirm": "Herunterladen",
         "downloading": "Wird heruntergeladen…",
         "error": "Backup fehlgeschlagen. Bitte erneut versuchen.",
-        "telegramWarning": "Ihr Backup wurde heruntergeladen, enthält aber Ihr Telegram-Bot-Token nicht: Es kann nicht mehr gelesen werden (das Server-Geheimnis hat sich geändert). Geben Sie das Token in den Einstellungen erneut ein und laden Sie ein neues Backup herunter.",
+        "telegramWarning": "Das Backup wurde heruntergeladen, enthält aber das Telegram-Bot-Token nicht: Es kann nicht mehr gelesen werden (das Server-Geheimnis hat sich geändert). Das Token in den Einstellungen erneut eingeben und ein neues Backup herunterladen.",
         "ok": "OK",
         "selectAll": "Alle auswählen",
         "deselectAll": "Alle abwählen",
@@ -332,10 +332,10 @@
         }
     },
     "SnapshotRecoverySection": {
-        "message": "Ein Snapshot Ihrer Daten wurde am {date} gespeichert, kurz vor Ihrer letzten Wiederherstellung.",
+        "message": "Ein Snapshot der Daten wurde am {date} gespeichert, kurz vor der letzten Wiederherstellung.",
         "restoreButton": "Diesen Snapshot wiederherstellen",
         "dialogTitle": "Diesen Snapshot wiederherstellen",
-        "dialogDescription": "Dadurch werden Ihre aktuellen Daten dauerhaft durch den vor Ihrer letzten Wiederherstellung erstellten Snapshot ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
+        "dialogDescription": "Dadurch werden die aktuellen Daten dauerhaft durch den vor der letzten Wiederherstellung erstellten Snapshot ersetzt. Diese Aktion kann nicht rückgängig gemacht werden.",
         "cancel": "Abbrechen",
         "confirm": "Wiederherstellen",
         "restoring": "Wird wiederhergestellt…",
@@ -363,7 +363,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Einstellungen",
-        "subtitle": "Mach PayTracker zu deinem eigenen.",
+        "subtitle": "PayTracker nach Bedarf anpassen.",
         "tabs": {
             "account": "Konto",
             "preferences": "Einstellungen",
@@ -374,7 +374,7 @@
             "about": "Info"
         },
         "unsavedTitle": "Nicht gespeicherte Änderungen",
-        "unsavedDescription": "Sie haben nicht gespeicherte Änderungen. Ohne Speichern verlassen?",
+        "unsavedDescription": "Es gibt nicht gespeicherte Änderungen. Ohne Speichern verlassen?",
         "unsavedLeave": "Verlassen",
         "unsavedStay": "Bleiben",
         "save": "Speichern",
@@ -391,7 +391,7 @@
         "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
         "profile": {
             "title": "Benutzerprofil",
-            "description": "Ändern Sie die E-Mail-Adresse für Ihre Anmeldung.",
+            "description": "Die E-Mail-Adresse für die Anmeldung ändern.",
             "currentEmailLabel": "Aktuelle E-Mail:",
             "emailLabel": "Neue E-Mail-Adresse",
             "emailHint": "Neue Adresse eingeben und mit dem aktuellen Passwort bestätigen.",
@@ -404,11 +404,11 @@
             "passwordTooLong": "Das Passwort darf höchstens 72 Bytes lang sein (etwa 72 Zeichen).",
             "wrongPassword": "Das aktuelle Passwort ist falsch.",
             "emailTaken": "Diese E-Mail-Adresse ist bereits registriert.",
-            "emailAndPasswordRequired": "Bitte gib eine neue E-Mail-Adresse und dein aktuelles Passwort ein."
+            "emailAndPasswordRequired": "Bitte eine neue E-Mail-Adresse und das aktuelle Passwort eingeben."
         },
         "password": {
             "title": "Passwort",
-            "description": "Wählen Sie ein neues Passwort für die Anmeldung."
+            "description": "Ein neues Passwort für die Anmeldung wählen."
         },
         "currency": {
             "title": "Standardwährung",
@@ -420,10 +420,10 @@
         },
         "timeZone": {
             "title": "Zeitzone",
-            "description": "Legt fest, was „heute“ für dich bedeutet und zu welcher Uhrzeit Erinnerungen gesendet werden.",
+            "description": "Legt fest, was „heute“ bedeutet und zu welcher Uhrzeit Erinnerungen gesendet werden.",
             "ariaLabel": "Zeitzone",
             "placeholder": "z. B. Europe/Berlin",
-            "useBrowser": "Zeitzone meines Browsers verwenden ({zone})",
+            "useBrowser": "Zeitzone des Browsers verwenden ({zone})",
             "hint": "Die Sendezeiten der Erinnerungen gelten in dieser Zeitzone; eine Änderung verschiebt also, wann sie ankommen.",
             "unknown": "Wähle eine Zeitzone aus der Liste.",
             "noMatches": "Keine passende Zeitzone"
@@ -458,15 +458,15 @@
                 "notes": "Notizen"
             }
         },
-        "notificationsServerTimeHint": "Benachrichtigungen werden in deiner Zeitzone (<b>{zone}</b>) gesendet. Dort ist es jetzt <b>{time}</b>.",
+        "notificationsServerTimeHint": "Benachrichtigungen werden in der gewählten Zeitzone (<b>{zone}</b>) gesendet. Dort ist es jetzt <b>{time}</b>.",
         "emailNotifications": {
             "title": "E-Mail-Benachrichtigungen",
-            "description": "Wählen Sie, wann Sie E-Mail-Erinnerungen für bevorstehende und überfällige Rechnungen erhalten möchten.",
+            "description": "Festlegen, wann E-Mail-Erinnerungen für bevorstehende und überfällige Rechnungen eintreffen.",
             "twoDaysBefore": "2 Tage vor Fälligkeit",
             "oneDayBefore": "1 Tag vor Fälligkeit",
             "onDay": "Am Zahlungstag",
             "oneDayAfter": "1 Tag nach Fälligkeit",
-            "noneWarning": "Wählen Sie mindestens eine Option, um E-Mail-Erinnerungen zu erhalten.",
+            "noneWarning": "Mindestens eine Option wählen, um E-Mail-Erinnerungen zu erhalten.",
             "sendTimeLabel": "Sendezeit ({zone})",
             "masterToggle": "E-Mail-Benachrichtigungen aktivieren",
             "sendNowButton": "Erinnerungen jetzt senden",
@@ -482,67 +482,67 @@
         },
         "browserNotifications": {
             "title": "Browser-Benachrichtigungen",
-            "description": "Erhalten Sie eine Benachrichtigung, wenn eine Rechnung heute fällig ist.",
+            "description": "Eine Benachrichtigung, wenn eine Rechnung heute fällig ist.",
             "enable": "Benachrichtigungen aktivieren",
             "toggle": "Browser-Benachrichtigungen aktivieren",
-            "osHint": "Keine Benachrichtigungen sichtbar? Prüfen Sie die Systembenachrichtigungseinstellungen (macOS: Systemeinstellungen → Mitteilungen).",
-            "blockedWarning": "Browser-Benachrichtigungen sind blockiert. Aktivieren Sie sie in den Browser- oder Betriebssystemeinstellungen."
+            "osHint": "Keine Benachrichtigungen sichtbar? Die Systembenachrichtigungseinstellungen prüfen (macOS: Systemeinstellungen → Mitteilungen).",
+            "blockedWarning": "Browser-Benachrichtigungen sind blockiert. In den Browser- oder Betriebssystemeinstellungen aktivieren."
         },
         "telegramNotifications": {
             "title": "Telegram-Benachrichtigungen",
-            "description": "Erhalten Sie Erinnerungen über Telegram. Getrennt von E-Mail konfigurierbar.",
+            "description": "Erinnerungen über Telegram. Getrennt von E-Mail konfigurierbar.",
             "chatIdLabel": "Telegram-Chat-ID",
             "chatIdPlaceholder": "z. B. 123456789",
             "testButton": "Testnachricht senden",
             "testSending": "Wird gesendet…",
             "testSent": "Testnachricht gesendet",
             "invalidId": "Die Chat-ID muss eine Zahl sein (bei Gruppen negativ).",
-            "testFailed": "Test fehlgeschlagen. Prüfen Sie die Chat-ID und ob Sie dem Bot zuerst geschrieben haben.",
+            "testFailed": "Test fehlgeschlagen. Die Chat-ID prüfen und sicherstellen, dass dem Bot zuerst geschrieben wurde.",
             "botTokenLabel": "Bot-Token",
             "botTokenPlaceholder": "Bot-Token von @BotFather",
-            "botTokenSaved": "Token gespeichert. Geben Sie einen neuen ein, um ihn zu ersetzen.",
+            "botTokenSaved": "Token gespeichert. Zum Ersetzen einen neuen eingeben.",
             "invalidToken": "Ungültiges Bot-Token-Format.",
             "remove": "Telegram entfernen",
-            "helpTitle": "Wie erhalte ich Bot-Token und Chat-ID?",
-            "helpStep1": "Öffnen Sie in Telegram @BotFather, senden Sie /newbot und folgen Sie den Schritten. Kopieren Sie den erhaltenen Token.",
-            "helpStep2": "Öffnen Sie Ihren neuen Bot und senden Sie ihm eine beliebige Nachricht (z. B. hi).",
-            "helpStep3": "Öffnen Sie diese Adresse im Browser (ersetzen Sie TOKEN durch Ihren Token):",
-            "helpStep4": "Suchen Sie im Ergebnis \"chat\" und dann \"id\". Diese Zahl ist Ihre Chat-ID. Fügen Sie Token und Chat-ID unten ein.",
+            "helpTitle": "Wo stehen Bot-Token und Chat-ID?",
+            "helpStep1": "In Telegram @BotFather öffnen, /newbot senden und den Schritten folgen. Das erhaltene Token kopieren.",
+            "helpStep2": "Den neuen Bot öffnen und eine beliebige Nachricht senden (z. B. hi).",
+            "helpStep3": "Diese Adresse im Browser öffnen (TOKEN durch das Bot-Token ersetzen):",
+            "helpStep4": "Im Ergebnis \"chat\" und dann \"id\" suchen. Diese Zahl ist die Chat-ID. Token und Chat-ID unten einfügen.",
             "masterToggle": "Telegram-Benachrichtigungen aktivieren",
-            "noneWarning": "Wählen Sie mindestens eine Option, um Telegram-Erinnerungen zu erhalten.",
-            "needCredentials": "Speichern Sie oben Bot-Token und Chat-ID, um den Versand zu aktivieren.",
-            "tokenUnreadable": "Das gespeicherte Bot-Token kann nicht mehr gelesen werden (das Server-Geheimnis hat sich geändert). Geben Sie das Token erneut ein und speichern Sie."
+            "noneWarning": "Mindestens eine Option wählen, um Telegram-Erinnerungen zu erhalten.",
+            "needCredentials": "Oben Bot-Token und Chat-ID speichern, um den Versand zu aktivieren.",
+            "tokenUnreadable": "Das gespeicherte Bot-Token kann nicht mehr gelesen werden (das Server-Geheimnis hat sich geändert). Das Token erneut eingeben und speichern."
         },
         "backup": {
             "title": "Daten sichern",
-            "description": "Laden Sie eine vollständige Kopie aller Pay Tracker-Daten als Sicherungsdatei herunter.",
+            "description": "Eine vollständige Kopie aller Pay Tracker-Daten als Sicherungsdatei herunterladen.",
             "button": "Sichern"
         },
         "restore": {
             "title": "Daten wiederherstellen",
-            "description": "Ersetzen Sie alle aktuellen Daten durch eine zuvor heruntergeladene Sicherungsdatei.",
+            "description": "Alle aktuellen Daten durch eine zuvor heruntergeladene Sicherungsdatei ersetzen.",
             "button": "Wiederherstellen"
         },
         "about": {
             "title": "App-Informationen",
             "description": "Version und nützliche Links.",
-            "text": "Pay Tracker ist eine Haushalts-App, mit der du den Überblick über deine Rechnungen behältst. Sie entstand für ein entspanntes Haushaltsbudget, damit keine Rechnung untergeht.",
+            "text": "Pay Tracker ist eine Haushalts-App, um den Überblick über Rechnungen zu behalten. Sie entstand für ein entspanntes Haushaltsbudget, damit keine Rechnung untergeht.",
             "licensesTitle": "Lizenzen",
             "licensesText": "Diese App nutzt die folgenden Open-Source-Komponenten und Schriften. Jede wird unter ihrer eigenen Lizenz verwendet.",
             "version": "App-Version",
             "license": "Lizenz",
             "licenseValue": "Kostenlos für nicht-kommerzielle Nutzung, mit Namensnennung",
-            "copyright": "Sie dürfen Pay Tracker für private und andere nicht-kommerzielle Zwecke nutzen, ändern und weitergeben. Bitte behalten Sie die Nennung des ursprünglichen Projekts bei. Kommerzielle Nutzung erfordert die schriftliche Erlaubnis des Autors."
+            "copyright": "Pay Tracker darf für private und andere nicht-kommerzielle Zwecke genutzt, geändert und weitergegeben werden. Die Nennung des ursprünglichen Projekts bitte beibehalten. Kommerzielle Nutzung erfordert die schriftliche Erlaubnis des Autors."
         },
         "deleteAccount": {
             "title": "Konto löschen",
-            "description": "Löschen Sie dauerhaft Ihr Konto und alles damit Verknüpfte. Dies kann nicht rückgängig gemacht werden.",
+            "description": "Das Konto und alles damit Verknüpfte dauerhaft löschen. Dies kann nicht rückgängig gemacht werden.",
             "button": "Konto löschen",
-            "error": "Konto konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+            "error": "Konto konnte nicht gelöscht werden. Bitte erneut versuchen."
         },
         "categories": {
             "title": "Kategorien",
-            "description": "Fügen Sie eigene Kategorien hinzu oder benennen und färben Sie die Standardkategorien um.",
+            "description": "Eigene Kategorien hinzufügen oder die Standardkategorien umbenennen und umfärben.",
             "loadError": "Kategorien konnten nicht geladen werden. Bitte erneut versuchen.",
             "nameRequired": "Name ist erforderlich.",
             "namePlaceholder": "z. B. Hobbys",
@@ -636,7 +636,7 @@
         "dueDateLabel": "Fällig am",
         "summary": {
             "subject": "Monatliche Zusammenfassung für {month_label}",
-            "intro": "Hier ist Ihre Zahlungsübersicht für {month_label}.",
+            "intro": "Hier ist die Zahlungsübersicht für {month_label}.",
             "paid_header": "Bezahlt",
             "unpaid_header": "Unbezahlt / Überfällig",
             "bill": "Rechnung",
@@ -649,11 +649,11 @@
             "nothing_unpaid": "Alle Rechnungen sind bezahlt — gut gemacht!",
             "total_paid": "Gesamt bezahlt",
             "total_outstanding": "Gesamt ausstehend",
-            "footer": "Verwalten Sie Ihre Rechnungen in der Pay Tracker App."
+            "footer": "Die Rechnungen lassen sich in der Pay Tracker App verwalten."
         },
         "reset": {
             "subject": "Pay Tracker Passwort zurücksetzen",
-            "body": "Sie haben eine Passwortzurücksetzung für Ihr Pay Tracker-Konto angefordert.\n\nKlicken Sie auf den folgenden Link, um ein neues Passwort festzulegen (gültig für {expires_label}):\n{reset_url}\n\nFalls Sie diese Anforderung nicht gestellt haben, können Sie diese E-Mail ignorieren — Ihr Passwort bleibt unverändert.",
+            "body": "Für das Pay Tracker-Konto wurde eine Passwortzurücksetzung angefordert.\n\nÜber den folgenden Link lässt sich ein neues Passwort festlegen (gültig für {expires_label}):\n{reset_url}\n\nFalls diese Anforderung nicht gestellt wurde, kann diese E-Mail ignoriert werden — das Passwort bleibt unverändert.",
             "expires": "{minutes} Minuten",
             "noExpiry": "unbegrenzt"
         },
@@ -686,7 +686,7 @@
     },
     "PauseConfirmDialog": {
         "title": "„{billName}” pausieren?",
-        "description": "Für diese Rechnung gibt es keine neuen Zahlungen und Erinnerungen mehr, und ihre unbezahlten kommenden Zahlungen verschwinden aus Zahlungen. Bezahlte Zahlungen bleiben erhalten. Du kannst sie jederzeit fortsetzen.",
+        "description": "Für diese Rechnung gibt es keine neuen Zahlungen und Erinnerungen mehr, und ihre unbezahlten kommenden Zahlungen verschwinden aus Zahlungen. Bezahlte Zahlungen bleiben erhalten. Eine Fortsetzung ist jederzeit möglich.",
         "cancel": "Abbrechen",
         "pause": "Pausieren",
         "pausing": "Pausiere…"
@@ -715,124 +715,124 @@
             "billD": "Jede Rechnung nur einmal hinzufügen, z. B. Miete oder Strom. Die Zahlung wird jeden Monat automatisch angelegt.",
             "billCta": "Rechnung hinzufügen",
             "paidT": "Eine Zahlung als bezahlt markieren",
-            "paidD": "Wenn du eine Rechnung bezahlt hast, tippe daneben auf <b>{markPaid}</b>.",
+            "paidD": "Nach dem Bezahlen einer Rechnung daneben auf <b>{markPaid}</b> tippen.",
             "remT": "Erinnerungen einschalten",
             "remD": "Du bekommst eine Nachricht vor der Fälligkeit und zahlst nie zu spät.",
             "remCta": "Einrichten"
         },
         "items": {
             "addBill": {
-                "q": "Wie füge ich eine Rechnung hinzu?",
+                "q": "Wie wird eine Rechnung hinzugefügt?",
                 "s1": "Öffne <b>{bills}</b> und tippe auf <b>{newBill}</b>.",
-                "s2": "Gib einen Namen ein, wähle eine Kategorie und schreibe den Betrag.",
-                "s3": "Wähle den Fälligkeitstag und wie oft sie wiederkommt (jeden Monat, jedes Jahr oder einmalig). Dann speichern."
+                "s2": "Einen Namen eingeben, eine Kategorie wählen und den Betrag schreiben.",
+                "s3": "Den Fälligkeitstag wählen und wie oft sie wiederkommt (jeden Monat, jedes Jahr oder einmalig). Dann speichern."
             },
             "repeat": {
-                "q": "Meine Rechnung kommt nicht monatlich. Was tun?",
+                "q": "Die Rechnung kommt nicht monatlich. Was tun?",
                 "s1": "Wähle beim Hinzufügen oder Ändern, wie oft sie wiederkommt: alle paar Monate, jedes Jahr oder nur einmal.",
-                "s2": "Du kannst auch einen Endmonat setzen. Dann hört eine endende Rechnung, z. B. ein Kredit, von selbst auf."
+                "s2": "Es lässt sich auch ein Endmonat setzen. Dann hört eine endende Rechnung, z. B. ein Kredit, von selbst auf."
             },
             "editBill": {
-                "q": "Wie ändere ich eine Rechnung (Name, Betrag, Tag)?",
+                "q": "Wie wird eine Rechnung geändert (Name, Betrag, Tag)?",
                 "s1": "Öffne <b>{bills}</b> und tippe neben der Rechnung auf <b>{edit}</b>.",
-                "s2": "Ändere, was du brauchst, und speichere."
+                "s2": "Ändern, was nötig ist, und speichern."
             },
             "pause": {
-                "q": "Wie pausiere ich eine Rechnung?",
+                "q": "Wie wird eine Rechnung pausiert?",
                 "s1": "Öffne <b>{bills}</b>.",
                 "s2": "Tippe neben der Rechnung auf <b>{pause}</b> und bestätige.",
-                "s3": "Es kommen keine neuen Zahlungen oder Erinnerungen mehr. Was du schon bezahlt hast, bleibt im Verlauf."
+                "s3": "Es kommen keine neuen Zahlungen oder Erinnerungen mehr. Was schon bezahlt wurde, bleibt im Verlauf."
             },
             "resume": {
-                "q": "Wie hole ich eine pausierte Rechnung zurück?",
+                "q": "Wie wird eine pausierte Rechnung zurückgeholt?",
                 "s1": "Öffne <b>{bills}</b> und tippe auf <b>{showPaused}</b>.",
                 "s2": "Tippe neben der Rechnung auf <b>{resume}</b>. Neue Zahlungen starten wieder."
             },
             "seePayments": {
-                "q": "Wo sehe ich, was ich zahlen muss?",
-                "s1": "Öffne <b>{payments}</b>. Du siehst die Rechnungen eines Monats, nach Kategorie gruppiert.",
-                "s2": "Mit den Pfeilen neben dem Monatsnamen wechselst du den Monat. Am Handy tippst du auf den Monatsnamen, um einen zu wählen.",
+                "q": "Wo ist zu sehen, was zu zahlen ist?",
+                "s1": "<b>{payments}</b> öffnen. Dort stehen die Rechnungen eines Monats, nach Kategorie gruppiert.",
+                "s2": "Mit den Pfeilen neben dem Monatsnamen wechselt der Monat. Am Handy öffnet ein Tipp auf den Monatsnamen die Auswahl.",
                 "s3": "Tippe auf <b>{today}</b>, um zu diesem Monat zurückzukehren."
             },
             "filters": {
-                "q": "Wie finde ich eine einzelne Zahlung?",
-                "s1": "Über der Liste siehst du <b>{search}</b>. Tippe einen Namen ein, um zu suchen.",
-                "s2": "Mit den Filtern zeigst du nur unbezahlte Rechnungen oder eine Kategorie und bestimmst die Reihenfolge.",
+                "q": "Wie wird eine einzelne Zahlung gefunden?",
+                "s1": "Über der Liste steht <b>{search}</b>. Einen Namen eintippen, um zu suchen.",
+                "s2": "Mit den Filtern werden nur unbezahlte Rechnungen oder eine Kategorie angezeigt, und die Reihenfolge lässt sich bestimmen.",
                 "s3": "Öffne <b>{calendar}</b> und tippe auf einen Tag, um nur die Zahlungen dieses Tages zu sehen."
             },
             "markPaid": {
-                "q": "Wie markiere ich eine Rechnung als bezahlt?",
+                "q": "Wie wird eine Rechnung als bezahlt markiert?",
                 "s1": "Öffne <b>{payments}</b>.",
                 "s2": "Tippe neben der Rechnung auf <b>{markPaid}</b>.",
-                "s3": "Wenn du einen anderen Betrag oder an einem anderen Tag gezahlt hast, ändere es und bestätige."
+                "s3": "Falls ein anderer Betrag oder an einem anderen Tag gezahlt wurde, ändern und bestätigen."
             },
             "editPayment": {
-                "q": "Ich habe einen anderen Betrag gezahlt. Kann ich das ändern?",
+                "q": "Es wurde ein anderer Betrag gezahlt. Lässt sich das ändern?",
                 "s1": "Öffne <b>{payments}</b> und tippe neben der Rechnung auf <b>{editPayment}</b> (der Stift).",
                 "s2": "Ändere Betrag, Datum oder Notiz und speichere. Das geht auch bei bezahlten Rechnungen."
             },
             "revert": {
-                "q": "Ich habe eine Rechnung versehentlich als bezahlt markiert",
+                "q": "Eine Rechnung wurde versehentlich als bezahlt markiert",
                 "s1": "Öffne <b>{payments}</b> und suche die Rechnung.",
                 "s2": "Tippe auf <b>{revert}</b>. Die Rechnung ist wieder unbezahlt."
             },
             "deletePayment": {
-                "q": "Wie entferne ich eine einzelne Zahlung?",
+                "q": "Wie wird eine einzelne Zahlung entfernt?",
                 "s1": "Tippe daneben auf <b>{deletePayment}</b> und bestätige.",
-                "s2": "Die nächsten Zahlungen dieser Rechnung bleiben. Um eine Rechnung ganz zu stoppen, pausiere sie."
+                "s2": "Die nächsten Zahlungen dieser Rechnung bleiben. Um eine Rechnung ganz zu stoppen, sie pausieren."
             },
             "export": {
-                "q": "Wie lade ich meine Zahlungen herunter (Excel oder PDF)?",
+                "q": "Wie werden Zahlungen heruntergeladen (Excel oder PDF)?",
                 "s1": "Öffne <b>{payments}</b> und wähle den Monat.",
                 "s2": "Tippe neben dem Monatsnamen auf <b>XLSX</b> oder <b>PDF</b>.",
-                "s3": "Wähle diesen Monat oder das ganze Jahr. Die Datei wird auf dein Gerät geladen.",
-                "s4": "Siehst du die Knöpfe nicht? Schalte sie unter <b>{settings}</b> → <b>{tabReports}</b> ein."
+                "s3": "Diesen Monat oder das ganze Jahr wählen. Die Datei wird auf das Gerät geladen.",
+                "s4": "Keine Knöpfe zu sehen? Sie lassen sich unter <b>{settings}</b> → <b>{tabReports}</b> einschalten."
             },
             "share": {
-                "q": "Wie schicke ich jemandem einen Monat per E-Mail?",
-                "s1": "Schalte unter <b>{settings}</b> → <b>{tabReports}</b> das Teilen ein. Du kannst oft genutzte Adressen speichern.",
+                "q": "Wie wird ein Monat per E-Mail verschickt?",
+                "s1": "Unter <b>{settings}</b> → <b>{tabReports}</b> das Teilen einschalten. Oft genutzte Adressen lassen sich speichern.",
                 "s2": "Öffne dann <b>{payments}</b> und tippe neben dem Monatsnamen auf den Teilen-Knopf (<b>{share}</b>).",
                 "s3": "Wähle eine Adresse und sende."
             },
             "reminders": {
-                "q": "Wie bekomme ich Erinnerungen?",
+                "q": "Wie werden Erinnerungen eingeschaltet?",
                 "s1": "Öffne <b>{settings}</b> → <b>{tabNotifications}</b>.",
                 "s2": "Schalte Erinnerungen per E-Mail, Browser oder Telegram ein und wähle, wann sie kommen sollen.",
-                "s3": "E-Mail und Telegram brauchen zuerst eine kurze Einrichtung. Die Seite sagt dir, was auszufüllen ist."
+                "s3": "E-Mail und Telegram brauchen zuerst eine kurze Einrichtung. Die Seite zeigt, was auszufüllen ist."
             },
             "backup": {
-                "q": "Wie mache ich eine Sicherung?",
+                "q": "Wie wird eine Sicherung erstellt?",
                 "s1": "Öffne <b>{settings}</b> → <b>{tabBackup}</b>.",
                 "s2": "Tippe auf <b>{backup}</b>, wähle, was dabei sein soll, und lade die Datei herunter.",
                 "s3": "Bewahre die Datei sicher auf."
             },
             "restore": {
-                "q": "Wie hole ich meine Daten aus einer Sicherung zurück?",
+                "q": "Wie werden Daten aus einer Sicherung zurückgeholt?",
                 "s1": "Öffne <b>{settings}</b> → <b>{tabBackup}</b>.",
-                "s2": "Tippe auf <b>{restore}</b> und wähle deine Sicherungsdatei.",
-                "s3": "Prüfe den Vergleich und bestätige. Achtung: Das ersetzt deine aktuellen Daten.",
-                "s4": "Anders überlegt? Direkt nach dem Wiederherstellen kannst du auf derselben Seite die vorherigen Daten zurückholen."
+                "s2": "Auf <b>{restore}</b> tippen und die Sicherungsdatei wählen.",
+                "s3": "Den Vergleich prüfen und bestätigen. Achtung: Das ersetzt die aktuellen Daten.",
+                "s4": "Anders überlegt? Direkt nach dem Wiederherstellen lassen sich auf derselben Seite die vorherigen Daten zurückholen."
             },
             "categories": {
-                "q": "Wie füge ich Kategorien hinzu oder ändere sie?",
+                "q": "Wie werden Kategorien hinzugefügt oder geändert?",
                 "s1": "Öffne <b>{settings}</b> → <b>{tabCategories}</b>.",
-                "s2": "Füge eigene hinzu oder ändere Name und Farbe der vorhandenen.",
+                "s2": "Eigene hinzufügen oder Name und Farbe der vorhandenen ändern.",
                 "s3": "Eine nicht mehr nötige Kategorie kann entfernt werden. Wird sie noch von einer Rechnung genutzt, wird sie nur ausgeblendet."
             },
             "language": {
-                "q": "Wie ändere ich Sprache, Währung oder Zeitzone?",
+                "q": "Wie werden Sprache, Währung oder Zeitzone geändert?",
                 "s1": "Öffne <b>{settings}</b> → <b>{tabPreferences}</b>.",
-                "s2": "Dort stellst du Standardwährung, Zahlenformat, Zeitzone und wählbare Sprachen ein. Die Sprache kannst du auch im Menü wechseln."
+                "s2": "Dort lassen sich Standardwährung, Zahlenformat, Zeitzone und wählbare Sprachen einstellen. Die Sprache lässt sich auch im Menü wechseln."
             },
             "account": {
-                "q": "Wie ändere ich E-Mail oder Passwort?",
+                "q": "Wie werden E-Mail oder Passwort geändert?",
                 "s1": "Öffne <b>{settings}</b> → <b>{tabAccount}</b>.",
-                "s2": "Ändere dort E-Mail oder Passwort. Passwort vergessen? Nutze den Link auf der Anmeldeseite.",
-                "s3": "Dort kannst du auch dein Konto löschen. Das lässt sich nicht rückgängig machen."
+                "s2": "Dort E-Mail oder Passwort ändern. Passwort vergessen? Den Link auf der Anmeldeseite nutzen.",
+                "s3": "Dort lässt sich auch das Konto löschen. Das lässt sich nicht rückgängig machen."
             },
             "install": {
-                "q": "Wie lege ich die App auf mein Handy?",
-                "s1": "Öffne die App im Browser deines Handys.",
+                "q": "Wie kommt die App aufs Handy?",
+                "s1": "Die App im Browser des Handys öffnen.",
                 "s2": "Wähle im Browsermenü „Zum Startbildschirm hinzufügen“ (iPhone: Teilen → „Zum Home-Bildschirm“)."
             }
         },

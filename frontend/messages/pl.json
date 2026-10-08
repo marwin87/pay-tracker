@@ -3,7 +3,7 @@
         "loginSubtitle": "Zaloguj się, aby kontynuować korzystanie z PayTracker",
         "welcomeHeading": "Witaj ponownie 👋",
         "registerSubtitle": "Utwórz konto",
-        "registerTagline": "Zacznij śledzić swoje rachunki z PayTracker",
+        "registerTagline": "Śledzenie rachunków z PayTracker",
         "emailLabel": "E-mail",
         "emailPlaceholder": "Wpisz email",
         "passwordLabel": "Hasło",
@@ -17,20 +17,20 @@
         "signingIn": "Logowanie…",
         "loginFailed": "Logowanie nie powiodło się",
         "tooManyAttempts": "Zbyt wiele prób. Odczekaj kilka minut i spróbuj ponownie.",
-        "sessionExpired": "Twoja sesja wygasła. Zaloguj się ponownie.",
-        "noAccount": "Nie masz jeszcze konta?",
+        "sessionExpired": "Sesja wygasła. Należy zalogować się ponownie.",
+        "noAccount": "Brak konta?",
         "register": "Załóż konto",
         "createAccount": "Utwórz konto",
         "creatingAccount": "Tworzenie konta…",
         "registrationFailed": "Rejestracja nie powiodła się",
         "emailAlreadyRegistered": "Ten adres e-mail jest już zarejestrowany.",
-        "alreadyHaveAccount": "Masz już konto?",
-        "forgotPassword": "Nie pamiętasz hasła?",
+        "alreadyHaveAccount": "Konto już założone?",
+        "forgotPassword": "Zapomniane hasło?",
         "forgotPasswordTitle": "Zresetuj hasło",
-        "forgotPasswordSubtitle": "Podaj adres e-mail, a my wyślemy Ci link do resetowania hasła.",
+        "forgotPasswordSubtitle": "Po podaniu adresu e-mail zostanie wysłany link do resetowania hasła.",
         "sendResetLink": "Wyślij link resetujący",
         "sendingResetLink": "Wysyłanie…",
-        "resetLinkSent": "Jeśli ten adres e-mail jest zarejestrowany, otrzymasz link do resetowania hasła.",
+        "resetLinkSent": "Jeśli ten adres e-mail jest zarejestrowany, zostanie wysłany link do resetowania hasła.",
         "resetPasswordTitle": "Ustaw nowe hasło",
         "resetPasswordSubtitle": "Wprowadź i potwierdź nowe hasło.",
         "newPasswordLabel": "Nowe hasło",
@@ -61,7 +61,7 @@
     },
     "Dashboard": {
         "title": "Witaj w Pay Tracker",
-        "subtitle": "Twój miesiąc w skrócie: co zapłacone, co do zapłaty i co po terminie.",
+        "subtitle": "Miesiąc w skrócie: co zapłacone, co do zapłaty i co po terminie.",
         "summary": {
             "paid": "Zapłacone",
             "overdue": "Po terminie",
@@ -77,7 +77,7 @@
             "loading": "Wczytywanie podsumowania",
             "currency": "Pokaż podsumowanie w:",
             "emptyMonth": "Brak płatności w tym miesiącu.",
-            "emptyHelp": "Płatności pojawią się tu same, gdy dodasz rachunek.",
+            "emptyHelp": "Płatności pojawią się tu same, po dodaniu rachunku.",
             "addBill": "Dodaj rachunek"
         },
         "nav": {
@@ -104,8 +104,8 @@
         }
     },
     "BillsPage": {
-        "title": "Moje rachunki",
-        "subtitle": "Dodaj każdy rachunek raz, np. czynsz albo prąd. Płatność co miesiąc utworzymy za Ciebie.",
+        "title": "Rachunki",
+        "subtitle": "Każdy rachunek wystarczy dodać raz, np. czynsz albo prąd. Płatność co miesiąc zostanie utworzona automatycznie.",
         "newBill": "Nowy rachunek",
         "cancel": "Anuluj",
         "billAdded": "Dodano rachunek „{name}”",
@@ -116,7 +116,7 @@
         "noFilterResults": "Brak rachunków pasujących do wybranego filtra",
         "collapseAll": "Zwiń wszystko",
         "expandAll": "Rozwiń wszystko",
-        "emptyHelp": "Rachunek to wszystko, co płacisz: co miesiąc, co rok albo jednorazowo. Dodaj go raz, a pojawi się w zakładce „Do zapłaty”.",
+        "emptyHelp": "Rachunek to każda opłata: powtarzająca się co miesiąc, co rok albo jednorazowa. Dodaj go raz, a pojawi się w zakładce „Do zapłaty”.",
         "billPaused": "Wstrzymano „{name}”",
         "billResumed": "Wznowiono „{name}”",
         "showPaused": "Pokaż wstrzymane",
@@ -168,7 +168,7 @@
     },
     "DeleteAccountDialog": {
         "title": "Usunąć konto?",
-        "description": "To trwale usunie Twoje konto oraz wszystko, co jest z nim powiązane — rachunki, kategorie i historię płatności. Tej operacji nie można cofnąć.",
+        "description": "To trwale usunie konto oraz wszystko, co jest z nim powiązane — rachunki, kategorie i historię płatności. Tej operacji nie można cofnąć.",
         "cancel": "Anuluj",
         "confirm": "Usuń konto",
         "passwordLabel": "Potwierdź swoim hasłem",
@@ -195,7 +195,7 @@
     },
     "PaymentsPage": {
         "title": "Do zapłaty",
-        "subtitle": "Twoje rachunki miesiąc po miesiącu. Gdy zapłacisz, kliknij „Oznacz jako opłacone”.",
+        "subtitle": "Rachunki miesiąc po miesiącu. Po zapłaceniu należy kliknąć „Oznacz jako opłacone”.",
         "paymentEdited": "Zapisano płatność „{name}”",
         "paymentPaid": "Zapłacono „{name}”",
         "paymentDeleted": "Usunięto płatność „{name}”",
@@ -229,7 +229,7 @@
         "nextMonth": "Następny miesiąc",
         "pickMonth": "Wybierz miesiąc",
         "nextYear": "Następny rok",
-        "emptyHelp": "Płatności pojawią się tu same, gdy dodasz rachunek w zakładce „Rachunki”."
+        "emptyHelp": "Płatności pojawią się tu same, po dodaniu rachunku w zakładce „Rachunki”."
     },
     "PaymentRow": {
         "status": {
@@ -303,7 +303,7 @@
         "categoriesCount": "{categories} kategorii",
         "countsUnavailable": "niedostępne",
         "exportDateUnknown": "data eksportu nieznana (starszy format kopii zapasowej)",
-        "staleDataWarning": "Ta kopia zapasowa zawiera mniej rachunków i płatności niż Twoje obecne dane. Przywrócenie trwale usunie różnicę.",
+        "staleDataWarning": "Ta kopia zapasowa zawiera mniej rachunków i płatności niż obecne dane. Przywrócenie trwale usunie różnicę.",
         "noBillsInFile": "Brak rachunków i płatności w tym pliku — obecne rachunki pozostaną bez zmian.",
         "done": "Dane przywrócone z kopii zapasowej"
     },
@@ -332,7 +332,7 @@
         }
     },
     "SnapshotRecoverySection": {
-        "message": "Migawka Twoich danych została zapisana {date}, tuż przed ostatnim przywróceniem.",
+        "message": "Migawka danych została zapisana {date}, tuż przed ostatnim przywróceniem.",
         "restoreButton": "Przywróć tę migawkę",
         "dialogTitle": "Przywróć tę migawkę",
         "dialogDescription": "Spowoduje to trwałe zastąpienie bieżących danych migawką wykonaną przed ostatnim przywracaniem. Tej czynności nie można cofnąć.",
@@ -374,7 +374,7 @@
             "about": "Informacje"
         },
         "unsavedTitle": "Niezapisane zmiany",
-        "unsavedDescription": "Masz niezapisane zmiany. Wyjść bez zapisywania?",
+        "unsavedDescription": "Są niezapisane zmiany. Wyjść bez zapisywania?",
         "unsavedLeave": "Wyjdź",
         "unsavedStay": "Zostań",
         "save": "Zapisz",
@@ -391,7 +391,7 @@
         "saveFailed": "Zapis nie powiódł się. Spróbuj ponownie.",
         "profile": {
             "title": "Profil użytkownika",
-            "description": "Zmień adres e-mail, którego używasz do logowania.",
+            "description": "Zmiana adresu e-mail używanego do logowania.",
             "currentEmailLabel": "Aktualny e-mail:",
             "emailLabel": "Nowy adres e-mail",
             "emailHint": "Wpisz nowy adres i potwierdź aktualnym hasłem.",
@@ -420,7 +420,7 @@
         },
         "timeZone": {
             "title": "Strefa czasowa",
-            "description": "Określa, co oznacza dla Ciebie „dzisiaj”, oraz o której godzinie wysyłane są przypomnienia.",
+            "description": "Określa, co oznacza „dzisiaj”, oraz o której godzinie wysyłane są przypomnienia.",
             "ariaLabel": "Strefa czasowa",
             "placeholder": "np. Europe/Warsaw",
             "useBrowser": "Użyj strefy mojej przeglądarki ({zone})",
@@ -458,7 +458,7 @@
                 "notes": "Notatki"
             }
         },
-        "notificationsServerTimeHint": "Powiadomienia są wysyłane w Twojej strefie czasowej (<b>{zone}</b>). Jest tam teraz <b>{time}</b>.",
+        "notificationsServerTimeHint": "Powiadomienia są wysyłane w wybranej strefie czasowej (<b>{zone}</b>). Jest tam teraz <b>{time}</b>.",
         "emailNotifications": {
             "title": "Powiadomienia e-mail",
             "description": "Wybierz, kiedy otrzymywać przypomnienia e-mail o nadchodzących i zaległych rachunkach.",
@@ -485,7 +485,7 @@
             "description": "Otrzymuj powiadomienie, gdy rachunek jest płatny dzisiaj.",
             "enable": "Włącz powiadomienia",
             "toggle": "Włącz powiadomienia przeglądarki",
-            "osHint": "Nie widzisz powiadomień? Sprawdź ustawienia powiadomień systemu (macOS: Ustawienia systemowe → Powiadomienia).",
+            "osHint": "Brak powiadomień? Sprawdź ustawienia powiadomień systemu (macOS: Ustawienia systemowe → Powiadomienia).",
             "blockedWarning": "Powiadomienia przeglądarki są zablokowane. Włącz je w ustawieniach przeglądarki lub systemu operacyjnego."
         },
         "telegramNotifications": {
@@ -505,8 +505,8 @@
             "remove": "Usuń Telegram",
             "helpTitle": "Jak zdobyć token bota i ID czatu?",
             "helpStep1": "W Telegramie otwórz @BotFather, wyślij /newbot i przejdź kolejne kroki. Skopiuj otrzymany token.",
-            "helpStep2": "Otwórz swojego nowego bota i wyślij mu dowolną wiadomość (np. cześć).",
-            "helpStep3": "Otwórz w przeglądarce ten adres (zamień TOKEN na swój token):",
+            "helpStep2": "Otwórz nowego bota i wyślij mu dowolną wiadomość (np. cześć).",
+            "helpStep3": "Otwórz w przeglądarce ten adres (zamień TOKEN na token bota):",
             "helpStep4": "W wyniku znajdź \"chat\", a potem \"id\". Ta liczba to ID czatu. Wklej token i ID czatu poniżej.",
             "masterToggle": "Włącz powiadomienia Telegram",
             "noneWarning": "Zaznacz co najmniej jedną opcję, aby otrzymywać przypomnienia na Telegramie.",
@@ -536,7 +536,7 @@
         },
         "deleteAccount": {
             "title": "Usuń konto",
-            "description": "Trwale usuń swoje konto oraz wszystko, co jest z nim powiązane. Tej operacji nie można cofnąć.",
+            "description": "Trwale usuń konto oraz wszystko, co jest z nim powiązane. Tej operacji nie można cofnąć.",
             "button": "Usuń konto",
             "error": "Nie udało się usunąć konta. Spróbuj ponownie."
         },
@@ -618,11 +618,11 @@
         "reminder": {
             "2_days_before": {
                 "subject": "Przypomnienie: {bill_name} płatne za 2 dni ({amount} {currency})",
-                "body": "Przypominamy, że {bill_name} jest płatne za 2 dni ({due_date}).\nKwota: {amount} {currency}"
+                "body": "Przypomnienie: {bill_name} jest płatne za 2 dni ({due_date}).\nKwota: {amount} {currency}"
             },
             "upcoming": {
                 "subject": "Przypomnienie: {bill_name} płatne jutro ({amount} {currency})",
-                "body": "Przypominamy, że {bill_name} jest płatne jutro ({due_date}).\nKwota: {amount} {currency}"
+                "body": "Przypomnienie: {bill_name} jest płatne jutro ({due_date}).\nKwota: {amount} {currency}"
             },
             "on_day": {
                 "subject": "Płatne dziś: {bill_name} ({amount} {currency})",
@@ -653,7 +653,7 @@
         },
         "reset": {
             "subject": "Zresetuj hasło Pay Tracker",
-            "body": "Zostało złożone żądanie zresetowania hasła do konta Pay Tracker.\n\nKliknij poniższy link, aby ustawić nowe hasło (ważny przez {expires_label}):\n{reset_url}\n\nJeśli nie prosiłeś o reset hasła, zignoruj tę wiadomość — Twoje hasło pozostanie bez zmian.",
+            "body": "Zostało złożone żądanie zresetowania hasła do konta Pay Tracker.\n\nPoniższy link pozwala ustawić nowe hasło (ważny przez {expires_label}):\n{reset_url}\n\nJeśli reset hasła nie był zamawiany, wiadomość można zignorować — hasło pozostanie bez zmian.",
             "expires": "{minutes} minut",
             "noExpiry": "bezterminowo"
         },
@@ -686,7 +686,7 @@
     },
     "PauseConfirmDialog": {
         "title": "Wstrzymać „{billName}”?",
-        "description": "Rachunek przestanie generować nowe płatności i przypomnienia, a jego nieopłacone nadchodzące płatności znikną z listy Płatności. Opłacona historia zostaje. Możesz go wznowić w każdej chwili.",
+        "description": "Rachunek przestanie generować nowe płatności i przypomnienia, a jego nieopłacone nadchodzące płatności znikną z listy Płatności. Opłacona historia zostaje. Wznowienie jest możliwe w każdej chwili.",
         "cancel": "Anuluj",
         "pause": "Wstrzymaj",
         "pausing": "Wstrzymywanie…"
@@ -749,7 +749,7 @@
                 "s2": "Naciśnij <b>{resume}</b> przy rachunku. Nowe płatności znów będą się pojawiać."
             },
             "seePayments": {
-                "q": "Gdzie zobaczę, co mam zapłacić?",
+                "q": "Gdzie widać, co jest do zapłaty?",
                 "s1": "Wejdź w <b>{payments}</b>. Widać tam rachunki z jednego miesiąca, pogrupowane według kategorii.",
                 "s2": "Strzałki przy nazwie miesiąca przełączają miesiąc. Na telefonie dotknięcie nazwy miesiąca otwiera jego wybór.",
                 "s3": "Naciśnij <b>{today}</b>, żeby wrócić do tego miesiąca."
@@ -827,7 +827,7 @@
             "account": {
                 "q": "Jak zmienić e-mail lub hasło?",
                 "s1": "Wejdź w <b>{settings}</b> → <b>{tabAccount}</b>.",
-                "s2": "Zmień tam e-mail albo hasło. Nie pamiętasz hasła? Użyj linku na stronie logowania.",
+                "s2": "Zmień tam e-mail albo hasło. Zapomniane hasło? Wystarczy użyć linku na stronie logowania.",
                 "s3": "Tam też można usunąć konto. Tego nie da się cofnąć."
             },
             "install": {

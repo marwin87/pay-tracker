@@ -2,12 +2,12 @@
     "Auth": {
         "loginSubtitle": "Sign in to keep using PayTracker",
         "welcomeHeading": "Welcome back 👋",
-        "registerSubtitle": "Create your account",
-        "registerTagline": "Start tracking your bills with PayTracker",
+        "registerSubtitle": "Create an account",
+        "registerTagline": "Start tracking bills with PayTracker",
         "emailLabel": "Email",
-        "emailPlaceholder": "Enter your email",
+        "emailPlaceholder": "Enter email",
         "passwordLabel": "Password",
-        "passwordPlaceholder": "Enter your password",
+        "passwordPlaceholder": "Enter password",
         "passwordHint": "Minimum 8 characters",
         "passwordTooShort": "Password must be at least 8 characters",
         "passwordTooLong": "Password must be at most 72 bytes (about 72 characters)",
@@ -17,7 +17,7 @@
         "signingIn": "Signing in…",
         "loginFailed": "Login failed",
         "tooManyAttempts": "Too many attempts. Please wait a few minutes and try again.",
-        "sessionExpired": "Your session expired. Please sign in again.",
+        "sessionExpired": "The session expired. Please sign in again.",
         "noAccount": "Don't have an account yet?",
         "register": "Create account",
         "createAccount": "Create account",
@@ -26,13 +26,13 @@
         "emailAlreadyRegistered": "This email is already registered.",
         "alreadyHaveAccount": "Already have an account?",
         "forgotPassword": "Forgot password?",
-        "forgotPasswordTitle": "Reset your password",
-        "forgotPasswordSubtitle": "Enter your email and we'll send you a reset link.",
+        "forgotPasswordTitle": "Reset password",
+        "forgotPasswordSubtitle": "After the email is entered, a reset link is sent.",
         "sendResetLink": "Send reset link",
         "sendingResetLink": "Sending…",
-        "resetLinkSent": "If that email is registered, you'll receive a reset link shortly.",
+        "resetLinkSent": "If that email is registered, a reset link is sent shortly.",
         "resetPasswordTitle": "Set a new password",
-        "resetPasswordSubtitle": "Enter and confirm your new password.",
+        "resetPasswordSubtitle": "Enter and confirm the new password.",
         "newPasswordLabel": "New password",
         "confirmPasswordLabel": "Confirm new password",
         "passwordsDoNotMatch": "Passwords do not match",
@@ -51,7 +51,7 @@
         "dashboard": "Overview",
         "more": "More",
         "payments": "To pay",
-        "bills": "My bills",
+        "bills": "Bills",
         "settings": "Settings",
         "logOut": "Log out",
         "userMenu": "User menu",
@@ -61,7 +61,7 @@
     },
     "Dashboard": {
         "title": "Welcome to Pay Tracker",
-        "subtitle": "Your month at a glance: what is paid, what is due and what is late.",
+        "subtitle": "The month at a glance: what is paid, what is due and what is late.",
         "summary": {
             "paid": "Paid",
             "overdue": "Overdue",
@@ -77,7 +77,7 @@
             "loading": "Loading summary",
             "currency": "Show summary in:",
             "emptyMonth": "No payments this month.",
-            "emptyHelp": "Payments show up here by themselves once you add a bill.",
+            "emptyHelp": "Payments show up here by themselves once a bill is added.",
             "addBill": "Add a bill"
         },
         "nav": {
@@ -104,26 +104,26 @@
         }
     },
     "BillsPage": {
-        "title": "My bills",
-        "subtitle": "Add each bill once, e.g. rent or electricity. We create its payment every month for you.",
+        "title": "Bills",
+        "subtitle": "Each bill only needs to be added once, e.g. rent or electricity. Its payment is created automatically every month.",
         "newBill": "New Bill",
         "cancel": "Cancel",
         "billAdded": "Bill “{name}” added",
         "billSaved": "Bill “{name}” saved",
         "loadError": "Failed to load bills.",
         "noBillsYet": "No bills yet",
-        "addFirstBill": "Add your first bill",
+        "addFirstBill": "Add the first bill",
         "noFilterResults": "No bills match the selected filter",
         "collapseAll": "Collapse all",
         "expandAll": "Expand all",
-        "emptyHelp": "A bill is anything you pay: every month, every year or just once. Add it once and it appears in “To pay”.",
+        "emptyHelp": "A bill is any payment: every month, every year or just once. Add it once and it appears in “To pay”.",
         "billPaused": "“{name}” paused",
         "billResumed": "“{name}” resumed",
         "showPaused": "Show paused",
         "paused": "Paused",
         "resumeError": "Failed to resume bill.",
         "hidePaused": "Hide paused",
-        "allPaused": "All your bills are paused",
+        "allPaused": "All bills are paused",
         "allPausedHelp": "Paused bills create no payments or reminders. Show them to resume one, or add a new bill."
     },
     "BillTemplateForm": {
@@ -145,7 +145,7 @@
         "notesLabel": "Notes",
         "notesPlaceholder": "Optional notes",
         "endPeriodLabel": "Last payment month (optional)",
-        "endPeriodAdjusted": "Your cycle skips that month — the last payment will be in {month}.",
+        "endPeriodAdjusted": "The cycle skips that month — the last payment will be in {month}.",
         "cancel": "Cancel",
         "save": "Save",
         "saving": "Saving…",
@@ -167,12 +167,12 @@
         "restoring": "Restoring…"
     },
     "DeleteAccountDialog": {
-        "title": "Delete your account?",
-        "description": "This permanently deletes your account and everything linked to it — bills, categories, and payment history. This cannot be undone.",
+        "title": "Delete the account?",
+        "description": "This permanently deletes the account and everything linked to it — bills, categories, and payment history. This cannot be undone.",
         "cancel": "Cancel",
         "confirm": "Delete account",
-        "passwordLabel": "Confirm with your password",
-        "passwordPlaceholder": "Enter your password",
+        "passwordLabel": "Confirm with the password",
+        "passwordPlaceholder": "Enter password",
         "wrongPassword": "Current password is incorrect.",
         "deleting": "Deleting…"
     },
@@ -195,7 +195,7 @@
     },
     "PaymentsPage": {
         "title": "To pay",
-        "subtitle": "Your bills for each month. Tap “Mark as Paid” when you pay one.",
+        "subtitle": "Bills for each month. Tap “Mark as Paid” once a bill is paid.",
         "paymentEdited": "Payment “{name}” saved",
         "paymentPaid": "“{name}” marked as paid",
         "paymentDeleted": "Payment “{name}” deleted",
@@ -229,7 +229,7 @@
         "nextMonth": "Next month",
         "pickMonth": "Pick a month",
         "nextYear": "Next year",
-        "emptyHelp": "Payments show up here by themselves once you add a bill in “My bills”."
+        "emptyHelp": "Payments show up here by themselves once a bill is added in “Bills”."
     },
     "PaymentRow": {
         "status": {
@@ -303,8 +303,8 @@
         "categoriesCount": "{categories} categories",
         "countsUnavailable": "unavailable",
         "exportDateUnknown": "export date unknown (older backup format)",
-        "staleDataWarning": "This backup has fewer bills and payments than your current data. Restoring will permanently delete the difference.",
-        "noBillsInFile": "No bills or payments in this file — your current bills stay untouched.",
+        "staleDataWarning": "This backup has fewer bills and payments than the current data. Restoring will permanently delete the difference.",
+        "noBillsInFile": "No bills or payments in this file — the current bills stay untouched.",
         "done": "Data restored from backup"
     },
     "BackupButton": {
@@ -315,7 +315,7 @@
         "confirm": "Download",
         "downloading": "Downloading…",
         "error": "Backup failed. Please try again.",
-        "telegramWarning": "Your backup was downloaded, but it does not contain your Telegram bot token: it can no longer be read (the server secret changed). Re-enter the token in Settings, then download a new backup.",
+        "telegramWarning": "The backup was downloaded, but it does not contain the Telegram bot token: it can no longer be read (the server secret changed). Re-enter the token in Settings, then download a new backup.",
         "ok": "OK",
         "selectAll": "Select all",
         "deselectAll": "Deselect all",
@@ -332,10 +332,10 @@
         }
     },
     "SnapshotRecoverySection": {
-        "message": "A snapshot of your data was saved on {date}, right before your last restore.",
+        "message": "A snapshot of the data was saved on {date}, right before the last restore.",
         "restoreButton": "Restore This Snapshot",
         "dialogTitle": "Restore This Snapshot",
-        "dialogDescription": "This will permanently replace your current data with the snapshot taken before your last restore. This action cannot be undone.",
+        "dialogDescription": "This will permanently replace the current data with the snapshot taken before the last restore. This action cannot be undone.",
         "cancel": "Cancel",
         "confirm": "Restore",
         "restoring": "Restoring…",
@@ -363,7 +363,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Settings",
-        "subtitle": "Make PayTracker your own.",
+        "subtitle": "Make PayTracker fit its use.",
         "tabs": {
             "account": "Account",
             "preferences": "Preferences",
@@ -391,20 +391,20 @@
         "saveFailed": "Save failed. Please try again.",
         "profile": {
             "title": "User Profile",
-            "description": "Change the email address you sign in with.",
+            "description": "Change the email address used to sign in.",
             "currentEmailLabel": "Current email:",
             "emailLabel": "New email address",
-            "emailHint": "Enter a new address, then confirm with your current password.",
+            "emailHint": "Enter a new address, then confirm with the current password.",
             "emailPlaceholder": "new@email.com",
             "currentPasswordPlaceholder": "Enter current password",
             "newPasswordLabel": "Change password",
-            "passwordHint": "Enter your current password, then choose a new one.",
+            "passwordHint": "Enter the current password, then choose a new one.",
             "newPasswordPlaceholder": "New password (min. 8 characters)",
             "passwordTooShort": "Password must be at least 8 characters.",
             "passwordTooLong": "Password must be at most 72 bytes (about 72 characters).",
             "wrongPassword": "Current password is incorrect.",
             "emailTaken": "That email is already registered.",
-            "emailAndPasswordRequired": "Please enter both a new email address and your current password."
+            "emailAndPasswordRequired": "Please enter both a new email address and the current password."
         },
         "password": {
             "title": "Password",
@@ -412,7 +412,7 @@
         },
         "currency": {
             "title": "Default Currency",
-            "description": "Used to preselect the currency when you create a new bill.",
+            "description": "Used to preselect the currency when a new bill is created.",
             "ariaLabel": "Currency",
             "customOption": "Custom…",
             "customCurrencyAriaLabel": "Custom currency code",
@@ -420,10 +420,10 @@
         },
         "timeZone": {
             "title": "Time zone",
-            "description": "Sets what “today” means for you and the time of day your reminders are sent.",
+            "description": "Sets what “today” means and the time of day reminders are sent.",
             "ariaLabel": "Time zone",
             "placeholder": "e.g. Europe/Warsaw",
-            "useBrowser": "Use my browser’s time zone ({zone})",
+            "useBrowser": "Use the browser’s time zone ({zone})",
             "hint": "Reminder send times are in this time zone, so changing it moves when they arrive.",
             "unknown": "Pick a time zone from the list.",
             "noMatches": "No matching time zone"
@@ -458,7 +458,7 @@
                 "notes": "Notes"
             }
         },
-        "notificationsServerTimeHint": "Notifications are sent in your time zone (<b>{zone}</b>). It is now <b>{time}</b> there.",
+        "notificationsServerTimeHint": "Notifications are sent in the selected time zone (<b>{zone}</b>). It is now <b>{time}</b> there.",
         "emailNotifications": {
             "title": "Email Notifications",
             "description": "Choose when to receive email reminders for upcoming and overdue bills.",
@@ -485,8 +485,8 @@
             "description": "Get notified when a bill is due today.",
             "enable": "Enable notifications",
             "toggle": "Enable browser notifications",
-            "osHint": "Not seeing notifications? Check your OS notification settings (macOS: System Settings → Notifications).",
-            "blockedWarning": "Browser notifications are blocked. Enable them in your browser or operating system settings."
+            "osHint": "No notifications showing? Check the OS notification settings (macOS: System Settings → Notifications).",
+            "blockedWarning": "Browser notifications are blocked. Enable them in the browser or operating system settings."
         },
         "telegramNotifications": {
             "title": "Telegram Notifications",
@@ -497,17 +497,17 @@
             "testSending": "Sending…",
             "testSent": "Test message sent",
             "invalidId": "Chat ID must be a number (negative for groups).",
-            "testFailed": "Test failed. Check the chat ID and that you have messaged the bot first.",
+            "testFailed": "Test failed. Check the chat ID and that the bot has been messaged first.",
             "botTokenLabel": "Bot token",
             "botTokenPlaceholder": "Bot token from @BotFather",
             "botTokenSaved": "Token saved. Enter a new one to replace it.",
             "invalidToken": "Invalid bot token format.",
             "remove": "Remove Telegram",
-            "helpTitle": "How do I get the bot token and chat ID?",
-            "helpStep1": "In Telegram open @BotFather, send /newbot and follow the steps. Copy the token you get.",
-            "helpStep2": "Open your new bot and send it any message (e.g. hi).",
-            "helpStep3": "Open this address in your browser (replace TOKEN with your token):",
-            "helpStep4": "In the result find \"chat\" and then \"id\". That number is your chat ID. Paste the token and the chat ID below.",
+            "helpTitle": "Where do the bot token and chat ID come from?",
+            "helpStep1": "In Telegram open @BotFather, send /newbot and follow the steps. Copy the token it returns.",
+            "helpStep2": "Open the new bot and send it any message (e.g. hi).",
+            "helpStep3": "Open this address in a browser (replace TOKEN with the bot token):",
+            "helpStep4": "In the result find \"chat\" and then \"id\". That number is the chat ID. Paste the token and the chat ID below.",
             "masterToggle": "Enable Telegram notifications",
             "noneWarning": "Select at least one option to receive Telegram reminders.",
             "needCredentials": "Save the bot token and chat ID above to enable sending.",
@@ -515,7 +515,7 @@
         },
         "backup": {
             "title": "Backup Data",
-            "description": "Download a complete copy of all your Pay Tracker data as a backup file.",
+            "description": "Download a complete copy of all Pay Tracker data as a backup file.",
             "button": "Backup"
         },
         "restore": {
@@ -526,7 +526,7 @@
         "about": {
             "title": "App information",
             "description": "Version and useful links.",
-            "text": "Pay Tracker is a household app for keeping track of your bills. It was made with a calm household budget in mind, so that no bill slips through.",
+            "text": "Pay Tracker is a household app for keeping track of bills. It was made with a calm household budget in mind, so that no bill slips through.",
             "licensesTitle": "Licences",
             "licensesText": "This app is built with the open-source components and fonts below. Each one is used under its own license.",
             "version": "App version",
@@ -536,13 +536,13 @@
         },
         "deleteAccount": {
             "title": "Delete Account",
-            "description": "Permanently delete your account and everything linked to it. This cannot be undone.",
+            "description": "Permanently delete the account and everything linked to it. This cannot be undone.",
             "button": "Delete account",
             "error": "Failed to delete account. Please try again."
         },
         "categories": {
             "title": "Categories",
-            "description": "Add your own categories or rename and recolor the defaults.",
+            "description": "Add custom categories or rename and recolor the defaults.",
             "loadError": "Couldn't load categories. Please try again.",
             "nameRequired": "Name is required.",
             "namePlaceholder": "e.g. Hobbies",
@@ -636,7 +636,7 @@
         "dueDateLabel": "Due date",
         "summary": {
             "subject": "Monthly summary for {month_label}",
-            "intro": "Here is your payment summary for {month_label}.",
+            "intro": "Here is the payment summary for {month_label}.",
             "paid_header": "Paid",
             "unpaid_header": "Unpaid / Overdue",
             "bill": "Bill",
@@ -649,11 +649,11 @@
             "nothing_unpaid": "All bills are paid — great job!",
             "total_paid": "Total paid",
             "total_outstanding": "Total outstanding",
-            "footer": "Manage your bills in the Pay Tracker app."
+            "footer": "Bills are managed in the Pay Tracker app."
         },
         "reset": {
-            "subject": "Reset your Pay Tracker password",
-            "body": "You requested a password reset for your Pay Tracker account.\n\nClick the link below to set a new password (valid for {expires_label}):\n{reset_url}\n\nIf you did not request this, you can ignore this email — your password will not change.",
+            "subject": "Reset Pay Tracker password",
+            "body": "A password reset was requested for this Pay Tracker account.\n\nThe link below sets a new password (valid for {expires_label}):\n{reset_url}\n\nIf this was not requested, the email can be ignored — the password will not change.",
             "expires": "{minutes} minutes",
             "noExpiry": "no expiry"
         },
@@ -686,14 +686,14 @@
     },
     "PauseConfirmDialog": {
         "title": "Pause “{billName}”?",
-        "description": "No new payments or reminders will be created for this bill, and its unpaid upcoming payments disappear from Payments. Paid history stays. You can resume it any time.",
+        "description": "No new payments or reminders will be created for this bill, and its unpaid upcoming payments disappear from Payments. Paid history stays. Resuming is possible at any time.",
         "cancel": "Cancel",
         "pause": "Pause",
         "pausing": "Pausing…"
     },
     "ResumeConfirmDialog": {
         "title": "Resume “{billName}”?",
-        "description": "This bill returns to your list and its upcoming payments come back. Months that passed while paused stay empty. A last payment month that has already passed is cleared.",
+        "description": "This bill returns to the list and its upcoming payments come back. Months that passed while paused stay empty. A last payment month that has already passed is cleared.",
         "cancel": "Cancel",
         "resume": "Resume",
         "resuming": "Resuming…"
@@ -711,128 +711,128 @@
             "title": "Get started in 3 steps",
             "progress": "{done} of {total} done",
             "hide": "Hide",
-            "billT": "Add your first bill",
+            "billT": "Add the first bill",
             "billD": "Add each bill once, like rent or electricity. Its payment is created automatically every month.",
             "billCta": "Add bill",
             "paidT": "Mark a payment as paid",
-            "paidD": "When you pay a bill, press <b>{markPaid}</b> next to it.",
+            "paidD": "After a bill is paid, press <b>{markPaid}</b> next to it.",
             "remT": "Turn on reminders",
-            "remD": "Get a message before a bill is due, so you never pay late.",
+            "remD": "A message arrives before a bill is due, so nothing is paid late.",
             "remCta": "Set up"
         },
         "items": {
             "addBill": {
-                "q": "How do I add a bill?",
+                "q": "How is a bill added?",
                 "s1": "Open <b>{bills}</b> and press <b>{newBill}</b>.",
                 "s2": "Type a name, pick a category and write the amount.",
                 "s3": "Choose the day it is due and how often it comes back (every month, every year or just once). Then save it."
             },
             "repeat": {
-                "q": "My bill is not monthly. What now?",
-                "s1": "When you add or edit a bill, choose how often it comes back: every few months, every year or only once.",
-                "s2": "You can also set an end month. Then a bill that ends, like a loan, stops by itself."
+                "q": "The bill is not monthly. What now?",
+                "s1": "When adding or editing a bill, choose how often it comes back: every few months, every year or only once.",
+                "s2": "An end month can also be set. Then a bill that ends, like a loan, stops by itself."
             },
             "editBill": {
-                "q": "How do I change a bill (name, amount, day)?",
+                "q": "How is a bill changed (name, amount, day)?",
                 "s1": "Open <b>{bills}</b> and press <b>{edit}</b> next to the bill.",
-                "s2": "Change what you need and save."
+                "s2": "Change what is needed and save."
             },
             "pause": {
-                "q": "How do I pause a bill?",
+                "q": "How is a bill paused?",
                 "s1": "Open <b>{bills}</b>.",
                 "s2": "Press <b>{pause}</b> next to the bill and confirm.",
-                "s3": "No new payments or reminders will come. What you already paid stays in your history."
+                "s3": "No new payments or reminders will come. What is already paid stays in the history."
             },
             "resume": {
-                "q": "How do I bring back a paused bill?",
+                "q": "How is a paused bill brought back?",
                 "s1": "Open <b>{bills}</b> and press <b>{showPaused}</b>.",
                 "s2": "Press <b>{resume}</b> next to the bill. New payments start again."
             },
             "seePayments": {
-                "q": "Where do I see what I have to pay?",
-                "s1": "Open <b>{payments}</b>. You see the bills of one month, grouped by category.",
+                "q": "Where is what needs to be paid shown?",
+                "s1": "Open <b>{payments}</b>. It shows the bills of one month, grouped by category.",
                 "s2": "Use the arrows next to the month name to go to another month. On a phone, tap the month name to pick one.",
                 "s3": "Press <b>{today}</b> to come back to this month."
             },
             "filters": {
-                "q": "How do I find one payment?",
-                "s1": "Above the list you see <b>{search}</b>. Type a name to search.",
+                "q": "How is one payment found?",
+                "s1": "Above the list is <b>{search}</b>. Type a name to search.",
                 "s2": "Use the filters to show only unpaid bills or one category, and choose how the list is sorted.",
                 "s3": "Open <b>{calendar}</b> and tap a day to see only the payments of that day."
             },
             "markPaid": {
-                "q": "How do I mark a bill as paid?",
+                "q": "How is a bill marked as paid?",
                 "s1": "Open <b>{payments}</b>.",
                 "s2": "Press <b>{markPaid}</b> next to the bill.",
-                "s3": "If you paid another amount or on another day, change it, then confirm."
+                "s3": "If another amount was paid or on another day, change it, then confirm."
             },
             "editPayment": {
-                "q": "I paid a different amount. Can I change it?",
+                "q": "A different amount was paid. Can it be changed?",
                 "s1": "Open <b>{payments}</b> and press <b>{editPayment}</b> (the pencil) next to the bill.",
                 "s2": "Change the amount, the date or the note, then save. It works for paid bills too."
             },
             "revert": {
-                "q": "I marked a bill as paid by mistake",
+                "q": "A bill was marked as paid by mistake",
                 "s1": "Open <b>{payments}</b> and find the bill.",
                 "s2": "Press <b>{revert}</b>. The bill goes back to unpaid."
             },
             "deletePayment": {
-                "q": "How do I remove one payment?",
+                "q": "How is one payment removed?",
                 "s1": "Press <b>{deletePayment}</b> next to it and confirm.",
                 "s2": "The next payments of this bill stay. To stop a bill completely, pause it."
             },
             "export": {
-                "q": "How do I download my payments (Excel or PDF)?",
+                "q": "How are payments downloaded (Excel or PDF)?",
                 "s1": "Open <b>{payments}</b> and choose the month.",
                 "s2": "Next to the month name press <b>XLSX</b> or <b>PDF</b>.",
-                "s3": "Pick this month or the whole year. The file downloads to your device.",
+                "s3": "Pick this month or the whole year. The file downloads to the device.",
                 "s4": "Do not see the buttons? Turn them on in <b>{settings}</b> → <b>{tabReports}</b>."
             },
             "share": {
-                "q": "How do I send a month to someone by email?",
-                "s1": "In <b>{settings}</b> → <b>{tabReports}</b> turn on sharing. You can save the addresses you use often.",
+                "q": "How is a month sent to someone by email?",
+                "s1": "In <b>{settings}</b> → <b>{tabReports}</b> turn on sharing. Frequently used addresses can be saved.",
                 "s2": "Then open <b>{payments}</b> and press the share button (<b>{share}</b>) next to the month name.",
                 "s3": "Pick an address and send."
             },
             "reminders": {
-                "q": "How do I get reminders?",
+                "q": "How are reminders turned on?",
                 "s1": "Open <b>{settings}</b> → <b>{tabNotifications}</b>.",
-                "s2": "Turn on email, browser or Telegram reminders and choose when you want them.",
-                "s3": "Email and Telegram need a short setup first. The page tells you what to fill in."
+                "s2": "Turn on email, browser or Telegram reminders and choose when they should arrive.",
+                "s3": "Email and Telegram need a short setup first. The page shows what to fill in."
             },
             "backup": {
-                "q": "How do I make a backup?",
+                "q": "How is a backup made?",
                 "s1": "Open <b>{settings}</b> → <b>{tabBackup}</b>.",
                 "s2": "Press <b>{backup}</b>, choose what to include and download the file.",
                 "s3": "Keep the file in a safe place."
             },
             "restore": {
-                "q": "How do I bring my data back from a backup?",
+                "q": "How is data brought back from a backup?",
                 "s1": "Open <b>{settings}</b> → <b>{tabBackup}</b>.",
-                "s2": "Press <b>{restore}</b> and choose your backup file.",
-                "s3": "Check the comparison and confirm. Careful: this replaces your current data.",
-                "s4": "Changed your mind? Right after a restore you can bring back the data you had before, on the same page."
+                "s2": "Press <b>{restore}</b> and choose the backup file.",
+                "s3": "Check the comparison and confirm. Careful: this replaces the current data.",
+                "s4": "Changed course? Right after a restore the previous data can be brought back, on the same page."
             },
             "categories": {
-                "q": "How do I add or change categories?",
+                "q": "How are categories added or changed?",
                 "s1": "Open <b>{settings}</b> → <b>{tabCategories}</b>.",
-                "s2": "Add your own, or rename and recolor the ones you have.",
-                "s3": "A category you do not need can be removed. If a bill still uses it, it is only hidden."
+                "s2": "Add custom ones, or rename and recolor the existing ones.",
+                "s3": "A category that is not needed can be removed. If a bill still uses it, it is only hidden."
             },
             "language": {
-                "q": "How do I change the language, currency or time zone?",
+                "q": "How are the language, currency or time zone changed?",
                 "s1": "Open <b>{settings}</b> → <b>{tabPreferences}</b>.",
-                "s2": "There you set the default currency, the number format, the time zone and the languages you can pick. You can also switch the language in the menu."
+                "s2": "There the default currency, the number format, the time zone and the selectable languages are set. The language can also be switched in the menu."
             },
             "account": {
-                "q": "How do I change my email or password?",
+                "q": "How are the email or password changed?",
                 "s1": "Open <b>{settings}</b> → <b>{tabAccount}</b>.",
-                "s2": "Change your email or password there. Forgot your password? Use the link on the sign-in page.",
-                "s3": "You can also delete your account there. This cannot be undone."
+                "s2": "Change the email or password there. Forgot the password? Use the link on the sign-in page.",
+                "s3": "The account can also be deleted there. This cannot be undone."
             },
             "install": {
-                "q": "How do I put the app on my phone?",
-                "s1": "Open the app in your phone’s browser.",
+                "q": "How is the app put on a phone?",
+                "s1": "Open the app in the phone’s browser.",
                 "s2": "In the browser menu choose “Add to Home screen” (on iPhone: Share → “Add to Home Screen”)."
             }
         },

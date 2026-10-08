@@ -2,10 +2,10 @@
     "Auth": {
         "loginSubtitle": "Accedi per continuare a usare PayTracker",
         "welcomeHeading": "Bentornato 👋",
-        "registerSubtitle": "Crea il tuo account",
-        "registerTagline": "Inizia a monitorare le tue bollette con PayTracker",
+        "registerSubtitle": "Creare un account",
+        "registerTagline": "Iniziare a monitorare le bollette con PayTracker",
         "emailLabel": "Email",
-        "emailPlaceholder": "Inserisci la tua email",
+        "emailPlaceholder": "Inserire l’email",
         "passwordLabel": "Password",
         "passwordPlaceholder": "Inserisci la password",
         "passwordHint": "Minimo 8 caratteri",
@@ -18,21 +18,21 @@
         "loginFailed": "Accesso non riuscito",
         "tooManyAttempts": "Troppi tentativi. Attendi qualche minuto e riprova.",
         "sessionExpired": "La sessione è scaduta. Accedi di nuovo.",
-        "noAccount": "Non hai ancora un account?",
+        "noAccount": "Ancora nessun account?",
         "register": "Crea un account",
         "createAccount": "Crea account",
         "creatingAccount": "Creazione account…",
         "registrationFailed": "Registrazione non riuscita",
         "emailAlreadyRegistered": "Questa email è già registrata.",
-        "alreadyHaveAccount": "Hai già un account?",
+        "alreadyHaveAccount": "Account già creato?",
         "forgotPassword": "Password dimenticata?",
-        "forgotPasswordTitle": "Reimposta la tua password",
-        "forgotPasswordSubtitle": "Inserisci la tua email e ti invieremo un link di reimpostazione.",
+        "forgotPasswordTitle": "Reimpostare la password",
+        "forgotPasswordSubtitle": "Dopo l’inserimento dell’email viene inviato un link di reimpostazione.",
         "sendResetLink": "Invia link di reimpostazione",
         "sendingResetLink": "Invio in corso…",
         "resetLinkSent": "Se quell'email è registrata, riceverai a breve un link di reimpostazione.",
         "resetPasswordTitle": "Imposta una nuova password",
-        "resetPasswordSubtitle": "Inserisci e conferma la tua nuova password.",
+        "resetPasswordSubtitle": "Inserire e confermare la nuova password.",
         "newPasswordLabel": "Nuova password",
         "confirmPasswordLabel": "Conferma nuova password",
         "passwordsDoNotMatch": "Le password non corrispondono",
@@ -61,7 +61,7 @@
     },
     "Dashboard": {
         "title": "Benvenuto in Pay Tracker",
-        "subtitle": "Il tuo mese a colpo d’occhio: cosa è pagato, cosa scade e cosa è in ritardo.",
+        "subtitle": "Il mese a colpo d’occhio: cosa è pagato, cosa scade e cosa è in ritardo.",
         "summary": {
             "paid": "Pagato",
             "overdue": "Scaduto",
@@ -104,15 +104,15 @@
         }
     },
     "BillsPage": {
-        "title": "Le mie bollette",
-        "subtitle": "Aggiungi ogni bolletta una sola volta, per esempio l’affitto o la luce. Il pagamento lo creiamo noi ogni mese.",
+        "title": "Bollette",
+        "subtitle": "Ogni bolletta va aggiunta una sola volta, per esempio l’affitto o la luce. Il pagamento viene creato automaticamente ogni mese.",
         "newBill": "Nuova bolletta",
         "cancel": "Annulla",
         "billAdded": "Bolletta «{name}» aggiunta",
         "billSaved": "Bolletta «{name}» salvata",
         "loadError": "Impossibile caricare le bollette.",
         "noBillsYet": "Nessuna bolletta ancora",
-        "addFirstBill": "Aggiungi la tua prima bolletta",
+        "addFirstBill": "Aggiungere la prima bolletta",
         "noFilterResults": "Nessuna bolletta corrisponde al filtro selezionato",
         "collapseAll": "Comprimi tutto",
         "expandAll": "Espandi tutto",
@@ -167,11 +167,11 @@
         "restoring": "Ripristino…"
     },
     "DeleteAccountDialog": {
-        "title": "Eliminare il tuo account?",
-        "description": "Questo eliminerà definitivamente il tuo account e tutto ciò che è collegato: bollette, categorie e cronologia pagamenti. Questa azione non può essere annullata.",
+        "title": "Eliminare l’account?",
+        "description": "Questo eliminerà definitivamente l’account e tutto ciò che è collegato: bollette, categorie e cronologia pagamenti. Questa azione non può essere annullata.",
         "cancel": "Annulla",
         "confirm": "Elimina account",
-        "passwordLabel": "Conferma con la tua password",
+        "passwordLabel": "Confermare con la password",
         "passwordPlaceholder": "Inserisci la password",
         "wrongPassword": "La password attuale non è corretta.",
         "deleting": "Eliminazione…"
@@ -195,7 +195,7 @@
     },
     "PaymentsPage": {
         "title": "Da pagare",
-        "subtitle": "Le tue bollette mese per mese. Tocca «Segna come pagato» quando ne paghi una.",
+        "subtitle": "Le bollette mese per mese. Toccare «Segna come pagato» dopo aver pagato una bolletta.",
         "paymentEdited": "Pagamento «{name}» salvato",
         "paymentPaid": "«{name}» segnata come pagata",
         "paymentDeleted": "Pagamento «{name}» eliminato",
@@ -292,7 +292,7 @@
         "dialogTitle": "Ripristina da backup",
         "dialogDescription": "Questo sostituirà definitivamente i dati contenuti in “{filename}” (le sezioni assenti dal file restano invariate). Questa azione non può essere annullata.",
         "cancel": "Annulla",
-        "confirm": "Sostituisci i miei dati",
+        "confirm": "Sostituisci i dati",
         "restoring": "Ripristino…",
         "error": "Ripristino non riuscito. Controlla il file e riprova.",
         "fileTooLarge": "File troppo grande. I file di backup devono essere inferiori a 10 MB.",
@@ -303,8 +303,8 @@
         "categoriesCount": "{categories} categorie",
         "countsUnavailable": "non disponibile",
         "exportDateUnknown": "data di esportazione sconosciuta (formato di backup precedente)",
-        "staleDataWarning": "Questo backup contiene meno bollette e pagamenti dei tuoi dati attuali. Il ripristino eliminerà definitivamente la differenza.",
-        "noBillsInFile": "Nessuna bolletta o pagamento in questo file: le tue bollette attuali restano invariate.",
+        "staleDataWarning": "Questo backup contiene meno bollette e pagamenti dei dati attuali. Il ripristino eliminerà definitivamente la differenza.",
+        "noBillsInFile": "Nessuna bolletta o pagamento in questo file: le bollette attuali restano invariate.",
         "done": "Dati ripristinati dal backup"
     },
     "BackupButton": {
@@ -332,10 +332,10 @@
         }
     },
     "SnapshotRecoverySection": {
-        "message": "Uno snapshot dei tuoi dati è stato salvato il {date}, appena prima dell'ultimo ripristino.",
+        "message": "Uno snapshot dei dati è stato salvato il {date}, appena prima dell'ultimo ripristino.",
         "restoreButton": "Ripristina questo snapshot",
         "dialogTitle": "Ripristina questo snapshot",
-        "dialogDescription": "Questo sostituirà definitivamente i tuoi dati attuali con lo snapshot creato prima dell'ultimo ripristino. Questa azione non può essere annullata.",
+        "dialogDescription": "Questo sostituirà definitivamente i dati attuali con lo snapshot creato prima dell'ultimo ripristino. Questa azione non può essere annullata.",
         "cancel": "Annulla",
         "confirm": "Ripristina",
         "restoring": "Ripristino…",
@@ -363,7 +363,7 @@
     },
     "SettingsPage": {
         "pageTitle": "Impostazioni",
-        "subtitle": "Rendi PayTracker tuo.",
+        "subtitle": "Personalizzare PayTracker.",
         "tabs": {
             "account": "Account",
             "preferences": "Preferenze",
@@ -374,7 +374,7 @@
             "about": "Informazioni"
         },
         "unsavedTitle": "Modifiche non salvate",
-        "unsavedDescription": "Hai modifiche non salvate. Uscire senza salvare?",
+        "unsavedDescription": "Ci sono modifiche non salvate. Uscire senza salvare?",
         "unsavedLeave": "Esci",
         "unsavedStay": "Rimani",
         "save": "Salva",
@@ -420,10 +420,10 @@
         },
         "timeZone": {
             "title": "Fuso orario",
-            "description": "Stabilisce cosa significa «oggi» per te e a che ora vengono inviati i promemoria.",
+            "description": "Stabilisce cosa significa «oggi» e a che ora vengono inviati i promemoria.",
             "ariaLabel": "Fuso orario",
             "placeholder": "es. Europe/Rome",
-            "useBrowser": "Usa il fuso orario del mio browser ({zone})",
+            "useBrowser": "Usa il fuso orario del browser ({zone})",
             "hint": "Gli orari di invio dei promemoria sono in questo fuso orario, quindi cambiarlo sposta il momento in cui arrivano.",
             "unknown": "Scegli un fuso orario dall’elenco.",
             "noMatches": "Nessun fuso orario corrispondente"
@@ -458,7 +458,7 @@
                 "notes": "Note"
             }
         },
-        "notificationsServerTimeHint": "Le notifiche vengono inviate nel tuo fuso orario (<b>{zone}</b>). Lì ora sono le <b>{time}</b>.",
+        "notificationsServerTimeHint": "Le notifiche vengono inviate nel fuso orario scelto (<b>{zone}</b>). Lì ora sono le <b>{time}</b>.",
         "emailNotifications": {
             "title": "Notifiche via email",
             "description": "Scegli quando ricevere promemoria via email per bollette in scadenza e scadute.",
@@ -485,7 +485,7 @@
             "description": "Ricevi una notifica quando una bolletta scade oggi.",
             "enable": "Attiva notifiche",
             "toggle": "Attiva notifiche del browser",
-            "osHint": "Non vedi le notifiche? Controlla le impostazioni di notifica del sistema operativo (macOS: Impostazioni di sistema → Notifiche).",
+            "osHint": "Le notifiche non compaiono? Controllare le impostazioni di notifica del sistema operativo (macOS: Impostazioni di sistema → Notifiche).",
             "blockedWarning": "Le notifiche del browser sono bloccate. Attivale nelle impostazioni del browser o del sistema operativo."
         },
         "telegramNotifications": {
@@ -505,9 +505,9 @@
             "remove": "Rimuovi Telegram",
             "helpTitle": "Come ottengo il token del bot e l'ID chat?",
             "helpStep1": "In Telegram apri @BotFather, invia /newbot e segui i passaggi. Copia il token ricevuto.",
-            "helpStep2": "Apri il tuo nuovo bot e invia un messaggio qualsiasi (es. ciao).",
-            "helpStep3": "Apri questo indirizzo nel browser (sostituisci TOKEN con il tuo token):",
-            "helpStep4": "Nel risultato cerca \"chat\" e poi \"id\". Quel numero è il tuo ID chat. Incolla token e ID chat qui sotto.",
+            "helpStep2": "Aprire il nuovo bot e inviare un messaggio qualsiasi (es. ciao).",
+            "helpStep3": "Aprire questo indirizzo nel browser (sostituire TOKEN con il token del bot):",
+            "helpStep4": "Nel risultato cercare \"chat\" e poi \"id\". Quel numero è l’ID chat. Incollare token e ID chat qui sotto.",
             "masterToggle": "Attiva le notifiche Telegram",
             "noneWarning": "Seleziona almeno un'opzione per ricevere i promemoria su Telegram.",
             "needCredentials": "Salva qui sopra il token del bot e l'ID chat per abilitare l'invio.",
@@ -515,7 +515,7 @@
         },
         "backup": {
             "title": "Backup dei dati",
-            "description": "Scarica una copia completa di tutti i tuoi dati di Pay Tracker come file di backup.",
+            "description": "Scaricare una copia completa di tutti i dati di Pay Tracker come file di backup.",
             "button": "Backup"
         },
         "restore": {
@@ -532,17 +532,17 @@
             "version": "Versione dell'app",
             "license": "Licenza",
             "licenseValue": "Gratuita per uso non commerciale, con attribuzione",
-            "copyright": "Puoi usare, modificare e condividere Pay Tracker per scopi personali e altri scopi non commerciali. Mantieni il riconoscimento al progetto originale. L’uso commerciale richiede il permesso scritto dell’autore."
+            "copyright": "Pay Tracker può essere usato, modificato e condiviso per scopi personali e altri scopi non commerciali. Mantenere il riconoscimento al progetto originale. L’uso commerciale richiede il permesso scritto dell’autore."
         },
         "deleteAccount": {
             "title": "Elimina account",
-            "description": "Elimina definitivamente il tuo account e tutto ciò che è collegato. Questa azione non può essere annullata.",
+            "description": "Elimina definitivamente l’account e tutto ciò che è collegato. Questa azione non può essere annullata.",
             "button": "Elimina account",
             "error": "Impossibile eliminare l'account. Riprova."
         },
         "categories": {
             "title": "Categorie",
-            "description": "Aggiungi le tue categorie o rinomina e ricolora quelle predefinite.",
+            "description": "Aggiungere categorie personalizzate o rinominare e ricolorare quelle predefinite.",
             "loadError": "Impossibile caricare le categorie. Riprova.",
             "nameRequired": "Il nome è obbligatorio.",
             "namePlaceholder": "es. Hobby",
@@ -618,11 +618,11 @@
         "reminder": {
             "2_days_before": {
                 "subject": "Promemoria: {bill_name} in scadenza tra 2 giorni ({amount} {currency})",
-                "body": "Ti ricordiamo che {bill_name} scade tra 2 giorni ({due_date}).\nImporto: {amount} {currency}"
+                "body": "Promemoria: {bill_name} scade tra 2 giorni ({due_date}).\nImporto: {amount} {currency}"
             },
             "upcoming": {
                 "subject": "Promemoria: {bill_name} in scadenza domani ({amount} {currency})",
-                "body": "Ti ricordiamo che {bill_name} scade domani ({due_date}).\nImporto: {amount} {currency}"
+                "body": "Promemoria: {bill_name} scade domani ({due_date}).\nImporto: {amount} {currency}"
             },
             "on_day": {
                 "subject": "In scadenza oggi: {bill_name} ({amount} {currency})",
@@ -636,7 +636,7 @@
         "dueDateLabel": "Scadenza",
         "summary": {
             "subject": "Riepilogo mensile per {month_label}",
-            "intro": "Ecco il riepilogo dei tuoi pagamenti per {month_label}.",
+            "intro": "Ecco il riepilogo dei pagamenti per {month_label}.",
             "paid_header": "Pagato",
             "unpaid_header": "Non pagato / Scaduto",
             "bill": "Fattura",
@@ -649,11 +649,11 @@
             "nothing_unpaid": "Tutte le fatture sono pagate — ottimo lavoro!",
             "total_paid": "Totale pagato",
             "total_outstanding": "Totale da pagare",
-            "footer": "Gestisci le tue fatture nell'app Pay Tracker."
+            "footer": "Le fatture si gestiscono nell'app Pay Tracker."
         },
         "reset": {
             "subject": "Reimposta la password di Pay Tracker",
-            "body": "Hai richiesto il ripristino della password del tuo account Pay Tracker.\n\nFai clic sul link seguente per impostare una nuova password (valido per {expires_label}):\n{reset_url}\n\nSe non hai fatto tu questa richiesta, puoi ignorare questa email: la tua password non cambierà.",
+            "body": "È stato richiesto il ripristino della password di questo account Pay Tracker.\n\nIl link seguente permette di impostare una nuova password (valido per {expires_label}):\n{reset_url}\n\nSe la richiesta non è stata fatta, questa email può essere ignorata: la password non cambierà.",
             "expires": "{minutes} minuti",
             "noExpiry": "senza scadenza"
         },
@@ -686,7 +686,7 @@
     },
     "PauseConfirmDialog": {
         "title": "Mettere in pausa “{billName}”?",
-        "description": "Questa bolletta non genererà più nuovi pagamenti né promemoria e i suoi prossimi pagamenti non saldati scompariranno da Pagamenti. Lo storico pagato resta. Puoi riprenderla in qualsiasi momento.",
+        "description": "Questa bolletta non genererà più nuovi pagamenti né promemoria e i suoi prossimi pagamenti non saldati scompariranno da Pagamenti. Lo storico pagato resta. La ripresa è possibile in qualsiasi momento.",
         "cancel": "Annulla",
         "pause": "Metti in pausa",
         "pausing": "Messa in pausa…"
@@ -711,7 +711,7 @@
             "title": "Inizia in 3 passi",
             "progress": "{done} di {total} fatti",
             "hide": "Nascondi",
-            "billT": "Aggiungi la tua prima bolletta",
+            "billT": "Aggiungere la prima bolletta",
             "billD": "Aggiungi ogni bolletta una sola volta, ad esempio l’affitto o la luce. Il pagamento di ogni mese viene creato automaticamente.",
             "billCta": "Aggiungi bolletta",
             "paidT": "Segna un pagamento come pagato",
@@ -722,116 +722,116 @@
         },
         "items": {
             "addBill": {
-                "q": "Come aggiungo una bolletta?",
+                "q": "Come si aggiunge una bolletta?",
                 "s1": "Apri <b>{bills}</b> e premi <b>{newBill}</b>.",
-                "s2": "Scrivi un nome, scegli una categoria e inserisci l’importo.",
+                "s2": "Scrivere un nome, scegliere una categoria e inserire l’importo.",
                 "s3": "Scegli il giorno di scadenza e ogni quanto si ripete (ogni mese, ogni anno o una volta sola). Poi salva."
             },
             "repeat": {
-                "q": "La mia bolletta non è mensile. Che faccio?",
-                "s1": "Quando aggiungi o modifichi una bolletta, scegli ogni quanto si ripete: ogni pochi mesi, ogni anno o una volta sola.",
-                "s2": "Puoi anche impostare un mese finale. Così una bolletta che finisce, come un prestito, si ferma da sola."
+                "q": "La bolletta non è mensile. Che fare?",
+                "s1": "Quando si aggiunge o modifica una bolletta, scegliere ogni quanto si ripete: ogni pochi mesi, ogni anno o una volta sola.",
+                "s2": "Si può anche impostare un mese finale. Così una bolletta che finisce, come un prestito, si ferma da sola."
             },
             "editBill": {
-                "q": "Come cambio una bolletta (nome, importo, giorno)?",
+                "q": "Come si cambia una bolletta (nome, importo, giorno)?",
                 "s1": "Apri <b>{bills}</b> e premi <b>{edit}</b> accanto alla bolletta.",
-                "s2": "Cambia ciò che serve e salva."
+                "s2": "Cambiare ciò che serve e salvare."
             },
             "pause": {
-                "q": "Come metto in pausa una bolletta?",
+                "q": "Come si mette in pausa una bolletta?",
                 "s1": "Apri <b>{bills}</b>.",
                 "s2": "Premi <b>{pause}</b> accanto alla bolletta e conferma.",
-                "s3": "Non arriveranno nuovi pagamenti né promemoria. Ciò che hai già pagato resta nella cronologia."
+                "s3": "Non arriveranno nuovi pagamenti né promemoria. Ciò che è già stato pagato resta nella cronologia."
             },
             "resume": {
-                "q": "Come riattivo una bolletta in pausa?",
+                "q": "Come si riattiva una bolletta in pausa?",
                 "s1": "Apri <b>{bills}</b> e premi <b>{showPaused}</b>.",
                 "s2": "Premi <b>{resume}</b> accanto alla bolletta. I nuovi pagamenti ricominciano."
             },
             "seePayments": {
-                "q": "Dove vedo cosa devo pagare?",
-                "s1": "Apri <b>{payments}</b>. Vedi le bollette di un mese, raggruppate per categoria.",
-                "s2": "Con le frecce accanto al nome del mese cambi mese. Sul telefono tocca il nome del mese per sceglierne uno.",
+                "q": "Dove si vede cosa c’è da pagare?",
+                "s1": "Aprire <b>{payments}</b>. Vi compaiono le bollette di un mese, raggruppate per categoria.",
+                "s2": "Con le frecce accanto al nome del mese si cambia mese. Sul telefono, toccare il nome del mese per sceglierne uno.",
                 "s3": "Premi <b>{today}</b> per tornare a questo mese."
             },
             "filters": {
-                "q": "Come trovo un pagamento?",
-                "s1": "Sopra l’elenco vedi <b>{search}</b>. Scrivi un nome per cercare.",
-                "s2": "Con i filtri mostri solo le non pagate o una categoria, e scegli l’ordine dell’elenco.",
+                "q": "Come si trova un pagamento?",
+                "s1": "Sopra l’elenco c’è <b>{search}</b>. Scrivere un nome per cercare.",
+                "s2": "I filtri mostrano solo le non pagate o una categoria, e l’ordine dell’elenco si può scegliere.",
                 "s3": "Apri <b>{calendar}</b> e tocca un giorno per vedere solo i pagamenti di quel giorno."
             },
             "markPaid": {
-                "q": "Come segno una bolletta come pagata?",
+                "q": "Come si segna una bolletta come pagata?",
                 "s1": "Apri <b>{payments}</b>.",
                 "s2": "Premi <b>{markPaid}</b> accanto alla bolletta.",
-                "s3": "Se hai pagato un altro importo o un altro giorno, cambialo e conferma."
+                "s3": "Se è stato pagato un altro importo o un altro giorno, cambiarlo e confermare."
             },
             "editPayment": {
-                "q": "Ho pagato un importo diverso. Posso cambiarlo?",
+                "q": "È stato pagato un importo diverso. Si può cambiare?",
                 "s1": "Apri <b>{payments}</b> e premi <b>{editPayment}</b> (la matita) accanto alla bolletta.",
                 "s2": "Cambia importo, data o nota e salva. Funziona anche per le bollette pagate."
             },
             "revert": {
-                "q": "Ho segnato una bolletta come pagata per sbaglio",
+                "q": "Una bolletta è stata segnata come pagata per sbaglio",
                 "s1": "Apri <b>{payments}</b> e trova la bolletta.",
                 "s2": "Premi <b>{revert}</b>. La bolletta torna da pagare."
             },
             "deletePayment": {
-                "q": "Come tolgo un singolo pagamento?",
+                "q": "Come si toglie un singolo pagamento?",
                 "s1": "Premi <b>{deletePayment}</b> accanto e conferma.",
-                "s2": "I pagamenti successivi di quella bolletta restano. Per fermare del tutto una bolletta, mettila in pausa."
+                "s2": "I pagamenti successivi di quella bolletta restano. Per fermare del tutto una bolletta, metterla in pausa."
             },
             "export": {
-                "q": "Come scarico i miei pagamenti (Excel o PDF)?",
+                "q": "Come si scaricano i pagamenti (Excel o PDF)?",
                 "s1": "Apri <b>{payments}</b> e scegli il mese.",
                 "s2": "Accanto al nome del mese premi <b>XLSX</b> o <b>PDF</b>.",
-                "s3": "Scegli questo mese o tutto l’anno. Il file si scarica sul tuo dispositivo.",
-                "s4": "Non vedi i pulsanti? Attivali in <b>{settings}</b> → <b>{tabReports}</b>."
+                "s3": "Scegliere questo mese o tutto l’anno. Il file si scarica sul dispositivo.",
+                "s4": "I pulsanti non compaiono? Si attivano in <b>{settings}</b> → <b>{tabReports}</b>."
             },
             "share": {
-                "q": "Come invio un mese a qualcuno per e-mail?",
-                "s1": "In <b>{settings}</b> → <b>{tabReports}</b> attiva la condivisione. Puoi salvare gli indirizzi che usi spesso.",
+                "q": "Come si invia un mese a qualcuno per e-mail?",
+                "s1": "In <b>{settings}</b> → <b>{tabReports}</b> attivare la condivisione. Gli indirizzi usati spesso si possono salvare.",
                 "s2": "Poi apri <b>{payments}</b> e premi il pulsante di condivisione (<b>{share}</b>) accanto al nome del mese.",
                 "s3": "Scegli un indirizzo e invia."
             },
             "reminders": {
-                "q": "Come ricevo i promemoria?",
+                "q": "Come si ricevono i promemoria?",
                 "s1": "Apri <b>{settings}</b> → <b>{tabNotifications}</b>.",
                 "s2": "Attiva i promemoria via e-mail, browser o Telegram e scegli quando riceverli.",
-                "s3": "E-mail e Telegram richiedono una breve configurazione. La pagina ti dice cosa compilare."
+                "s3": "E-mail e Telegram richiedono una breve configurazione. La pagina indica cosa compilare."
             },
             "backup": {
-                "q": "Come faccio un backup?",
+                "q": "Come si fa un backup?",
                 "s1": "Apri <b>{settings}</b> → <b>{tabBackup}</b>.",
                 "s2": "Premi <b>{backup}</b>, scegli cosa includere e scarica il file.",
                 "s3": "Conserva il file in un posto sicuro."
             },
             "restore": {
-                "q": "Come recupero i miei dati da un backup?",
+                "q": "Come si recuperano i dati da un backup?",
                 "s1": "Apri <b>{settings}</b> → <b>{tabBackup}</b>.",
                 "s2": "Premi <b>{restore}</b> e scegli il file di backup.",
                 "s3": "Guarda il confronto e conferma. Attenzione: questo sostituisce i dati attuali.",
-                "s4": "Hai cambiato idea? Subito dopo il ripristino puoi riavere i dati di prima nella stessa pagina."
+                "s4": "Ripensamento? Subito dopo il ripristino i dati di prima si possono riavere nella stessa pagina."
             },
             "categories": {
-                "q": "Come aggiungo o cambio le categorie?",
+                "q": "Come si aggiungono o cambiano le categorie?",
                 "s1": "Apri <b>{settings}</b> → <b>{tabCategories}</b>.",
-                "s2": "Aggiungi le tue o cambia nome e colore di quelle esistenti.",
+                "s2": "Aggiungere categorie personalizzate o cambiare nome e colore di quelle esistenti.",
                 "s3": "Una categoria che non serve si può eliminare. Se una bolletta la usa ancora, viene solo nascosta."
             },
             "language": {
-                "q": "Come cambio lingua, valuta o fuso orario?",
+                "q": "Come si cambiano lingua, valuta o fuso orario?",
                 "s1": "Apri <b>{settings}</b> → <b>{tabPreferences}</b>.",
-                "s2": "Lì imposti valuta predefinita, formato dei numeri, fuso orario e lingue disponibili. La lingua si cambia anche dal menu."
+                "s2": "Lì si impostano valuta predefinita, formato dei numeri, fuso orario e lingue disponibili. La lingua si cambia anche dal menu."
             },
             "account": {
-                "q": "Come cambio e-mail o password?",
+                "q": "Come si cambiano e-mail o password?",
                 "s1": "Apri <b>{settings}</b> → <b>{tabAccount}</b>.",
-                "s2": "Cambia lì e-mail o password. Password dimenticata? Usa il link nella pagina di accesso.",
-                "s3": "Lì puoi anche eliminare l’account. Non si può annullare."
+                "s2": "Cambiare lì e-mail o password. Password dimenticata? Usare il link nella pagina di accesso.",
+                "s3": "Lì si può anche eliminare l’account. Non si può annullare."
             },
             "install": {
-                "q": "Come metto l’app sul telefono?",
+                "q": "Come si mette l’app sul telefono?",
                 "s1": "Apri l’app nel browser del telefono.",
                 "s2": "Nel menu del browser scegli “Aggiungi a schermata Home” (iPhone: Condividi → “Aggiungi alla schermata Home”)."
             }
