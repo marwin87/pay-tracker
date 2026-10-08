@@ -56,7 +56,9 @@
         "settings": "Instellingen",
         "logOut": "Uitloggen",
         "userMenu": "Gebruikersmenu",
-        "signedInAs": "Ingelogd als"
+        "signedInAs": "Ingelogd als",
+        "menuGroup": "Menu",
+        "accountGroup": "Account"
     },
     "Dashboard": {
         "title": "Welkom bij Pay Tracker",
@@ -547,7 +549,10 @@
             "text": "Pay Tracker is een huishoudapp om je rekeningen bij te houden. Hij is gemaakt voor een rustig huishoudbudget, zodat er geen rekening tussendoor glipt.",
             "licensesTitle": "Licenties",
             "licensesText": "Deze app is gebouwd met de onderstaande open-sourcecomponenten en lettertypen. Elk daarvan wordt gebruikt onder zijn eigen licentie.",
-            "version": "App-versie"
+            "version": "App-versie",
+            "license": "Licentie",
+            "licenseValue": "Gratis voor niet-commercieel gebruik, met naamsvermelding",
+            "copyright": "Je mag Pay Tracker gebruiken, aanpassen en delen voor persoonlijke en andere niet-commerciële doeleinden. Behoud de vermelding van het oorspronkelijke project. Commercieel gebruik vereist schriftelijke toestemming van de auteur."
         },
         "deleteAccount": {
             "title": "Account verwijderen",

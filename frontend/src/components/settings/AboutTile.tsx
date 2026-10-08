@@ -5,6 +5,9 @@ import { useTranslations } from "next-intl";
 import { Tile, type TileColor } from "@/components/settings/Tile";
 
 const APP_VERSION = process.env.NEXT_PUBLIC_APP_VERSION ?? "dev";
+const AUTHOR = "Mariusz Winiarz";
+const REPO_URL = "https://github.com/marwin87/pay-tracker";
+const LINK_CLASS = "font-medium text-green-700 underline-offset-2 hover:underline dark:text-emerald-400";
 
 // Direct runtime dependencies and shipped fonts; update when adding or removing one (PDF fonts: backend/app/assets/fonts/LICENSES.txt).
 const LICENSES: { group: string; items: [name: string, license: string][] }[] = [
@@ -59,9 +62,18 @@ export function AboutTile({
   return (
     <Tile color={color} icon={Info} title={t("about.title")} description={t("about.description")} t={t}>
       <p className="text-sm text-slate-600 dark:text-slate-300">{t("about.text")}</p>
-      <p className="text-sm text-slate-700 dark:text-slate-200">
-        {t("about.version")}: <span className="font-medium">{APP_VERSION}</span>
-      </p>
+      <dl className="divide-y divide-slate-200 rounded-lg border border-slate-200 text-sm dark:divide-slate-700 dark:border-slate-700">
+        <InfoRow label={t("about.version")}>
+          <span className="rounded-md bg-slate-100 px-2 py-0.5 font-mono text-xs font-medium text-slate-700 dark:bg-slate-700 dark:text-slate-200">
+            {APP_VERSION}
+          </span>
+        </InfoRow>
+        <InfoRow label={t("about.license")}>
+          <a href={`${REPO_URL}/blob/main/LICENSE`} target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
+            {t("about.licenseValue")}
+          </a>
+        </InfoRow>
+      </dl>
       <details className="group rounded-lg border border-slate-200 dark:border-slate-700">
         <summary className="flex cursor-pointer list-none items-center gap-2 px-3.5 py-2.5 text-sm font-semibold text-slate-800 focus-visible:outline-2 focus-visible:outline-green-600 dark:text-slate-100 [&::-webkit-details-marker]:hidden">
           <ChevronRight size={14} className="shrink-0 text-slate-400 transition-transform group-open:rotate-90 dark:text-slate-500" />
@@ -78,7 +90,19 @@ export function AboutTile({
           </table>
         </div>
       </details>
+      <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
+        © 2026 {AUTHOR}. {t("about.copyright")}
+      </p>
     </Tile>
+  );
+}
+
+function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
+  return (
+    <div className="flex items-center justify-between gap-4 px-3.5 py-2.5">
+      <dt className="shrink-0 text-slate-500 dark:text-slate-400">{label}</dt>
+      <dd className="min-w-0 text-right font-medium text-slate-800 dark:text-slate-100">{children}</dd>
+    </div>
   );
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef, ViewTransition } from "react";
+import { useEffect, useLayoutEffect, useState, useRef, ViewTransition } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
@@ -73,12 +73,49 @@ function BottomTabBody({ active, Icon, label, badge = 0 }: { active: boolean; Ic
   );
 }
 
-const sidebarLinkClass = (active: boolean) =>
-  `group flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all ${
-    active
-      ? "border border-green-200 bg-green-50 text-green-800 shadow-sm dark:border-green-800 dark:bg-green-900/30 dark:text-green-300"
-      : "border border-transparent text-slate-600 hover:border-green-200 hover:bg-green-50 hover:text-green-700 dark:text-slate-400 dark:hover:border-green-800 dark:hover:bg-green-900/20 dark:hover:text-green-300"
-  }`;
+// Desktop sidebar row. The active one takes the theme accent; the moving bar/glow are drawn by the layout.
+function SideItem({
+  href,
+  label,
+  Icon,
+  active,
+  badge = 0,
+  innerRef,
+}: {
+  href: string;
+  label: string;
+  Icon: LucideIcon;
+  active: boolean;
+  badge?: number;
+  innerRef: (el: HTMLElement | null) => void;
+}) {
+  return (
+    <Link
+      ref={innerRef}
+      href={href}
+      aria-current={active ? "page" : undefined}
+      className={`group relative z-10 flex items-center gap-3 rounded-xl px-3.5 py-3 text-[15px] transition-colors ${
+        active
+          ? "font-semibold text-[color:var(--nav-accent)]"
+          : "font-medium text-slate-600 hover:bg-slate-100/70 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-white/5 dark:hover:text-slate-200"
+      }`}
+    >
+      <Icon
+        className={`h-5 w-5 transition-transform duration-[450ms] ease-[cubic-bezier(.3,1.7,.5,1)] group-active:scale-85 motion-reduce:transition-none ${
+          active ? "scale-[1.18]" : ""
+        }`}
+      />
+      {label}
+      {badge > 0 && (
+        <span className="ml-auto grid h-5 min-w-5 place-items-center rounded-full bg-red-600 px-1.5 text-xs font-extrabold leading-none tabular-nums text-white">
+          {badge}
+        </span>
+      )}
+    </Link>
+  );
+}
+
+const SIDE_GROUP_CLASS = "px-3.5 pb-1 pt-2 text-[11px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500";
 
 export default function DashboardLayout({
   children,
@@ -156,6 +193,29 @@ export default function DashboardLayout({
   }
   const tabDir = tabState.dir;
 
+  // Desktop sidebar indicator: measured position of the active row, relative to the sidebar content.
+  const sideRef = useRef<HTMLDivElement>(null);
+  const sideItems = useRef<(HTMLElement | null)[]>([]);
+  const [sideInd, setSideInd] = useState<{ top: number; bottom: number } | null>(null);
+  useLayoutEffect(() => {
+    const box = sideRef.current;
+    if (!box) return;
+    function measure() {
+      const el = sideItems.current[tabIdx];
+      if (!box || !el) return setSideInd(null);
+      const b = box.getBoundingClientRect();
+      const r = el.getBoundingClientRect();
+      setSideInd({ top: r.top - b.top, bottom: b.bottom - r.bottom });
+    }
+    measure();
+    // Rows shift without resizing the box (e.g. when the email block loads in), so re-measure on those too.
+    const ro = new ResizeObserver(measure);
+    ro.observe(box);
+    sideItems.current.forEach((el) => el && ro.observe(el));
+    document.fonts?.ready.then(measure);
+    return () => ro.disconnect();
+  }, [tabIdx, isAuthenticated, userEmail]);
+
   if (!isAuthenticated) return null;
 
   const initials = userEmail ? userEmail[0].toUpperCase() : "?";
@@ -165,74 +225,100 @@ export default function DashboardLayout({
     <div className="flex min-h-dvh flex-col -mb-9">
       {/* Desktop sidebar */}
       <aside className="[view-transition-name:app-sidebar] fixed inset-y-0 left-0 z-50 hidden w-60 flex-col overflow-y-auto border-r border-slate-200 dark:border-slate-700 md:flex">
-        <Link
-          href="/dashboard"
-          className="flex items-center gap-2 px-4 py-4 transition-opacity hover:opacity-80"
-        >
-          <Image src="/pt-logo.png" alt="Pay Tracker" width={32} height={32} className="rounded-xl" />
-          <span className="brand-wordmark text-lg font-bold tracking-tight">
-            <span className="text-[#10231A] dark:text-slate-100">Pay</span>
-            <span className="text-[#079447] dark:text-emerald-500">Tracker</span>
-          </span>
-        </Link>
+        <div ref={sideRef} className="relative flex min-h-full flex-1 flex-col">
+          {sideInd && (
+            <>
+              <span
+                aria-hidden
+                data-dir={tabDir}
+                className="side-ind pointer-events-none absolute inset-x-0 z-0 bg-[linear-gradient(90deg,color-mix(in_srgb,var(--nav-accent)_18%,transparent),color-mix(in_srgb,var(--nav-accent)_5%,transparent)_60%,transparent)]"
+                style={{ top: sideInd.top, bottom: sideInd.bottom }}
+              />
+              <span
+                aria-hidden
+                data-dir={tabDir}
+                className="side-ind pointer-events-none absolute left-0 z-20 w-1 rounded-r-full bg-[var(--nav-accent)]"
+                style={{ top: sideInd.top + 6, bottom: sideInd.bottom + 6 }}
+              />
+            </>
+          )}
 
-        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+          <Link
+            href="/dashboard"
+            className="flex items-center gap-2 px-4 py-4 transition-opacity hover:opacity-80"
+          >
+            <Image src="/pt-logo.png" alt="Pay Tracker" width={32} height={32} className="rounded-xl" />
+            <span className="brand-wordmark text-lg font-bold tracking-tight">
+              <span className="text-[#10231A] dark:text-slate-100">Pay</span>
+              <span className="text-[#079447] dark:text-emerald-500">Tracker</span>
+            </span>
+          </Link>
 
-        {userEmail && (
-          <div className="flex items-center gap-2.5 px-4 py-3">
-            <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${palette.grad} text-sm font-bold text-white shadow-md ${palette.shadow}`}>
-              {initials}
-            </div>
-            <span className="truncate text-xs text-slate-500 dark:text-slate-400">{userEmail}</span>
+          <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+
+          {/* Always rendered (blank until the email loads) so the rows below never jump and the indicator stays put. */}
+          <div className="flex h-14 items-center gap-2.5 px-4">
+            {userEmail && (
+              <>
+                <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${palette.grad} text-sm font-bold text-white shadow-md ${palette.shadow}`}>
+                  {initials}
+                </div>
+                <span className="truncate text-xs text-slate-500 dark:text-slate-400">{userEmail}</span>
+              </>
+            )}
           </div>
-        )}
-        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
-        <nav className="flex flex-col gap-1 p-3">
-          {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
-            const active = pathname === href || (!exact && pathname.startsWith(href + "/"));
-            return (
-              <Link
+          <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+
+          <nav className="flex flex-col gap-0.5 p-3">
+            <p className={SIDE_GROUP_CLASS}>{t("menuGroup")}</p>
+            {NAV_ITEMS.map(({ href, labelKey, icon }, i) => (
+              <SideItem
                 key={href}
                 href={href}
-                className={sidebarLinkClass(active)}
-              >
-                <Icon size={16} className={SIDEBAR_ICON_CLASS} />
-                {t(labelKey)}
-              </Link>
-            );
-          })}
-        </nav>
+                label={t(labelKey)}
+                Icon={icon}
+                active={tabIdx === i}
+                badge={href === "/dashboard/payments" ? overdue : 0}
+                innerRef={(el) => { sideItems.current[i] = el; }}
+              />
+            ))}
+          </nav>
 
-        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+          <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
 
-        <div className="flex flex-col gap-0.5 p-3">
-          <Link href={SETTINGS_ITEM.href} className={sidebarLinkClass(pathname.startsWith(SETTINGS_ITEM.href))}>
-            <Settings size={15} className={SIDEBAR_ICON_CLASS} />
-            {t(SETTINGS_ITEM.labelKey)}
-          </Link>
-          <ThemeToggle />
-          <LanguageToggle />
-        </div>
+          <div className="flex flex-col gap-0.5 p-3">
+            <p className={SIDE_GROUP_CLASS}>{t("accountGroup")}</p>
+            <SideItem
+              href={SETTINGS_ITEM.href}
+              label={t(SETTINGS_ITEM.labelKey)}
+              Icon={Settings}
+              active={tabIdx === NAV_ITEMS.length}
+              innerRef={(el) => { sideItems.current[NAV_ITEMS.length] = el; }}
+            />
+            <ThemeToggle />
+            <LanguageToggle />
+          </div>
 
-        <div className="flex-1" />
+          <div className="flex-1" />
 
-        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+          <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
 
-        <div className="p-3">
-          <button
-            data-logout-trigger
-            onClick={logout}
-            className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-slate-600 transition-all md:gap-2 md:rounded-lg md:py-2 md:text-sm hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
-          >
-            <LogOut size={14} className={SIDEBAR_ICON_CLASS} />
-            {t("logOut")}
-          </button>
-        </div>
+          <div className="p-3">
+            <button
+              data-logout-trigger
+              onClick={logout}
+              className="group flex w-full items-center gap-3 rounded-xl px-3.5 py-3 text-[15px] font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+            >
+              <LogOut className={`h-5 w-5 ${SIDEBAR_ICON_CLASS}`} />
+              {t("logOut")}
+            </button>
+          </div>
 
-        <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
+          <div className="mx-4 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
 
-        <div className="app-footer flex h-9 items-center justify-center text-xs text-slate-400 dark:text-slate-500">
-          © {new Date().getFullYear()} Pay Tracker · {process.env.NEXT_PUBLIC_APP_VERSION ?? "dev"}
+          <div className="app-footer flex h-9 items-center justify-center text-xs text-slate-400 dark:text-slate-500">
+            © {new Date().getFullYear()} Pay Tracker · {process.env.NEXT_PUBLIC_APP_VERSION ?? "dev"}
+          </div>
         </div>
       </aside>
 

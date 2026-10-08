@@ -56,7 +56,9 @@
         "settings": "Impostazioni",
         "logOut": "Esci",
         "userMenu": "Menu utente",
-        "signedInAs": "Accesso effettuato come"
+        "signedInAs": "Accesso effettuato come",
+        "menuGroup": "Menu",
+        "accountGroup": "Account"
     },
     "Dashboard": {
         "title": "Benvenuto in Pay Tracker",
@@ -547,7 +549,10 @@
             "text": "Pay Tracker è un'app domestica per tenere sotto controllo le bollette. Nasce per un budget familiare sereno, perché nessuna bolletta venga dimenticata.",
             "licensesTitle": "Licenze",
             "licensesText": "Questa app usa i componenti open source e i font elencati di seguito. Ognuno è utilizzato secondo la propria licenza.",
-            "version": "Versione dell'app"
+            "version": "Versione dell'app",
+            "license": "Licenza",
+            "licenseValue": "Gratuita per uso non commerciale, con attribuzione",
+            "copyright": "Puoi usare, modificare e condividere Pay Tracker per scopi personali e altri scopi non commerciali. Mantieni il riconoscimento al progetto originale. L’uso commerciale richiede il permesso scritto dell’autore."
         },
         "deleteAccount": {
             "title": "Elimina account",

@@ -22,7 +22,7 @@ test('dashboard summarises each currency separately and is reachable from the lo
 
   // Step: the menu marks the dashboard as the current page and leads back to it
   await page.goto('/dashboard/payments');
-  await page.getByRole('navigation').getByRole('link', { name: 'Dashboard' }).click();
+  await page.getByRole('navigation').getByRole('link', { name: 'Overview' }).click();
   await expect(page).toHaveURL(/\/dashboard$/);
 
   // Step: pick EUR — only the €50 bill counts

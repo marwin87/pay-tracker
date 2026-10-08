@@ -56,7 +56,9 @@
         "settings": "Definições",
         "logOut": "Terminar sessão",
         "userMenu": "Menu do utilizador",
-        "signedInAs": "Sessão iniciada como"
+        "signedInAs": "Sessão iniciada como",
+        "menuGroup": "Menu",
+        "accountGroup": "Conta"
     },
     "Dashboard": {
         "title": "Bem-vindo ao Pay Tracker",
@@ -547,7 +549,10 @@
             "text": "O Pay Tracker é uma aplicação doméstica para acompanhar as suas faturas. Foi pensada para um orçamento familiar tranquilo, para que nenhuma fatura passe despercebida.",
             "licensesTitle": "Licenças",
             "licensesText": "Esta aplicação é construída com os componentes de código aberto e os tipos de letra abaixo. Cada um é utilizado ao abrigo da sua própria licença.",
-            "version": "Versão da aplicação"
+            "version": "Versão da aplicação",
+            "license": "Licença",
+            "licenseValue": "Gratuito para uso não comercial, com atribuição",
+            "copyright": "Pode usar, modificar e partilhar o Pay Tracker para fins pessoais e outros fins não comerciais. Mantenha o crédito ao projeto original. O uso comercial requer autorização escrita do autor."
         },
         "deleteAccount": {
             "title": "Eliminar conta",

@@ -56,7 +56,9 @@
         "settings": "Settings",
         "logOut": "Log out",
         "userMenu": "User menu",
-        "signedInAs": "Signed in as"
+        "signedInAs": "Signed in as",
+        "menuGroup": "Menu",
+        "accountGroup": "Account"
     },
     "Dashboard": {
         "title": "Welcome to Pay Tracker",
@@ -547,7 +549,10 @@
             "text": "Pay Tracker is a household app for keeping track of your bills. It was made with a calm household budget in mind, so that no bill slips through.",
             "licensesTitle": "Licences",
             "licensesText": "This app is built with the open-source components and fonts below. Each one is used under its own license.",
-            "version": "App version"
+            "version": "App version",
+            "license": "License",
+            "licenseValue": "Free for non-commercial use, with attribution",
+            "copyright": "You may use, modify and share Pay Tracker for personal and other non-commercial purposes. Please keep the credit to the original project. Commercial use needs written permission from the author."
         },
         "deleteAccount": {
             "title": "Delete Account",
