@@ -50,9 +50,9 @@
     "DashboardLayout": {
         "dashboard": "Overzicht",
         "more": "Meer",
-        "payments": "Betalingen",
+        "payments": "Te betalen",
         "bills": "Rekeningen",
-        "archived": "Gearchiveerd",
+        "archived": "Archief",
         "settings": "Instellingen",
         "logOut": "Uitloggen",
         "userMenu": "Gebruikersmenu",
@@ -60,7 +60,7 @@
     },
     "Dashboard": {
         "title": "Welkom bij Pay Tracker",
-        "subtitle": "Beheer de rekeningen van je huishouden op één plek.",
+        "subtitle": "Je maand in één oogopslag: wat is betaald, wat moet nog en wat is te laat.",
         "summary": {
             "paid": "Betaald",
             "overdue": "Te laat",
@@ -75,7 +75,9 @@
             "loadError": "Het overzicht kon niet worden geladen. Probeer het opnieuw.",
             "loading": "Overzicht laden",
             "currency": "Overzicht tonen in:",
-            "emptyMonth": "Geen betalingen deze maand."
+            "emptyMonth": "Geen betalingen deze maand.",
+            "emptyHelp": "Betalingen verschijnen hier vanzelf zodra je een rekening toevoegt.",
+            "addBill": "Rekening toevoegen"
         },
         "nav": {
             "prev": "Vorige maand",
@@ -101,8 +103,8 @@
         }
     },
     "BillsPage": {
-        "title": "Je rekeningen",
-        "subtitle": "Beheer je terugkerende en eenmalige rekeningen. Voor elke rekening worden automatisch betalingsherinneringen aangemaakt.",
+        "title": "Mijn rekeningen",
+        "subtitle": "Voeg elke rekening één keer toe, bijvoorbeeld huur of stroom. De betaling maken wij elke maand voor je aan.",
         "newBill": "Nieuwe rekening",
         "cancel": "Annuleren",
         "billAdded": "Rekening “{name}” toegevoegd",
@@ -114,16 +116,17 @@
         "viewArchive": "Gearchiveerde rekeningen",
         "noFilterResults": "Geen rekeningen komen overeen met het gekozen filter",
         "collapseAll": "Alles inklappen",
-        "expandAll": "Alles uitklappen"
+        "expandAll": "Alles uitklappen",
+        "emptyHelp": "Een rekening is alles wat je betaalt: elke maand, elk jaar of eenmalig. Voeg hem één keer toe en hij verschijnt bij “Te betalen”."
     },
     "ArchivedBillsPage": {
         "backToActive": "Actieve rekeningen",
-        "title": "Gearchiveerde rekeningen",
-        "subtitle": "De betalingsgeschiedenis van alle gearchiveerde rekeningen blijft bewaard.",
+        "title": "Archief",
+        "subtitle": "Rekeningen die je niet meer betaalt. De betalingsgeschiedenis blijft bewaard.",
         "billRestored": "“{name}” hersteld",
         "loadError": "Gearchiveerde rekeningen laden mislukt.",
         "noArchivedBills": "Geen gearchiveerde rekeningen",
-        "willAppearHere": "Rekeningen die je archiveert verschijnen hier",
+        "willAppearHere": "Gearchiveerde rekeningen komen hier terecht met hun geschiedenis. Je kunt ze altijd terugzetten.",
         "noFilterResults": "Geen gearchiveerde rekeningen komen overeen met het gekozen filter",
         "archived": "Gearchiveerd",
         "collapseAll": "Alles inklappen",
@@ -212,16 +215,16 @@
         "placeholder": "bijv. Nutsvoorzieningen"
     },
     "PaymentsPage": {
-        "title": "Betalingen",
-        "subtitle": "Volg en markeer je rekeningen maand voor maand.",
+        "title": "Te betalen",
+        "subtitle": "Je rekeningen per maand. Tik op “Markeer als betaald” als je er een betaalt.",
         "paymentEdited": "Betaling “{name}” opgeslagen",
         "paymentPaid": "“{name}” als betaald gemarkeerd",
         "paymentDeleted": "Betaling “{name}” verwijderd",
         "paymentReverted": "Betaling “{name}” teruggedraaid",
         "loadError": "Betalingen laden mislukt.",
-        "noPayments": "Geen rekeningen voor deze maand",
+        "noPayments": "Deze maand niets te betalen",
         "noFilterResults": "Geen betalingen komen overeen met de gekozen filters",
-        "addBills": "Rekeningen toevoegen →",
+        "addBills": "Rekening toevoegen",
         "pastMonth": "Verleden",
         "exportXlsx": "Excel-export",
         "exportXlsxLoading": "Bezig met exporteren…",
@@ -243,7 +246,8 @@
         "previousYear": "Vorig jaar",
         "previousMonth": "Vorige maand",
         "nextMonth": "Volgende maand",
-        "nextYear": "Volgend jaar"
+        "nextYear": "Volgend jaar",
+        "emptyHelp": "Betalingen verschijnen hier vanzelf zodra je een rekening toevoegt bij “Rekeningen”."
     },
     "PaymentRow": {
         "status": {

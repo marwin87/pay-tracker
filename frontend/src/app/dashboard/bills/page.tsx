@@ -1,5 +1,6 @@
 "use client";
 
+import { btnPrimaryClass } from "@/components/ui/formButtonClasses";
 import { useEffect, useState } from "react";
 import { ChevronRight, ChevronsUpDown, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -328,12 +329,12 @@ export default function BillsPage() {
             <Plus size={28} />
           </div>
           <p className="font-medium text-slate-700 dark:text-slate-300">{t("noBillsYet")}</p>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            {t("addFirstBill")}
+          <p className="mt-1 max-w-sm text-sm text-slate-500 dark:text-slate-400">
+            {t("emptyHelp")}
           </p>
           <button
             onClick={() => toggleExpand("new")}
-            className="mt-4 rounded-xl border border-green-700 bg-green-700 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800"
+            className={`mt-4 ${btnPrimaryClass}`}
           >
             {t("addFirstBill")}
           </button>

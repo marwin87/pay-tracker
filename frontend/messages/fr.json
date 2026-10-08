@@ -48,11 +48,11 @@
         "hidePassword": "Masquer le mot de passe"
     },
     "DashboardLayout": {
-        "dashboard": "Tableau de bord",
+        "dashboard": "Aperçu",
         "more": "Plus",
-        "payments": "Paiements",
+        "payments": "À payer",
         "bills": "Factures",
-        "archived": "Archivées",
+        "archived": "Archives",
         "settings": "Paramètres",
         "logOut": "Se déconnecter",
         "userMenu": "Menu utilisateur",
@@ -60,7 +60,7 @@
     },
     "Dashboard": {
         "title": "Bienvenue sur Pay Tracker",
-        "subtitle": "Gérez les factures de votre foyer en un seul endroit.",
+        "subtitle": "Votre mois en un coup d’œil : ce qui est payé, ce qui est dû et ce qui est en retard.",
         "summary": {
             "paid": "Payé",
             "overdue": "En retard",
@@ -75,7 +75,9 @@
             "loadError": "Impossible de charger le résumé. Veuillez réessayer.",
             "loading": "Chargement du résumé",
             "currency": "Afficher le résumé en :",
-            "emptyMonth": "Aucun paiement ce mois-ci."
+            "emptyMonth": "Aucun paiement ce mois-ci.",
+            "emptyHelp": "Les paiements apparaissent ici d’eux-mêmes dès que vous ajoutez une facture.",
+            "addBill": "Ajouter une facture"
         },
         "nav": {
             "prev": "Mois précédent",
@@ -101,8 +103,8 @@
         }
     },
     "BillsPage": {
-        "title": "Vos factures",
-        "subtitle": "Gérez vos factures récurrentes et ponctuelles. Chaque facture génère automatiquement des rappels de paiement.",
+        "title": "Mes factures",
+        "subtitle": "Ajoutez chaque facture une seule fois, par exemple le loyer ou l’électricité. Nous créons son paiement chaque mois pour vous.",
         "newBill": "Nouvelle facture",
         "cancel": "Annuler",
         "billAdded": "Facture « {name} » ajoutée",
@@ -114,16 +116,17 @@
         "viewArchive": "Factures archivées",
         "noFilterResults": "Aucune facture ne correspond au filtre sélectionné",
         "collapseAll": "Tout réduire",
-        "expandAll": "Tout développer"
+        "expandAll": "Tout développer",
+        "emptyHelp": "Une facture, c’est tout ce que vous payez : chaque mois, chaque année ou une seule fois. Ajoutez-la une fois et elle apparaît dans « À payer »."
     },
     "ArchivedBillsPage": {
         "backToActive": "Factures actives",
-        "title": "Factures archivées",
-        "subtitle": "L'historique des paiements est conservé pour toutes les factures archivées.",
+        "title": "Archives",
+        "subtitle": "Factures que vous ne payez plus. Leur historique de paiements est conservé.",
         "billRestored": "« {name} » restaurée",
         "loadError": "Échec du chargement des factures archivées.",
         "noArchivedBills": "Aucune facture archivée",
-        "willAppearHere": "Les factures que vous archivez apparaîtront ici",
+        "willAppearHere": "Les factures archivées arrivent ici avec leur historique. Vous pouvez les restaurer à tout moment.",
         "noFilterResults": "Aucune facture archivée ne correspond au filtre sélectionné",
         "archived": "Archivée",
         "collapseAll": "Tout réduire",
@@ -212,16 +215,16 @@
         "placeholder": "ex. Charges"
     },
     "PaymentsPage": {
-        "title": "Paiements",
-        "subtitle": "Suivez et marquez vos factures mois par mois.",
+        "title": "À payer",
+        "subtitle": "Vos factures mois par mois. Touchez « Marquer comme payé » quand vous en payez une.",
         "paymentEdited": "Paiement « {name} » enregistré",
         "paymentPaid": "« {name} » marquée comme payée",
         "paymentDeleted": "Paiement « {name} » supprimé",
         "paymentReverted": "Paiement « {name} » annulé",
         "loadError": "Échec du chargement des paiements.",
-        "noPayments": "Aucune facture pour ce mois",
+        "noPayments": "Rien à payer ce mois-ci",
         "noFilterResults": "Aucun paiement ne correspond aux filtres sélectionnés",
-        "addBills": "Ajouter des factures →",
+        "addBills": "Ajouter une facture",
         "pastMonth": "Passé",
         "exportXlsx": "Export Excel",
         "exportXlsxLoading": "Exportation…",
@@ -243,7 +246,8 @@
         "previousYear": "Année précédente",
         "previousMonth": "Mois précédent",
         "nextMonth": "Mois suivant",
-        "nextYear": "Année suivante"
+        "nextYear": "Année suivante",
+        "emptyHelp": "Les paiements apparaissent ici d’eux-mêmes dès que vous ajoutez une facture dans « Factures »."
     },
     "PaymentRow": {
         "status": {

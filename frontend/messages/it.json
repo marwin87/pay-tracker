@@ -48,11 +48,11 @@
         "hidePassword": "Nascondi password"
     },
     "DashboardLayout": {
-        "dashboard": "Dashboard",
+        "dashboard": "Panoramica",
         "more": "Altro",
-        "payments": "Pagamenti",
+        "payments": "Da pagare",
         "bills": "Bollette",
-        "archived": "Archiviate",
+        "archived": "Archivio",
         "settings": "Impostazioni",
         "logOut": "Esci",
         "userMenu": "Menu utente",
@@ -60,7 +60,7 @@
     },
     "Dashboard": {
         "title": "Benvenuto in Pay Tracker",
-        "subtitle": "Gestisci le bollette di casa in un unico posto.",
+        "subtitle": "Il tuo mese a colpo d’occhio: cosa è pagato, cosa scade e cosa è in ritardo.",
         "summary": {
             "paid": "Pagato",
             "overdue": "Scaduto",
@@ -75,7 +75,9 @@
             "loadError": "Impossibile caricare il riepilogo. Riprova.",
             "loading": "Caricamento del riepilogo",
             "currency": "Mostra riepilogo in:",
-            "emptyMonth": "Nessun pagamento questo mese."
+            "emptyMonth": "Nessun pagamento questo mese.",
+            "emptyHelp": "I pagamenti compaiono qui da soli appena aggiungi una bolletta.",
+            "addBill": "Aggiungi una bolletta"
         },
         "nav": {
             "prev": "Mese precedente",
@@ -101,8 +103,8 @@
         }
     },
     "BillsPage": {
-        "title": "Le tue bollette",
-        "subtitle": "Gestisci le tue bollette ricorrenti e una tantum. Ogni bolletta genera automaticamente i promemoria di pagamento.",
+        "title": "Le mie bollette",
+        "subtitle": "Aggiungi ogni bolletta una sola volta, per esempio l’affitto o la luce. Il pagamento lo creiamo noi ogni mese.",
         "newBill": "Nuova bolletta",
         "cancel": "Annulla",
         "billAdded": "Bolletta «{name}» aggiunta",
@@ -114,16 +116,17 @@
         "viewArchive": "Bollette archiviate",
         "noFilterResults": "Nessuna bolletta corrisponde al filtro selezionato",
         "collapseAll": "Comprimi tutto",
-        "expandAll": "Espandi tutto"
+        "expandAll": "Espandi tutto",
+        "emptyHelp": "Una bolletta è tutto ciò che paghi: ogni mese, ogni anno o una volta sola. Aggiungila una volta e comparirà in «Da pagare»."
     },
     "ArchivedBillsPage": {
         "backToActive": "Bollette attive",
-        "title": "Bollette archiviate",
-        "subtitle": "La cronologia dei pagamenti è conservata per tutte le bollette archiviate.",
+        "title": "Archivio",
+        "subtitle": "Bollette che non paghi più. Lo storico dei pagamenti viene conservato.",
         "billRestored": "«{name}» ripristinata",
         "loadError": "Impossibile caricare le bollette archiviate.",
         "noArchivedBills": "Nessuna bolletta archiviata",
-        "willAppearHere": "Le bollette che archivi appariranno qui",
+        "willAppearHere": "Le bollette archiviate arrivano qui con il loro storico. Puoi ripristinarle quando vuoi.",
         "noFilterResults": "Nessuna bolletta archiviata corrisponde al filtro selezionato",
         "archived": "Archiviata",
         "collapseAll": "Comprimi tutto",
@@ -212,16 +215,16 @@
         "placeholder": "es. Utenze"
     },
     "PaymentsPage": {
-        "title": "Pagamenti",
-        "subtitle": "Monitora e segna le tue bollette mese per mese.",
+        "title": "Da pagare",
+        "subtitle": "Le tue bollette mese per mese. Tocca «Segna come pagato» quando ne paghi una.",
         "paymentEdited": "Pagamento «{name}» salvato",
         "paymentPaid": "«{name}» segnata come pagata",
         "paymentDeleted": "Pagamento «{name}» eliminato",
         "paymentReverted": "Pagamento «{name}» annullato",
         "loadError": "Impossibile caricare i pagamenti.",
-        "noPayments": "Nessuna bolletta per questo mese",
+        "noPayments": "Niente da pagare questo mese",
         "noFilterResults": "Nessun pagamento corrisponde ai filtri selezionati",
-        "addBills": "Aggiungi bollette →",
+        "addBills": "Aggiungi una bolletta",
         "pastMonth": "Passato",
         "exportXlsx": "Esporta in Excel",
         "exportXlsxLoading": "Esportazione…",
@@ -243,7 +246,8 @@
         "previousYear": "Anno precedente",
         "previousMonth": "Mese precedente",
         "nextMonth": "Mese successivo",
-        "nextYear": "Anno successivo"
+        "nextYear": "Anno successivo",
+        "emptyHelp": "I pagamenti compaiono qui da soli appena aggiungi una bolletta in «Bollette»."
     },
     "PaymentRow": {
         "status": {

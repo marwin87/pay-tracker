@@ -50,7 +50,7 @@
     "DashboardLayout": {
         "dashboard": "Übersicht",
         "more": "Mehr",
-        "payments": "Zahlungen",
+        "payments": "Zu zahlen",
         "bills": "Rechnungen",
         "archived": "Archiv",
         "settings": "Einstellungen",
@@ -60,7 +60,7 @@
     },
     "Dashboard": {
         "title": "Willkommen bei Pay Tracker",
-        "subtitle": "Verwalten Sie Ihre Haushaltsrechnungen an einem Ort.",
+        "subtitle": "Ihr Monat auf einen Blick: was bezahlt ist, was fällig ist und was überfällig ist.",
         "summary": {
             "paid": "Bezahlt",
             "overdue": "Überfällig",
@@ -75,7 +75,9 @@
             "loadError": "Die Übersicht konnte nicht geladen werden. Bitte erneut versuchen.",
             "loading": "Übersicht wird geladen",
             "currency": "Zusammenfassung anzeigen in:",
-            "emptyMonth": "Keine Zahlungen in diesem Monat."
+            "emptyMonth": "Keine Zahlungen in diesem Monat.",
+            "emptyHelp": "Zahlungen erscheinen hier von selbst, sobald Sie eine Rechnung hinzufügen.",
+            "addBill": "Rechnung hinzufügen"
         },
         "nav": {
             "prev": "Vorheriger Monat",
@@ -101,8 +103,8 @@
         }
     },
     "BillsPage": {
-        "title": "Ihre Rechnungen",
-        "subtitle": "Verwalten Sie Ihre wiederkehrenden und einmaligen Rechnungen. Jede Rechnung generiert automatisch Zahlungserinnerungen.",
+        "title": "Meine Rechnungen",
+        "subtitle": "Fügen Sie jede Rechnung nur einmal hinzu, z. B. Miete oder Strom. Die Zahlung legen wir jeden Monat für Sie an.",
         "newBill": "Neue Rechnung",
         "cancel": "Abbrechen",
         "billAdded": "Rechnung „{name}“ hinzugefügt",
@@ -114,16 +116,17 @@
         "viewArchive": "Archivierte Rechnungen",
         "noFilterResults": "Keine Rechnungen entsprechen dem ausgewählten Filter",
         "collapseAll": "Alle einklappen",
-        "expandAll": "Alle ausklappen"
+        "expandAll": "Alle ausklappen",
+        "emptyHelp": "Eine Rechnung ist alles, was Sie zahlen: monatlich, jährlich oder einmalig. Einmal hinzufügen, und sie erscheint unter „Zu zahlen“."
     },
     "ArchivedBillsPage": {
         "backToActive": "Aktive Rechnungen",
-        "title": "Archivierte Rechnungen",
-        "subtitle": "Die Zahlungshistorie aller archivierten Rechnungen bleibt erhalten.",
+        "title": "Archiv",
+        "subtitle": "Rechnungen, die Sie nicht mehr zahlen. Ihr Zahlungsverlauf bleibt erhalten.",
         "billRestored": "„{name}“ wiederhergestellt",
         "loadError": "Archivierte Rechnungen konnten nicht geladen werden.",
         "noArchivedBills": "Keine archivierten Rechnungen",
-        "willAppearHere": "Archivierte Rechnungen erscheinen hier",
+        "willAppearHere": "Archivierte Rechnungen landen hier samt Verlauf. Sie können sie jederzeit wiederherstellen.",
         "noFilterResults": "Keine archivierten Rechnungen entsprechen dem ausgewählten Filter",
         "archived": "Archiviert",
         "collapseAll": "Alle einklappen",
@@ -212,16 +215,16 @@
         "placeholder": "z. B. Nebenkosten"
     },
     "PaymentsPage": {
-        "title": "Zahlungen",
-        "subtitle": "Verfolgen und markieren Sie Ihre Rechnungen Monat für Monat.",
+        "title": "Zu zahlen",
+        "subtitle": "Ihre Rechnungen Monat für Monat. Tippen Sie auf „Als bezahlt markieren“, wenn Sie eine bezahlt haben.",
         "paymentEdited": "Zahlung „{name}“ gespeichert",
         "paymentPaid": "„{name}“ als bezahlt markiert",
         "paymentDeleted": "Zahlung „{name}“ gelöscht",
         "paymentReverted": "Zahlung „{name}“ zurückgesetzt",
         "loadError": "Zahlungen konnten nicht geladen werden.",
-        "noPayments": "Keine Rechnungen für diesen Monat",
+        "noPayments": "Diesen Monat ist nichts zu zahlen",
         "noFilterResults": "Keine Zahlungen entsprechen den ausgewählten Filtern",
-        "addBills": "Rechnungen hinzufügen →",
+        "addBills": "Rechnung hinzufügen",
         "pastMonth": "Vergangen",
         "exportXlsx": "Excel-Export",
         "exportXlsxLoading": "Exportiere…",
@@ -243,7 +246,8 @@
         "previousYear": "Vorheriges Jahr",
         "previousMonth": "Vorheriger Monat",
         "nextMonth": "Nächster Monat",
-        "nextYear": "Nächstes Jahr"
+        "nextYear": "Nächstes Jahr",
+        "emptyHelp": "Zahlungen erscheinen hier von selbst, sobald Sie unter „Rechnungen“ eine Rechnung hinzufügen."
     },
     "PaymentRow": {
         "status": {

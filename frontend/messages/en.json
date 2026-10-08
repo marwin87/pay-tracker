@@ -48,11 +48,11 @@
         "hidePassword": "Hide password"
     },
     "DashboardLayout": {
-        "dashboard": "Dashboard",
+        "dashboard": "Overview",
         "more": "More",
-        "payments": "Payments",
-        "bills": "Bills",
-        "archived": "Archived",
+        "payments": "To pay",
+        "bills": "My bills",
+        "archived": "Archive",
         "settings": "Settings",
         "logOut": "Log out",
         "userMenu": "User menu",
@@ -60,7 +60,7 @@
     },
     "Dashboard": {
         "title": "Welcome to Pay Tracker",
-        "subtitle": "Manage your household bills in one place.",
+        "subtitle": "Your month at a glance: what is paid, what is due and what is late.",
         "summary": {
             "paid": "Paid",
             "overdue": "Overdue",
@@ -75,7 +75,9 @@
             "loadError": "Couldn't load the summary. Please try again.",
             "loading": "Loading summary",
             "currency": "Show summary in:",
-            "emptyMonth": "No payments this month."
+            "emptyMonth": "No payments this month.",
+            "emptyHelp": "Payments show up here by themselves once you add a bill.",
+            "addBill": "Add a bill"
         },
         "nav": {
             "prev": "Previous month",
@@ -101,8 +103,8 @@
         }
     },
     "BillsPage": {
-        "title": "Your Bills",
-        "subtitle": "Manage your recurring and one-off bills. Each bill generates payment reminders automatically.",
+        "title": "My bills",
+        "subtitle": "Add each bill once, e.g. rent or electricity. We create its payment every month for you.",
         "newBill": "New Bill",
         "cancel": "Cancel",
         "billAdded": "Bill “{name}” added",
@@ -114,16 +116,17 @@
         "viewArchive": "Archived bills",
         "noFilterResults": "No bills match the selected filter",
         "collapseAll": "Collapse all",
-        "expandAll": "Expand all"
+        "expandAll": "Expand all",
+        "emptyHelp": "A bill is anything you pay: every month, every year or just once. Add it once and it appears in “To pay”."
     },
     "ArchivedBillsPage": {
         "backToActive": "Active bills",
-        "title": "Archived Bills",
-        "subtitle": "Payment history is preserved for all archived bills.",
+        "title": "Archive",
+        "subtitle": "Bills you no longer pay. Their payment history is kept.",
         "billRestored": "“{name}” restored",
         "loadError": "Failed to load archived bills.",
         "noArchivedBills": "No archived bills",
-        "willAppearHere": "Bills you archive will appear here",
+        "willAppearHere": "Archived bills land here with their history. You can restore them any time.",
         "noFilterResults": "No archived bills match the selected filter",
         "archived": "Archived",
         "collapseAll": "Collapse all",
@@ -212,16 +215,16 @@
         "placeholder": "e.g. Utilities"
     },
     "PaymentsPage": {
-        "title": "Payments",
-        "subtitle": "Track and mark your bills month by month.",
+        "title": "To pay",
+        "subtitle": "Your bills for each month. Tap “Mark as Paid” when you pay one.",
         "paymentEdited": "Payment “{name}” saved",
         "paymentPaid": "“{name}” marked as paid",
         "paymentDeleted": "Payment “{name}” deleted",
         "paymentReverted": "Payment “{name}” reverted",
         "loadError": "Failed to load payments.",
-        "noPayments": "No bills for this month",
+        "noPayments": "Nothing to pay this month",
         "noFilterResults": "No payments match the selected filters",
-        "addBills": "Add bills →",
+        "addBills": "Add a bill",
         "pastMonth": "Past",
         "exportXlsx": "Excel Export",
         "exportXlsxLoading": "Exporting…",
@@ -243,7 +246,8 @@
         "previousYear": "Previous year",
         "previousMonth": "Previous month",
         "nextMonth": "Next month",
-        "nextYear": "Next year"
+        "nextYear": "Next year",
+        "emptyHelp": "Payments show up here by themselves once you add a bill in “My bills”."
     },
     "PaymentRow": {
         "status": {

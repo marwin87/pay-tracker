@@ -7,3 +7,7 @@ export const btnSaveClass =
 
 export const btnCancelClass =
   "rounded-lg border border-slate-200 bg-white px-4 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:bg-slate-700 dark:hover:text-slate-200";
+
+// Solid call-to-action for empty states (a button or a link styled as one).
+export const btnPrimaryClass =
+  "inline-block rounded-xl border border-green-700 bg-green-700 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-all hover:border-green-800 hover:bg-green-800";

@@ -48,9 +48,9 @@
         "hidePassword": "Ukryj hasło"
     },
     "DashboardLayout": {
-        "dashboard": "Pulpit",
+        "dashboard": "Przegląd",
         "more": "Więcej",
-        "payments": "Płatności",
+        "payments": "Do zapłaty",
         "bills": "Rachunki",
         "archived": "Archiwum",
         "settings": "Ustawienia",
@@ -60,7 +60,7 @@
     },
     "Dashboard": {
         "title": "Witaj w Pay Tracker",
-        "subtitle": "Zarządzaj rachunkami domowymi w jednym miejscu.",
+        "subtitle": "Twój miesiąc w skrócie: co zapłacone, co do zapłaty i co po terminie.",
         "summary": {
             "paid": "Zapłacone",
             "overdue": "Po terminie",
@@ -75,7 +75,9 @@
             "loadError": "Nie udało się wczytać podsumowania. Spróbuj ponownie.",
             "loading": "Wczytywanie podsumowania",
             "currency": "Pokaż podsumowanie w:",
-            "emptyMonth": "Brak płatności w tym miesiącu."
+            "emptyMonth": "Brak płatności w tym miesiącu.",
+            "emptyHelp": "Płatności pojawią się tu same, gdy dodasz rachunek.",
+            "addBill": "Dodaj rachunek"
         },
         "nav": {
             "prev": "Poprzedni miesiąc",
@@ -101,8 +103,8 @@
         }
     },
     "BillsPage": {
-        "title": "Twoje rachunki",
-        "subtitle": "Zarządzaj swoimi cyklicznymi i jednorazowymi rachunkami. Każdy rachunek automatycznie generuje przypomnienia o płatnościach.",
+        "title": "Moje rachunki",
+        "subtitle": "Dodaj każdy rachunek raz, np. czynsz albo prąd. Płatność co miesiąc utworzymy za Ciebie.",
         "newBill": "Nowy rachunek",
         "cancel": "Anuluj",
         "billAdded": "Dodano rachunek „{name}”",
@@ -114,16 +116,17 @@
         "viewArchive": "Zarchiwizowane rachunki",
         "noFilterResults": "Brak rachunków pasujących do wybranego filtra",
         "collapseAll": "Zwiń wszystko",
-        "expandAll": "Rozwiń wszystko"
+        "expandAll": "Rozwiń wszystko",
+        "emptyHelp": "Rachunek to wszystko, co płacisz: co miesiąc, co rok albo jednorazowo. Dodaj go raz, a pojawi się w zakładce „Do zapłaty”."
     },
     "ArchivedBillsPage": {
         "backToActive": "Aktywne rachunki",
-        "title": "Zarchiwizowane rachunki",
-        "subtitle": "Historia płatności jest zachowana dla wszystkich zarchiwizowanych rachunków.",
+        "title": "Archiwum",
+        "subtitle": "Rachunki, których już nie płacisz. Ich historia płatności zostaje.",
         "billRestored": "Przywrócono „{name}”",
         "loadError": "Nie udało się załadować zarchiwizowanych rachunków.",
         "noArchivedBills": "Brak zarchiwizowanych rachunków",
-        "willAppearHere": "Tutaj pojawią się zarchiwizowane rachunki",
+        "willAppearHere": "Zarchiwizowane rachunki trafiają tu razem z historią. Możesz je przywrócić w każdej chwili.",
         "noFilterResults": "Brak zarchiwizowanych rachunków pasujących do wybranego filtra",
         "archived": "Zarchiwizowany",
         "collapseAll": "Zwiń wszystko",
@@ -212,16 +215,16 @@
         "placeholder": "np. Media"
     },
     "PaymentsPage": {
-        "title": "Płatności",
-        "subtitle": "Śledź i oznaczaj swoje rachunki miesiąc po miesiącu.",
+        "title": "Do zapłaty",
+        "subtitle": "Twoje rachunki miesiąc po miesiącu. Gdy zapłacisz, kliknij „Oznacz jako opłacone”.",
         "paymentEdited": "Zapisano płatność „{name}”",
         "paymentPaid": "Zapłacono „{name}”",
         "paymentDeleted": "Usunięto płatność „{name}”",
         "paymentReverted": "Cofnięto płatność „{name}”",
         "loadError": "Nie udało się załadować płatności.",
-        "noPayments": "Brak rachunków w tym miesiącu",
+        "noPayments": "W tym miesiącu nic do zapłaty",
         "noFilterResults": "Brak płatności pasujących do wybranych filtrów",
-        "addBills": "Dodaj rachunki →",
+        "addBills": "Dodaj rachunek",
         "pastMonth": "Poprzedni",
         "exportXlsx": "Eksport Excel",
         "exportXlsxLoading": "Eksportowanie…",
@@ -243,7 +246,8 @@
         "previousYear": "Poprzedni rok",
         "previousMonth": "Poprzedni miesiąc",
         "nextMonth": "Następny miesiąc",
-        "nextYear": "Następny rok"
+        "nextYear": "Następny rok",
+        "emptyHelp": "Płatności pojawią się tu same, gdy dodasz rachunek w zakładce „Rachunki”."
     },
     "PaymentRow": {
         "status": {

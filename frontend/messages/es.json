@@ -48,11 +48,11 @@
         "hidePassword": "Ocultar contraseña"
     },
     "DashboardLayout": {
-        "dashboard": "Panel",
+        "dashboard": "Resumen",
         "more": "Más",
-        "payments": "Pagos",
+        "payments": "Por pagar",
         "bills": "Facturas",
-        "archived": "Archivadas",
+        "archived": "Archivo",
         "settings": "Ajustes",
         "logOut": "Cerrar sesión",
         "userMenu": "Menú de usuario",
@@ -60,7 +60,7 @@
     },
     "Dashboard": {
         "title": "Bienvenido a Pay Tracker",
-        "subtitle": "Gestiona las facturas de tu hogar en un solo lugar.",
+        "subtitle": "Tu mes de un vistazo: qué está pagado, qué vence y qué está atrasado.",
         "summary": {
             "paid": "Pagado",
             "overdue": "Vencido",
@@ -75,7 +75,9 @@
             "loadError": "No se pudo cargar el resumen. Inténtalo de nuevo.",
             "loading": "Cargando resumen",
             "currency": "Mostrar resumen en:",
-            "emptyMonth": "No hay pagos este mes."
+            "emptyMonth": "No hay pagos este mes.",
+            "emptyHelp": "Los pagos aparecen aquí solos en cuanto añades una factura.",
+            "addBill": "Añadir una factura"
         },
         "nav": {
             "prev": "Mes anterior",
@@ -101,8 +103,8 @@
         }
     },
     "BillsPage": {
-        "title": "Tus facturas",
-        "subtitle": "Gestiona tus facturas recurrentes y puntuales. Cada factura genera recordatorios de pago automáticamente.",
+        "title": "Mis facturas",
+        "subtitle": "Añade cada factura una sola vez, por ejemplo el alquiler o la luz. Nosotros creamos su pago cada mes.",
         "newBill": "Nueva factura",
         "cancel": "Cancelar",
         "billAdded": "Factura «{name}» añadida",
@@ -114,16 +116,17 @@
         "viewArchive": "Facturas archivadas",
         "noFilterResults": "Ninguna factura coincide con el filtro seleccionado",
         "collapseAll": "Contraer todo",
-        "expandAll": "Expandir todo"
+        "expandAll": "Expandir todo",
+        "emptyHelp": "Una factura es todo lo que pagas: cada mes, cada año o una sola vez. Añádela una vez y aparecerá en «Por pagar»."
     },
     "ArchivedBillsPage": {
         "backToActive": "Facturas activas",
-        "title": "Facturas archivadas",
-        "subtitle": "El historial de pagos se conserva para todas las facturas archivadas.",
+        "title": "Archivo",
+        "subtitle": "Facturas que ya no pagas. Se conserva su historial de pagos.",
         "billRestored": "«{name}» restaurada",
         "loadError": "No se pudieron cargar las facturas archivadas.",
         "noArchivedBills": "No hay facturas archivadas",
-        "willAppearHere": "Las facturas que archives aparecerán aquí",
+        "willAppearHere": "Las facturas archivadas llegan aquí con su historial. Puedes restaurarlas cuando quieras.",
         "noFilterResults": "Ninguna factura archivada coincide con el filtro seleccionado",
         "archived": "Archivada",
         "collapseAll": "Contraer todo",
@@ -212,16 +215,16 @@
         "placeholder": "p. ej. Servicios"
     },
     "PaymentsPage": {
-        "title": "Pagos",
-        "subtitle": "Controla y marca tus facturas mes a mes.",
+        "title": "Por pagar",
+        "subtitle": "Tus facturas mes a mes. Toca «Marcar como pagado» cuando pagues una.",
         "paymentEdited": "Pago «{name}» guardado",
         "paymentPaid": "«{name}» marcada como pagada",
         "paymentDeleted": "Pago «{name}» eliminado",
         "paymentReverted": "Pago «{name}» revertido",
         "loadError": "No se pudieron cargar los pagos.",
-        "noPayments": "No hay facturas para este mes",
+        "noPayments": "Nada que pagar este mes",
         "noFilterResults": "Ningún pago coincide con los filtros seleccionados",
-        "addBills": "Añadir facturas →",
+        "addBills": "Añadir una factura",
         "pastMonth": "Pasado",
         "exportXlsx": "Exportar a Excel",
         "exportXlsxLoading": "Exportando…",
@@ -243,7 +246,8 @@
         "previousYear": "Año anterior",
         "previousMonth": "Mes anterior",
         "nextMonth": "Mes siguiente",
-        "nextYear": "Año siguiente"
+        "nextYear": "Año siguiente",
+        "emptyHelp": "Los pagos aparecen aquí solos en cuanto añades una factura en «Facturas»."
     },
     "PaymentRow": {
         "status": {

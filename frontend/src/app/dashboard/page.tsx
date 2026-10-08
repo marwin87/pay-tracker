@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
 import { monthIn } from "@/lib/today";
@@ -14,6 +15,7 @@ import {
 } from "@/lib/payments-api";
 import { fetchMe } from "@/lib/user-api";
 import { getCached, setCached } from "@/lib/page-cache";
+import { btnPrimaryClass } from "@/components/ui/formButtonClasses";
 import { currenciesByVolume, pickCurrency, summarize } from "@/lib/summary";
 import MonthSummaryCard, { CARD_CLASS } from "@/components/dashboard/MonthSummaryCard";
 import CategoryDonut from "@/components/dashboard/CategoryDonut";
@@ -100,6 +102,14 @@ export default function DashboardPage() {
         <section className={CARD_CLASS}>
           <MonthNav month={month} currentMonth={currentMonth} minMonth={minMonth} monthLabel={monthLabel} onChange={setMonth} />
           <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{t("summary.emptyMonth")}</p>
+          {month >= currentMonth && (
+            <>
+              <p className="mt-1 max-w-md text-sm text-slate-500 dark:text-slate-400">{t("summary.emptyHelp")}</p>
+              <Link href="/dashboard/bills" className={`mt-4 ${btnPrimaryClass}`}>
+                {t("summary.addBill")}
+              </Link>
+            </>
+          )}
         </section>
       )}
       {data && summary && currency && (

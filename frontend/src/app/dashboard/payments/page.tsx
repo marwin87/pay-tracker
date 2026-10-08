@@ -1,5 +1,6 @@
 "use client";
 
+import { btnPrimaryClass } from "@/components/ui/formButtonClasses";
 import { getCached, setCached } from "@/lib/page-cache";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -875,12 +876,12 @@ function PaymentsPageInner() {
             {instances.length === 0 ? t("noPayments") : t("noFilterResults")}
           </p>
           {instances.length === 0 && !isReadOnly && (
-            <Link
-              href="/dashboard/bills"
-              className="mt-3 text-sm font-medium text-green-700 hover:underline dark:text-green-500"
-            >
-              {t("addBills")}
-            </Link>
+            <>
+              <p className="mt-1 max-w-sm text-sm text-slate-500 dark:text-slate-400">{t("emptyHelp")}</p>
+              <Link href="/dashboard/bills" className={`mt-4 ${btnPrimaryClass}`}>
+                {t("addBills")}
+              </Link>
+            </>
           )}
         </div>
       )}

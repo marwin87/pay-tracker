@@ -48,11 +48,11 @@
         "hidePassword": "隐藏密码"
     },
     "DashboardLayout": {
-        "dashboard": "仪表盘",
+        "dashboard": "概览",
         "more": "更多",
-        "payments": "付款",
+        "payments": "待付款",
         "bills": "账单",
-        "archived": "已归档",
+        "archived": "归档",
         "settings": "设置",
         "logOut": "退出登录",
         "userMenu": "用户菜单",
@@ -60,7 +60,7 @@
     },
     "Dashboard": {
         "title": "欢迎使用 Pay Tracker",
-        "subtitle": "在一处集中管理您的家庭账单。",
+        "subtitle": "一览本月：哪些已付、哪些待付、哪些已逾期。",
         "summary": {
             "paid": "已付",
             "overdue": "已逾期",
@@ -75,7 +75,9 @@
             "loadError": "无法加载概览，请重试。",
             "loading": "正在加载概览",
             "currency": "显示摘要币种：",
-            "emptyMonth": "本月没有付款记录。"
+            "emptyMonth": "本月没有付款记录。",
+            "emptyHelp": "添加账单后，付款会自动出现在这里。",
+            "addBill": "添加账单"
         },
         "nav": {
             "prev": "上个月",
@@ -101,8 +103,8 @@
         }
     },
     "BillsPage": {
-        "title": "您的账单",
-        "subtitle": "管理您的周期性和一次性账单。每个账单会自动生成付款提醒。",
+        "title": "我的账单",
+        "subtitle": "每个账单只需添加一次，例如房租或电费。我们会每月为您生成付款。",
         "newBill": "新建账单",
         "cancel": "取消",
         "billAdded": "已添加账单“{name}”",
@@ -114,16 +116,17 @@
         "viewArchive": "已归档账单",
         "noFilterResults": "没有符合所选筛选条件的账单",
         "collapseAll": "全部折叠",
-        "expandAll": "全部展开"
+        "expandAll": "全部展开",
+        "emptyHelp": "账单就是您要支付的一切：每月、每年或仅一次。添加一次，它就会出现在“待付款”中。"
     },
     "ArchivedBillsPage": {
         "backToActive": "有效账单",
-        "title": "已归档账单",
-        "subtitle": "所有已归档账单的付款记录都会被保留。",
+        "title": "归档",
+        "subtitle": "您不再支付的账单。其付款记录会保留。",
         "billRestored": "已恢复“{name}”",
         "loadError": "已归档账单加载失败。",
         "noArchivedBills": "暂无已归档账单",
-        "willAppearHere": "您归档的账单将显示在此处",
+        "willAppearHere": "已归档的账单会连同记录一起放在这里。您可以随时恢复。",
         "noFilterResults": "没有符合所选筛选条件的已归档账单",
         "archived": "已归档",
         "collapseAll": "全部折叠",
@@ -212,16 +215,16 @@
         "placeholder": "例如：水电"
     },
     "PaymentsPage": {
-        "title": "付款",
-        "subtitle": "按月跟踪并标记您的账单。",
+        "title": "待付款",
+        "subtitle": "按月查看您的账单。付款后点击“标记为已付款”。",
         "paymentEdited": "已保存付款“{name}”",
         "paymentPaid": "已标记“{name}”为已付款",
         "paymentDeleted": "已删除付款“{name}”",
         "paymentReverted": "已撤销付款“{name}”",
         "loadError": "付款记录加载失败。",
-        "noPayments": "本月暂无账单",
+        "noPayments": "本月没有待付款项",
         "noFilterResults": "没有符合所选筛选条件的付款记录",
-        "addBills": "添加账单 →",
+        "addBills": "添加账单",
         "pastMonth": "已过去",
         "exportXlsx": "导出 Excel",
         "exportXlsxLoading": "正在导出…",
@@ -243,7 +246,8 @@
         "previousYear": "上一年",
         "previousMonth": "上个月",
         "nextMonth": "下个月",
-        "nextYear": "下一年"
+        "nextYear": "下一年",
+        "emptyHelp": "在“账单”中添加账单后，付款会自动出现在这里。"
     },
     "PaymentRow": {
         "status": {
