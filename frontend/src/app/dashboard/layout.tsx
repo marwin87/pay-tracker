@@ -10,7 +10,7 @@ import { useAuth } from "@/context/auth-context";
 import { getAuthToken } from "@/lib/auth";
 import { fetchMe } from "@/lib/user-api";
 import { fetchPayments } from "@/lib/payments-api";
-import { setOverdueBadge } from "@/lib/app-badge";
+import { setOverdueBadge, useOverdueCount } from "@/lib/app-badge";
 import { monthIn } from "@/lib/today";
 import { useLocale } from "@/context/locale-context";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -48,22 +48,25 @@ const SIDEBAR_ICON_CLASS =
   "transition-transform duration-150 ease-out group-active:scale-80 motion-reduce:transition-none motion-reduce:group-active:scale-100";
 
 const bottomTabClass = (active: boolean) =>
-  `group flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-1.5 text-[11px] font-medium transition-colors ${
+  `group relative z-10 flex min-w-0 flex-1 flex-col items-center gap-0.5 px-1 py-1.5 text-[11px] font-medium transition-colors ${
     active ? "text-green-700 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"
   }`;
 
-function BottomTabBody({ active, Icon, label }: { active: boolean; Icon: LucideIcon; label: string }) {
+function BottomTabBody({ active, Icon, label, badge = 0 }: { active: boolean; Icon: LucideIcon; label: string; badge?: number }) {
   return (
     <>
-      <span
-        className={`flex h-7 w-14 items-center justify-center rounded-full transition-colors ${
-          active ? "bg-green-100 dark:bg-emerald-900/30" : ""
-        }`}
-      >
+      <span className="relative flex h-7 items-center justify-center">
         <Icon
           size={20}
-          className={`${SIDEBAR_ICON_CLASS} ${active ? "animate-[icon-pop_260ms_ease-out] motion-reduce:animate-none" : ""}`}
+          className={`transition-transform duration-[450ms] ease-[cubic-bezier(.3,1.7,.5,1)] group-active:scale-85 motion-reduce:transition-none ${
+            active ? "-translate-y-[3px] scale-[1.18]" : ""
+          }`}
         />
+        {badge > 0 && (
+          <span className="absolute -right-2.5 -top-0.5 grid h-[17px] min-w-[17px] place-items-center rounded-full border-2 border-white bg-red-500 px-1 text-[10px] font-bold leading-none text-white dark:border-slate-800">
+            {badge}
+          </span>
+        )}
       </span>
       <span className="max-w-full truncate">{label}</span>
     </>
@@ -90,6 +93,8 @@ export default function DashboardLayout({
   const [menuOpen, setMenuOpen] = useState(false);
   const [userEmail, setUserEmail] = useState<string | null>(null);
   const menuRef = useRef<HTMLElement>(null);
+  const overdue = useOverdueCount();
+  const overdueLoaded = useRef(false);
 
   useEffect(() => {
     // `isAuthenticated` is forced false for one render right after hydration
@@ -110,7 +115,10 @@ export default function DashboardLayout({
 
   // Payments page sets the badge itself; the dashboard home needs it here.
   useEffect(() => {
-    if (!isAuthenticated || pathname !== "/dashboard") return;
+    if (!isAuthenticated || pathname === "/dashboard/payments") return;
+    // Home refreshes on every visit; other pages fetch once so the tab badge is filled.
+    if (pathname !== "/dashboard" && overdueLoaded.current) return;
+    overdueLoaded.current = true;
     fetchPayments(monthIn(timeZone))
       .then((list) => setOverdueBadge(list.filter((i) => i.status === "overdue").length))
       .catch(() => {});
@@ -135,6 +143,18 @@ export default function DashboardLayout({
     if (menuOpen) document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
   }, [menuOpen]);
+
+  // Bottom bar: index of the active tab (More = last) drives the sliding indicator.
+  const navIdx = NAV_ITEMS.findIndex(
+    ({ href, exact }) => pathname === href || (!exact && pathname.startsWith(href + "/")),
+  );
+  const tabIdx = menuOpen || pathname.startsWith(SETTINGS_ITEM.href) ? NAV_ITEMS.length : navIdx;
+  // Derived during render (not a ref) so the stretch direction is set in the same render as the move.
+  const [tabState, setTabState] = useState({ idx: tabIdx, dir: "R" });
+  if (tabState.idx !== tabIdx) {
+    setTabState({ idx: tabIdx, dir: tabIdx > tabState.idx ? "R" : "L" });
+  }
+  const tabDir = tabState.dir;
 
   if (!isAuthenticated) return null;
 
@@ -272,8 +292,24 @@ export default function DashboardLayout({
             </div>
           </div>
         )}
-        {NAV_ITEMS.map(({ href, labelKey, icon: Icon, exact }) => {
-          const active = pathname === href || (!exact && pathname.startsWith(href + "/"));
+        {tabIdx >= 0 && (
+          <>
+            <span
+              aria-hidden
+              data-dir={tabDir}
+              className="tab-ind pointer-events-none absolute top-0 h-[62px] bg-[radial-gradient(ellipse_70%_100%_at_50%_0,color-mix(in_srgb,var(--color-green-600)_28%,transparent),color-mix(in_srgb,var(--color-green-600)_10%,transparent)_55%,transparent_80%)] [mask-image:linear-gradient(#000,transparent)] dark:bg-[radial-gradient(ellipse_70%_100%_at_50%_0,color-mix(in_srgb,var(--color-emerald-400)_26%,transparent),color-mix(in_srgb,var(--color-emerald-400)_9%,transparent)_55%,transparent_80%)]"
+              style={{ left: `${tabIdx * 20}%`, right: `${100 - (tabIdx + 1) * 20}%` }}
+            />
+            <span
+              aria-hidden
+              data-dir={tabDir}
+              className="tab-ind pointer-events-none absolute -top-px z-20 h-[3px] rounded-b-md bg-gradient-to-r from-transparent via-green-600 to-transparent dark:via-emerald-400"
+              style={{ left: `${tabIdx * 20 + 2}%`, right: `${100 - (tabIdx + 1) * 20 + 2}%` }}
+            />
+          </>
+        )}
+        {NAV_ITEMS.map(({ href, labelKey, icon: Icon }, i) => {
+          const active = tabIdx === i;
           return (
             <Link
               key={href}
@@ -282,12 +318,17 @@ export default function DashboardLayout({
               aria-current={active ? "page" : undefined}
               className={bottomTabClass(active)}
             >
-              <BottomTabBody active={active} Icon={Icon} label={t(labelKey)} />
+              <BottomTabBody
+                active={active}
+                Icon={Icon}
+                label={t(labelKey)}
+                badge={href === "/dashboard/payments" ? overdue : 0}
+              />
             </Link>
           );
         })}
         {(() => {
-          const active = menuOpen || pathname.startsWith(SETTINGS_ITEM.href);
+          const active = tabIdx === NAV_ITEMS.length;
           return (
             <button
               type="button"

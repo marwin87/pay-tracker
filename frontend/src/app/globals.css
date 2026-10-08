@@ -293,8 +293,11 @@ html.dark:not(.theme-vesperfall) body {
   border-top-color: #c29a3f;
 }
 
-/* Bottom tab bar: the newly active tab icon pops once. */
-@keyframes icon-pop { 0% { transform: scale(1); } 40% { transform: scale(1.18); } 100% { transform: scale(1); } }
+/* Bottom tab bar indicator: left/right edges move at different speeds, so it stretches toward the new tab. */
+.tab-ind { transition: left 300ms cubic-bezier(.3,.8,.3,1), right 300ms cubic-bezier(.3,.8,.3,1); }
+.tab-ind[data-dir="R"] { transition: left 420ms cubic-bezier(.3,.8,.3,1) 60ms, right 260ms cubic-bezier(.3,.8,.3,1); }
+.tab-ind[data-dir="L"] { transition: left 260ms cubic-bezier(.3,.8,.3,1), right 420ms cubic-bezier(.3,.8,.3,1) 60ms; }
+@media (prefers-reduced-motion: reduce) { .tab-ind { transition: none !important; } }
 
 /* Soft fade when switching dashboard pages (keyed by pathname on <main>). */
 @keyframes page-in { from { opacity: 0; } to { opacity: 1; } }
