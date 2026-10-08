@@ -52,7 +52,6 @@
         "more": "Más",
         "payments": "Por pagar",
         "bills": "Facturas",
-        "archived": "Archivo",
         "settings": "Ajustes",
         "logOut": "Cerrar sesión",
         "userMenu": "Menú de usuario",
@@ -111,30 +110,18 @@
         "cancel": "Cancelar",
         "billAdded": "Factura «{name}» añadida",
         "billSaved": "Factura «{name}» guardada",
-        "billArchived": "«{name}» archivada",
         "loadError": "No se pudieron cargar las facturas.",
         "noBillsYet": "Aún no hay facturas",
         "addFirstBill": "Añade tu primera factura",
-        "viewArchive": "Facturas archivadas",
         "noFilterResults": "Ninguna factura coincide con el filtro seleccionado",
         "collapseAll": "Contraer todo",
         "expandAll": "Expandir todo",
-        "emptyHelp": "Una factura es todo lo que pagas: cada mes, cada año o una sola vez. Añádela una vez y aparecerá en «Por pagar»."
-    },
-    "ArchivedBillsPage": {
-        "backToActive": "Facturas activas",
-        "title": "Archivo",
-        "subtitle": "Facturas que ya no pagas. Se conserva su historial de pagos.",
-        "billRestored": "«{name}» restaurada",
-        "loadError": "No se pudieron cargar las facturas archivadas.",
-        "noArchivedBills": "No hay facturas archivadas",
-        "willAppearHere": "Las facturas archivadas llegan aquí con su historial. Puedes restaurarlas cuando quieras.",
-        "noFilterResults": "Ninguna factura archivada coincide con el filtro seleccionado",
-        "archived": "Archivada",
-        "collapseAll": "Contraer todo",
-        "expandAll": "Expandir todo",
-        "restore": "Restaurar",
-        "restoreError": "No se pudo restaurar la factura."
+        "emptyHelp": "Una factura es todo lo que pagas: cada mes, cada año o una sola vez. Añádela una vez y aparecerá en «Por pagar».",
+        "billPaused": "«{name}» en pausa",
+        "billResumed": "«{name}» reanudada",
+        "showPaused": "Mostrar facturas en pausa",
+        "paused": "En pausa",
+        "resumeError": "No se pudo reanudar la factura."
     },
     "BillTemplateForm": {
         "nameLabel": "Nombre",
@@ -166,7 +153,8 @@
         "lastPayment": "Último pago: {month}",
         "close": "Cerrar",
         "edit": "Editar",
-        "archive": "Archivar"
+        "pause": "Pausar",
+        "resume": "Reanudar"
     },
     "RestoreDeletedDialog": {
         "title": "¿Restaurar pagos eliminados?",
@@ -174,13 +162,6 @@
         "restore": "Restaurar",
         "skip": "Omitir",
         "restoring": "Restaurando…"
-    },
-    "ArchiveConfirmDialog": {
-        "title": "¿Archivar “{billName}”?",
-        "description": "Dejarás de recibir nuevos pagos y recordatorios de esta factura, y sus próximos pagos sin pagar desaparecerán de Pagos. El historial pagado se conserva. Puedes restaurarla en cualquier momento desde el archivo.",
-        "cancel": "Cancelar",
-        "archive": "Archivar",
-        "archiving": "Archivando…"
     },
     "DeleteAccountDialog": {
         "title": "¿Eliminar tu cuenta?",
@@ -191,13 +172,6 @@
         "passwordPlaceholder": "Introduce tu contraseña",
         "wrongPassword": "La contraseña actual es incorrecta.",
         "deleting": "Eliminando…"
-    },
-    "RestoreConfirmDialog": {
-        "title": "¿Restaurar “{billName}”?",
-        "description": "Esta factura vuelve a la lista activa y sus próximos pagos reaparecen. Los meses que pasaron mientras estaba archivada quedan vacíos. Un último mes de pago que ya pasó se borra.",
-        "cancel": "Cancelar",
-        "restore": "Restaurar",
-        "restoring": "Restaurando…"
     },
     "Frequencies": {
         "monthly": "Mensual",
@@ -408,7 +382,6 @@
         "passwordChanged": "Contraseña cambiada",
         "telegramSaved": "Ajustes de Telegram guardados",
         "categorySaved": "Categoría guardada",
-        "categoryArchived": "Categoría archivada",
         "categoryRestored": "Categoría restaurada",
         "settingsSaved": "Ajustes guardados",
         "saveFailed": "Error al guardar. Inténtalo de nuevo.",
@@ -572,11 +545,11 @@
             "defaultBadge": "predeterminada",
             "archivedBadge": "archivada",
             "edit": "Editar",
-            "archive": "Archivar",
             "unarchive": "Desarchivar",
             "addNew": "Añadir categoría",
             "newColorsLabel": "Colores nuevos",
-            "usedColorsLabel": "Colores usados"
+            "usedColorsLabel": "Colores usados",
+            "delete": "Eliminar"
         },
         "pdfExport": {
             "title": "Exportación a PDF",
@@ -591,7 +564,9 @@
             "addPlaceholder": "nombre@example.com",
             "add": "Añadir correo",
             "remove": "Quitar {email}"
-        }
+        },
+        "categoryDeleted": "Categoría eliminada",
+        "categoryInUseArchived": "La categoría se usa en facturas, así que se archivó en su lugar"
     },
     "Categories": {
         "housing": "Vivienda",
@@ -704,5 +679,19 @@
         "send": "Enviar",
         "sending": "Enviando…",
         "failed": "No se pudo enviar el correo."
+    },
+    "PauseConfirmDialog": {
+        "title": "¿Pausar “{billName}”?",
+        "description": "Esta factura dejará de generar nuevos pagos y recordatorios, y sus próximos pagos sin pagar desaparecerán de Pagos. El historial pagado se conserva. Puedes reanudarla en cualquier momento.",
+        "cancel": "Cancelar",
+        "pause": "Pausar",
+        "pausing": "Pausando…"
+    },
+    "ResumeConfirmDialog": {
+        "title": "¿Reanudar “{billName}”?",
+        "description": "Esta factura vuelve a la lista y sus próximos pagos reaparecen. Los meses que pasaron mientras estaba en pausa quedan vacíos. Un último mes de pago que ya pasó se borra.",
+        "cancel": "Cancelar",
+        "resume": "Reanudar",
+        "resuming": "Reanudando…"
     }
 }

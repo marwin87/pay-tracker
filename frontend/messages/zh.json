@@ -52,7 +52,6 @@
         "more": "更多",
         "payments": "待付款",
         "bills": "账单",
-        "archived": "归档",
         "settings": "设置",
         "logOut": "退出登录",
         "userMenu": "用户菜单",
@@ -111,30 +110,18 @@
         "cancel": "取消",
         "billAdded": "已添加账单“{name}”",
         "billSaved": "已保存账单“{name}”",
-        "billArchived": "已归档“{name}”",
         "loadError": "账单加载失败。",
         "noBillsYet": "暂无账单",
         "addFirstBill": "添加您的第一个账单",
-        "viewArchive": "已归档账单",
         "noFilterResults": "没有符合所选筛选条件的账单",
         "collapseAll": "全部折叠",
         "expandAll": "全部展开",
-        "emptyHelp": "账单就是您要支付的一切：每月、每年或仅一次。添加一次，它就会出现在“待付款”中。"
-    },
-    "ArchivedBillsPage": {
-        "backToActive": "有效账单",
-        "title": "归档",
-        "subtitle": "您不再支付的账单。其付款记录会保留。",
-        "billRestored": "已恢复“{name}”",
-        "loadError": "已归档账单加载失败。",
-        "noArchivedBills": "暂无已归档账单",
-        "willAppearHere": "已归档的账单会连同记录一起放在这里。您可以随时恢复。",
-        "noFilterResults": "没有符合所选筛选条件的已归档账单",
-        "archived": "已归档",
-        "collapseAll": "全部折叠",
-        "expandAll": "全部展开",
-        "restore": "恢复",
-        "restoreError": "账单恢复失败。"
+        "emptyHelp": "账单就是您要支付的一切：每月、每年或仅一次。添加一次，它就会出现在“待付款”中。",
+        "billPaused": "已暂停“{name}”",
+        "billResumed": "已恢复“{name}”",
+        "showPaused": "显示已暂停的账单",
+        "paused": "已暂停",
+        "resumeError": "恢复账单失败。"
     },
     "BillTemplateForm": {
         "nameLabel": "名称",
@@ -166,7 +153,8 @@
         "lastPayment": "最后一次付款：{month}",
         "close": "关闭",
         "edit": "编辑",
-        "archive": "归档"
+        "pause": "暂停",
+        "resume": "恢复"
     },
     "RestoreDeletedDialog": {
         "title": "恢复已删除的付款记录？",
@@ -174,13 +162,6 @@
         "restore": "恢复",
         "skip": "跳过",
         "restoring": "正在恢复…"
-    },
-    "ArchiveConfirmDialog": {
-        "title": "归档“{billName}”？",
-        "description": "此账单将不再生成新的付款和提醒，其未付的即将到期付款会从“付款”中消失。已付历史会保留。你可以随时从存档中恢复。",
-        "cancel": "取消",
-        "archive": "归档",
-        "archiving": "正在归档…"
     },
     "DeleteAccountDialog": {
         "title": "删除您的账户？",
@@ -191,13 +172,6 @@
         "passwordPlaceholder": "请输入密码",
         "wrongPassword": "当前密码不正确。",
         "deleting": "正在删除…"
-    },
-    "RestoreConfirmDialog": {
-        "title": "恢复“{billName}”？",
-        "description": "此账单将回到活动列表，其即将到期的付款会重新出现。存档期间已过去的月份保持为空。已过去的最后付款月份将被清除。",
-        "cancel": "取消",
-        "restore": "恢复",
-        "restoring": "正在恢复…"
     },
     "Frequencies": {
         "monthly": "每月",
@@ -408,7 +382,6 @@
         "passwordChanged": "密码已更改",
         "telegramSaved": "已保存 Telegram 设置",
         "categorySaved": "已保存分类",
-        "categoryArchived": "已归档分类",
         "categoryRestored": "已恢复分类",
         "settingsSaved": "设置已保存",
         "saveFailed": "保存失败，请重试。",
@@ -572,11 +545,11 @@
             "defaultBadge": "默认",
             "archivedBadge": "已归档",
             "edit": "编辑",
-            "archive": "归档",
             "unarchive": "取消归档",
             "addNew": "添加类别",
             "newColorsLabel": "新颜色",
-            "usedColorsLabel": "已用颜色"
+            "usedColorsLabel": "已用颜色",
+            "delete": "删除"
         },
         "pdfExport": {
             "title": "PDF 导出",
@@ -591,7 +564,9 @@
             "addPlaceholder": "name@example.com",
             "add": "添加邮箱",
             "remove": "移除 {email}"
-        }
+        },
+        "categoryDeleted": "已删除分类",
+        "categoryInUseArchived": "该分类正被账单使用，已改为归档"
     },
     "Categories": {
         "housing": "住房",
@@ -704,5 +679,19 @@
         "send": "发送",
         "sending": "发送中…",
         "failed": "无法发送邮件。"
+    },
+    "PauseConfirmDialog": {
+        "title": "暂停“{billName}”？",
+        "description": "此账单将不再生成新的付款和提醒，其未付的即将到期付款会从“付款”中消失。已付历史会保留。你可以随时恢复。",
+        "cancel": "取消",
+        "pause": "暂停",
+        "pausing": "正在暂停…"
+    },
+    "ResumeConfirmDialog": {
+        "title": "恢复“{billName}”？",
+        "description": "此账单将回到列表，其即将到期的付款会重新出现。暂停期间已过去的月份保持为空。已过去的最后付款月份将被清除。",
+        "cancel": "取消",
+        "resume": "恢复",
+        "resuming": "正在恢复…"
     }
 }

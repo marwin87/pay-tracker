@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useState, useRef, ViewTransition } from "re
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-import { Archive, CalendarCheck, ClipboardPen, Ellipsis, LayoutGrid, LogOut, Settings, type LucideIcon } from "lucide-react";
+import { CalendarCheck, ClipboardPen, Ellipsis, LayoutGrid, LogOut, Settings, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useAuth } from "@/context/auth-context";
 import { getAuthToken } from "@/lib/auth";
@@ -38,7 +38,6 @@ const NAV_ITEMS = [
   { href: "/dashboard", labelKey: "dashboard" as const, icon: LayoutGrid, exact: true },
   { href: "/dashboard/payments", labelKey: "payments" as const, icon: CalendarCheck, exact: false },
   { href: "/dashboard/bills", labelKey: "bills" as const, icon: ClipboardPen, exact: true },
-  { href: "/dashboard/bills/archived", labelKey: "archived" as const, icon: Archive, exact: false },
 ];
 
 // Settings lives in the avatar menu on desktop and in the hamburger menu on mobile.

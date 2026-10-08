@@ -52,7 +52,6 @@
         "more": "Mehr",
         "payments": "Zu zahlen",
         "bills": "Rechnungen",
-        "archived": "Archiv",
         "settings": "Einstellungen",
         "logOut": "Abmelden",
         "userMenu": "Benutzermenü",
@@ -111,30 +110,18 @@
         "cancel": "Abbrechen",
         "billAdded": "Rechnung „{name}“ hinzugefügt",
         "billSaved": "Rechnung „{name}“ gespeichert",
-        "billArchived": "„{name}“ archiviert",
         "loadError": "Rechnungen konnten nicht geladen werden.",
         "noBillsYet": "Noch keine Rechnungen",
         "addFirstBill": "Erste Rechnung hinzufügen",
-        "viewArchive": "Archivierte Rechnungen",
         "noFilterResults": "Keine Rechnungen entsprechen dem ausgewählten Filter",
         "collapseAll": "Alle einklappen",
         "expandAll": "Alle ausklappen",
-        "emptyHelp": "Eine Rechnung ist alles, was Sie zahlen: monatlich, jährlich oder einmalig. Einmal hinzufügen, und sie erscheint unter „Zu zahlen“."
-    },
-    "ArchivedBillsPage": {
-        "backToActive": "Aktive Rechnungen",
-        "title": "Archiv",
-        "subtitle": "Rechnungen, die Sie nicht mehr zahlen. Ihr Zahlungsverlauf bleibt erhalten.",
-        "billRestored": "„{name}“ wiederhergestellt",
-        "loadError": "Archivierte Rechnungen konnten nicht geladen werden.",
-        "noArchivedBills": "Keine archivierten Rechnungen",
-        "willAppearHere": "Archivierte Rechnungen landen hier samt Verlauf. Sie können sie jederzeit wiederherstellen.",
-        "noFilterResults": "Keine archivierten Rechnungen entsprechen dem ausgewählten Filter",
-        "archived": "Archiviert",
-        "collapseAll": "Alle einklappen",
-        "expandAll": "Alle ausklappen",
-        "restore": "Wiederherstellen",
-        "restoreError": "Rechnung konnte nicht wiederhergestellt werden."
+        "emptyHelp": "Eine Rechnung ist alles, was Sie zahlen: monatlich, jährlich oder einmalig. Einmal hinzufügen, und sie erscheint unter „Zu zahlen“.",
+        "billPaused": "„{name}“ pausiert",
+        "billResumed": "„{name}“ fortgesetzt",
+        "showPaused": "Pausierte Rechnungen anzeigen",
+        "paused": "Pausiert",
+        "resumeError": "Rechnung konnte nicht fortgesetzt werden."
     },
     "BillTemplateForm": {
         "nameLabel": "Name",
@@ -166,7 +153,8 @@
         "lastPayment": "Letzte Zahlung: {month}",
         "close": "Schließen",
         "edit": "Bearbeiten",
-        "archive": "Archivieren"
+        "pause": "Pausieren",
+        "resume": "Fortsetzen"
     },
     "RestoreDeletedDialog": {
         "title": "Gelöschte Zahlungen wiederherstellen?",
@@ -174,13 +162,6 @@
         "restore": "Wiederherstellen",
         "skip": "Überspringen",
         "restoring": "Wird wiederhergestellt…"
-    },
-    "ArchiveConfirmDialog": {
-        "title": "„{billName}” archivieren?",
-        "description": "Für diese Rechnung gibt es keine neuen Zahlungen und Erinnerungen mehr, und ihre unbezahlten kommenden Zahlungen verschwinden aus Zahlungen. Bezahlte Zahlungen bleiben erhalten. Du kannst sie jederzeit aus dem Archiv wiederherstellen.",
-        "cancel": "Abbrechen",
-        "archive": "Archivieren",
-        "archiving": "Archivierung…"
     },
     "DeleteAccountDialog": {
         "title": "Konto löschen?",
@@ -191,13 +172,6 @@
         "passwordPlaceholder": "Passwort eingeben",
         "wrongPassword": "Das aktuelle Passwort ist falsch.",
         "deleting": "Wird gelöscht…"
-    },
-    "RestoreConfirmDialog": {
-        "title": "„{billName}” wiederherstellen?",
-        "description": "Diese Rechnung kehrt in die aktive Liste zurück und ihre kommenden Zahlungen erscheinen wieder. Monate, die während der Archivierung vergangen sind, bleiben leer. Ein bereits vergangener letzter Zahlungsmonat wird entfernt.",
-        "cancel": "Abbrechen",
-        "restore": "Wiederherstellen",
-        "restoring": "Wiederherstellung…"
     },
     "Frequencies": {
         "monthly": "Monatlich",
@@ -408,7 +382,6 @@
         "passwordChanged": "Passwort geändert",
         "telegramSaved": "Telegram-Einstellungen gespeichert",
         "categorySaved": "Kategorie gespeichert",
-        "categoryArchived": "Kategorie archiviert",
         "categoryRestored": "Kategorie wiederhergestellt",
         "settingsSaved": "Einstellungen gespeichert",
         "saveFailed": "Speichern fehlgeschlagen. Bitte erneut versuchen.",
@@ -572,11 +545,11 @@
             "defaultBadge": "Standard",
             "archivedBadge": "archiviert",
             "edit": "Bearbeiten",
-            "archive": "Archivieren",
             "unarchive": "Wiederherstellen",
             "addNew": "Kategorie hinzufügen",
             "newColorsLabel": "Neue Farben",
-            "usedColorsLabel": "Verwendete Farben"
+            "usedColorsLabel": "Verwendete Farben",
+            "delete": "Löschen"
         },
         "pdfExport": {
             "title": "PDF-Export",
@@ -591,7 +564,9 @@
             "addPlaceholder": "name@example.com",
             "add": "Adresse hinzufügen",
             "remove": "{email} entfernen"
-        }
+        },
+        "categoryDeleted": "Kategorie gelöscht",
+        "categoryInUseArchived": "Kategorie wird von Rechnungen verwendet und wurde stattdessen archiviert"
     },
     "Categories": {
         "housing": "Wohnen",
@@ -704,5 +679,19 @@
         "send": "Senden",
         "sending": "Wird gesendet…",
         "failed": "E-Mail konnte nicht gesendet werden."
+    },
+    "PauseConfirmDialog": {
+        "title": "„{billName}” pausieren?",
+        "description": "Für diese Rechnung gibt es keine neuen Zahlungen und Erinnerungen mehr, und ihre unbezahlten kommenden Zahlungen verschwinden aus Zahlungen. Bezahlte Zahlungen bleiben erhalten. Du kannst sie jederzeit fortsetzen.",
+        "cancel": "Abbrechen",
+        "pause": "Pausieren",
+        "pausing": "Pausiere…"
+    },
+    "ResumeConfirmDialog": {
+        "title": "„{billName}” fortsetzen?",
+        "description": "Diese Rechnung kehrt in die Liste zurück und ihre kommenden Zahlungen erscheinen wieder. Monate, die während der Pause vergangen sind, bleiben leer. Ein bereits vergangener letzter Zahlungsmonat wird entfernt.",
+        "cancel": "Abbrechen",
+        "resume": "Fortsetzen",
+        "resuming": "Setze fort…"
     }
 }

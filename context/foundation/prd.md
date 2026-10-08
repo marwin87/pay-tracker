@@ -102,9 +102,9 @@ household finance manager does not need to check the dashboard proactively.
 - FR-004: User can edit an existing bill template. Priority: must-have
   > Socratic: No counter-argument — template values (amount, due day) change over time.
 
-- FR-005: User can archive a bill template (hidden from active view; existing payment
+- FR-005: User can pause a bill template (hidden from active view; existing payment
   history preserved). Priority: must-have
-  > Socratic: Archive preferred over hard delete — prevents accidental financial history
+  > Socratic: Pause (stored as `is_archived`) preferred over hard delete — prevents accidental financial history
   > loss. Archived templates' instances remain accessible via export.
 
 ### Payment Instances
@@ -214,7 +214,7 @@ household finance manager does not need to check the dashboard proactively.
 ### Post-v1 additions (implemented; details in `context/archive/history.md`)
 
 - FR-023: Categories are per-user DB records (9 defaults seeded; create, rename, recolor,
-  archive/unarchive). Archiving a category does not touch bills or payments using it.
+  delete when unused, archive instead when bills use it). Archiving a category does not touch bills or payments using it.
   Supersedes the fixed category enum from S-15.
 - FR-024: Per-user default currency (PLN, EUR, USD, CNY, custom) used for new bills.
 - FR-025: Restore is guarded: the confirmation dialog compares current vs. backup data,
@@ -225,7 +225,7 @@ household finance manager does not need to check the dashboard proactively.
 - FR-028: User can delete their account with all data (cascade).
 - FR-029: Payments view: calendar of due days, multi-select status/category filters,
   payment date and note on Mark as Paid, confirmation before reverting.
-- FR-030: Archived bill templates can be restored to the active list.
+- FR-030: Paused bill templates are listed with the active ones ("Show paused") and can be resumed.
 - FR-031: Settings page (tabs: profile, preferences, notifications, categories, backup/restore).
 - FR-032: Demo mode: pre-seeded demo account/image (`demo/`), all notifications (email, Telegram, browser) disabled.
 - FR-033: New accounts start with every notification (email, Telegram, browser, monthly

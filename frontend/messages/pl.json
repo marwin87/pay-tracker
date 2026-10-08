@@ -52,7 +52,6 @@
         "more": "Więcej",
         "payments": "Do zapłaty",
         "bills": "Rachunki",
-        "archived": "Archiwum",
         "settings": "Ustawienia",
         "logOut": "Wyloguj się",
         "userMenu": "Menu użytkownika",
@@ -111,30 +110,18 @@
         "cancel": "Anuluj",
         "billAdded": "Dodano rachunek „{name}”",
         "billSaved": "Zapisano rachunek „{name}”",
-        "billArchived": "Zarchiwizowano „{name}”",
         "loadError": "Nie udało się załadować rachunków.",
         "noBillsYet": "Brak rachunków",
         "addFirstBill": "Dodaj pierwszy rachunek",
-        "viewArchive": "Zarchiwizowane rachunki",
         "noFilterResults": "Brak rachunków pasujących do wybranego filtra",
         "collapseAll": "Zwiń wszystko",
         "expandAll": "Rozwiń wszystko",
-        "emptyHelp": "Rachunek to wszystko, co płacisz: co miesiąc, co rok albo jednorazowo. Dodaj go raz, a pojawi się w zakładce „Do zapłaty”."
-    },
-    "ArchivedBillsPage": {
-        "backToActive": "Aktywne rachunki",
-        "title": "Archiwum",
-        "subtitle": "Rachunki, których już nie płacisz. Ich historia płatności zostaje.",
-        "billRestored": "Przywrócono „{name}”",
-        "loadError": "Nie udało się załadować zarchiwizowanych rachunków.",
-        "noArchivedBills": "Brak zarchiwizowanych rachunków",
-        "willAppearHere": "Zarchiwizowane rachunki trafiają tu razem z historią. Możesz je przywrócić w każdej chwili.",
-        "noFilterResults": "Brak zarchiwizowanych rachunków pasujących do wybranego filtra",
-        "archived": "Zarchiwizowany",
-        "collapseAll": "Zwiń wszystko",
-        "expandAll": "Rozwiń wszystko",
-        "restore": "Przywróć",
-        "restoreError": "Nie udało się przywrócić rachunku."
+        "emptyHelp": "Rachunek to wszystko, co płacisz: co miesiąc, co rok albo jednorazowo. Dodaj go raz, a pojawi się w zakładce „Do zapłaty”.",
+        "billPaused": "Wstrzymano „{name}”",
+        "billResumed": "Wznowiono „{name}”",
+        "showPaused": "Pokaż wstrzymane rachunki",
+        "paused": "Wstrzymany",
+        "resumeError": "Nie udało się wznowić rachunku."
     },
     "BillTemplateForm": {
         "nameLabel": "Nazwa",
@@ -166,7 +153,8 @@
         "lastPayment": "Ostatnia płatność: {month}",
         "close": "Zamknij",
         "edit": "Edytuj",
-        "archive": "Archiwizuj"
+        "pause": "Wstrzymaj",
+        "resume": "Wznów"
     },
     "RestoreDeletedDialog": {
         "title": "Przywrócić usunięte płatności?",
@@ -174,13 +162,6 @@
         "restore": "Przywróć",
         "skip": "Pomiń",
         "restoring": "Przywracanie…"
-    },
-    "ArchiveConfirmDialog": {
-        "title": "Zarchiwizować „{billName}”?",
-        "description": "Rachunek przestanie generować nowe płatności i przypomnienia, a jego nieopłacone nadchodzące płatności znikną z listy Płatności. Opłacona historia zostaje. Możesz go przywrócić w każdej chwili z archiwum.",
-        "cancel": "Anuluj",
-        "archive": "Archiwizuj",
-        "archiving": "Archiwizowanie…"
     },
     "DeleteAccountDialog": {
         "title": "Usunąć konto?",
@@ -191,13 +172,6 @@
         "passwordPlaceholder": "Wpisz hasło",
         "wrongPassword": "Aktualne hasło jest nieprawidłowe.",
         "deleting": "Usuwanie…"
-    },
-    "RestoreConfirmDialog": {
-        "title": "Przywrócić „{billName}”?",
-        "description": "Rachunek wróci na aktywną listę, a jego nadchodzące płatności się pojawią. Miesiące, które minęły w czasie archiwizacji, zostają puste. Ostatnia płatność, która już minęła, zostanie wyczyszczona.",
-        "cancel": "Anuluj",
-        "restore": "Przywróć",
-        "restoring": "Przywracanie…"
     },
     "Frequencies": {
         "monthly": "Miesięcznie",
@@ -408,7 +382,6 @@
         "passwordChanged": "Zmieniono hasło",
         "telegramSaved": "Zapisano ustawienia Telegrama",
         "categorySaved": "Zapisano kategorię",
-        "categoryArchived": "Zarchiwizowano kategorię",
         "categoryRestored": "Przywrócono kategorię",
         "settingsSaved": "Ustawienia zapisane",
         "saveFailed": "Zapis nie powiódł się. Spróbuj ponownie.",
@@ -572,11 +545,11 @@
             "defaultBadge": "domyślna",
             "archivedBadge": "zarchiwizowana",
             "edit": "Edytuj",
-            "archive": "Archiwizuj",
             "unarchive": "Przywróć",
             "addNew": "Dodaj kategorię",
             "newColorsLabel": "Nowe kolory",
-            "usedColorsLabel": "Użyte kolory"
+            "usedColorsLabel": "Użyte kolory",
+            "delete": "Usuń"
         },
         "pdfExport": {
             "title": "Eksport do PDF",
@@ -591,7 +564,9 @@
             "addPlaceholder": "imie@example.com",
             "add": "Dodaj adres",
             "remove": "Usuń {email}"
-        }
+        },
+        "categoryDeleted": "Kategoria usunięta",
+        "categoryInUseArchived": "Kategoria jest używana przez rachunki, więc została zarchiwizowana"
     },
     "Categories": {
         "housing": "Mieszkanie",
@@ -704,5 +679,19 @@
         "send": "Wyślij",
         "sending": "Wysyłanie…",
         "failed": "Nie udało się wysłać e-maila."
+    },
+    "PauseConfirmDialog": {
+        "title": "Wstrzymać „{billName}”?",
+        "description": "Rachunek przestanie generować nowe płatności i przypomnienia, a jego nieopłacone nadchodzące płatności znikną z listy Płatności. Opłacona historia zostaje. Możesz go wznowić w każdej chwili.",
+        "cancel": "Anuluj",
+        "pause": "Wstrzymaj",
+        "pausing": "Wstrzymywanie…"
+    },
+    "ResumeConfirmDialog": {
+        "title": "Wznowić „{billName}”?",
+        "description": "Rachunek wróci na listę, a jego nadchodzące płatności się pojawią. Miesiące, które minęły w czasie wstrzymania, zostają puste. Ostatnia płatność, która już minęła, zostanie wyczyszczona.",
+        "cancel": "Anuluj",
+        "resume": "Wznów",
+        "resuming": "Wznawianie…"
     }
 }

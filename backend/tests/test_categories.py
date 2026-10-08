@@ -196,3 +196,54 @@ def test_rename_default_category_keeps_slug(client):
         "housing",
         True,
     )
+
+
+def test_delete_unused_category(client):
+    tok = register_and_login(client, "del_unused@test.com")
+    r = client.post(
+        "/categories", json={"name": "Hobbies", "color": "pink"}, headers=auth(tok)
+    )
+    cid = r.json()["id"]
+
+    assert client.delete(f"/categories/{cid}", headers=auth(tok)).status_code == 204
+    r = client.get("/categories?include_archived=true", headers=auth(tok))
+    assert cid not in {c["id"] for c in r.json()}
+
+
+def test_delete_category_used_by_bill_returns_409(client):
+    tok = register_and_login(client, "del_used@test.com")
+    other = next(
+        c
+        for c in client.get("/categories", headers=auth(tok)).json()
+        if c["slug"] == "other"
+    )
+    client.post(
+        "/bills",
+        json={
+            "name": "Misc",
+            "category_id": other["id"],
+            "frequency": "monthly",
+            "amount": "10.00",
+            "currency": "PLN",
+            "due_day": 1,
+        },
+        headers=auth(tok),
+    )
+
+    assert (
+        client.delete(f"/categories/{other['id']}", headers=auth(tok)).status_code
+        == 409
+    )
+
+
+def test_category_delete_other_user_returns_403(client):
+    tok_a = register_and_login(client, "cat_del_a@test.com")
+    tok_b = register_and_login(client, "cat_del_b@test.com")
+    category_a = client.get("/categories", headers=auth(tok_a)).json()[0]
+
+    assert (
+        client.delete(
+            f"/categories/{category_a['id']}", headers=auth(tok_b)
+        ).status_code
+        == 403
+    )

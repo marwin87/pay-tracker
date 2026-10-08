@@ -9,6 +9,7 @@ import {
   createBill,
   updateBill,
   archiveBill,
+  unarchiveBill,
   hasDeletedFuture,
   type BillTemplateOut,
   type BillTemplateCreate,
@@ -25,7 +26,8 @@ import {
 } from "@/lib/categories";
 import BillTemplateForm from "@/components/bills/BillTemplateForm";
 import BillTemplateRow from "@/components/bills/BillTemplateRow";
-import ArchiveConfirmDialog from "@/components/bills/ArchiveConfirmDialog";
+import PauseConfirmDialog from "@/components/bills/PauseConfirmDialog";
+import ResumeConfirmDialog from "@/components/bills/ResumeConfirmDialog";
 import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
@@ -46,8 +48,12 @@ export default function BillsPage() {
   const [loadError, setLoadError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
   const [expandedId, setExpandedId] = useState<number | "new" | null>(null);
-  const [archiveTarget, setArchiveTarget] = useState<BillTemplateOut | null>(null);
-  const [archiving, setArchiving] = useState(false);
+  // "Paused" in the UI == `is_archived` in the API.
+  const [pauseTarget, setPauseTarget] = useState<BillTemplateOut | null>(null);
+  const [pausing, setPausing] = useState(false);
+  const [resumeTarget, setResumeTarget] = useState<BillTemplateOut | null>(null);
+  const [resuming, setResuming] = useState(false);
+  const [showPaused, setShowPaused] = useState(false);
   const [deletedFutureMap, setDeletedFutureMap] = useState<Record<number, boolean>>({});
   const [restoreTarget, setRestoreTarget] = useState<{ id: number; name: string; data: BillTemplateUpdate } | null>(null);
   const [restoring, setRestoring] = useState(false);
@@ -61,13 +67,15 @@ export default function BillsPage() {
     fetchMe().then((p) => setDefaultCurrency(p.default_currency)).catch(() => {});
   }, []);
 
+  const pausedCount = templates.filter((tmpl) => tmpl.is_archived).length;
   const filteredTemplates = templates
+    .filter((tmpl) => showPaused || !tmpl.is_archived)
     .filter((tmpl) => categoryFilter.size === 0 || categoryFilter.has(String(tmpl.category.id)))
     .filter(
       (tmpl) => !searchQuery || tmpl.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
 
-  const categoryOptions = distinctCategories(templates, (tmpl) => tmpl.category).map((cat) => ({
+  const categoryOptions = distinctCategories(templates.filter((tmpl) => showPaused || !tmpl.is_archived), (tmpl) => tmpl.category).map((cat) => ({
     value: String(cat.id),
     label: categoryFilterLabel(cat, tCategories),
   }));
@@ -103,7 +111,7 @@ export default function BillsPage() {
 
   useEffect(() => {
     let cancelled = false;
-    fetchBills()
+    fetchBills(true)
       .then((data) => {
         setCached("bills", data);
         if (!cancelled) {
@@ -181,16 +189,33 @@ export default function BillsPage() {
     }
   }
 
-  async function handleArchiveConfirm() {
-    if (!archiveTarget || archiving) return;
-    setArchiving(true);
+  async function handlePauseConfirm() {
+    if (!pauseTarget || pausing) return;
+    setPausing(true);
     try {
-      await archiveBill(archiveTarget.id);
-      showToast(t("billArchived", { name: toastName(archiveTarget.name) }));
-      setArchiveTarget(null);
+      await archiveBill(pauseTarget.id);
+      showToast(t("billPaused", { name: toastName(pauseTarget.name) }));
+      setPauseTarget(null);
       setRefreshKey((k) => k + 1);
     } finally {
-      setArchiving(false);
+      setPausing(false);
+    }
+  }
+
+  async function handleResumeConfirm() {
+    if (!resumeTarget || resuming) return;
+    setResuming(true);
+    try {
+      await unarchiveBill(resumeTarget.id);
+      showToast(t("billResumed", { name: toastName(resumeTarget.name) }));
+      setResumeTarget(null);
+      setRefreshKey((k) => k + 1);
+    } catch (err: unknown) {
+      if (err instanceof SessionExpiredError) return;
+      setLoadError(err instanceof Error ? err.message : t("resumeError"));
+      setResumeTarget(null);
+    } finally {
+      setResuming(false);
     }
   }
 
@@ -208,12 +233,21 @@ export default function BillsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 md:px-8 py-8">
-      {archiveTarget && (
-        <ArchiveConfirmDialog
-          billName={archiveTarget.name}
-          onConfirm={handleArchiveConfirm}
-          onCancel={() => setArchiveTarget(null)}
-          archiving={archiving}
+      {pauseTarget && (
+        <PauseConfirmDialog
+          billName={pauseTarget.name}
+          onConfirm={handlePauseConfirm}
+          onCancel={() => setPauseTarget(null)}
+          pausing={pausing}
+        />
+      )}
+
+      {resumeTarget && (
+        <ResumeConfirmDialog
+          billName={resumeTarget.name}
+          onConfirm={handleResumeConfirm}
+          onCancel={() => setResumeTarget(null)}
+          resuming={resuming}
         />
       )}
 
@@ -243,6 +277,17 @@ export default function BillsPage() {
               <Plus size={16} />
               {expandedId === "new" ? t("cancel") : t("newBill")}
             </button>
+            {pausedCount > 0 && (
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                <input
+                  type="checkbox"
+                  checked={showPaused}
+                  onChange={(e) => setShowPaused(e.target.checked)}
+                  className="h-4 w-4 accent-green-600"
+                />
+                {t("showPaused")} ({pausedCount})
+              </label>
+            )}
           </div>
           {templates.length > 0 && (
             <>
@@ -327,7 +372,7 @@ export default function BillsPage() {
             <div key={i} className="h-16 rounded-xl bg-slate-200 dark:bg-slate-700 animate-pulse" />
           ))}
         </div>
-      ) : templates.length === 0 && expandedId !== "new" ? (
+      ) : templates.every((tmpl) => tmpl.is_archived) && !showPaused && expandedId !== "new" ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 px-6 py-16 text-center">
           <div className="mb-3 rounded-full bg-green-100 dark:bg-green-900/30 p-4 text-green-700">
             <Plus size={28} />
@@ -384,7 +429,8 @@ export default function BillsPage() {
                         highlighted={highlightId === tmpl.id}
                         onEditToggle={() => toggleExpand(tmpl.id)}
                         onSave={(data) => handleUpdate(tmpl.id, data)}
-                        onArchive={() => setArchiveTarget(tmpl)}
+                        onPause={() => setPauseTarget(tmpl)}
+                        onResume={() => setResumeTarget(tmpl)}
                       />
                     ))}
                   </div>

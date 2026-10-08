@@ -52,7 +52,6 @@
         "more": "Plus",
         "payments": "À payer",
         "bills": "Factures",
-        "archived": "Archives",
         "settings": "Paramètres",
         "logOut": "Se déconnecter",
         "userMenu": "Menu utilisateur",
@@ -111,30 +110,18 @@
         "cancel": "Annuler",
         "billAdded": "Facture « {name} » ajoutée",
         "billSaved": "Facture « {name} » enregistrée",
-        "billArchived": "« {name} » archivée",
         "loadError": "Échec du chargement des factures.",
         "noBillsYet": "Aucune facture pour le moment",
         "addFirstBill": "Ajoutez votre première facture",
-        "viewArchive": "Factures archivées",
         "noFilterResults": "Aucune facture ne correspond au filtre sélectionné",
         "collapseAll": "Tout réduire",
         "expandAll": "Tout développer",
-        "emptyHelp": "Une facture, c’est tout ce que vous payez : chaque mois, chaque année ou une seule fois. Ajoutez-la une fois et elle apparaît dans « À payer »."
-    },
-    "ArchivedBillsPage": {
-        "backToActive": "Factures actives",
-        "title": "Archives",
-        "subtitle": "Factures que vous ne payez plus. Leur historique de paiements est conservé.",
-        "billRestored": "« {name} » restaurée",
-        "loadError": "Échec du chargement des factures archivées.",
-        "noArchivedBills": "Aucune facture archivée",
-        "willAppearHere": "Les factures archivées arrivent ici avec leur historique. Vous pouvez les restaurer à tout moment.",
-        "noFilterResults": "Aucune facture archivée ne correspond au filtre sélectionné",
-        "archived": "Archivée",
-        "collapseAll": "Tout réduire",
-        "expandAll": "Tout développer",
-        "restore": "Restaurer",
-        "restoreError": "Échec de la restauration de la facture."
+        "emptyHelp": "Une facture, c’est tout ce que vous payez : chaque mois, chaque année ou une seule fois. Ajoutez-la une fois et elle apparaît dans « À payer ».",
+        "billPaused": "« {name} » mise en pause",
+        "billResumed": "« {name} » reprise",
+        "showPaused": "Afficher les factures en pause",
+        "paused": "En pause",
+        "resumeError": "Impossible de reprendre la facture."
     },
     "BillTemplateForm": {
         "nameLabel": "Nom",
@@ -166,7 +153,8 @@
         "lastPayment": "Dernier paiement : {month}",
         "close": "Fermer",
         "edit": "Modifier",
-        "archive": "Archiver"
+        "pause": "Mettre en pause",
+        "resume": "Reprendre"
     },
     "RestoreDeletedDialog": {
         "title": "Restaurer les paiements supprimés ?",
@@ -174,13 +162,6 @@
         "restore": "Restaurer",
         "skip": "Ignorer",
         "restoring": "Restauration…"
-    },
-    "ArchiveConfirmDialog": {
-        "title": "Archiver « {billName} » ?",
-        "description": "Cette facture ne générera plus de nouveaux paiements ni de rappels, et ses prochains paiements non réglés disparaîtront de Paiements. L'historique payé est conservé. Vous pouvez la restaurer à tout moment depuis les archives.",
-        "cancel": "Annuler",
-        "archive": "Archiver",
-        "archiving": "Archivage…"
     },
     "DeleteAccountDialog": {
         "title": "Supprimer votre compte ?",
@@ -191,13 +172,6 @@
         "passwordPlaceholder": "Saisissez votre mot de passe",
         "wrongPassword": "Le mot de passe actuel est incorrect.",
         "deleting": "Suppression…"
-    },
-    "RestoreConfirmDialog": {
-        "title": "Restaurer « {billName} » ?",
-        "description": "Cette facture revient dans la liste active et ses prochains paiements réapparaissent. Les mois écoulés pendant l'archivage restent vides. Un dernier mois de paiement déjà passé est effacé.",
-        "cancel": "Annuler",
-        "restore": "Restaurer",
-        "restoring": "Restauration…"
     },
     "Frequencies": {
         "monthly": "Mensuelle",
@@ -408,7 +382,6 @@
         "passwordChanged": "Mot de passe modifié",
         "telegramSaved": "Paramètres Telegram enregistrés",
         "categorySaved": "Catégorie enregistrée",
-        "categoryArchived": "Catégorie archivée",
         "categoryRestored": "Catégorie restaurée",
         "settingsSaved": "Paramètres enregistrés",
         "saveFailed": "Échec de l'enregistrement. Veuillez réessayer.",
@@ -572,11 +545,11 @@
             "defaultBadge": "par défaut",
             "archivedBadge": "archivée",
             "edit": "Modifier",
-            "archive": "Archiver",
             "unarchive": "Désarchiver",
             "addNew": "Ajouter une catégorie",
             "newColorsLabel": "Nouvelles couleurs",
-            "usedColorsLabel": "Couleurs utilisées"
+            "usedColorsLabel": "Couleurs utilisées",
+            "delete": "Supprimer"
         },
         "pdfExport": {
             "title": "Export PDF",
@@ -591,7 +564,9 @@
             "addPlaceholder": "nom@example.com",
             "add": "Ajouter une adresse",
             "remove": "Retirer {email}"
-        }
+        },
+        "categoryDeleted": "Catégorie supprimée",
+        "categoryInUseArchived": "La catégorie est utilisée par des factures, elle a donc été archivée à la place"
     },
     "Categories": {
         "housing": "Logement",
@@ -704,5 +679,19 @@
         "send": "Envoyer",
         "sending": "Envoi…",
         "failed": "Impossible d'envoyer l'e-mail."
+    },
+    "PauseConfirmDialog": {
+        "title": "Mettre « {billName} » en pause ?",
+        "description": "Cette facture ne générera plus de nouveaux paiements ni de rappels, et ses prochains paiements non réglés disparaîtront de Paiements. L'historique payé est conservé. Vous pouvez la reprendre à tout moment.",
+        "cancel": "Annuler",
+        "pause": "Mettre en pause",
+        "pausing": "Mise en pause…"
+    },
+    "ResumeConfirmDialog": {
+        "title": "Reprendre « {billName} » ?",
+        "description": "Cette facture revient dans la liste et ses prochains paiements réapparaissent. Les mois écoulés pendant la pause restent vides. Un dernier mois de paiement déjà passé est effacé.",
+        "cancel": "Annuler",
+        "resume": "Reprendre",
+        "resuming": "Reprise…"
     }
 }

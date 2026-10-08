@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.core.database import get_db
 from app.core.deps import current_user
+from app.models.bill import BillTemplate
 from app.models.category import Category
 from app.models.user import User
 from app.schemas.category import CategoryCreate, CategoryOut, CategoryUpdate
@@ -100,4 +101,22 @@ def unarchive_category(
 ):
     category = _owned_category(db, category_id, me.id)
     category.is_archived = False
+    db.commit()
+
+
+@router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_category(
+    category_id: int,
+    db: Session = Depends(get_db),
+    me: User = Depends(current_user),
+):
+    category = _owned_category(db, category_id, me.id)
+    in_use = (
+        db.query(BillTemplate.id)
+        .filter(BillTemplate.category_id == category.id)
+        .first()
+    )
+    if in_use:
+        raise HTTPException(status_code=409, detail="Category is used by bills")
+    db.delete(category)
     db.commit()

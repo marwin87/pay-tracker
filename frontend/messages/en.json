@@ -52,7 +52,6 @@
         "more": "More",
         "payments": "To pay",
         "bills": "My bills",
-        "archived": "Archive",
         "settings": "Settings",
         "logOut": "Log out",
         "userMenu": "User menu",
@@ -111,30 +110,18 @@
         "cancel": "Cancel",
         "billAdded": "Bill “{name}” added",
         "billSaved": "Bill “{name}” saved",
-        "billArchived": "“{name}” archived",
         "loadError": "Failed to load bills.",
         "noBillsYet": "No bills yet",
         "addFirstBill": "Add your first bill",
-        "viewArchive": "Archived bills",
         "noFilterResults": "No bills match the selected filter",
         "collapseAll": "Collapse all",
         "expandAll": "Expand all",
-        "emptyHelp": "A bill is anything you pay: every month, every year or just once. Add it once and it appears in “To pay”."
-    },
-    "ArchivedBillsPage": {
-        "backToActive": "Active bills",
-        "title": "Archive",
-        "subtitle": "Bills you no longer pay. Their payment history is kept.",
-        "billRestored": "“{name}” restored",
-        "loadError": "Failed to load archived bills.",
-        "noArchivedBills": "No archived bills",
-        "willAppearHere": "Archived bills land here with their history. You can restore them any time.",
-        "noFilterResults": "No archived bills match the selected filter",
-        "archived": "Archived",
-        "collapseAll": "Collapse all",
-        "expandAll": "Expand all",
-        "restore": "Restore",
-        "restoreError": "Failed to restore bill."
+        "emptyHelp": "A bill is anything you pay: every month, every year or just once. Add it once and it appears in “To pay”.",
+        "billPaused": "“{name}” paused",
+        "billResumed": "“{name}” resumed",
+        "showPaused": "Show paused bills",
+        "paused": "Paused",
+        "resumeError": "Failed to resume bill."
     },
     "BillTemplateForm": {
         "nameLabel": "Name",
@@ -166,7 +153,8 @@
         "lastPayment": "Last payment: {month}",
         "close": "Close",
         "edit": "Edit",
-        "archive": "Archive"
+        "pause": "Pause",
+        "resume": "Resume"
     },
     "RestoreDeletedDialog": {
         "title": "Restore deleted payments?",
@@ -174,13 +162,6 @@
         "restore": "Restore",
         "skip": "Skip",
         "restoring": "Restoring…"
-    },
-    "ArchiveConfirmDialog": {
-        "title": "Archive “{billName}”?",
-        "description": "You will stop getting new payments and reminders for this bill, and its unpaid upcoming payments disappear from Payments. Paid history stays. You can restore it any time from the archive.",
-        "cancel": "Cancel",
-        "archive": "Archive",
-        "archiving": "Archiving…"
     },
     "DeleteAccountDialog": {
         "title": "Delete your account?",
@@ -191,13 +172,6 @@
         "passwordPlaceholder": "Enter your password",
         "wrongPassword": "Current password is incorrect.",
         "deleting": "Deleting…"
-    },
-    "RestoreConfirmDialog": {
-        "title": "Restore “{billName}”?",
-        "description": "This bill returns to the active list and its upcoming payments come back. Months that passed while archived stay empty. A last payment month that has already passed is cleared.",
-        "cancel": "Cancel",
-        "restore": "Restore",
-        "restoring": "Restoring…"
     },
     "Frequencies": {
         "monthly": "Monthly",
@@ -408,7 +382,6 @@
         "passwordChanged": "Password changed",
         "telegramSaved": "Telegram settings saved",
         "categorySaved": "Category saved",
-        "categoryArchived": "Category archived",
         "categoryRestored": "Category restored",
         "settingsSaved": "Settings saved",
         "saveFailed": "Save failed. Please try again.",
@@ -572,11 +545,11 @@
             "defaultBadge": "default",
             "archivedBadge": "archived",
             "edit": "Edit",
-            "archive": "Archive",
             "unarchive": "Unarchive",
             "addNew": "Add category",
             "newColorsLabel": "New colors",
-            "usedColorsLabel": "Used colors"
+            "usedColorsLabel": "Used colors",
+            "delete": "Delete"
         },
         "pdfExport": {
             "title": "PDF export",
@@ -591,7 +564,9 @@
             "addPlaceholder": "name@example.com",
             "add": "Add email",
             "remove": "Remove {email}"
-        }
+        },
+        "categoryDeleted": "Category deleted",
+        "categoryInUseArchived": "Category is used by bills, so it was archived instead"
     },
     "Categories": {
         "housing": "Housing",
@@ -704,5 +679,19 @@
         "send": "Send",
         "sending": "Sending…",
         "failed": "Could not send the email."
+    },
+    "PauseConfirmDialog": {
+        "title": "Pause “{billName}”?",
+        "description": "No new payments or reminders will be created for this bill, and its unpaid upcoming payments disappear from Payments. Paid history stays. You can resume it any time.",
+        "cancel": "Cancel",
+        "pause": "Pause",
+        "pausing": "Pausing…"
+    },
+    "ResumeConfirmDialog": {
+        "title": "Resume “{billName}”?",
+        "description": "This bill returns to your list and its upcoming payments come back. Months that passed while paused stay empty. A last payment month that has already passed is cleared.",
+        "cancel": "Cancel",
+        "resume": "Resume",
+        "resuming": "Resuming…"
     }
 }

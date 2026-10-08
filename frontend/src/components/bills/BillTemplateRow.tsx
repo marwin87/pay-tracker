@@ -2,7 +2,8 @@
 
 import {
   Pencil,
-  Archive as ArchiveIcon,
+  Pause,
+  Play,
   ChevronUp,
   NotebookPen,
 } from "lucide-react";
@@ -20,7 +21,8 @@ interface Props {
   highlighted?: boolean;
   onEditToggle: () => void;
   onSave: (data: BillTemplateUpdate) => Promise<void>;
-  onArchive: () => void;
+  onPause: () => void;
+  onResume: () => void;
 }
 
 export function formatDueLabel(template: BillTemplateOut, locale: string): string | null {
@@ -62,9 +64,11 @@ export default function BillTemplateRow({
   highlighted = false,
   onEditToggle,
   onSave,
-  onArchive,
+  onPause,
+  onResume,
 }: Props) {
   const t = useTranslations("BillTemplateRow");
+  const tPage = useTranslations("BillsPage");
   const frequencyLabel = useFrequencyLabel();
   const locale = useLocale();
   const { decimalSeparator } = useAppLocale();
@@ -79,7 +83,7 @@ export default function BillTemplateRow({
       id={`bill-${template.id}`}
       className={`bill-row group rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow duration-500 dark:bg-slate-800 dark:border-slate-700 border-l-4 ${leftBorder} ${
         highlighted ? "bill-row-highlight ring-2 ring-green-200 dark:ring-green-800" : ""
-      }`}
+      } ${template.is_archived ? "opacity-70" : ""}`}
     >
       {/* Collapsed row */}
       <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center">
@@ -90,6 +94,11 @@ export default function BillTemplateRow({
             <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">
               {template.name}
             </span>
+            {template.is_archived && (
+              <span className="shrink-0 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
+                {tPage("paused")}
+              </span>
+            )}
           </div>
 
           {/* Line 2: amount · frequency · due */}
@@ -132,14 +141,25 @@ export default function BillTemplateRow({
               {isExpanded ? <ChevronUp className="h-5 w-5 sm:h-[15px] sm:w-[15px]" /> : <Pencil className="h-5 w-5 sm:h-[15px] sm:w-[15px]" />}
               <span>{isExpanded ? t("close") : t("edit")}</span>
             </button>
-            <button
-              onClick={onArchive}
-              aria-label={t("archive")}
-              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 sm:rounded-lg sm:px-2.5 sm:py-1.5 text-sm font-medium text-slate-400 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-red-800 dark:hover:bg-red-900/20 dark:hover:text-red-400"
-            >
-              <ArchiveIcon className="h-5 w-5 sm:h-[15px] sm:w-[15px]" />
-              <span>{t("archive")}</span>
-            </button>
+            {template.is_archived ? (
+              <button
+                onClick={onResume}
+                aria-label={t("resume")}
+                className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 sm:rounded-lg sm:px-2.5 sm:py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+              >
+                <Play className="h-5 w-5 sm:h-[15px] sm:w-[15px]" />
+                <span>{t("resume")}</span>
+              </button>
+            ) : (
+              <button
+                onClick={onPause}
+                aria-label={t("pause")}
+                className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 sm:rounded-lg sm:px-2.5 sm:py-1.5 text-sm font-medium text-slate-400 shadow-sm transition-all hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-amber-800 dark:hover:bg-amber-900/20 dark:hover:text-amber-400"
+              >
+                <Pause className="h-5 w-5 sm:h-[15px] sm:w-[15px]" />
+                <span>{t("pause")}</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

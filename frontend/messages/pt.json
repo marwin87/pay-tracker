@@ -52,7 +52,6 @@
         "more": "Mais",
         "payments": "A pagar",
         "bills": "Faturas",
-        "archived": "Arquivo",
         "settings": "Definições",
         "logOut": "Terminar sessão",
         "userMenu": "Menu do utilizador",
@@ -111,30 +110,18 @@
         "cancel": "Cancelar",
         "billAdded": "Fatura “{name}” adicionada",
         "billSaved": "Fatura “{name}” guardada",
-        "billArchived": "“{name}” arquivada",
         "loadError": "Falha ao carregar as faturas.",
         "noBillsYet": "Ainda sem faturas",
         "addFirstBill": "Adicione a sua primeira fatura",
-        "viewArchive": "Faturas arquivadas",
         "noFilterResults": "Nenhuma fatura corresponde ao filtro selecionado",
         "collapseAll": "Recolher tudo",
         "expandAll": "Expandir tudo",
-        "emptyHelp": "Uma fatura é tudo o que paga: todos os meses, todos os anos ou uma só vez. Adicione-a uma vez e aparece em «A pagar»."
-    },
-    "ArchivedBillsPage": {
-        "backToActive": "Faturas ativas",
-        "title": "Arquivo",
-        "subtitle": "Faturas que já não paga. O histórico de pagamentos é mantido.",
-        "billRestored": "“{name}” restaurada",
-        "loadError": "Falha ao carregar as faturas arquivadas.",
-        "noArchivedBills": "Sem faturas arquivadas",
-        "willAppearHere": "As faturas arquivadas ficam aqui com o respetivo histórico. Pode restaurá-las quando quiser.",
-        "noFilterResults": "Nenhuma fatura arquivada corresponde ao filtro selecionado",
-        "archived": "Arquivada",
-        "collapseAll": "Recolher tudo",
-        "expandAll": "Expandir tudo",
-        "restore": "Restaurar",
-        "restoreError": "Falha ao restaurar a fatura."
+        "emptyHelp": "Uma fatura é tudo o que paga: todos os meses, todos os anos ou uma só vez. Adicione-a uma vez e aparece em «A pagar».",
+        "billPaused": "“{name}” em pausa",
+        "billResumed": "“{name}” retomada",
+        "showPaused": "Mostrar contas em pausa",
+        "paused": "Em pausa",
+        "resumeError": "Não foi possível retomar a conta."
     },
     "BillTemplateForm": {
         "nameLabel": "Nome",
@@ -166,7 +153,8 @@
         "lastPayment": "Último pagamento: {month}",
         "close": "Fechar",
         "edit": "Editar",
-        "archive": "Arquivar"
+        "pause": "Pausar",
+        "resume": "Retomar"
     },
     "RestoreDeletedDialog": {
         "title": "Restaurar pagamentos eliminados?",
@@ -174,13 +162,6 @@
         "restore": "Restaurar",
         "skip": "Ignorar",
         "restoring": "A restaurar…"
-    },
-    "ArchiveConfirmDialog": {
-        "title": "Arquivar “{billName}”?",
-        "description": "Esta conta deixará de gerar novos pagamentos e lembretes, e os próximos pagamentos por pagar desaparecem de Pagamentos. O histórico pago fica guardado. Pode restaurá-la a qualquer momento a partir do arquivo.",
-        "cancel": "Cancelar",
-        "archive": "Arquivar",
-        "archiving": "A arquivar…"
     },
     "DeleteAccountDialog": {
         "title": "Eliminar a sua conta?",
@@ -191,13 +172,6 @@
         "passwordPlaceholder": "Introduza a sua palavra-passe",
         "wrongPassword": "A palavra-passe atual está incorreta.",
         "deleting": "A eliminar…"
-    },
-    "RestoreConfirmDialog": {
-        "title": "Restaurar “{billName}”?",
-        "description": "Esta conta volta à lista ativa e os próximos pagamentos reaparecem. Os meses que passaram enquanto estava arquivada ficam vazios. Um último mês de pagamento já passado é limpo.",
-        "cancel": "Cancelar",
-        "restore": "Restaurar",
-        "restoring": "A restaurar…"
     },
     "Frequencies": {
         "monthly": "Mensal",
@@ -408,7 +382,6 @@
         "passwordChanged": "Palavra-passe alterada",
         "telegramSaved": "Definições do Telegram guardadas",
         "categorySaved": "Categoria guardada",
-        "categoryArchived": "Categoria arquivada",
         "categoryRestored": "Categoria restaurada",
         "settingsSaved": "Definições guardadas",
         "saveFailed": "Falha ao guardar. Tente novamente.",
@@ -572,11 +545,11 @@
             "defaultBadge": "predefinida",
             "archivedBadge": "arquivada",
             "edit": "Editar",
-            "archive": "Arquivar",
             "unarchive": "Desarquivar",
             "addNew": "Adicionar categoria",
             "newColorsLabel": "Novas cores",
-            "usedColorsLabel": "Cores em uso"
+            "usedColorsLabel": "Cores em uso",
+            "delete": "Eliminar"
         },
         "pdfExport": {
             "title": "Exportação para PDF",
@@ -591,7 +564,9 @@
             "addPlaceholder": "nome@exemplo.pt",
             "add": "Adicionar e-mail",
             "remove": "Remover {email}"
-        }
+        },
+        "categoryDeleted": "Categoria eliminada",
+        "categoryInUseArchived": "A categoria é usada por contas, por isso foi arquivada"
     },
     "Categories": {
         "housing": "Habitação",
@@ -704,5 +679,19 @@
         "send": "Enviar",
         "sending": "A enviar…",
         "failed": "Não foi possível enviar o e-mail."
+    },
+    "PauseConfirmDialog": {
+        "title": "Pausar “{billName}”?",
+        "description": "Esta conta deixará de gerar novos pagamentos e lembretes, e os próximos pagamentos por pagar desaparecem de Pagamentos. O histórico pago fica guardado. Pode retomá-la a qualquer momento.",
+        "cancel": "Cancelar",
+        "pause": "Pausar",
+        "pausing": "A pausar…"
+    },
+    "ResumeConfirmDialog": {
+        "title": "Retomar “{billName}”?",
+        "description": "Esta conta volta à lista e os próximos pagamentos reaparecem. Os meses que passaram enquanto estava em pausa ficam vazios. Um último mês de pagamento já passado é limpo.",
+        "cancel": "Cancelar",
+        "resume": "Retomar",
+        "resuming": "A retomar…"
     }
 }

@@ -9,7 +9,6 @@ import { useCallback, useState } from "react";
 export const COLLAPSED_CATEGORIES_KEYS = {
   bills: "bills-collapsed-categories",
   payments: "payments-collapsed-categories",
-  archivedBills: "archived-bills-collapsed-categories",
 } as const;
 
 function readFromStorage(storageKey: string): Set<string> {

@@ -52,7 +52,6 @@
         "more": "Altro",
         "payments": "Da pagare",
         "bills": "Bollette",
-        "archived": "Archivio",
         "settings": "Impostazioni",
         "logOut": "Esci",
         "userMenu": "Menu utente",
@@ -111,30 +110,18 @@
         "cancel": "Annulla",
         "billAdded": "Bolletta «{name}» aggiunta",
         "billSaved": "Bolletta «{name}» salvata",
-        "billArchived": "«{name}» archiviata",
         "loadError": "Impossibile caricare le bollette.",
         "noBillsYet": "Nessuna bolletta ancora",
         "addFirstBill": "Aggiungi la tua prima bolletta",
-        "viewArchive": "Bollette archiviate",
         "noFilterResults": "Nessuna bolletta corrisponde al filtro selezionato",
         "collapseAll": "Comprimi tutto",
         "expandAll": "Espandi tutto",
-        "emptyHelp": "Una bolletta è tutto ciò che paghi: ogni mese, ogni anno o una volta sola. Aggiungila una volta e comparirà in «Da pagare»."
-    },
-    "ArchivedBillsPage": {
-        "backToActive": "Bollette attive",
-        "title": "Archivio",
-        "subtitle": "Bollette che non paghi più. Lo storico dei pagamenti viene conservato.",
-        "billRestored": "«{name}» ripristinata",
-        "loadError": "Impossibile caricare le bollette archiviate.",
-        "noArchivedBills": "Nessuna bolletta archiviata",
-        "willAppearHere": "Le bollette archiviate arrivano qui con il loro storico. Puoi ripristinarle quando vuoi.",
-        "noFilterResults": "Nessuna bolletta archiviata corrisponde al filtro selezionato",
-        "archived": "Archiviata",
-        "collapseAll": "Comprimi tutto",
-        "expandAll": "Espandi tutto",
-        "restore": "Ripristina",
-        "restoreError": "Impossibile ripristinare la bolletta."
+        "emptyHelp": "Una bolletta è tutto ciò che paghi: ogni mese, ogni anno o una volta sola. Aggiungila una volta e comparirà in «Da pagare».",
+        "billPaused": "«{name}» in pausa",
+        "billResumed": "«{name}» ripresa",
+        "showPaused": "Mostra bollette in pausa",
+        "paused": "In pausa",
+        "resumeError": "Impossibile riprendere la bolletta."
     },
     "BillTemplateForm": {
         "nameLabel": "Nome",
@@ -166,7 +153,8 @@
         "lastPayment": "Ultimo pagamento: {month}",
         "close": "Chiudi",
         "edit": "Modifica",
-        "archive": "Archivia"
+        "pause": "Metti in pausa",
+        "resume": "Riprendi"
     },
     "RestoreDeletedDialog": {
         "title": "Ripristinare i pagamenti eliminati?",
@@ -174,13 +162,6 @@
         "restore": "Ripristina",
         "skip": "Salta",
         "restoring": "Ripristino…"
-    },
-    "ArchiveConfirmDialog": {
-        "title": "Archiviare “{billName}”?",
-        "description": "Questa bolletta non genererà più nuovi pagamenti né promemoria e i suoi prossimi pagamenti non saldati scompariranno da Pagamenti. Lo storico pagato resta. Puoi ripristinarla in qualsiasi momento dall'archivio.",
-        "cancel": "Annulla",
-        "archive": "Archivia",
-        "archiving": "Archiviazione…"
     },
     "DeleteAccountDialog": {
         "title": "Eliminare il tuo account?",
@@ -191,13 +172,6 @@
         "passwordPlaceholder": "Inserisci la password",
         "wrongPassword": "La password attuale non è corretta.",
         "deleting": "Eliminazione…"
-    },
-    "RestoreConfirmDialog": {
-        "title": "Ripristinare “{billName}”?",
-        "description": "Questa bolletta torna nell'elenco attivo e i suoi prossimi pagamenti riappaiono. I mesi trascorsi durante l'archiviazione restano vuoti. Un ultimo mese di pagamento già trascorso viene cancellato.",
-        "cancel": "Annulla",
-        "restore": "Ripristina",
-        "restoring": "Ripristino…"
     },
     "Frequencies": {
         "monthly": "Mensile",
@@ -408,7 +382,6 @@
         "passwordChanged": "Password cambiata",
         "telegramSaved": "Impostazioni Telegram salvate",
         "categorySaved": "Categoria salvata",
-        "categoryArchived": "Categoria archiviata",
         "categoryRestored": "Categoria ripristinata",
         "settingsSaved": "Impostazioni salvate",
         "saveFailed": "Salvataggio non riuscito. Riprova.",
@@ -572,11 +545,11 @@
             "defaultBadge": "predefinita",
             "archivedBadge": "archiviata",
             "edit": "Modifica",
-            "archive": "Archivia",
             "unarchive": "Ripristina dall'archivio",
             "addNew": "Aggiungi categoria",
             "newColorsLabel": "Nuovi colori",
-            "usedColorsLabel": "Colori già usati"
+            "usedColorsLabel": "Colori già usati",
+            "delete": "Elimina"
         },
         "pdfExport": {
             "title": "Esportazione PDF",
@@ -591,7 +564,9 @@
             "addPlaceholder": "nome@example.com",
             "add": "Aggiungi indirizzo",
             "remove": "Rimuovi {email}"
-        }
+        },
+        "categoryDeleted": "Categoria eliminata",
+        "categoryInUseArchived": "La categoria è usata da alcune bollette, quindi è stata archiviata"
     },
     "Categories": {
         "housing": "Casa",
@@ -704,5 +679,19 @@
         "send": "Invia",
         "sending": "Invio…",
         "failed": "Impossibile inviare l'e-mail."
+    },
+    "PauseConfirmDialog": {
+        "title": "Mettere in pausa “{billName}”?",
+        "description": "Questa bolletta non genererà più nuovi pagamenti né promemoria e i suoi prossimi pagamenti non saldati scompariranno da Pagamenti. Lo storico pagato resta. Puoi riprenderla in qualsiasi momento.",
+        "cancel": "Annulla",
+        "pause": "Metti in pausa",
+        "pausing": "Messa in pausa…"
+    },
+    "ResumeConfirmDialog": {
+        "title": "Riprendere “{billName}”?",
+        "description": "Questa bolletta torna nell'elenco e i suoi prossimi pagamenti riappaiono. I mesi trascorsi durante la pausa restano vuoti. Un ultimo mese di pagamento già trascorso viene cancellato.",
+        "cancel": "Annulla",
+        "resume": "Riprendi",
+        "resuming": "Ripresa…"
     }
 }

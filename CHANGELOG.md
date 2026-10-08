@@ -12,17 +12,18 @@ Notable changes to Pay Tracker, release by release.
 - Add a new category right from the bill form
 - Animated menu on mobile and desktop, with the overdue count on Payments
 - Clearer tab names and helpful hints on empty screens
-- Archived bills show due date, last payment and notes
+- Pause and resume bills right from the bills list, no separate archive page
+- Delete categories you don't use
 - Payments shows which day you are filtering by, pinned at the top while you scroll
 - The selected month in the dashboard 12-month chart stands out more
-- Reset filters button on Payments, Bills and Archive
-- Archiving a bill hides its unpaid upcoming payments, and restoring brings them back
+- Reset filters button on Payments and Bills
+- Pausing a bill hides its unpaid upcoming payments, and resuming brings them back
 
 ### Fixes
 
 - Default categories can now be renamed in Settings
 - A payment moved to a future due date is no longer shown as overdue
-- Edit and archive buttons on bills are always visible
+- Edit and pause buttons on bills are always visible
 - Switching tabs no longer flashes: pages crossfade and show the last data instantly
 - Long bill names are shortened in confirmation messages so they fit
 

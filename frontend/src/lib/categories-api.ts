@@ -36,6 +36,10 @@ export function updateCategory(id: number, data: CategoryUpdate): Promise<Catego
   });
 }
 
+export function deleteCategory(id: number): Promise<void> {
+  return apiFetch<void>(`/categories/${id}`, { method: "DELETE" });
+}
+
 export function archiveCategory(id: number): Promise<void> {
   return apiFetch<void>(`/categories/${id}/archive`, { method: "POST" });
 }

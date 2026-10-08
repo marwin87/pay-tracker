@@ -52,7 +52,6 @@
         "more": "Meer",
         "payments": "Te betalen",
         "bills": "Rekeningen",
-        "archived": "Archief",
         "settings": "Instellingen",
         "logOut": "Uitloggen",
         "userMenu": "Gebruikersmenu",
@@ -111,30 +110,18 @@
         "cancel": "Annuleren",
         "billAdded": "Rekening “{name}” toegevoegd",
         "billSaved": "Rekening “{name}” opgeslagen",
-        "billArchived": "“{name}” gearchiveerd",
         "loadError": "Rekeningen laden mislukt.",
         "noBillsYet": "Nog geen rekeningen",
         "addFirstBill": "Voeg je eerste rekening toe",
-        "viewArchive": "Gearchiveerde rekeningen",
         "noFilterResults": "Geen rekeningen komen overeen met het gekozen filter",
         "collapseAll": "Alles inklappen",
         "expandAll": "Alles uitklappen",
-        "emptyHelp": "Een rekening is alles wat je betaalt: elke maand, elk jaar of eenmalig. Voeg hem één keer toe en hij verschijnt bij “Te betalen”."
-    },
-    "ArchivedBillsPage": {
-        "backToActive": "Actieve rekeningen",
-        "title": "Archief",
-        "subtitle": "Rekeningen die je niet meer betaalt. De betalingsgeschiedenis blijft bewaard.",
-        "billRestored": "“{name}” hersteld",
-        "loadError": "Gearchiveerde rekeningen laden mislukt.",
-        "noArchivedBills": "Geen gearchiveerde rekeningen",
-        "willAppearHere": "Gearchiveerde rekeningen komen hier terecht met hun geschiedenis. Je kunt ze altijd terugzetten.",
-        "noFilterResults": "Geen gearchiveerde rekeningen komen overeen met het gekozen filter",
-        "archived": "Gearchiveerd",
-        "collapseAll": "Alles inklappen",
-        "expandAll": "Alles uitklappen",
-        "restore": "Herstellen",
-        "restoreError": "Rekening herstellen mislukt."
+        "emptyHelp": "Een rekening is alles wat je betaalt: elke maand, elk jaar of eenmalig. Voeg hem één keer toe en hij verschijnt bij “Te betalen”.",
+        "billPaused": "“{name}” gepauzeerd",
+        "billResumed": "“{name}” hervat",
+        "showPaused": "Gepauzeerde rekeningen tonen",
+        "paused": "Gepauzeerd",
+        "resumeError": "Rekening hervatten mislukt."
     },
     "BillTemplateForm": {
         "nameLabel": "Naam",
@@ -166,7 +153,8 @@
         "lastPayment": "Laatste betaling: {month}",
         "close": "Sluiten",
         "edit": "Bewerken",
-        "archive": "Archiveren"
+        "pause": "Pauzeren",
+        "resume": "Hervatten"
     },
     "RestoreDeletedDialog": {
         "title": "Verwijderde betalingen herstellen?",
@@ -174,13 +162,6 @@
         "restore": "Herstellen",
         "skip": "Overslaan",
         "restoring": "Bezig met herstellen…"
-    },
-    "ArchiveConfirmDialog": {
-        "title": "“{billName}” archiveren?",
-        "description": "Voor deze rekening komen er geen nieuwe betalingen en herinneringen meer en de openstaande komende betalingen verdwijnen uit Betalingen. Betaalde geschiedenis blijft behouden. Je kunt hem op elk moment uit het archief terugzetten.",
-        "cancel": "Annuleren",
-        "archive": "Archiveren",
-        "archiving": "Bezig met archiveren…"
     },
     "DeleteAccountDialog": {
         "title": "Je account verwijderen?",
@@ -191,13 +172,6 @@
         "passwordPlaceholder": "Vul je wachtwoord in",
         "wrongPassword": "Het huidige wachtwoord is onjuist.",
         "deleting": "Bezig met verwijderen…"
-    },
-    "RestoreConfirmDialog": {
-        "title": "“{billName}” herstellen?",
-        "description": "Deze rekening komt terug in de actieve lijst en de komende betalingen verschijnen weer. Maanden die voorbijgingen tijdens het archiveren blijven leeg. Een laatste betaalmaand die al voorbij is, wordt gewist.",
-        "cancel": "Annuleren",
-        "restore": "Herstellen",
-        "restoring": "Bezig met herstellen…"
     },
     "Frequencies": {
         "monthly": "Maandelijks",
@@ -408,7 +382,6 @@
         "passwordChanged": "Wachtwoord gewijzigd",
         "telegramSaved": "Telegram-instellingen opgeslagen",
         "categorySaved": "Categorie opgeslagen",
-        "categoryArchived": "Categorie gearchiveerd",
         "categoryRestored": "Categorie hersteld",
         "settingsSaved": "Instellingen opgeslagen",
         "saveFailed": "Opslaan mislukt. Probeer het opnieuw.",
@@ -572,11 +545,11 @@
             "defaultBadge": "standaard",
             "archivedBadge": "gearchiveerd",
             "edit": "Bewerken",
-            "archive": "Archiveren",
             "unarchive": "Dearchiveren",
             "addNew": "Categorie toevoegen",
             "newColorsLabel": "Nieuwe kleuren",
-            "usedColorsLabel": "Gebruikte kleuren"
+            "usedColorsLabel": "Gebruikte kleuren",
+            "delete": "Verwijderen"
         },
         "pdfExport": {
             "title": "PDF-export",
@@ -591,7 +564,9 @@
             "addPlaceholder": "naam@voorbeeld.nl",
             "add": "E-mailadres toevoegen",
             "remove": "{email} verwijderen"
-        }
+        },
+        "categoryDeleted": "Categorie verwijderd",
+        "categoryInUseArchived": "Categorie wordt door rekeningen gebruikt en is daarom gearchiveerd"
     },
     "Categories": {
         "housing": "Wonen",
@@ -704,5 +679,19 @@
         "send": "Versturen",
         "sending": "Bezig met versturen…",
         "failed": "De e-mail kon niet worden verzonden."
+    },
+    "PauseConfirmDialog": {
+        "title": "“{billName}” pauzeren?",
+        "description": "Voor deze rekening komen er geen nieuwe betalingen en herinneringen meer en de openstaande komende betalingen verdwijnen uit Betalingen. Betaalde geschiedenis blijft behouden. Je kunt hem op elk moment hervatten.",
+        "cancel": "Annuleren",
+        "pause": "Pauzeren",
+        "pausing": "Bezig met pauzeren…"
+    },
+    "ResumeConfirmDialog": {
+        "title": "“{billName}” hervatten?",
+        "description": "Deze rekening komt terug in de lijst en de komende betalingen verschijnen weer. Maanden die voorbijgingen tijdens de pauze blijven leeg. Een laatste betaalmaand die al voorbij is, wordt gewist.",
+        "cancel": "Annuleren",
+        "resume": "Hervatten",
+        "resuming": "Bezig met hervatten…"
     }
 }

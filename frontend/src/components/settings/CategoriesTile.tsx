@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Tag, Pencil, Plus, FolderArchive, FolderOpen } from "lucide-react";
+import { Tag, Pencil, Plus, FolderOpen, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { ApiError } from "@/lib/api";
 import {
   fetchCategories,
   createCategory,
   updateCategory,
   archiveCategory,
+  deleteCategory,
   unarchiveCategory,
   type Category,
 } from "@/lib/categories-api";
@@ -129,11 +131,28 @@ export function CategoriesTile({
     }
   }
 
-  async function toggleArchive(cat: Category) {
+  async function restore(cat: Category) {
     try {
-      await (cat.is_archived ? unarchiveCategory(cat.id) : archiveCategory(cat.id));
+      await unarchiveCategory(cat.id);
       reload();
-      showToast(tc(cat.is_archived ? "categoryRestored" : "categoryArchived"));
+      showToast(tc("categoryRestored"));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : tc("categories.loadError"));
+    }
+  }
+
+  // Delete when unused; the API answers 409 when bills use it, so archive instead.
+  async function remove(cat: Category) {
+    try {
+      try {
+        await deleteCategory(cat.id);
+        showToast(tc("categoryDeleted"));
+      } catch (err) {
+        if (!(err instanceof ApiError) || err.status !== 409) throw err;
+        await archiveCategory(cat.id);
+        showToast(tc("categoryInUseArchived"));
+      }
+      reload();
     } catch (err) {
       setError(err instanceof Error ? err.message : tc("categories.loadError"));
     }
@@ -229,13 +248,11 @@ export function CategoriesTile({
                     <Pencil size={14} />
                   </button>
                   <button
-                    onClick={() => toggleArchive(cat)}
-                    aria-label={
-                      cat.is_archived ? tc("categories.unarchive") : tc("categories.archive")
-                    }
+                    onClick={() => (cat.is_archived ? restore(cat) : remove(cat))}
+                    aria-label={cat.is_archived ? tc("categories.unarchive") : tc("categories.delete")}
                     className="shrink-0 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-300"
                   >
-                    {cat.is_archived ? <FolderOpen size={14} /> : <FolderArchive size={14} />}
+                    {cat.is_archived ? <FolderOpen size={14} /> : <Trash2 size={14} />}
                   </button>
                 </div>
               ),
