@@ -104,6 +104,11 @@ class PaymentInstance(Base):
     is_deleted: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
     )
+    # Set together with is_deleted when archiving the bill hid this payment, so
+    # unarchiving restores exactly those rows and not ones the user deleted by hand.
+    deleted_by_archive: Mapped[bool] = mapped_column(
+        Boolean, nullable=False, default=False, server_default="false"
+    )
     reminder_sent_upcoming: Mapped[bool] = mapped_column(
         Boolean, nullable=False, default=False, server_default="false"
     )

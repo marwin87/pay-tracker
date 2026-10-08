@@ -177,7 +177,7 @@
     },
     "ArchiveConfirmDialog": {
         "title": "„{billName}” archivieren?",
-        "description": "Diese Rechnung wird aus der aktiven Liste ausgeblendet. Die Zahlungshistorie bleibt erhalten und ist in der archivierten Ansicht zugänglich.",
+        "description": "Für diese Rechnung gibt es keine neuen Zahlungen und Erinnerungen mehr, und ihre unbezahlten kommenden Zahlungen verschwinden aus Zahlungen. Bezahlte Zahlungen bleiben erhalten. Du kannst sie jederzeit aus dem Archiv wiederherstellen.",
         "cancel": "Abbrechen",
         "archive": "Archivieren",
         "archiving": "Archivierung…"
@@ -194,7 +194,7 @@
     },
     "RestoreConfirmDialog": {
         "title": "„{billName}” wiederherstellen?",
-        "description": "Diese Rechnung erscheint wieder in der aktiven Liste und generiert erneut anstehende Zahlungen.",
+        "description": "Diese Rechnung kehrt in die aktive Liste zurück und ihre kommenden Zahlungen erscheinen wieder. Monate, die während der Archivierung vergangen sind, bleiben leer. Ein bereits vergangener letzter Zahlungsmonat wird entfernt.",
         "cancel": "Abbrechen",
         "restore": "Wiederherstellen",
         "restoring": "Wiederherstellung…"

@@ -177,7 +177,7 @@
     },
     "ArchiveConfirmDialog": {
         "title": "Archive “{billName}”?",
-        "description": "This bill will be hidden from the active list. Payment history is preserved and accessible from the archived view.",
+        "description": "You will stop getting new payments and reminders for this bill, and its unpaid upcoming payments disappear from Payments. Paid history stays. You can restore it any time from the archive.",
         "cancel": "Cancel",
         "archive": "Archive",
         "archiving": "Archiving…"
@@ -194,7 +194,7 @@
     },
     "RestoreConfirmDialog": {
         "title": "Restore “{billName}”?",
-        "description": "This bill will reappear on the active list and resume generating upcoming payments.",
+        "description": "This bill returns to the active list and its upcoming payments come back. Months that passed while archived stay empty. A last payment month that has already passed is cleared.",
         "cancel": "Cancel",
         "restore": "Restore",
         "restoring": "Restoring…"

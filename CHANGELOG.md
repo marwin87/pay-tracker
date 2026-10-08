@@ -16,6 +16,7 @@ Notable changes to Pay Tracker, release by release.
 - Payments shows which day you are filtering by, pinned at the top while you scroll
 - The selected month in the dashboard 12-month chart stands out more
 - Reset filters button on Payments, Bills and Archive
+- Archiving a bill hides its unpaid upcoming payments, and restoring brings them back
 
 ### Fixes
 

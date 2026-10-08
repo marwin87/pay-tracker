@@ -177,7 +177,7 @@
     },
     "ArchiveConfirmDialog": {
         "title": "Archiviare “{billName}”?",
-        "description": "Questa bolletta verrà nascosta dall'elenco attivo. La cronologia dei pagamenti viene conservata ed è accessibile dalla vista archiviate.",
+        "description": "Questa bolletta non genererà più nuovi pagamenti né promemoria e i suoi prossimi pagamenti non saldati scompariranno da Pagamenti. Lo storico pagato resta. Puoi ripristinarla in qualsiasi momento dall'archivio.",
         "cancel": "Annulla",
         "archive": "Archivia",
         "archiving": "Archiviazione…"
@@ -194,7 +194,7 @@
     },
     "RestoreConfirmDialog": {
         "title": "Ripristinare “{billName}”?",
-        "description": "Questa bolletta ricomparirà nell'elenco attivo e riprenderà a generare i prossimi pagamenti.",
+        "description": "Questa bolletta torna nell'elenco attivo e i suoi prossimi pagamenti riappaiono. I mesi trascorsi durante l'archiviazione restano vuoti. Un ultimo mese di pagamento già trascorso viene cancellato.",
         "cancel": "Annulla",
         "restore": "Ripristina",
         "restoring": "Ripristino…"

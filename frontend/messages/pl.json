@@ -177,7 +177,7 @@
     },
     "ArchiveConfirmDialog": {
         "title": "Zarchiwizować „{billName}”?",
-        "description": "Ten rachunek zostanie ukryty z aktywnej listy. Historia płatności zostanie zachowana i będzie dostępna w widoku zarchiwizowanych.",
+        "description": "Rachunek przestanie generować nowe płatności i przypomnienia, a jego nieopłacone nadchodzące płatności znikną z listy Płatności. Opłacona historia zostaje. Możesz go przywrócić w każdej chwili z archiwum.",
         "cancel": "Anuluj",
         "archive": "Archiwizuj",
         "archiving": "Archiwizowanie…"
@@ -194,7 +194,7 @@
     },
     "RestoreConfirmDialog": {
         "title": "Przywrócić „{billName}”?",
-        "description": "Ten rachunek pojawi się z powrotem na aktywnej liście i wznowi generowanie nadchodzących płatności.",
+        "description": "Rachunek wróci na aktywną listę, a jego nadchodzące płatności się pojawią. Miesiące, które minęły w czasie archiwizacji, zostają puste. Ostatnia płatność, która już minęła, zostanie wyczyszczona.",
         "cancel": "Anuluj",
         "restore": "Przywróć",
         "restoring": "Przywracanie…"

@@ -177,7 +177,7 @@
     },
     "ArchiveConfirmDialog": {
         "title": "¿Archivar “{billName}”?",
-        "description": "Esta factura se ocultará de la lista activa. El historial de pagos se conserva y es accesible desde la vista de archivadas.",
+        "description": "Dejarás de recibir nuevos pagos y recordatorios de esta factura, y sus próximos pagos sin pagar desaparecerán de Pagos. El historial pagado se conserva. Puedes restaurarla en cualquier momento desde el archivo.",
         "cancel": "Cancelar",
         "archive": "Archivar",
         "archiving": "Archivando…"
@@ -194,7 +194,7 @@
     },
     "RestoreConfirmDialog": {
         "title": "¿Restaurar “{billName}”?",
-        "description": "Esta factura volverá a aparecer en la lista activa y reanudará la generación de próximos pagos.",
+        "description": "Esta factura vuelve a la lista activa y sus próximos pagos reaparecen. Los meses que pasaron mientras estaba archivada quedan vacíos. Un último mes de pago que ya pasó se borra.",
         "cancel": "Cancelar",
         "restore": "Restaurar",
         "restoring": "Restaurando…"

@@ -473,6 +473,16 @@ def archive_bill(
     if bill.user_id != me.id:
         raise HTTPException(status_code=403, detail="Not authorized")
     bill.is_archived = True
+    # Hide what is still unpaid from this month on; paid and past payments stay as history.
+    current_period = today_for(me).strftime("%Y-%m")
+    db.query(PaymentInstance).filter(
+        PaymentInstance.bill_id == bill.id,
+        PaymentInstance.period >= current_period,
+        PaymentInstance.status != PaymentStatus.paid,
+        PaymentInstance.is_deleted.is_(False),
+    ).update(
+        {"is_deleted": True, "deleted_by_archive": True}, synchronize_session=False
+    )
     db.commit()
 
 
@@ -488,4 +498,16 @@ def unarchive_bill(
     if bill.user_id != me.id:
         raise HTTPException(status_code=403, detail="Not authorized")
     bill.is_archived = False
+    current_period = today_for(me).strftime("%Y-%m")
+    # A last-payment month already in the past would leave the restored bill idle.
+    if bill.end_period and bill.end_period < current_period:
+        bill.end_period = None
+    # Bring back only what archiving hid; payments the user deleted by hand stay deleted.
+    db.query(PaymentInstance).filter(
+        PaymentInstance.bill_id == bill.id,
+        PaymentInstance.deleted_by_archive.is_(True),
+        PaymentInstance.period >= current_period,
+    ).update(
+        {"is_deleted": False, "deleted_by_archive": False}, synchronize_session=False
+    )
     db.commit()

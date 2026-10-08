@@ -177,7 +177,7 @@
     },
     "ArchiveConfirmDialog": {
         "title": "归档“{billName}”？",
-        "description": "该账单将从有效列表中隐藏。付款记录会被保留，并可在已归档视图中查看。",
+        "description": "此账单将不再生成新的付款和提醒，其未付的即将到期付款会从“付款”中消失。已付历史会保留。你可以随时从存档中恢复。",
         "cancel": "取消",
         "archive": "归档",
         "archiving": "正在归档…"
@@ -194,7 +194,7 @@
     },
     "RestoreConfirmDialog": {
         "title": "恢复“{billName}”？",
-        "description": "该账单将重新出现在有效列表中，并继续生成后续付款。",
+        "description": "此账单将回到活动列表，其即将到期的付款会重新出现。存档期间已过去的月份保持为空。已过去的最后付款月份将被清除。",
         "cancel": "取消",
         "restore": "恢复",
         "restoring": "正在恢复…"

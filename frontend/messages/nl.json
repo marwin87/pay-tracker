@@ -177,7 +177,7 @@
     },
     "ArchiveConfirmDialog": {
         "title": "“{billName}” archiveren?",
-        "description": "Deze rekening wordt verborgen in de actieve lijst. De betalingsgeschiedenis blijft bewaard en is beschikbaar in de weergave Gearchiveerd.",
+        "description": "Voor deze rekening komen er geen nieuwe betalingen en herinneringen meer en de openstaande komende betalingen verdwijnen uit Betalingen. Betaalde geschiedenis blijft behouden. Je kunt hem op elk moment uit het archief terugzetten.",
         "cancel": "Annuleren",
         "archive": "Archiveren",
         "archiving": "Bezig met archiveren…"
@@ -194,7 +194,7 @@
     },
     "RestoreConfirmDialog": {
         "title": "“{billName}” herstellen?",
-        "description": "Deze rekening verschijnt weer in de actieve lijst en maakt weer aankomende betalingen aan.",
+        "description": "Deze rekening komt terug in de actieve lijst en de komende betalingen verschijnen weer. Maanden die voorbijgingen tijdens het archiveren blijven leeg. Een laatste betaalmaand die al voorbij is, wordt gewist.",
         "cancel": "Annuleren",
         "restore": "Herstellen",
         "restoring": "Bezig met herstellen…"
