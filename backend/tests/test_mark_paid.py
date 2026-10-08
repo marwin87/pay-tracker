@@ -272,6 +272,29 @@ def test_edit_due_date_on_overdue_instance(client_db):
     assert r.json()["due_date"] == new_due
 
 
+def test_moving_due_date_to_the_future_clears_stored_overdue(client_db):
+    """A stored "overdue" status (set by revert / old data) must not outlive a due
+    date that is no longer past — the status follows the date."""
+    client, db = client_db
+    token = register_and_login(client, "dd4@test.com")
+    bill_id = _create_bill(client, token)
+    instance_id = _instance_id(client, token, bill_id)
+    next_month = (today_utc().replace(day=1) + timedelta(days=32)).replace(day=1)
+    inst = db.get(PaymentInstance, instance_id)
+    inst.period = next_month.strftime("%Y-%m")
+    inst.due_date = today_utc() - timedelta(days=3)
+    inst.status = "overdue"
+    db.commit()
+
+    r = client.patch(
+        f"/bills/payments/{instance_id}",
+        json={"due_date": f"{inst.period}-20"},
+        headers=auth(token),
+    )
+    assert r.status_code == 200
+    assert r.json()["status"] == "upcoming"
+
+
 def test_edit_due_date_rejected_when_paid(client_db):
     client, db = client_db
     token = register_and_login(client, "dd3@test.com")

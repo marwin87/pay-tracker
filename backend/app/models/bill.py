@@ -137,6 +137,15 @@ class PaymentInstance(Base):
 
     template: Mapped["BillTemplate"] = relationship(back_populates="instances")
 
+    def status_on(self, today: date) -> PaymentStatus:
+        """Status as shown to the user: an unpaid payment follows its due date,
+        never the stored value (a stored "overdue" must clear when the date moves)."""
+        if self.status == PaymentStatus.paid:
+            return PaymentStatus.paid
+        return (
+            PaymentStatus.overdue if self.due_date < today else PaymentStatus.upcoming
+        )
+
     @property
     def current_amount(self) -> Decimal:
         """Amount expected for this payment: paid keeps its snapshot, unpaid

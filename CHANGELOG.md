@@ -16,6 +16,7 @@ Notable changes to Pay Tracker, release by release.
 ### Fixes
 
 - Default categories can now be renamed in Settings
+- A payment moved to a future due date is no longer shown as overdue
 - Edit and archive buttons on bills are always visible
 - Switching tabs no longer flashes: pages crossfade and show the last data instantly
 

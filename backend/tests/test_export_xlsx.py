@@ -2,11 +2,12 @@
 full-year backfill, and language translation."""
 
 import io
-from datetime import date
+from datetime import date, timedelta
 
 import openpyxl
 
 from app.core.i18n import LOCALES
+from app.models.bill import PaymentInstance
 from tests.conftest import (
     auth,
     category_id,
@@ -326,3 +327,44 @@ def test_xlsx_has_print_footer(client):
     assert ws.page_setup.orientation == "landscape"
     assert ws.sheet_properties.pageSetUpPr.fitToPage
     assert (ws.page_setup.fitToWidth, ws.page_setup.fitToHeight) == (1, 0)
+
+
+def test_xlsx_status_follows_due_date_not_stored_value(client_db):
+    """Same rule as the API: a stored "overdue" with a future due date reads
+    Upcoming, and a stored "upcoming" that is past due reads Overdue."""
+    client, db = client_db
+    tok = register_and_login(client, "xlsx_status@test.com")
+    cat_id = category_id(client, tok)
+    today = today_utc()
+    for name in ("Stored overdue", "Stored upcoming"):
+        r = client.post(
+            "/bills",
+            json={
+                **_BILL_A,
+                "name": name,
+                "category_id": cat_id,
+                "due_month": today.month,
+            },
+            headers=auth(tok),
+        )
+        assert r.status_code == 201
+    sync_payments(client, tok, month=today.strftime("%Y-%m"))
+    by_name = {i.template.name: i for i in db.query(PaymentInstance).all()}
+    by_name["Stored overdue"].status = "overdue"
+    by_name["Stored overdue"].due_date = today + timedelta(days=5)
+    by_name["Stored upcoming"].status = "upcoming"
+    by_name["Stored upcoming"].due_date = today - timedelta(days=5)
+    db.commit()
+
+    r = client.get(f"/export/xlsx?year={today.year}", headers=auth(tok))
+    wb = openpyxl.load_workbook(io.BytesIO(r.content))
+    period = today.strftime("%Y-%m")
+    # columns: Bill, Category, Period, Due Date, Amount, Currency, Status
+    status = {
+        row[0]: row[6]
+        for ws in wb.worksheets
+        for row in ws.iter_rows(min_row=2, values_only=True)
+        if row[2] == period
+    }
+    assert status["Stored overdue"] == "Upcoming"
+    assert status["Stored upcoming"] == "Overdue"

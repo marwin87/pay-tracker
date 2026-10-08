@@ -8,7 +8,7 @@ from openpyxl.worksheet.properties import PageSetupProperties
 from sqlalchemy.orm import Session, selectinload
 
 from app.core.i18n import t
-from app.core.tz import user_tz
+from app.core.tz import today_for, user_tz
 from app.models.bill import BillFrequency, BillTemplate, PaymentInstance
 from app.models.user import User
 from app.schemas.auth import EXPORT_FIELD_KEYS
@@ -99,6 +99,7 @@ def _rows_by_month(
 ) -> dict[int, list[dict]]:
     _ensure_year_instances(db, me.id, year)
     tz = user_tz(me)
+    today = today_for(me)
 
     instances = (
         db.query(PaymentInstance)
@@ -124,7 +125,7 @@ def _rows_by_month(
                 "Due Date": i.due_date.isoformat(),
                 "Amount": f"{i.current_amount:.2f}".replace(".", me.decimal_separator),
                 "Currency": i.template.currency,
-                "Status": t(lang, f"PaymentRow.status.{i.status}"),
+                "Status": t(lang, f"PaymentRow.status.{i.status_on(today).value}"),
                 "Paid Amount": (
                     f"{i.paid_amount:.2f}".replace(".", me.decimal_separator)
                     if i.paid_amount
@@ -134,7 +135,7 @@ def _rows_by_month(
                     i.paid_at.astimezone(tz).date().isoformat() if i.paid_at else None
                 ),
                 "Notes": i.notes,
-                "_status_key": i.status,
+                "_status_key": i.status_on(today).value,
                 "_category_color": i.template.category.color,
             }
         )

@@ -70,13 +70,8 @@ def _paid_at_datetime(day: date, user: User) -> datetime:
 
 
 def _to_out(inst: PaymentInstance, today: date) -> PaymentInstanceOut:
-    # Dynamic overdue (relative to the caller's today): reported in every response
-    # without writing to the DB.
-    status = (
-        PaymentStatus.overdue
-        if inst.status == PaymentStatus.upcoming and inst.due_date < today
-        else inst.status
-    )
+    # Relative to the caller's today; reported in every response without writing to the DB.
+    status = inst.status_on(today)
     # Unpaid instances follow the per-payment override, else the template's
     # current price (not the generation-time snapshot), so editing a bill's
     # amount is reflected immediately. Paid instances keep their historical amount.
