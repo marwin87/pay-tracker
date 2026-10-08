@@ -119,9 +119,12 @@
         "emptyHelp": "账单就是您要支付的一切：每月、每年或仅一次。添加一次，它就会出现在“待付款”中。",
         "billPaused": "已暂停“{name}”",
         "billResumed": "已恢复“{name}”",
-        "showPaused": "显示已暂停的账单",
+        "showPaused": "显示已暂停",
         "paused": "已暂停",
-        "resumeError": "恢复账单失败。"
+        "resumeError": "恢复账单失败。",
+        "hidePaused": "隐藏已暂停",
+        "allPaused": "所有账单都已暂停",
+        "allPausedHelp": "已暂停的账单不会生成付款或提醒。显示它们即可恢复，或添加新账单。"
     },
     "BillTemplateForm": {
         "nameLabel": "名称",

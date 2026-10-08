@@ -119,9 +119,12 @@
         "emptyHelp": "Eine Rechnung ist alles, was Sie zahlen: monatlich, jährlich oder einmalig. Einmal hinzufügen, und sie erscheint unter „Zu zahlen“.",
         "billPaused": "„{name}“ pausiert",
         "billResumed": "„{name}“ fortgesetzt",
-        "showPaused": "Pausierte Rechnungen anzeigen",
+        "showPaused": "Pausierte zeigen",
         "paused": "Pausiert",
-        "resumeError": "Rechnung konnte nicht fortgesetzt werden."
+        "resumeError": "Rechnung konnte nicht fortgesetzt werden.",
+        "hidePaused": "Pausierte ausblenden",
+        "allPaused": "Alle Rechnungen sind pausiert",
+        "allPausedHelp": "Pausierte Rechnungen erzeugen keine Zahlungen oder Erinnerungen. Zeige sie an, um eine fortzusetzen, oder füge eine neue Rechnung hinzu."
     },
     "BillTemplateForm": {
         "nameLabel": "Name",

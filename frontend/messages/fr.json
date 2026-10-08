@@ -119,9 +119,12 @@
         "emptyHelp": "Une facture, c’est tout ce que vous payez : chaque mois, chaque année ou une seule fois. Ajoutez-la une fois et elle apparaît dans « À payer ».",
         "billPaused": "« {name} » mise en pause",
         "billResumed": "« {name} » reprise",
-        "showPaused": "Afficher les factures en pause",
+        "showPaused": "Afficher en pause",
         "paused": "En pause",
-        "resumeError": "Impossible de reprendre la facture."
+        "resumeError": "Impossible de reprendre la facture.",
+        "hidePaused": "Masquer en pause",
+        "allPaused": "Toutes vos factures sont en pause",
+        "allPausedHelp": "Les factures en pause ne génèrent ni paiements ni rappels. Affichez-les pour en reprendre une, ou ajoutez une nouvelle facture."
     },
     "BillTemplateForm": {
         "nameLabel": "Nom",

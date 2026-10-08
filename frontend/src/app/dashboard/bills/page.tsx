@@ -2,7 +2,7 @@
 
 import { btnPrimaryClass } from "@/components/ui/formButtonClasses";
 import { useEffect, useState } from "react";
-import { ChevronRight, ChevronsUpDown, Plus } from "lucide-react";
+import { ChevronRight, ChevronsUpDown, CirclePause, Plus } from "lucide-react";
 import { useTranslations } from "next-intl";
 import {
   fetchBills,
@@ -68,6 +68,7 @@ export default function BillsPage() {
   }, []);
 
   const pausedCount = templates.filter((tmpl) => tmpl.is_archived).length;
+  const allPaused = templates.length > 0 && pausedCount === templates.length;
   const filteredTemplates = templates
     .filter((tmpl) => showPaused || !tmpl.is_archived)
     .filter((tmpl) => categoryFilter.size === 0 || categoryFilter.has(String(tmpl.category.id)))
@@ -278,15 +279,21 @@ export default function BillsPage() {
               {expandedId === "new" ? t("cancel") : t("newBill")}
             </button>
             {pausedCount > 0 && (
-              <label className="flex cursor-pointer items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
-                <input
-                  type="checkbox"
-                  checked={showPaused}
-                  onChange={(e) => setShowPaused(e.target.checked)}
-                  className="h-4 w-4 accent-green-600"
-                />
-                {t("showPaused")} ({pausedCount})
-              </label>
+              <button
+                onClick={() => setShowPaused((v) => !v)}
+                aria-pressed={showPaused}
+                className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-sm font-medium shadow-sm transition-all sm:px-4 ${
+                  showPaused
+                    ? "border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-900/20 dark:text-amber-400 dark:hover:bg-amber-900/30"
+                    : "border-slate-200 bg-white text-slate-500 hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
+                }`}
+              >
+                <CirclePause size={16} />
+                {showPaused ? t("hidePaused") : t("showPaused")}
+                <span className="rounded-full bg-slate-100 px-1.5 text-xs font-semibold tabular-nums text-slate-500 dark:bg-slate-700 dark:text-slate-400">
+                  {pausedCount}
+                </span>
+              </button>
             )}
           </div>
           {templates.length > 0 && (
@@ -374,18 +381,26 @@ export default function BillsPage() {
         </div>
       ) : templates.every((tmpl) => tmpl.is_archived) && !showPaused && expandedId !== "new" ? (
         <div className="flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-700 px-6 py-16 text-center">
-          <div className="mb-3 rounded-full bg-green-100 dark:bg-green-900/30 p-4 text-green-700">
-            <Plus size={28} />
+          <div
+            className={`mb-3 rounded-full p-4 ${
+              allPaused
+                ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                : "bg-green-100 text-green-700 dark:bg-green-900/30"
+            }`}
+          >
+            {allPaused ? <CirclePause size={28} /> : <Plus size={28} />}
           </div>
-          <p className="font-medium text-slate-700 dark:text-slate-300">{t("noBillsYet")}</p>
+          <p className="font-medium text-slate-700 dark:text-slate-300">
+            {allPaused ? t("allPaused") : t("noBillsYet")}
+          </p>
           <p className="mt-1 max-w-sm text-sm text-slate-500 dark:text-slate-400">
-            {t("emptyHelp")}
+            {allPaused ? t("allPausedHelp") : t("emptyHelp")}
           </p>
           <button
-            onClick={() => toggleExpand("new")}
+            onClick={() => (allPaused ? setShowPaused(true) : toggleExpand("new"))}
             className={`mt-4 ${btnPrimaryClass}`}
           >
-            {t("addFirstBill")}
+            {allPaused ? t("showPaused") : t("addFirstBill")}
           </button>
         </div>
       ) : filteredTemplates.length === 0 ? (

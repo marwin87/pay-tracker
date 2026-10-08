@@ -40,6 +40,9 @@ const NAV_ITEMS = [
   { href: "/dashboard/bills", labelKey: "bills" as const, icon: ClipboardPen, exact: true },
 ];
 
+// Bottom bar width of one tab, in %: the nav items plus the More tab.
+const TAB_W = 100 / (NAV_ITEMS.length + 1);
+
 // Settings lives in the avatar menu on desktop and in the hamburger menu on mobile.
 const SETTINGS_ITEM = { href: "/dashboard/settings", labelKey: "settings" as const, icon: Settings, exact: false };
 // The icon squeezes while its row (sidebar link or bottom-bar tab) is pressed.
@@ -388,13 +391,13 @@ export default function DashboardLayout({
               aria-hidden
               data-dir={tabDir}
               className="tab-ind pointer-events-none absolute top-0 h-[62px] bg-[radial-gradient(ellipse_70%_100%_at_50%_0,color-mix(in_srgb,var(--nav-accent)_28%,transparent),color-mix(in_srgb,var(--nav-accent)_10%,transparent)_55%,transparent_80%)] [mask-composite:intersect] [mask-image:linear-gradient(#000,transparent),linear-gradient(90deg,transparent,#000_25%,#000_75%,transparent)]"
-              style={{ left: `${tabIdx * 20}%`, right: `${100 - (tabIdx + 1) * 20}%` }}
+              style={{ left: `${tabIdx * TAB_W}%`, right: `${100 - (tabIdx + 1) * TAB_W}%` }}
             />
             <span
               aria-hidden
               data-dir={tabDir}
               className="tab-ind pointer-events-none absolute -top-px z-20 h-[3px] rounded-b-md bg-gradient-to-r from-transparent via-[var(--nav-accent)] to-transparent"
-              style={{ left: `${tabIdx * 20 + 2}%`, right: `${100 - (tabIdx + 1) * 20 + 2}%` }}
+              style={{ left: `${tabIdx * TAB_W + 2}%`, right: `${100 - (tabIdx + 1) * TAB_W + 2}%` }}
             />
           </>
         )}

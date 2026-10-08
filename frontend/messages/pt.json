@@ -119,9 +119,12 @@
         "emptyHelp": "Uma fatura é tudo o que paga: todos os meses, todos os anos ou uma só vez. Adicione-a uma vez e aparece em «A pagar».",
         "billPaused": "“{name}” em pausa",
         "billResumed": "“{name}” retomada",
-        "showPaused": "Mostrar contas em pausa",
+        "showPaused": "Mostrar em pausa",
         "paused": "Em pausa",
-        "resumeError": "Não foi possível retomar a conta."
+        "resumeError": "Não foi possível retomar a conta.",
+        "hidePaused": "Ocultar em pausa",
+        "allPaused": "Todas as suas contas estão em pausa",
+        "allPausedHelp": "As contas em pausa não geram pagamentos nem lembretes. Mostre-as para retomar uma ou adicione uma nova conta."
     },
     "BillTemplateForm": {
         "nameLabel": "Nome",

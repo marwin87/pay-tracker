@@ -119,9 +119,12 @@
         "emptyHelp": "Een rekening is alles wat je betaalt: elke maand, elk jaar of eenmalig. Voeg hem één keer toe en hij verschijnt bij “Te betalen”.",
         "billPaused": "“{name}” gepauzeerd",
         "billResumed": "“{name}” hervat",
-        "showPaused": "Gepauzeerde rekeningen tonen",
+        "showPaused": "Toon gepauzeerd",
         "paused": "Gepauzeerd",
-        "resumeError": "Rekening hervatten mislukt."
+        "resumeError": "Rekening hervatten mislukt.",
+        "hidePaused": "Verberg gepauzeerd",
+        "allPaused": "Al je rekeningen zijn gepauzeerd",
+        "allPausedHelp": "Gepauzeerde rekeningen maken geen betalingen of herinneringen aan. Toon ze om er een te hervatten, of voeg een nieuwe rekening toe."
     },
     "BillTemplateForm": {
         "nameLabel": "Naam",

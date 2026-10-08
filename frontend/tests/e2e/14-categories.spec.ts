@@ -1,6 +1,6 @@
 /**
- * Flow 14: Categories — create / rename / archive in Settings, filter payments by category
- * Risk: a category change does not persist (or archive is not reflected), or the payments
+ * Flow 14: Categories — create / rename / delete (archive when in use) in Settings, filter payments by category
+ * Risk: a category change does not persist (or delete/archive is not reflected), or the payments
  *       category filter shows rows from other categories — user misreads what is due.
  * Real boundaries: auth, /categories API, /bills/payments API, payments list filtering.
  * Each test uses a fresh isolated user.
@@ -15,7 +15,7 @@ import {
   syncPaymentsViaApi,
 } from './helpers';
 
-test('create, rename and archive a custom category in Settings', async ({ page }) => {
+test('create, rename and delete an unused custom category in Settings', async ({ page }) => {
   const name = `E2E Cat ${Date.now()}`;
   const renamed = `${name} Renamed`;
 
@@ -37,14 +37,34 @@ test('create, rename and archive a custom category in Settings', async ({ page }
   await expect(page.getByText(renamed, { exact: true })).toBeVisible();
   await expect(page.getByText(name, { exact: true })).not.toBeVisible();
 
-  // Step: archive
-  await page.getByRole('button', { name: 'Archive', exact: true }).last().click();
-  await expect(page.getByText('archived', { exact: true })).toBeVisible();
+  // Step: delete — no bill uses it, so it is removed for good
+  await page.getByRole('button', { name: 'Delete', exact: true }).last().click();
+  await expect(page.getByText(renamed, { exact: true })).not.toBeVisible();
 
-  // Assert: rename + archive are persisted server-side
+  // Assert: persisted server-side
   await page.reload();
   await page.getByRole('tab', { name: 'Categories', exact: true }).click();
-  await expect(page.getByText(renamed, { exact: true })).toBeVisible();
+  await expect(page.getByText(renamed, { exact: true })).not.toBeVisible();
+});
+
+test('deleting a category used by a bill archives it instead', async ({ page }) => {
+  const stamp = Date.now();
+  const name = `E2E Used Cat ${stamp}`;
+
+  await loginNewUser(page);
+  const res = await page.request.post(`${API}/categories`, {
+    data: { name, color: 'rose' },
+    headers: { 'Content-Type': 'application/json', ...(await getCsrfHeader(page)) },
+  });
+  expect(res.ok()).toBeTruthy();
+  await createBillViaApi(page, `E2E Used Cat Bill ${stamp}`, await categoryIdByName(page, name));
+
+  await page.goto('/dashboard/settings');
+  await page.getByRole('tab', { name: 'Categories', exact: true }).click();
+  await page.getByRole('button', { name: 'Delete', exact: true }).last().click();
+
+  // Kept, flagged as archived, and can be restored
+  await expect(page.getByText(name, { exact: true })).toBeVisible();
   await expect(page.getByText('archived', { exact: true })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Unarchive', exact: true })).toBeVisible();
 });

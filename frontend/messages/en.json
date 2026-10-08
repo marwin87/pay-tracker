@@ -119,9 +119,12 @@
         "emptyHelp": "A bill is anything you pay: every month, every year or just once. Add it once and it appears in “To pay”.",
         "billPaused": "“{name}” paused",
         "billResumed": "“{name}” resumed",
-        "showPaused": "Show paused bills",
+        "showPaused": "Show paused",
         "paused": "Paused",
-        "resumeError": "Failed to resume bill."
+        "resumeError": "Failed to resume bill.",
+        "hidePaused": "Hide paused",
+        "allPaused": "All your bills are paused",
+        "allPausedHelp": "Paused bills create no payments or reminders. Show them to resume one, or add a new bill."
     },
     "BillTemplateForm": {
         "nameLabel": "Name",

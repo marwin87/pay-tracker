@@ -119,9 +119,12 @@
         "emptyHelp": "Una factura es todo lo que pagas: cada mes, cada año o una sola vez. Añádela una vez y aparecerá en «Por pagar».",
         "billPaused": "«{name}» en pausa",
         "billResumed": "«{name}» reanudada",
-        "showPaused": "Mostrar facturas en pausa",
+        "showPaused": "Mostrar en pausa",
         "paused": "En pausa",
-        "resumeError": "No se pudo reanudar la factura."
+        "resumeError": "No se pudo reanudar la factura.",
+        "hidePaused": "Ocultar en pausa",
+        "allPaused": "Todas tus facturas están en pausa",
+        "allPausedHelp": "Las facturas en pausa no generan pagos ni recordatorios. Muéstralas para reanudar una o añade una factura nueva."
     },
     "BillTemplateForm": {
         "nameLabel": "Nombre",

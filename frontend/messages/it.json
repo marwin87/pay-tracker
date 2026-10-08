@@ -119,9 +119,12 @@
         "emptyHelp": "Una bolletta è tutto ciò che paghi: ogni mese, ogni anno o una volta sola. Aggiungila una volta e comparirà in «Da pagare».",
         "billPaused": "«{name}» in pausa",
         "billResumed": "«{name}» ripresa",
-        "showPaused": "Mostra bollette in pausa",
+        "showPaused": "Mostra in pausa",
         "paused": "In pausa",
-        "resumeError": "Impossibile riprendere la bolletta."
+        "resumeError": "Impossibile riprendere la bolletta.",
+        "hidePaused": "Nascondi in pausa",
+        "allPaused": "Tutte le bollette sono in pausa",
+        "allPausedHelp": "Le bollette in pausa non generano pagamenti né promemoria. Mostrale per riprenderne una oppure aggiungi una nuova bolletta."
     },
     "BillTemplateForm": {
         "nameLabel": "Nome",

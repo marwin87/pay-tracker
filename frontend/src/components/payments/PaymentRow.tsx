@@ -139,7 +139,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
                 onClick={() => onMarkPaid(instance)}
                 className="flex h-11 w-11 items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-white sm:h-auto sm:w-auto sm:rounded-lg sm:px-2.5 sm:py-1 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
               >
-                <CheckCircle className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+                <CheckCircle className="h-[18px] w-[18px] sm:h-3.5 sm:w-3.5" />
                 <span className="hidden sm:inline">{t("markAsPaid")}</span>
               </button>
             )}
@@ -150,7 +150,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
               aria-label={t("edit")}
               className="flex h-11 w-11 items-center justify-center rounded-xl sm:h-auto sm:w-auto sm:rounded-lg sm:p-1.5 max-sm:border max-sm:border-slate-200 max-sm:bg-white max-sm:shadow-sm dark:max-sm:border-slate-600 dark:max-sm:bg-slate-800 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
             >
-              <Pencil className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+              <Pencil className="h-[18px] w-[18px] sm:h-3.5 sm:w-3.5" />
             </button>
             {/* Revert — visible for paid instances */}
             {instance.status === "paid" && (
@@ -160,7 +160,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
                 aria-label={t("revert")}
                 className="flex h-11 w-11 items-center justify-center rounded-xl sm:h-auto sm:w-auto sm:rounded-lg sm:p-1.5 max-sm:border max-sm:border-slate-200 max-sm:bg-white max-sm:shadow-sm dark:max-sm:border-slate-600 dark:max-sm:bg-slate-800 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
               >
-                <Undo2 className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+                <Undo2 className="h-[18px] w-[18px] sm:h-3.5 sm:w-3.5" />
               </button>
             )}
             <div className="mx-0.5 hidden h-4 w-px bg-slate-200 dark:bg-slate-600 sm:block" />
@@ -176,7 +176,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
                     : "text-slate-300 hover:bg-slate-100 hover:text-slate-400 dark:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-500"
                 }`}
               >
-                <AtSign className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+                <AtSign className="h-[18px] w-[18px] sm:h-3.5 sm:w-3.5" />
               </button>
               {emailOpen && (
                 <div className="absolute bottom-full right-0 mb-2 w-48 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10 whitespace-normal">
@@ -193,20 +193,10 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
               aria-label={t("delete")}
               className="flex h-11 w-11 items-center justify-center rounded-xl sm:h-auto sm:w-auto sm:rounded-lg sm:p-1.5 max-sm:border max-sm:border-slate-200 max-sm:bg-white max-sm:shadow-sm dark:max-sm:border-slate-600 dark:max-sm:bg-slate-800 text-slate-400 hover:bg-red-50 hover:text-red-500 dark:text-slate-500 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
             >
-              <Trash2 className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
+              <Trash2 className="h-[18px] w-[18px] sm:h-3.5 sm:w-3.5" />
             </button>
           </div>
         </div>
-        {/* Note — shown below when present */}
-        {instance.notes && (
-          <>
-            <div className="border-t border-slate-200 dark:border-slate-700 mt-1 pt-1" />
-            <div className="flex items-start gap-1.5 text-xs text-slate-500 dark:text-slate-400">
-              <MessageSquare size={12} className="shrink-0 mt-0.5" />
-              <span>{instance.notes}</span>
-            </div>
-          </>
-        )}
         {/* Amount mismatch warning */}
         {amountMismatch && (
           <div className="flex items-center gap-1.5 text-xs text-slate-700 dark:text-slate-300 mt-0.5">
@@ -220,6 +210,15 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
               })}
             </span>
           </div>
+        )}
+        {/* Note — shown below when present */}
+        {instance.notes && (
+          <>
+            <div className="mt-1 flex items-start gap-1.5 text-xs text-slate-500 dark:text-slate-400">
+              <MessageSquare size={12} className="shrink-0 mt-0.5" />
+              <span>{instance.notes}</span>
+            </div>
+          </>
         )}
       </div>
     </div>

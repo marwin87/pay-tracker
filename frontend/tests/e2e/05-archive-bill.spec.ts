@@ -1,68 +1,48 @@
 /**
- * Flow 5: Archive a bill → moves to archived page; restoring it brings it back
- * Risk: bill remains on the active list after archiving, or does not appear on
- *       the archived list — user thinks the bill was deleted. Or: restore does
- *       nothing and an archived bill can never come back.
- * Real boundaries: auth, POST /bills/:id/archive + /unarchive, bills list pages.
- * Each test uses a fresh isolated user → exactly one bill on the active list.
+ * Flow 5: Pause a bill → leaves the bills list, shows under "Show paused"; resuming brings it back
+ * Risk: bill remains on the list after pausing, or cannot be found among paused bills —
+ *       user thinks the bill was deleted. Or: resume does nothing and a paused bill can
+ *       never come back.
+ * Real boundaries: auth, POST /bills/:id/archive + /unarchive, bills list page.
+ * Each test uses a fresh isolated user → exactly one bill on the list.
  */
 import { test, expect } from '@playwright/test';
 import { loginNewUser, createBillViaApi } from './helpers';
 
-test('archived bill leaves active list and appears on archived page', async ({ page }) => {
-  const billName = `E2E Archive ${Date.now()}`;
+test('paused bill leaves the list, shows with "Show paused", and resumes', async ({ page }) => {
+  const billName = `E2E Pause ${Date.now()}`;
+  const row = page.getByText(billName, { exact: true });
 
-  // Setup: authenticate + create bill via API
   await loginNewUser(page);
   await createBillViaApi(page, billName);
 
-  // Step: navigate to bills page
   await page.goto('/dashboard/bills');
-  await expect(page.getByText(billName, { exact: true })).toBeVisible();
+  await expect(row).toBeVisible();
 
-  // Step: hover over the bill row to reveal the action buttons
-  // (sm+ viewports show Edit/Archive on group-hover)
-  await page.getByText(billName, { exact: true }).hover();
-
-  // Step: click "Archive" (aria-label on the archive button in BillTemplateRow)
-  await page.getByRole('button', { name: 'Archive' }).click();
-
-  // ArchiveConfirmDialog appears
+  // Pause (sm+ viewports show the buttons on group-hover)
+  await row.hover();
+  await page.getByRole('button', { name: 'Pause' }).click();
   const dialog = page.getByRole('dialog');
   await expect(dialog).toBeVisible();
+  await dialog.getByRole('button', { name: 'Pause' }).click();
 
-  // Step: confirm archive
-  await dialog.getByRole('button', { name: 'Archive' }).click();
+  // The user is told the bill was paused, and it leaves the list
+  await expect(page.getByRole('status')).toContainText(`“${billName}” paused`);
+  await expect(dialog).not.toBeVisible();
+  await expect(row).not.toBeVisible();
 
-  // Assert: the user is told the bill was archived
-  await expect(page.getByRole('status')).toContainText(`“${billName}” archived`);
+  // It reappears (marked Paused) when paused bills are shown
+  await page.getByRole('button', { name: /Show paused/ }).first().click();
+  await expect(row).toBeVisible();
 
-  // Assert: bill no longer on the active bills list
-  // Wait for the dialog to close first, then check the list
+  // Resume
+  await page.getByRole('button', { name: 'Resume' }).click();
+  await page.getByRole('dialog').getByRole('button', { name: 'Resume' }).click();
   await expect(page.getByRole('dialog')).not.toBeVisible();
-  // exact: true avoids strict-mode violation from the dialog title containing the bill name
-  await expect(page.getByText(billName, { exact: true })).not.toBeVisible();
+  await expect(page.getByRole('status')).toContainText(`“${billName}” resumed`);
 
-  // Step: navigate to the archived bills page
-  await page.goto('/dashboard/bills/archived');
-
-  // Assert: bill appears in the archived list
-  await expect(page.getByText(billName, { exact: true })).toBeVisible();
-
-  // Step: click "Restore" (opens RestoreConfirmDialog)
-  await page.getByRole('button', { name: 'Restore' }).click();
-
-  const restoreDialog = page.getByRole('dialog');
-  await expect(restoreDialog).toBeVisible();
-
-  // Step: confirm restore
-  await restoreDialog.getByRole('button', { name: 'Restore' }).click();
-
-  // Assert: bill no longer on the archived list
-  await expect(page.getByRole('dialog')).not.toBeVisible();
-  await expect(page.getByText(billName, { exact: true })).not.toBeVisible();
-
-  // Assert: bill is back on the active bills list
+  // Back as a normal bill on the list (no Resume button left)
   await page.goto('/dashboard/bills');
-  await expect(page.getByText(billName, { exact: true })).toBeVisible();
+  await expect(row).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Resume' })).toHaveCount(0);
 });

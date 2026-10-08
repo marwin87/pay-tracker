@@ -119,9 +119,12 @@
         "emptyHelp": "Rachunek to wszystko, co płacisz: co miesiąc, co rok albo jednorazowo. Dodaj go raz, a pojawi się w zakładce „Do zapłaty”.",
         "billPaused": "Wstrzymano „{name}”",
         "billResumed": "Wznowiono „{name}”",
-        "showPaused": "Pokaż wstrzymane rachunki",
+        "showPaused": "Pokaż wstrzymane",
         "paused": "Wstrzymany",
-        "resumeError": "Nie udało się wznowić rachunku."
+        "resumeError": "Nie udało się wznowić rachunku.",
+        "hidePaused": "Ukryj wstrzymane",
+        "allPaused": "Wszystkie rachunki są wstrzymane",
+        "allPausedHelp": "Wstrzymane rachunki nie tworzą płatności ani przypomnień. Pokaż je, żeby wznowić któryś, albo dodaj nowy rachunek."
     },
     "BillTemplateForm": {
         "nameLabel": "Nazwa",
