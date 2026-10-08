@@ -566,9 +566,9 @@ function PaymentsPageInner() {
                 }}
                 aria-label={t("shareMonth")}
                 title={t("shareMonth")}
-                className="flex items-center rounded-lg border border-slate-200 bg-white p-2 text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-400"
+                className="flex items-center rounded-xl border border-slate-200 bg-white p-2.5 text-slate-600 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-green-700 dark:hover:bg-green-900/20 dark:hover:text-green-400"
               >
-                <Share2 size={14} />
+                <Share2 size={18} />
               </button>
             )}
             {exportEnabled && (
@@ -582,9 +582,9 @@ function PaymentsPageInner() {
               placeholder={
                 <span className="flex items-center gap-1.5">
                   {xlsxLoading ? (
-                    <Loader2 size={14} className="animate-spin text-green-600 dark:text-emerald-400" />
+                    <Loader2 size={16} className="animate-spin text-green-600 dark:text-emerald-400" />
                   ) : (
-                    <FileSpreadsheet size={14} />
+                    <FileSpreadsheet size={16} />
                   )}
                   XLSX
                 </span>
@@ -603,9 +603,9 @@ function PaymentsPageInner() {
               placeholder={
                 <span className="flex items-center gap-1.5">
                   {pdfLoading ? (
-                    <Loader2 size={14} className="animate-spin text-green-600 dark:text-emerald-400" />
+                    <Loader2 size={16} className="animate-spin text-green-600 dark:text-emerald-400" />
                   ) : (
-                    <FileText size={14} />
+                    <FileText size={16} />
                   )}
                   PDF
                 </span>
@@ -679,7 +679,7 @@ function PaymentsPageInner() {
       </div>
 
       {/* Selected month header */}
-      <div className="mb-4 pb-5 border-b border-slate-200 dark:border-slate-700">
+      <div className="mb-4 pb-2">
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">
@@ -699,15 +699,6 @@ function PaymentsPageInner() {
               </span>
             )}
           </div>
-          {!loading && !loadError && (
-            <button
-              onClick={allCollapsed ? expandAll : collapseAll}
-              className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
-            >
-              <ChevronsUpDown size={13} />
-              {allCollapsed ? t("expandAll") : t("collapseAll")}
-            </button>
-          )}
         </div>
         {!loading && !loadError && (
           <div className="mt-0.5 flex flex-col gap-3">
@@ -727,15 +718,16 @@ function PaymentsPageInner() {
                 }}
               />
             )}
+            <p className="-mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">{tFilters("toolbarTitle")}</p>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <SearchInput
                 value={searchQuery}
                 onChange={setSearchQuery}
                 placeholder={tFilters("searchPlaceholder")}
               />
-              <div className="flex flex-wrap items-center justify-end gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+              <div className="grid w-full grid-cols-1 items-center gap-2 sm:flex sm:w-auto sm:flex-wrap sm:justify-end sm:gap-3">
+                <div className="flex min-w-0 items-center gap-2 max-sm:[&>div]:min-w-0 max-sm:[&>div]:flex-1 max-sm:[&_button]:w-full max-sm:[&_button]:justify-between">
+                  <span className="max-sm:sr-only text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                     {tFilters("filterBy")}
                   </span>
                   <MultiSelectFilter
@@ -753,9 +745,9 @@ function PaymentsPageInner() {
                     allLabel={tFilters("allCategories")}
                   />
                 </div>
-                <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                <div className="hidden h-5 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
+                <div className="flex min-w-0 items-center gap-2 max-sm:[&>div]:min-w-0 max-sm:[&>div]:flex-1 max-sm:[&_button]:w-full max-sm:[&_button]:justify-between">
+                  <span className="max-sm:sr-only text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                     {tFilters("sortBy")}
                   </span>
                   <FilterSelect
@@ -766,6 +758,16 @@ function PaymentsPageInner() {
                   />
                 </div>
               </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <div className="border-t border-slate-200 dark:border-slate-700 sm:h-px sm:w-1/2 sm:self-end sm:border-t-0 sm:bg-gradient-to-r sm:from-transparent sm:to-slate-300 dark:sm:to-slate-600" />
+              <button
+                onClick={allCollapsed ? expandAll : collapseAll}
+                className="flex shrink-0 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200 w-full justify-center sm:w-auto sm:self-end"
+              >
+                <ChevronsUpDown size={16} />
+                {allCollapsed ? t("expandAll") : t("collapseAll")}
+              </button>
             </div>
           </div>
         )}

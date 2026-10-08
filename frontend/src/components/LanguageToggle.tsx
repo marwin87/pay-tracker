@@ -25,11 +25,11 @@ export default function LanguageToggle() {
         aria-label={t("ariaLabel")}
         className={MENU_ROW_CLASS}
       >
-        <Languages size={15} />
+        <Languages className="h-[18px] w-[18px] md:h-[15px] md:w-[15px]" />
         <span>{t("title")}</span>
         <span className="ml-auto flex items-center gap-1 text-xs font-normal text-slate-400 dark:text-slate-500">
           {current?.flag} {current?.name}
-          <ChevronDown size={14} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
         </span>
       </button>
 
@@ -42,7 +42,7 @@ export default function LanguageToggle() {
               role="option"
               aria-selected={value === locale}
               onClick={() => setLocale(value)}
-              className={`flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left text-sm transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50 ${
+              className={`flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-[15px] transition-colors md:rounded-lg md:py-1.5 md:text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50 ${
                 value === locale
                   ? "font-medium text-green-700 dark:text-green-400"
                   : "text-slate-600 dark:text-slate-400"
@@ -50,7 +50,7 @@ export default function LanguageToggle() {
             >
               <span>{flag}</span>
               <span>{name}</span>
-              {value === locale && <Check size={14} className="ml-auto" />}
+              {value === locale && <Check className="ml-auto h-4 w-4 md:h-3.5 md:w-3.5" />}
             </button>
           ))}
         </div>

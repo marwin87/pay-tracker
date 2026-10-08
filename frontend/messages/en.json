@@ -603,7 +603,8 @@
         "sortCategoryDesc": "Category Z-A",
         "sortPaidFirst": "Paid first",
         "sortUnpaidFirst": "Unpaid first",
-        "searchPlaceholder": "Search by name…"
+        "searchPlaceholder": "Search by name…",
+        "toolbarTitle": "Search, filter & sort"
     },
     "ExcelExport": {
         "monthShort": {

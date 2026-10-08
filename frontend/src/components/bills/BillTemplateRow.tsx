@@ -83,7 +83,7 @@ export default function BillTemplateRow({
       }`}
     >
       {/* Collapsed row */}
-      <div className="flex items-center gap-3 px-4 py-3">
+      <div className="flex flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center">
         {/* Two-line content */}
         <div className="flex flex-1 flex-col min-w-0 gap-0.5">
           {/* Line 1: name */}
@@ -123,23 +123,23 @@ export default function BillTemplateRow({
         </div>
 
         {/* Actions */}
-        <div className="flex items-center gap-1 shrink-0">
-          <div className="flex items-center gap-1">
+        <div className="shrink-0">
+          <div className="flex items-center justify-end gap-3 sm:gap-1">
             <button
               onClick={onEditToggle}
               aria-label={isExpanded ? t("close") : t("edit")}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 sm:rounded-lg sm:px-2.5 sm:py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-green-300 hover:bg-green-50 hover:text-green-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
             >
-              {isExpanded ? <ChevronUp size={15} /> : <Pencil size={15} />}
-              <span className="hidden sm:inline">{isExpanded ? t("close") : t("edit")}</span>
+              {isExpanded ? <ChevronUp className="h-5 w-5 sm:h-[15px] sm:w-[15px]" /> : <Pencil className="h-5 w-5 sm:h-[15px] sm:w-[15px]" />}
+              <span>{isExpanded ? t("close") : t("edit")}</span>
             </button>
             <button
               onClick={onArchive}
               aria-label={t("archive")}
-              className="flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-sm font-medium text-slate-400 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-red-800 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+              className="flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 sm:rounded-lg sm:px-2.5 sm:py-1.5 text-sm font-medium text-slate-400 shadow-sm transition-all hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-500 dark:hover:border-red-800 dark:hover:bg-red-900/20 dark:hover:text-red-400"
             >
-              <ArchiveIcon size={15} />
-              <span className="hidden sm:inline">{t("archive")}</span>
+              <ArchiveIcon className="h-5 w-5 sm:h-[15px] sm:w-[15px]" />
+              <span>{t("archive")}</span>
             </button>
           </div>
         </div>

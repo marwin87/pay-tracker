@@ -33,14 +33,14 @@ export default function ThemeToggle() {
         suppressHydrationWarning
         className={MENU_ROW_CLASS}
       >
-        <Palette size={15} />
+        <Palette className="h-[18px] w-[18px] md:h-[15px] md:w-[15px]" />
         <span>{t("label")}</span>
         <span
           suppressHydrationWarning
           className="ml-auto flex items-center gap-1 text-xs font-normal text-slate-400 dark:text-slate-500"
         >
           {t(theme)}
-          <ChevronDown size={14} className={`transition-transform ${open ? "rotate-180" : ""}`} />
+          <ChevronDown className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
         </span>
       </button>
 
@@ -53,14 +53,14 @@ export default function ThemeToggle() {
               role="option"
               aria-selected={value === theme}
               onClick={() => pick(value)}
-              className={`flex w-full items-center gap-2 rounded-lg px-3 py-1.5 text-left text-sm transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50 ${
+              className={`flex w-full items-center gap-2 rounded-xl px-3 py-2.5 text-left text-[15px] transition-colors md:rounded-lg md:py-1.5 md:text-sm hover:bg-slate-50 dark:hover:bg-slate-700/50 ${
                 value === theme
                   ? "font-medium text-green-700 dark:text-green-400"
                   : "text-slate-600 dark:text-slate-400"
               }`}
             >
               <span>{t(value)}</span>
-              {value === theme && <Check size={14} className="ml-auto" />}
+              {value === theme && <Check className="ml-auto h-4 w-4 md:h-3.5 md:w-3.5" />}
             </button>
           ))}
         </div>

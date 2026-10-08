@@ -125,24 +125,16 @@ export default function ArchivedBillsPage() {
         </p>
         {templates.length > 0 && (
           <div className="mt-3 flex flex-col gap-3">
-            <div className="flex justify-end">
-              <button
-                onClick={allCollapsed ? expandAll : collapseAll}
-                className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200"
-              >
-                <ChevronsUpDown size={13} />
-                {allCollapsed ? t("expandAll") : t("collapseAll")}
-              </button>
-            </div>
+            <p className="-mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">{tFilters("toolbarTitle")}</p>
             <div className="flex flex-wrap items-center justify-between gap-3">
               <SearchInput
                 value={searchQuery}
                 onChange={setSearchQuery}
                 placeholder={tFilters("searchPlaceholder")}
               />
-              <div className="flex flex-wrap items-center justify-end gap-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+              <div className="grid w-full grid-cols-2 items-center gap-2 sm:flex sm:w-auto sm:flex-wrap sm:justify-end sm:gap-3">
+                <div className="flex min-w-0 items-center gap-2 max-sm:[&>div]:min-w-0 max-sm:[&>div]:flex-1 max-sm:[&_button]:w-full max-sm:[&_button]:justify-between">
+                  <span className="max-sm:sr-only text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                     {tFilters("filterBy")}
                   </span>
                   <MultiSelectFilter
@@ -153,9 +145,9 @@ export default function ArchivedBillsPage() {
                     allLabel={tFilters("allCategories")}
                   />
                 </div>
-                <div className="h-5 w-px bg-slate-200 dark:bg-slate-700" />
-                <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                <div className="hidden h-5 w-px bg-slate-200 dark:bg-slate-700 sm:block" />
+                <div className="flex min-w-0 items-center gap-2 max-sm:[&>div]:min-w-0 max-sm:[&>div]:flex-1 max-sm:[&_button]:w-full max-sm:[&_button]:justify-between">
+                  <span className="max-sm:sr-only text-[10px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">
                     {tFilters("sortBy")}
                   </span>
                   <FilterSelect
@@ -166,6 +158,16 @@ export default function ArchivedBillsPage() {
                   />
                 </div>
               </div>
+            </div>
+            <div className="flex flex-col gap-3">
+              <div className="border-t border-slate-200 dark:border-slate-700 sm:h-px sm:w-1/2 sm:self-end sm:border-t-0 sm:bg-gradient-to-r sm:from-transparent sm:to-slate-300 dark:sm:to-slate-600" />
+              <button
+                onClick={allCollapsed ? expandAll : collapseAll}
+                className="flex shrink-0 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 hover:text-slate-700 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-slate-600 dark:hover:text-slate-200 w-full justify-center sm:w-auto sm:self-end"
+              >
+                <ChevronsUpDown size={16} />
+                {allCollapsed ? t("expandAll") : t("collapseAll")}
+              </button>
             </div>
           </div>
         )}
@@ -237,7 +239,7 @@ export default function ArchivedBillsPage() {
                   {group.map((tmpl) => (
                     <div
                       key={tmpl.id}
-                      className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 opacity-70 dark:bg-slate-800 dark:border-slate-700"
+                      className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 opacity-70 sm:flex-row sm:items-center dark:bg-slate-800 dark:border-slate-700"
                     >
                       <div className="flex flex-1 flex-col min-w-0 gap-0.5">
                         <span className="font-semibold text-sm text-slate-800 dark:text-slate-100 truncate">
@@ -256,10 +258,10 @@ export default function ArchivedBillsPage() {
                         onClick={() => setRestoreTarget(tmpl)}
                         disabled={restoreTarget?.id === tmpl.id && restoring}
                         aria-label={t("restore")}
-                        className="flex shrink-0 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-500 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
+                        className="flex shrink-0 items-center justify-center gap-1.5 self-end sm:self-auto rounded-xl border border-slate-200 bg-white px-4 py-2.5 sm:rounded-lg sm:px-2.5 sm:py-1.5 text-sm font-medium text-slate-500 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400"
                       >
-                        <ArchiveRestore size={14} />
-                        <span className="hidden sm:inline">{t("restore")}</span>
+                        <ArchiveRestore size={18} />
+                        <span>{t("restore")}</span>
                       </button>
                     </div>
                   ))}

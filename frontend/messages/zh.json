@@ -603,7 +603,8 @@
         "sortCategoryDesc": "类别 Z-A",
         "sortPaidFirst": "已付款优先",
         "sortUnpaidFirst": "未付款优先",
-        "searchPlaceholder": "按名称搜索…"
+        "searchPlaceholder": "按名称搜索…",
+        "toolbarTitle": "搜索、筛选与排序"
     },
     "ExcelExport": {
         "monthShort": {

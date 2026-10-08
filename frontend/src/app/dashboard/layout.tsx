@@ -202,7 +202,7 @@ export default function DashboardLayout({
           <button
             data-logout-trigger
             onClick={logout}
-            className="group flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+            className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-slate-600 transition-all md:gap-2 md:rounded-lg md:py-2 md:text-sm hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
           >
             <LogOut size={14} className={SIDEBAR_ICON_CLASS} />
             {t("logOut")}
@@ -245,17 +245,17 @@ export default function DashboardLayout({
               {userEmail && (
                 <>
                   <div className="flex items-center gap-2.5 px-3 py-2">
-                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${palette.grad} text-sm font-bold text-white shadow-md ${palette.shadow}`}>
+                    <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br ${palette.grad} text-sm font-bold text-white shadow-md ${palette.shadow}`}>
                       {initials}
                     </div>
-                    <span className="truncate text-xs text-slate-500 dark:text-slate-400">{userEmail}</span>
+                    <span className="truncate text-sm text-slate-500 dark:text-slate-400">{userEmail}</span>
                   </div>
                   <div className="mx-3 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent dark:via-slate-600" />
                 </>
               )}
               <div className="flex flex-col gap-0.5">
                 <Link href={SETTINGS_ITEM.href} onClick={() => setMenuOpen(false)} className={MENU_ROW_CLASS}>
-                  <Settings size={15} />
+                  <Settings className="h-[18px] w-[18px] md:h-[15px] md:w-[15px]" />
                   {t(SETTINGS_ITEM.labelKey)}
                 </Link>
                 <ThemeToggle />
@@ -263,9 +263,9 @@ export default function DashboardLayout({
                 <button
                   data-logout-trigger
                   onClick={() => { setMenuOpen(false); logout(); }}
-                  className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition-all hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium text-slate-600 transition-all md:gap-2 md:rounded-lg md:py-2 md:text-sm hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-900/20 dark:hover:text-red-400"
                 >
-                  <LogOut size={15} />
+                  <LogOut className="h-[18px] w-[18px] md:h-[15px] md:w-[15px]" />
                   {t("logOut")}
                 </button>
               </div>

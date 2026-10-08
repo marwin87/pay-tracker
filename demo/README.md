@@ -6,7 +6,7 @@ This folder contains a seed script that populates Pay Tracker with realistic dem
 
 **User:** `demo@demo.com` / `demo1234`
 
-All notifications are switched off for this account (email, Telegram, browser), so the demo never sends anything even when SMTP is configured.
+All notifications are switched off for this account (email, Telegram, browser), so the demo never sends anything even when SMTP is configured. Share by email is switched on, but it only sends when someone clicks Share.
 
 **11 categories** — the 9 defaults every user gets, plus 2 custom ones used to exercise category-specific edge cases:
 

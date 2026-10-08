@@ -603,7 +603,8 @@
         "sortCategoryDesc": "Categorie Z-A",
         "sortPaidFirst": "Betaald eerst",
         "sortUnpaidFirst": "Onbetaald eerst",
-        "searchPlaceholder": "Zoeken op naam…"
+        "searchPlaceholder": "Zoeken op naam…",
+        "toolbarTitle": "Zoeken, filteren & sorteren"
     },
     "ExcelExport": {
         "monthShort": {

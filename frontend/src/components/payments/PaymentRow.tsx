@@ -87,7 +87,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
     : null;
 
   return (
-    <div className={`rounded-xl border border-slate-200 px-4 py-3 shadow-sm dark:border-slate-700 transition-colors ${tileGradientClass()}`}>
+    <div className={`relative max-sm:pb-[76px] rounded-xl border border-slate-200 px-4 py-3 shadow-sm dark:border-slate-700 transition-colors ${tileGradientClass()}`}>
       <div className="flex flex-col gap-0.5">
         {/* Name */}
         <div className="flex items-center gap-2 min-w-0">
@@ -107,7 +107,7 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
           </span>
         )}
         {/* Due date + status (left) — actions (right) */}
-        <div className="flex items-center justify-between gap-2 mt-0.5">
+        <div className="mt-0.5 flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 text-xs min-w-0">
             <span className="text-slate-400 dark:text-slate-500 shrink-0">
               {t("due")} {dueDateFormatted}
@@ -132,14 +132,14 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex shrink-0 items-center gap-1 max-sm:absolute max-sm:bottom-3 max-sm:right-3 max-sm:gap-1.5 max-sm:pt-3 max-sm:before:absolute max-sm:before:inset-x-0 max-sm:before:top-0 max-sm:before:h-px max-sm:before:bg-gradient-to-r max-sm:before:from-transparent max-sm:before:to-slate-300 dark:max-sm:before:to-slate-600">
             {/* Primary action */}
             {!readOnly && instance.status !== "paid" && (
               <button
                 onClick={() => onMarkPaid(instance)}
-                className="flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-white px-2.5 py-1 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
+                className="flex h-11 w-11 items-center justify-center gap-1.5 rounded-xl border border-emerald-200 bg-white sm:h-auto sm:w-auto sm:rounded-lg sm:px-2.5 sm:py-1 text-sm font-medium text-emerald-600 shadow-sm transition-all hover:border-emerald-300 hover:bg-emerald-50 hover:text-emerald-700 dark:border-emerald-800 dark:bg-slate-800 dark:text-emerald-400 dark:hover:border-emerald-700 dark:hover:bg-emerald-900/20 dark:hover:text-emerald-300"
               >
-                <CheckCircle size={14} />
+                <CheckCircle className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
                 <span className="hidden sm:inline">{t("markAsPaid")}</span>
               </button>
             )}
@@ -148,9 +148,9 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
               onClick={() => onEdit(instance)}
               title={t("edit")}
               aria-label={t("edit")}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-xl sm:h-auto sm:w-auto sm:rounded-lg sm:p-1.5 max-sm:border max-sm:border-slate-200 max-sm:bg-white max-sm:shadow-sm dark:max-sm:border-slate-600 dark:max-sm:bg-slate-800 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
             >
-              <Pencil size={14} />
+              <Pencil className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
             </button>
             {/* Revert — visible for paid instances */}
             {instance.status === "paid" && (
@@ -158,25 +158,25 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
                 onClick={() => onRevert(instance)}
                 title={t("revert")}
                 aria-label={t("revert")}
-                className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
+                className="flex h-11 w-11 items-center justify-center rounded-xl sm:h-auto sm:w-auto sm:rounded-lg sm:p-1.5 max-sm:border max-sm:border-slate-200 max-sm:bg-white max-sm:shadow-sm dark:max-sm:border-slate-600 dark:max-sm:bg-slate-800 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:text-slate-500 dark:hover:bg-slate-700 dark:hover:text-slate-300 transition-colors"
               >
-                <Undo2 size={14} />
+                <Undo2 className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
               </button>
             )}
-            <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
+            <div className="mx-0.5 hidden h-4 w-px bg-slate-200 dark:bg-slate-600 sm:block" />
             {/* Email notification indicator */}
             <div className="relative" ref={emailRef}>
               <button
                 aria-label={t("emailNotification")}
                 aria-expanded={emailOpen}
                 onClick={() => setEmailOpen((o) => !o)}
-                className={`rounded-lg p-1.5 transition-colors ${
+                className={`flex h-11 w-11 items-center justify-center rounded-xl sm:h-auto sm:w-auto sm:rounded-lg sm:p-1.5 max-sm:border max-sm:border-slate-200 max-sm:bg-white max-sm:shadow-sm dark:max-sm:border-slate-600 dark:max-sm:bg-slate-800 transition-colors ${
                   emailSentAt
                     ? "text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-900/20"
                     : "text-slate-300 hover:bg-slate-100 hover:text-slate-400 dark:text-slate-600 dark:hover:bg-slate-700 dark:hover:text-slate-500"
                 }`}
               >
-                <AtSign size={14} />
+                <AtSign className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
               </button>
               {emailOpen && (
                 <div className="absolute bottom-full right-0 mb-2 w-48 rounded-lg bg-slate-800 px-3 py-2 text-xs text-white shadow-lg dark:bg-slate-700 z-10 whitespace-normal">
@@ -187,13 +187,13 @@ export default function PaymentRow({ instance, onMarkPaid, onDelete, onRevert, o
                 </div>
               )}
             </div>
-            <div className="w-px h-4 bg-slate-200 dark:bg-slate-600 mx-0.5" />
+            <div className="mx-0.5 hidden h-4 w-px bg-slate-200 dark:bg-slate-600 sm:block" />
             <button
               onClick={() => onDelete(instance)}
               aria-label={t("delete")}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-red-50 hover:text-red-500 dark:text-slate-500 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
+              className="flex h-11 w-11 items-center justify-center rounded-xl sm:h-auto sm:w-auto sm:rounded-lg sm:p-1.5 max-sm:border max-sm:border-slate-200 max-sm:bg-white max-sm:shadow-sm dark:max-sm:border-slate-600 dark:max-sm:bg-slate-800 text-slate-400 hover:bg-red-50 hover:text-red-500 dark:text-slate-500 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors"
             >
-              <Trash2 size={14} />
+              <Trash2 className="h-5 w-5 sm:h-3.5 sm:w-3.5" />
             </button>
           </div>
         </div>

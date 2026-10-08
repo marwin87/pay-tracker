@@ -98,8 +98,8 @@ export default function TrendChart({ points, currency, month }: Props) {
                     <rect x={x} y={y(b.total)} width={bw} height={y(b.paid) - y(b.total)} rx={2}
                       className="fill-blue-400 dark:fill-blue-500" />
                   )}
-                  <text x={x + bw / 2} y={BASE + 18} textAnchor="middle"
-                    className={`text-[11px] ${isLast ? "fill-slate-800 font-semibold dark:fill-slate-100" : "fill-slate-400 dark:fill-slate-500"}`}>
+                  <text x={x + bw / 2} y={BASE + 22} textAnchor="middle"
+                    className={`text-[20px] sm:text-[11px] ${isLast ? "fill-slate-800 font-semibold dark:fill-slate-100" : "fill-slate-400 dark:fill-slate-500"}`}>
                     {monthName(b.period, "short")}
                   </text>
                 </g>
