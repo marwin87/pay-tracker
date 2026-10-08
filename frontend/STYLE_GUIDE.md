@@ -124,7 +124,7 @@ Focus ring is always green regardless of the tile's color — don't theme it per
 
 ## Dropdowns
 
-**Never use a native `<select>`.** The open popup renders with OS-native styling that can't be themed and looks inconsistent with the rest of the app. Every dropdown in this app — including any list of choices, not just form fields — uses the shared `Dropdown` component (`frontend/src/components/ui/Dropdown.tsx`), which generalizes the custom popup pattern originally built for `DayPicker.tsx` (click-outside/Escape to close, `role="listbox"`/`role="option"`, green hover/selected states).
+**Never use a native `<select>`.** The open popup renders with OS-native styling that can't be themed and looks inconsistent with the rest of the app. Every dropdown in this app — including any list of choices, not just form fields — uses the shared `Dropdown` component (`frontend/src/components/ui/Dropdown.tsx`), which (click-outside/Escape to close, `role="listbox"`/`role="option"`, green hover/selected states).
 
 ```tsx
 <Dropdown

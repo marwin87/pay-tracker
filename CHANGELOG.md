@@ -23,6 +23,7 @@ Notable changes to Pay Tracker, release by release.
 
 ### Fixes
 
+- All calendars now show the same, correct weekdays and today's date
 - Default categories can now be renamed in Settings
 - A payment moved to a future due date is no longer shown as overdue
 - Edit and pause buttons on bills are always visible

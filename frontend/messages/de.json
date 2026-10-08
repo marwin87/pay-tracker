@@ -184,12 +184,6 @@
         "months": "{count, plural, one {# Monat} other {# Monate}}",
         "years": "{count, plural, one {# Jahr} other {# Jahre}}"
     },
-    "DayPicker": {
-        "placeholder": "Tag auswählen",
-        "selectedDay": "Tag {day}",
-        "heading": "Tag des Monats",
-        "shortMonthWarning": "Manche Monate haben weniger Tage — die Rechnung fällt dann auf den letzten verfügbaren Tag."
-    },
     "CategoryCombobox": {
         "placeholder": "z. B. Nebenkosten"
     },

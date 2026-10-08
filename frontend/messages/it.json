@@ -184,12 +184,6 @@
         "months": "{count, plural, one {# mese} other {# mesi}}",
         "years": "{count, plural, one {# anno} other {# anni}}"
     },
-    "DayPicker": {
-        "placeholder": "Seleziona giorno",
-        "selectedDay": "Giorno {day}",
-        "heading": "Giorno del mese",
-        "shortMonthWarning": "Alcuni mesi hanno meno giorni: la bolletta cadrà nell'ultimo giorno disponibile."
-    },
     "CategoryCombobox": {
         "placeholder": "es. Utenze"
     },

@@ -184,12 +184,6 @@
         "months": "{count, plural, other {# 个月}}",
         "years": "{count, plural, other {# 年}}"
     },
-    "DayPicker": {
-        "placeholder": "选择日期",
-        "selectedDay": "第 {day} 日",
-        "heading": "每月日期",
-        "shortMonthWarning": "部分月份天数较少——账单将落在该月的最后一天。"
-    },
     "CategoryCombobox": {
         "placeholder": "例如：水电"
     },

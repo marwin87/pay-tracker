@@ -184,12 +184,6 @@
         "months": "{count, plural, one {# miesiąc} few {# miesiące} many {# miesięcy} other {# miesiąca}}",
         "years": "{count, plural, one {# rok} few {# lata} many {# lat} other {# roku}}"
     },
-    "DayPicker": {
-        "placeholder": "Wybierz dzień",
-        "selectedDay": "Dzień {day}",
-        "heading": "Dzień miesiąca",
-        "shortMonthWarning": "Niektóre miesiące mają mniej dni — rachunek przypadnie na ostatni dostępny dzień."
-    },
     "CategoryCombobox": {
         "placeholder": "np. Media"
     },

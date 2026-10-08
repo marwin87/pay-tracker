@@ -184,12 +184,6 @@
         "months": "{count, plural, one {# mois} other {# mois}}",
         "years": "{count, plural, one {# an} other {# ans}}"
     },
-    "DayPicker": {
-        "placeholder": "Sélectionner un jour",
-        "selectedDay": "Jour {day}",
-        "heading": "Jour du mois",
-        "shortMonthWarning": "Certains mois comptent moins de jours — la facture tombera au dernier jour disponible."
-    },
     "CategoryCombobox": {
         "placeholder": "ex. Charges"
     },

@@ -184,12 +184,6 @@
         "months": "{count, plural, one {# maand} other {# maanden}}",
         "years": "{count, plural, one {# jaar} other {# jaar}}"
     },
-    "DayPicker": {
-        "placeholder": "Kies een dag",
-        "selectedDay": "Dag {day}",
-        "heading": "Dag van de maand",
-        "shortMonthWarning": "Sommige maanden hebben minder dagen — de rekening valt dan op de laatste beschikbare dag."
-    },
     "CategoryCombobox": {
         "placeholder": "bijv. Nutsvoorzieningen"
     },

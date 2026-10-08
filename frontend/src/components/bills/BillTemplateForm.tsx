@@ -3,11 +3,12 @@
 import { FormEvent, useState } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
+import { daysInMonth, isoDate } from "@/lib/calendar";
 import { todayIn } from "@/lib/today";
 import CategoryCombobox from "./CategoryCombobox";
-import MonthDayCalendar from "./MonthDayCalendar";
 import MonthYearPicker from "./MonthYearPicker";
 import CurrencyPicker from "@/components/CurrencyPicker";
+import DatePicker from "@/components/ui/DatePicker";
 import Dropdown from "@/components/ui/Dropdown";
 import { LOCALE_DEFAULT_CURRENCY } from "@/lib/currency";
 import { formatAmount } from "@/lib/summary";
@@ -90,6 +91,10 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
   const effectiveStart =
     startPeriod ?? `${todayYear}-${String(parseInt(dueMonth, 10) || todayMonth).padStart(2, "0")}`;
   const minEnd = effectiveStart > currentPeriod ? effectiveStart : currentPeriod;
+  // Day-of-year anchor: the picker shows the real calendar of the year the bill starts in
+  const startYear = Number(effectiveStart.slice(0, 4));
+  const startMonth = parseInt(dueMonth, 10) || todayMonth;
+  const startDate = isoDate(startYear, startMonth, Math.min(parseInt(dueDay, 10) || todayDay, daysInMonth(startYear, startMonth)));
   const maxInterval = frequency === "annual" ? 5 : 12;
   const effectiveInterval = frequency === "one_off" ? 1 : Math.min(interval, maxInterval);
   const step = effectiveInterval * (frequency === "annual" ? 12 : 1);
@@ -246,10 +251,12 @@ export default function BillTemplateForm({ initial, startPeriod, defaultCurrency
           <label className={labelClass}>
             {isRecurring ? t("startDateLabel") : t("dueDateLabel")}
           </label>
-          <MonthDayCalendar
-            month={parseInt(dueMonth, 10) || todayMonth}
-            day={parseInt(dueDay, 10) || todayDay}
-            onChange={(m, d) => { setDueMonth(String(m)); setDueDay(String(d)); }}
+          <DatePicker
+            value={startDate}
+            min={`${startYear}-01-01`}
+            max={`${startYear}-12-31`}
+            hideYear
+            onChange={(iso) => { setDueMonth(String(Number(iso.slice(5, 7)))); setDueDay(String(Number(iso.slice(8, 10)))); }}
           />
         </div>
         {isRecurring && (

@@ -184,12 +184,6 @@
         "months": "{count, plural, one {# month} other {# months}}",
         "years": "{count, plural, one {# year} other {# years}}"
     },
-    "DayPicker": {
-        "placeholder": "Select day",
-        "selectedDay": "Day {day}",
-        "heading": "Day of month",
-        "shortMonthWarning": "Some months have fewer days — the bill will fall on the last available day."
-    },
     "CategoryCombobox": {
         "placeholder": "e.g. Utilities"
     },

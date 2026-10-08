@@ -9,7 +9,7 @@ import { ApiError } from "@/lib/api";
 import { markPaid, updatePayment, type PaymentInstanceOut } from "@/lib/payments-api";
 import { formatAmount } from "@/lib/summary";
 import { todayIn } from "@/lib/today";
-import PaymentDateCalendar from "./PaymentDateCalendar";
+import DatePicker from "@/components/ui/DatePicker";
 
 interface Props {
   instance: PaymentInstanceOut;
@@ -129,7 +129,7 @@ export default function MarkPaidDialog({
             <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
               {t("dateLabel")}
             </label>
-            <PaymentDateCalendar value={paidDate} onChange={setPaidDate} />
+            <DatePicker value={paidDate} onChange={setPaidDate} max={todayIn(timeZone)} />
           </div>
         )}
 
@@ -138,14 +138,7 @@ export default function MarkPaidDialog({
             <label className="mb-1.5 block text-sm font-medium text-slate-700 dark:text-slate-300">
               {t("dueDateLabel")}
             </label>
-            <PaymentDateCalendar
-              value={dueDate}
-              onChange={setDueDate}
-              lockToMonth={{
-                year: Number(instance.period.slice(0, 4)),
-                month: Number(instance.period.slice(5, 7)),
-              }}
-            />
+            <DatePicker value={dueDate} onChange={setDueDate} min={`${instance.period}-01`} max={`${instance.period}-31`} />
           </div>
         )}
 
