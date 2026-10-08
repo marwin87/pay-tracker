@@ -616,6 +616,7 @@
         "sortPaidFirst": "Bezahlt zuerst",
         "sortUnpaidFirst": "Unbezahlt zuerst",
         "searchPlaceholder": "Nach Name suchen…",
+        "resetFilters": "Filter zurücksetzen",
         "toolbarTitle": "Suchen, filtern & sortieren"
     },
     "ExcelExport": {

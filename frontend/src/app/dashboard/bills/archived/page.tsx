@@ -20,6 +20,7 @@ import { SessionExpiredError } from "@/lib/api";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
+import FiltersHeader from "@/components/FiltersHeader";
 import { formatDueLabel, formatLastPaymentLabel } from "@/components/bills/BillTemplateRow";
 import RestoreConfirmDialog from "@/components/bills/RestoreConfirmDialog";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
@@ -132,7 +133,10 @@ export default function ArchivedBillsPage() {
         </p>
         {templates.length > 0 && (
           <div className="mt-3 flex flex-col gap-3">
-            <p className="-mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">{tFilters("toolbarTitle")}</p>
+            <FiltersHeader
+              activeCount={(searchQuery ? 1 : 0) + (categoryFilter.size > 0 ? 1 : 0)}
+              onReset={() => { setSearchQuery(""); setCategoryFilter(new Set()); }}
+            />
             <div className="flex flex-wrap items-center justify-between gap-3">
               <SearchInput
                 value={searchQuery}

@@ -15,6 +15,7 @@ Notable changes to Pay Tracker, release by release.
 - Archived bills show due date, last payment and notes
 - Payments shows which day you are filtering by, pinned at the top while you scroll
 - The selected month in the dashboard 12-month chart stands out more
+- Reset filters button on Payments, Bills and Archive
 
 ### Fixes
 

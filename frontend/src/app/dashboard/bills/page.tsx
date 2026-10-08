@@ -30,6 +30,7 @@ import RestoreDeletedDialog from "@/components/bills/RestoreDeletedDialog";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
+import FiltersHeader from "@/components/FiltersHeader";
 import { toastName, useToast } from "@/context/toast-context";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
@@ -245,7 +246,10 @@ export default function BillsPage() {
           </div>
           {templates.length > 0 && (
             <>
-            <p className="-mb-1 text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">{tFilters("toolbarTitle")}</p>
+            <FiltersHeader
+              activeCount={(searchQuery ? 1 : 0) + (categoryFilter.size > 0 ? 1 : 0)}
+              onReset={() => { setSearchQuery(""); setCategoryFilter(new Set()); }}
+            />
             <div className="flex flex-wrap items-center justify-between gap-3">
               <SearchInput
                 value={searchQuery}

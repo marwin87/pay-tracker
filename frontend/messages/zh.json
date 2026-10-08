@@ -616,6 +616,7 @@
         "sortPaidFirst": "已付款优先",
         "sortUnpaidFirst": "未付款优先",
         "searchPlaceholder": "按名称搜索…",
+        "resetFilters": "重置筛选",
         "toolbarTitle": "搜索、筛选与排序"
     },
     "ExcelExport": {

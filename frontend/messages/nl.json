@@ -616,6 +616,7 @@
         "sortPaidFirst": "Betaald eerst",
         "sortUnpaidFirst": "Onbetaald eerst",
         "searchPlaceholder": "Zoeken op naam…",
+        "resetFilters": "Filters wissen",
         "toolbarTitle": "Zoeken, filteren & sorteren"
     },
     "ExcelExport": {
