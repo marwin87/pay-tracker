@@ -1,13 +1,43 @@
 "use client";
 
-import { createContext, useCallback, useContext, useState, ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, ReactNode } from "react";
 import Toast from "@/components/ui/Toast";
 
 const ToastContext = createContext<(message: string) => void>(() => {});
 
+const FLASH_KEY = "flash_toast";
+
+/** Queue a toast for after a full page reload (e.g. after restoring a backup). */
+export function flashToastAfterReload(message: string): void {
+  try {
+    sessionStorage.setItem(FLASH_KEY, message);
+  } catch {
+    /* storage blocked: the toast is simply skipped */
+  }
+}
+
+function readFlash(): string | null {
+  try {
+    return sessionStorage.getItem(FLASH_KEY);
+  } catch {
+    return null;
+  }
+}
+
 export function ToastProvider({ children }: { children: ReactNode }) {
-  const [message, setMessage] = useState<string | null>(null);
+  // The provider only mounts after hydration (the dashboard layout renders null until then),
+  // so reading storage in the initializer is safe. Removal waits for the effect, so a
+  // double-invoked initializer (Strict Mode) can't lose the message.
+  const [message, setMessage] = useState<string | null>(readFlash);
   const clear = useCallback(() => setMessage(null), []);
+
+  useEffect(() => {
+    try {
+      sessionStorage.removeItem(FLASH_KEY);
+    } catch {
+      /* storage blocked */
+    }
+  }, []);
 
   return (
     <ToastContext.Provider value={setMessage}>

@@ -324,7 +324,8 @@
         "countsUnavailable": "indisponible",
         "exportDateUnknown": "date d'exportation inconnue (ancien format de sauvegarde)",
         "staleDataWarning": "Cette sauvegarde contient moins de factures et de paiements que vos données actuelles. La restauration supprimera définitivement la différence.",
-        "noBillsInFile": "Aucune facture ni aucun paiement dans ce fichier : vos factures actuelles restent inchangées."
+        "noBillsInFile": "Aucune facture ni aucun paiement dans ce fichier : vos factures actuelles restent inchangées.",
+        "done": "Données restaurées depuis la sauvegarde"
     },
     "BackupButton": {
         "ariaLabel": "Télécharger la sauvegarde",

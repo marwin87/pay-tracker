@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { HardDriveUpload, Loader2 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { getExportSummary, restoreFromBackup } from "@/lib/export-api";
+import { flashToastAfterReload } from "@/context/toast-context";
 
 type State = "idle" | "confirming" | "restoring" | "error";
 
@@ -121,7 +122,8 @@ export default function RestoreButton({ label }: { label?: string } = {}) {
       setBackupCounts(null);
       setBackupExportedAt(null);
       setCurrentCounts(null);
-      // Reload page so dashboard reflects restored data
+      // Reload page so dashboard reflects restored data; the toast is shown after it.
+      flashToastAfterReload(t("done"));
       window.location.reload();
     } catch (err) {
       setErrorMsg(err instanceof Error ? err.message : t("error"));

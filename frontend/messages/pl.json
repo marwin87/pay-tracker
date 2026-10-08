@@ -324,7 +324,8 @@
         "countsUnavailable": "niedostępne",
         "exportDateUnknown": "data eksportu nieznana (starszy format kopii zapasowej)",
         "staleDataWarning": "Ta kopia zapasowa zawiera mniej rachunków i płatności niż Twoje obecne dane. Przywrócenie trwale usunie różnicę.",
-        "noBillsInFile": "Brak rachunków i płatności w tym pliku — obecne rachunki pozostaną bez zmian."
+        "noBillsInFile": "Brak rachunków i płatności w tym pliku — obecne rachunki pozostaną bez zmian.",
+        "done": "Dane przywrócone z kopii zapasowej"
     },
     "BackupButton": {
         "ariaLabel": "Pobierz kopię zapasową",
