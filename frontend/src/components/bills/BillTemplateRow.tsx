@@ -23,7 +23,7 @@ interface Props {
   onArchive: () => void;
 }
 
-function formatDueLabel(template: BillTemplateOut, locale: string): string | null {
+export function formatDueLabel(template: BillTemplateOut, locale: string): string | null {
   const { frequency, due_day, due_month, start_period } = template;
 
   if (frequency === "one_off") {
@@ -49,6 +49,13 @@ function formatDueLabel(template: BillTemplateOut, locale: string): string | nul
   return null;
 }
 
+export function formatLastPaymentLabel(endPeriod: string | null, locale: string): string | null {
+  if (!endPeriod) return null;
+  return new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
+    new Date(Number(endPeriod.slice(0, 4)), Number(endPeriod.slice(5, 7)) - 1, 1),
+  );
+}
+
 export default function BillTemplateRow({
   template,
   isExpanded,
@@ -65,15 +72,7 @@ export default function BillTemplateRow({
   const dueLabel = formatDueLabel(template, locale);
 
   const leftBorder = categoryBorderClass(template.category.color);
-  const lastPaymentLabel = template.end_period
-    ? new Intl.DateTimeFormat(locale, { month: "long", year: "numeric" }).format(
-        new Date(
-          Number(template.end_period.slice(0, 4)),
-          Number(template.end_period.slice(5, 7)) - 1,
-          1,
-        ),
-      )
-    : null;
+  const lastPaymentLabel = formatLastPaymentLabel(template.end_period, locale);
 
   return (
     <div

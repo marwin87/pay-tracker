@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Archive, ArchiveRestore, ChevronRight, ChevronsUpDown } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { Archive, ArchiveRestore, ChevronRight, ChevronsUpDown, NotebookPen } from "lucide-react";
+import { useLocale as useIntlLocale, useTranslations } from "next-intl";
 import { useLocale } from "@/context/locale-context";
 import { useFrequencyLabel } from "@/lib/frequency";
 import { formatAmount } from "@/lib/summary";
@@ -20,6 +20,7 @@ import { SessionExpiredError } from "@/lib/api";
 import FilterSelect from "@/components/FilterSelect";
 import MultiSelectFilter from "@/components/MultiSelectFilter";
 import SearchInput from "@/components/SearchInput";
+import { formatDueLabel, formatLastPaymentLabel } from "@/components/bills/BillTemplateRow";
 import RestoreConfirmDialog from "@/components/bills/RestoreConfirmDialog";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
@@ -30,6 +31,8 @@ const CATEGORY_SORT_OPTIONS: CategorySortOrder[] = ["az", "za"];
 export default function ArchivedBillsPage() {
   const t = useTranslations("ArchivedBillsPage");
   const frequencyLabel = useFrequencyLabel();
+  const tRow = useTranslations("BillTemplateRow");
+  const intlLocale = useIntlLocale();
   const tCategories = useTranslations("Categories");
   const tFilters = useTranslations("Filters");
   const showToast = useToast();
@@ -256,7 +259,23 @@ export default function ArchivedBillsPage() {
                           <span className="rounded-full bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-500 dark:bg-slate-700 dark:text-slate-400">
                             {frequencyLabel(tmpl.frequency, tmpl.interval)}
                           </span>
+                          {formatDueLabel(tmpl, intlLocale) && (
+                            <span className="text-xs text-slate-400 dark:text-slate-500">
+                              {tRow("dueOn")}&nbsp;{formatDueLabel(tmpl, intlLocale)}
+                            </span>
+                          )}
+                          {tmpl.end_period && (
+                            <span className="text-xs text-slate-400 dark:text-slate-500">
+                              {tRow("lastPayment", { month: formatLastPaymentLabel(tmpl.end_period, intlLocale) ?? "" })}
+                            </span>
+                          )}
                         </div>
+                        {tmpl.notes && (
+                          <div className="flex items-start gap-1 mt-0.5 text-xs text-slate-400 dark:text-slate-500">
+                            <NotebookPen size={10} className="mt-0.5 shrink-0" />
+                            <span className="line-clamp-1">{tmpl.notes}</span>
+                          </div>
+                        )}
                       </div>
                       <button
                         onClick={() => setRestoreTarget(tmpl)}
