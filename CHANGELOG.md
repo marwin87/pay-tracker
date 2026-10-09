@@ -6,6 +6,8 @@ Notable changes to Pay Tracker, release by release.
 
 ### Features
 
+- Bigger month arrows on the dashboard, the 12-month chart scrolls year by year and its bars pick the month, and the dashboard and Payments month pickers swipe on touch screens
+- Browse the dashboard and Payments up to 5 years back and ahead
 - About tab in Settings with app details and licenses
 - Dutch and Portuguese language support
 - Bottom tab bar on mobile, with a More tab for Settings, theme, language and log out

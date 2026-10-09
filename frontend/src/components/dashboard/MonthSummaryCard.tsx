@@ -68,7 +68,7 @@ export default function MonthSummaryCard({ summary, currency, title }: Props) {
                   <span className={`h-2 w-2 shrink-0 rounded-full ${s.dot}`} />
                   <span className="truncate">{s.label}</span>
                 </dt>
-                <dd className={`text-sm font-medium tabular-nums ${s.text}`}>{money(s.value)}</dd>
+                <dd className={`break-words text-sm font-medium tabular-nums ${s.text}`}>{money(s.value)}</dd>
                 <dd className="text-xs text-slate-400 dark:text-slate-500">{t("bills", { count: s.n })}</dd>
               </div>
             ))}

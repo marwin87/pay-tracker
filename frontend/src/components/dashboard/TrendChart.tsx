@@ -1,14 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
-import { formatMoney, trendPeriods } from "@/lib/summary";
-import type { TrendPoint } from "@/lib/payments-api";
+import { formatMoney, shiftMonth, trendPeriods } from "@/lib/summary";
+import { fetchTrend, type TrendPoint } from "@/lib/payments-api";
 import { CARD_CLASS } from "./MonthSummaryCard";
+import { NAV_BTN } from "./MonthNav";
+import { useSwipe } from "@/hooks/useSwipe";
 
 const W = 640;
-const H = 240;
+const H = 268;
 const LEFT = 8;
 const TOP = 12;
 const BASE = 205;
@@ -24,20 +27,59 @@ function niceMax(v: number): number {
 interface Props {
   points: TrendPoint[];
   currency: string;
-  /** Last month of the window, "YYYY-MM". */
+  /** The dashboard's month, "YYYY-MM": the window starts out ending here (`points` cover it). */
   month: string;
+  /** Earliest and latest month the year arrows can reach, "YYYY-MM". */
+  minMonth: string;
+  maxMonth: string;
+  /** Called with "YYYY-MM" when a bar is clicked. */
+  onSelectMonth: (month: string) => void;
 }
 
-export default function TrendChart({ points, currency, month }: Props) {
+export default function TrendChart({ points: initialPoints, currency, month, minMonth, maxMonth, onSelectMonth }: Props) {
   const t = useTranslations("Dashboard.trend");
+  const tYear = useTranslations("PaymentsPage");
   const locale = useLocale();
   const { decimalSeparator } = useAppLocale();
   const money = (v: number) => formatMoney(v, currency, locale, decimalSeparator);
   const [active, setActive] = useState<number | null>(null);
+  const monthName = (period: string, style: "short" | "long", withYear = false) => {
+    const [yy, mm] = period.split("-").map(Number);
+    return new Intl.DateTimeFormat(locale, style === "short" && !withYear ? { month: "short" } : style === "short" ? { month: "short", year: "numeric" } : { month: "long", year: "numeric" }).format(new Date(yy, mm - 1));
+  };
+  // The window (year arrows, swipe) moves on its own; trend data is cached per window end so
+  // clicking a bar (which changes `month`) doesn't reload the window it sits in.
+  const [end, setEnd] = useState(month);
+  const [cache, setCache] = useState<Record<string, TrendPoint[]>>({ [month]: initialPoints });
+  const points = cache[end] ?? (end === month ? initialPoints : null);
 
-  const periods = trendPeriods(month);
+  // The dashboard month changed (nav arrows, swipe, bar click): reset the hover, and bring the
+  // window along only when the month fell outside it.
+  const [seenMonth, setSeenMonth] = useState(month);
+  if (seenMonth !== month) {
+    setSeenMonth(month);
+    setActive(null);
+    setCache((c) => ({ ...c, [month]: initialPoints }));
+    if (!trendPeriods(end).includes(month)) setEnd(month);
+  }
+
+  useEffect(() => {
+    if (points) return;
+    let cancelled = false;
+    fetchTrend(end).then((p) => !cancelled && setCache((c) => ({ ...c, [end]: p }))).catch(() => {});
+    return () => { cancelled = true; };
+  }, [end, points]);
+
+  const periods = trendPeriods(end);
+  const clamp = (m: string) => (m < minMonth ? minMonth : m > maxMonth ? maxMonth : m);
+  const moveTo = (e: string) => { setEnd(e); setActive(null); };
+  const nextEnd = clamp(shiftMonth(end, 12));
+  const prevEnd = clamp(shiftMonth(end, -12));
+  // Touch swipe = the year arrows: left for the next year, right for the previous
+  const swipe = useSwipe(() => moveTo(nextEnd), () => moveTo(prevEnd));
+  const range = `${monthName(periods[0], "short", true)} – ${monthName(end, "short", true)}`;
   const bars = periods.map((period) => {
-    const pt = points.find((p) => p.period === period && p.currency === currency);
+    const pt = points?.find((p) => p.period === period && p.currency === currency);
     const paid = pt ? parseFloat(pt.paid) : 0;
     const unpaid = pt ? parseFloat(pt.unpaid) : 0;
     return { period, paid, unpaid, total: paid + unpaid };
@@ -47,16 +89,23 @@ export default function TrendChart({ points, currency, month }: Props) {
   const max = niceMax(Math.max(...bars.map((b) => b.total), avg));
   const y = (v: number) => BASE - (v / max) * (BASE - TOP);
   const step = (W - LEFT * 2) / bars.length;
-  const monthName = (period: string, style: "short" | "long") => {
-    const [yy, mm] = period.split("-").map(Number);
-    return new Intl.DateTimeFormat(locale, style === "short" ? { month: "short" } : { month: "long", year: "numeric" }).format(new Date(yy, mm - 1));
-  };
 
-  const shown = bars[active ?? bars.length - 1];
+  // Runs of consecutive bars in the same calendar year, for the year labels and separators
+  const years = bars.reduce<{ year: string; from: number; count: number }[]>((acc, b, i) => {
+    const year = b.period.slice(0, 4);
+    const last = acc[acc.length - 1];
+    if (last?.year === year) last.count++;
+    else acc.push({ year, from: i, count: 1 });
+    return acc;
+  }, []);
+
+  // Without a hover, the bar of the dashboard's month is selected (the last one if it is off-window)
+  const current = periods.includes(month) ? periods.indexOf(month) : bars.length - 1;
+  const shown = bars[active ?? current];
   const diff = shown.total - avg;
 
   return (
-    <section className={CARD_CLASS} aria-labelledby="trend-title">
+    <section className={CARD_CLASS} aria-labelledby="trend-title" {...swipe}>
       <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
         <h2 id="trend-title" className="text-xs font-semibold uppercase tracking-wide text-slate-400 dark:text-slate-500">
           {t("title")}
@@ -68,7 +117,19 @@ export default function TrendChart({ points, currency, month }: Props) {
         </span>
       </div>
 
-      {filled.length === 0 ? (
+      <div className="mb-3 flex items-center gap-2">
+        <button type="button" className={NAV_BTN} aria-label={tYear("previousYear")} title={tYear("previousYear")} disabled={end <= prevEnd} onClick={() => moveTo(prevEnd)}>
+          <ChevronLeft size={22} />
+        </button>
+        <span className="min-w-36 text-center text-sm font-semibold capitalize text-slate-800 dark:text-slate-100">{range}</span>
+        <button type="button" className={NAV_BTN} aria-label={tYear("nextYear")} title={tYear("nextYear")} disabled={end >= nextEnd} onClick={() => moveTo(nextEnd)}>
+          <ChevronRight size={22} />
+        </button>
+      </div>
+
+      {!points ? (
+        <div className="h-48 animate-pulse rounded-lg bg-slate-100 dark:bg-slate-700/50" aria-busy="true" />
+      ) : filled.length === 0 ? (
         <p className="text-sm text-slate-500 dark:text-slate-400">{t("empty")}</p>
       ) : (
         <>
@@ -77,7 +138,7 @@ export default function TrendChart({ points, currency, month }: Props) {
             {bars.map((b, i) => {
               const bw = step * 0.62;
               const x = LEFT + i * step + (step - bw) / 2;
-              const isSel = i === (active ?? bars.length - 1);
+              const isSel = i === (active ?? current);
               const dim = isSel ? 1 : 0.45;
               return (
                 <g
@@ -88,7 +149,7 @@ export default function TrendChart({ points, currency, month }: Props) {
                   className="cursor-pointer outline-none [&:focus-visible>rect:first-child]:stroke-green-500"
                   onMouseEnter={() => setActive(i)}
                   onFocus={() => setActive(i)}
-                  onClick={() => setActive(i)}
+                  onClick={() => { setActive(i); if (b.period >= minMonth && b.period <= maxMonth) onSelectMonth(b.period); }}
                 >
                   <rect x={LEFT + i * step} y={TOP} width={step} height={BASE - TOP + 24} rx={6} strokeWidth={2}
                     className={`stroke-transparent ${isSel ? "fill-slate-100 dark:fill-slate-700/60" : "fill-transparent"}`} />
@@ -107,6 +168,18 @@ export default function TrendChart({ points, currency, month }: Props) {
                 </g>
               );
             })}
+            {years.map((y, k) => (
+              <g key={y.year} className="pointer-events-none">
+                {k > 0 && (
+                  <line x1={LEFT + y.from * step} x2={LEFT + y.from * step} y1={TOP} y2={BASE + 50} strokeDasharray="3 4"
+                    className="stroke-slate-300 dark:stroke-slate-600" />
+                )}
+                <text x={LEFT + (y.from + y.count / 2) * step} y={BASE + 46} textAnchor="middle"
+                  className="fill-slate-600 text-[22px] font-bold sm:text-[13px] dark:fill-slate-300">
+                  {y.year}
+                </text>
+              </g>
+            ))}
             {avg > 0 && (
               <line x1={LEFT} x2={W - LEFT} y1={y(avg)} y2={y(avg)} strokeDasharray="4 4"
                 className="pointer-events-none stroke-slate-500 dark:stroke-slate-400" opacity={0.6} />

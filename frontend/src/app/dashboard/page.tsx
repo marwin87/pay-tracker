@@ -5,7 +5,7 @@ import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
-import { monthIn } from "@/lib/today";
+import { browseYears, monthIn } from "@/lib/today";
 import { SessionExpiredError } from "@/lib/api";
 import {
   fetchPayments,
@@ -17,19 +17,22 @@ import {
 import { fetchMe } from "@/lib/user-api";
 import { getCached, setCached } from "@/lib/page-cache";
 import { btnPrimaryClass } from "@/components/ui/formButtonClasses";
-import { currenciesByVolume, pickCurrency, summarize } from "@/lib/summary";
+import { currenciesByVolume, pickCurrency, shiftMonth, summarize } from "@/lib/summary";
 import MonthSummaryCard, { CARD_CLASS } from "@/components/dashboard/MonthSummaryCard";
 import CategoryDonut from "@/components/dashboard/CategoryDonut";
 import TrendChart from "@/components/dashboard/TrendChart";
 import MonthNav from "@/components/dashboard/MonthNav";
+import { useSwipe } from "@/hooks/useSwipe";
 
 export default function DashboardPage() {
   const t = useTranslations("Dashboard");
   const locale = useLocale();
   const { timeZone } = useAppLocale();
   const currentMonth = monthIn(timeZone);
-  // Same reach as the Payments page year switcher: two years back from this year.
-  const minMonth = `${Number(currentMonth.slice(0, 4)) - 2}-01`;
+  // Same reach as the Payments page, both ways.
+  const { minYear, maxYear } = browseYears(Number(currentMonth.slice(0, 4)));
+  const minMonth = `${minYear}-01`;
+  const maxMonth = `${maxYear}-12`;
   const [month, setMonth] = useState(currentMonth);
   const [data, setData] = useState<{
     month: string;
@@ -67,6 +70,13 @@ export default function DashboardPage() {
     };
   }, [month, currentMonth, t]);
 
+  // Swipe the summary card left/right (touch only) for the next/previous month
+  const stepMonth = (delta: number) => {
+    const next = shiftMonth(month, delta);
+    if (next >= minMonth && next <= maxMonth) setMonth(next);
+  };
+  const swipe = useSwipe(() => stepMonth(1), () => stepMonth(-1));
+
   const currencies = data ? currenciesByVolume(data.instances, data.trend) : [];
   const currency = data ? pickCurrency(selectedCurrency, currencies, data.defaultCurrency) : null;
   const summary = data && currency ? summarize(data.instances, currency) : null;
@@ -95,8 +105,8 @@ export default function DashboardPage() {
       )}
       {data && !currency && (
         // No payments in any currency for this window: keep the month nav so you can go back
-        <section className={CARD_CLASS}>
-          <MonthNav month={month} currentMonth={currentMonth} minMonth={minMonth} monthLabel={monthLabel} onChange={setMonth} />
+        <section className={CARD_CLASS} {...swipe}>
+          <MonthNav month={month} currentMonth={currentMonth} minMonth={minMonth} maxMonth={maxMonth} monthLabel={monthLabel} onChange={setMonth} />
           <p className="mt-3 text-sm text-slate-500 dark:text-slate-400">{t("summary.emptyMonth")}</p>
           {month >= currentMonth && (
             <>
@@ -134,22 +144,24 @@ export default function DashboardPage() {
               </div>
             </div>
           )}
-          <MonthSummaryCard
-            summary={summary}
-            currency={currency}
-            title={
-              <MonthNav
-                month={shownMonth}
-                currentMonth={currentMonth}
-                minMonth={minMonth}
-                monthLabel={monthLabel}
-                onChange={setMonth}
-              />
-            }
-          />
+          <div {...swipe}>
+            <MonthSummaryCard
+              summary={summary}
+              currency={currency}
+              title={
+                <MonthNav
+                  month={shownMonth}
+                  currentMonth={currentMonth}
+                  minMonth={minMonth} maxMonth={maxMonth}
+                  monthLabel={monthLabel}
+                  onChange={setMonth}
+                />
+              }
+            />
+          </div>
           <div className="grid gap-4 xl:grid-cols-2">
             <CategoryDonut rows={summary.byCategory} currency={currency} monthLabel={monthLabel} />
-            <TrendChart points={data.trend} currency={currency} month={shownMonth} />
+            <TrendChart onSelectMonth={setMonth} points={data.trend} currency={currency} month={shownMonth} minMonth={minMonth} maxMonth={maxMonth} />
           </div>
         </div>
       )}

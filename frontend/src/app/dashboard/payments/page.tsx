@@ -8,7 +8,7 @@ import { CalendarDays, ChevronDown, ChevronLeft, ChevronRight, ChevronsUpDown, F
 import { Fragment } from "react";
 import { useTranslations, useLocale } from "next-intl";
 import { useLocale as useAppLocale } from "@/context/locale-context";
-import { todayIn } from "@/lib/today";
+import { browseYears, todayIn } from "@/lib/today";
 import { setOverdueBadge } from "@/lib/app-badge";
 import {
   fetchPayments,
@@ -40,6 +40,7 @@ import SearchInput from "@/components/SearchInput";
 import FiltersHeader from "@/components/FiltersHeader";
 import { useCollapsedCategories, COLLAPSED_CATEGORIES_KEYS } from "@/hooks/useCollapsedCategories";
 import { useSortOption } from "@/hooks/useSortOption";
+import { useSwipe } from "@/hooks/useSwipe";
 import { toastName, useToast } from "@/context/toast-context";
 
 type PaymentSortOption = "category-az" | "category-za" | "paid-first" | "unpaid-first";
@@ -138,6 +139,7 @@ function PaymentsPageInner() {
   const { timeZone } = useAppLocale();
   const todayStr = todayIn(timeZone);
   const currentYear = Number(todayStr.slice(0, 4));
+  const { minYear, maxYear } = browseYears(currentYear);
   const currentMonth = todayStr.slice(0, 7);
 
   const [selectedMonth, setSelectedMonth] = useState<string>(currentMonth);
@@ -289,11 +291,13 @@ function PaymentsPageInner() {
   const selectedYear = selYear;
   function stepMonth(delta: number) {
     const d = new Date(selYear, selMonthIdx + delta);
-    if (d.getFullYear() < currentYear - 2 || d.getFullYear() > currentYear + 1) return;
+    if (d.getFullYear() < minYear || d.getFullYear() > maxYear) return;
     setSelectedMonth(monthKey(d.getFullYear(), d.getMonth()));
   }
-  const atMinMonth = selYear <= currentYear - 2 && selMonthIdx === 0;
-  const atMaxMonth = selYear >= currentYear + 1 && selMonthIdx === 11;
+  // Touch swipe on the month selector: left = next month, right = previous
+  const swipeMonth = useSwipe(() => stepMonth(1), () => stepMonth(-1));
+  const atMinMonth = selYear <= minYear && selMonthIdx === 0;
+  const atMaxMonth = selYear >= maxYear && selMonthIdx === 11;
   const monthTitle = `${monthName(selYear, selMonthIdx, locale)} ${selYear}`;
 
   const [statusFilter, setStatusFilter] = useState<Set<string>>(new Set());
@@ -506,7 +510,7 @@ function PaymentsPageInner() {
       <OnboardingChecklist currentMonth={currentMonth} />
 
       {/* Month selector: one card, the title is the only place the month is named */}
-      <div className="mb-6">
+      <div className="mb-6" {...swipeMonth}>
         <div className="sm:rounded-xl sm:border sm:border-slate-200 sm:bg-white sm:px-4 sm:pt-3 sm:shadow-sm dark:sm:border-slate-700 dark:sm:bg-slate-800">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
             <div className="flex w-full items-center justify-between rounded-2xl border border-slate-200 bg-white p-1 sm:w-auto sm:justify-start sm:gap-1 sm:rounded-none sm:border-0 sm:bg-transparent sm:p-0 dark:border-slate-700 dark:bg-slate-800 dark:sm:bg-transparent">
@@ -601,8 +605,8 @@ function PaymentsPageInner() {
             year={selYear}
             selectedMonth={selectedMonth}
             currentMonth={currentMonth}
-            minYear={currentYear - 2}
-            maxYear={currentYear + 1}
+            minYear={minYear}
+            maxYear={maxYear}
             locale={locale}
             onPick={(key) => {
               setSelectedMonth(key);

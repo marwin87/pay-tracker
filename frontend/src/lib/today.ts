@@ -44,3 +44,12 @@ export function todayIn(timeZone: string, now: Date = new Date()): string {
 export function monthIn(timeZone: string, now: Date = new Date()): string {
   return todayIn(timeZone, now).slice(0, 7);
 }
+
+/** How far the month browsers (Dashboard, Payments) reach from the current year. One place to change it. */
+export const BROWSE_YEARS_BACK = 5;
+export const BROWSE_YEARS_AHEAD = 5;
+
+/** First and last year the month browsers can reach. */
+export function browseYears(currentYear: number): { minYear: number; maxYear: number } {
+  return { minYear: currentYear - BROWSE_YEARS_BACK, maxYear: currentYear + BROWSE_YEARS_AHEAD };
+}
